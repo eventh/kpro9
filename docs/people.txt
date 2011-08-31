@@ -1,0 +1,13 @@
+People
+---------
+Daniela S. Cruzes, Project advisor, dcruzes@idi.ntnu.no
+Christian Tellefsen, Customer, 
+Stig Bjørlykke, Customer
+
+Erik Bergersen, System Architect, eribe
+Sondre Johan Mannsverk, sondrejo
+Terje Snarby, Project leader, snarby
+Even Wiik Thomassen, evenwiik
+Lars Solvoll Tønder, Test leader, larssot
+Sigurd Wien, Customer contact, sigurdw
+Jaroslav Fibichr, jaroslaf

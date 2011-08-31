@@ -1,0 +1,43 @@
+\documentclass[a4paper, 11pt]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx} % support graphics
+\usepackage{hyperref} % links in the document
+\usepackage{float} % position of figures
+\usepackage{paralist} % inline lists
+
+%\setcounter{tocdepth}{1} % Depth of table of contents
+
+% Configure links in pdfs
+\hypersetup{
+    bookmarksopen=false, % Hide bookmarks menu
+    colorlinks=true, % Don't wrap links in colored boxes
+}
+
+\title{Wireshark:\\ Automated generation of protocol dissectors}
+\author{by Erik Bergersen, Sondre Johan Mannsverk,\\ Terje Snarby,
+		Even Wiik Thomassen, Lars Solvoll Tønder,\\ Sigurd Wien
+		and Jaroslav Fibichr}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Wireshark is the world's foremost network protocol analyzer, and is the de
+facto (and often de jure) standard across many industries and educational
+institutions. Lua is a powerful, fast, lightweight, embeddable scripting
+language, which can be used to extend Wireshark.
+
+We intend to do something awesome with some software we are gonna write
+which then will do something to make something easier.
+\end{abstract}
+
+\tableofcontents
+
+\include{latex_syntax}
+\include{project_plan}
+\include{project_requirements}
+
+\end{document}

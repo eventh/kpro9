@@ -2,3 +2,6 @@
 *.log
 *.toc
 *.out
+*.class
+/misc
+/source/grammar/output

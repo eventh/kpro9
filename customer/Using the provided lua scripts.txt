@@ -1,0 +1,29 @@
+This is a list of configuration needed to test the provided Lua
+scripts with the attached capture file.
+
+* Start Wireshark and locate the preferences directory: "Help -> About
+  -> Folders -> Personal configuration".  On a UN*X based system this is
+  ~/.wireshark/
+* Copy 1-luastructs.lua to ~/.wireshark/
+* Copy the rest of the lua scripts to ~/.wireshark/plugins/ (create
+  the directory if it does not exist)
+* Edit ~/.wireshark/init.lua (create the file if it does not exist)
+  and insert the following code:  dofile("1-luastructs.lua")
+  This is because we have to ensure 1-luastructs.lua is loaded before
+  all other Lua scripts.
+* (re)Start Wireshark. The loaded scripts (from the plugins directory)
+  should be listed in Help -> About -> Plugins
+* Open "Edit -> Preferences -> Protocols -> DLT_USER -> Encapsulations
+  Table".  Add an entry with DLT=147 and Payload protocol=luastructs.
+  This is because we have captured packets using a generic
+  user-defined DLT (data link type)
+* Open the attached luastructs-example.pcap and observe that this is
+  dissected as previously shown at meetings.
+
+Once you have configured this the only needed changes would be to add
+new scripts to ~/.wireshark/plugins/
+
+The Wireshark Lua support is documented here:
+http://www.wireshark.org/docs/wsug_html_chunked/wsluarm.html
+You also should read the previously given Lua presentation
+DT06_Bjorlykke_Lua Scripting in Wireshark.pdf

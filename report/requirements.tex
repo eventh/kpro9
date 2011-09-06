@@ -25,36 +25,57 @@ TODO: create less detailed lists of those found futher down.
 
 \chapter{Prioritization}
 
-\chapter{Functional Requirements}
-\begin{description}
-	\item[F01] The utility shall be able to read basic C language struct
+\chapter{Requirements}
+\autoref{tab:funcreq} lists the functional requirements and their priority,
+while \autoref{tab:nonfuncreq} lists the non-functional requirements.
+
+\begin{table}[h] \center
+\caption{Functional Requirements\label{tab:funcreq}}
+\begin{tabular}{| c | p{11cm} | c |}
+	\hline ID & Description & Priority \\
+    \hline FR01 & The utility shall be able to read basic C language struct
 		definitions, and generate a Wireshark dissector for the binary
-		representation of the structs.
-	\item[F02] The utility shall support structs with any of the basic data
-		types (e.g. int, boolean, float, char) and structs.
-	\item[F03] The utility shall be able to follow \#include <...> statements.
-		This allows parsing structs that depend on structs or defines from
-		other header files.
-	\item[F04] The dissector shall be able to recognize invalid values for a
-		struct member. Allowed ranges should be specified by configuration. An
-		example is an integer that indictates a percentage between 0 and 100.
-	\item[F05] A struct may have a header and/or trailer (other registered
-		protocol). This must be configurable.
-	\item[F06] The dissector shall be able to display each struct member.
-		Structs within structs shall also be dissected and displayed.
-	\item[F07] It shall be possible to configure special handling of specific
-		data types. E.g. a 'time\_t' may be interpreted to contain a unixtime
-		value, and be displayed as a date.
-	\item[F08] An integer member may indicate that a variable number of other
-		structs (array of structs) are following the current struct.
-	\item[F09] Integers may be an enumerated named value or a bit string.
-	\item[F10] The dissectors produced shall be able to handle binary input
+		representation of the structs. & TODO \\
+	\hline FR02 & The utility shall support structs with the following basic
+		data types: int, float, char, boolean, structs, unions, array and
+		enums. & TODO \\
+	\hline FR03 & The utility shall be able to follow \#include <...>
+		statements. This allows parsing structs that depend on structs or
+		defines from other header files. & TODO \\
+	\hline FR04 & The dissector shall be able to recognize invalid values for
+		a struct member. Allowed ranges should be specified by configuration.
+		An example is an integer that indictates a percentage between 0 and
+		100. & TODO \\
+	\hline FR05 & A struct may have a header and/or trailer (other registered
+		protocol). This must be configurable. & TODO \\
+	\hline FR06 & The dissector shall be able to display each struct member.
+		Structs within structs shall also be dissected and displayed. & TODO \\
+	\hline FR07 & It shall be possible to configure special handling of
+		specific data types. E.g. a 'time\_t' may be interpreted to contain a
+		unixtime value, and be displayed as a date. & TODO \\
+	\hline FR08 & An integer member may indicate that a variable number of
+		other structs (array of structs) are following the current struct.
+		& TODO \\
+	\hline FR09 & Integers may be an enumerated named value or a bit string.
+		& TODO \\
+	\hline FR10 & The dissectors produced shall be able to handle binary input
 		from at least Windows 32bit and 64bit, Solaris 64bit and Sparc.
 		Example: BOOL is 1 byte on Solaris and 4 bytes on Win32. Endian and
-		alignment also differs between the architectures.
-\end{description}
+		alignment also differs between the architectures. & TODO \\
+	\hline
+\end{tabular}
+\end{table}
 
-\chapter{Non-Functional Requirements}
+\begin{table}[h] \center
+\caption{Non-Functional Requirements\label{tab:nonfuncreq}}
+\begin{tabular}{| c | p{11cm} | c |}
+	\hline ID & Description & Priority \\
+	\hline NR01 & The utility shall be able to run on Windows 32bit \& 64bit,
+		Solaris 64bit and Sparc. & TODO \\
+	\hline NR02 & The utility shall be able to run in batch mode. & TODO \\
+	\hline
+\end{tabular}
+\end{table}
 
 \chapter{Test plan?}
 

@@ -1,7 +1,7 @@
-%\chapter{Use Cases}
-%\section{Actors}
-%\section{High-Level Use Case Diagram}
-%\section{Low-Level Use Case Diagrams}
+\chapter{Use Cases}
+\section{Actors}
+\section{High-Level Use Case Diagram}
+\section{Low-Level Use Case Diagrams}
 
 \chapter{Overview}
 
@@ -15,17 +15,34 @@ representation of a C struct, as long as its definition is known.
 
 The expected work flow for the utility is to read one or more C header files,
 which contain struct definitions, and output Wireshark dissectors, implemented
-in Lua scripts. A configuration file or source scode annotations in the header
+in Lua scripts. A configuration file or source code annotations in the header
 files may be used when additional configuration is required.
 
 \section{Requirements}
 An overview over both functional and non-functional requirements.
+See \autoref{chap:requirements} for more detailed description of the requirements.
 
-TODO: create less detailed lists of those found futher down.
+\begin{description}
+    \item[FR01] Read C structs and generate Wireshark dissectors
+	\item[FR02] Support structs with basic C data types
+	\item[FR03] Support C preprocessor \#include \#define etc.
+	\item[FR04] Recognize invalid values for struct members
+	\item[FR05] A struct may have a header and/or trailer
+	\item[FR06] Support also structs within structs
+	\item[FR07] Support custom handling of specific data types
+	\item[FR08] Support integers which indicate array of structs are following
+	\item[FR09] Configuration for enumerated named value or a bit strings
+	\item[FR10] Handle platform dependent endian and type sizes
+	\item[NR01] Run on Windows 32bit \& 64bit, Solaris 64bit and Sparc
+	\item[NR02] Be able to run in batch mode
+	\item[NR03] Need to have flexible configuration
+	\item[NR04] The configuration needs to be well documented
+\end{description}
 
 \chapter{Prioritization}
 
 \chapter{Requirements}
+\label{chap:requirements}
 \autoref{tab:funcreq} lists the functional requirements and their priority,
 while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 
@@ -40,7 +57,9 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 		data types: int, float, char, boolean, structs, unions, array and
 		enums. & TODO \\
 	\hline FR03 & The utility must support the following C preprocessor
-		directives and macros: \#include, WIN32, TODO!! & TODO \\
+		directives and macros: \verb+#include+, \verb+#define+, \verb+#if+,
+		\verb+WIN32+, \verb+_WIN32+, \verb+_WIN64+, \verb+__sparc__+,
+		\verb+__sparc+ and \verb+sun+ & TODO \\
 	\hline FR04 & The dissector shall be able to recognize invalid values for
 		a struct member. Allowed ranges should be specified by configuration.
 		& TODO \\
@@ -48,15 +67,14 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 		protocol), which must be configurable. & TODO \\
 	\hline FR06 & The dissector shall be able to display each struct member.
 		Structs within structs shall also be dissected and displayed. & TODO \\
-	\hline FR07 & It shall be possible to configure special handling of
+	\hline FR07 & Configuration must support custom handling of
 		specific data types. E.g. a 'time\_t' may be interpreted to contain a
 		unixtime value, and be displayed as a date. & TODO \\
-	\hline FR08 & An integer member may indicate that a variable number of
-		other structs (array of structs) are following the current struct.
-		& TODO \\
-	\hline FR09 & Integers may be an enumerated named value or a bit string.
-		TODO!!!
-		& TODO \\
+	\hline FR08 & Configuration must support integer members which indicate
+		that a variable number of other structs (array of structs) are
+		following the current struct. & TODO \\
+	\hline FR09 & Configuration must support integer members which represent
+		enumerated named value or a bit string. & TODO \\
 	\hline FR10 & The dissectors must be able to handle binary input which size
 		and endian depends on originating platform. & TODO \\
 	\hline
@@ -71,12 +89,11 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 		Solaris 64bit and Sparc. & TODO \\
 	\hline NR02 & The utility shall be able to run in batch mode. & TODO \\
 	\hline NR03 & The utility needs to have flexible configuration. & TODO \\
-	\hline NR04 & The configuration needs to be well documentet. & TODO \\
-	\hline NR05 & The utility and its code should have some documentation
-		& TODO \\
+	\hline NR04 & The configuration needs to be well documented. & TODO \\
 	\hline
 \end{tabular}
 \end{table}
 
-\chapter{Test plan?}
+\chapter{Test plan}
+TODO
 

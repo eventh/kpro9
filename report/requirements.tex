@@ -31,7 +31,7 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 
 \begin{table}[h] \center
 \caption{Functional Requirements\label{tab:funcreq}}
-\begin{tabular}{| c | p{11cm} | c |}
+\begin{tabular}{| c | p{9cm} | c |}
 	\hline ID & Description & Priority \\
     \hline FR01 & The utility shall be able to read basic C language struct
 		definitions, and generate a Wireshark dissector for the binary
@@ -39,15 +39,13 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 	\hline FR02 & The utility shall support structs with the following basic
 		data types: int, float, char, boolean, structs, unions, array and
 		enums. & TODO \\
-	\hline FR03 & The utility shall be able to follow \#include <...>
-		statements. This allows parsing structs that depend on structs or
-		defines from other header files. & TODO \\
+	\hline FR03 & The utility must support the following C preprocessor
+		directives and macros: \#include, WIN32, TODO!! & TODO \\
 	\hline FR04 & The dissector shall be able to recognize invalid values for
 		a struct member. Allowed ranges should be specified by configuration.
-		An example is an integer that indictates a percentage between 0 and
-		100. & TODO \\
+		& TODO \\
 	\hline FR05 & A struct may have a header and/or trailer (other registered
-		protocol). This must be configurable. & TODO \\
+		protocol), which must be configurable. & TODO \\
 	\hline FR06 & The dissector shall be able to display each struct member.
 		Structs within structs shall also be dissected and displayed. & TODO \\
 	\hline FR07 & It shall be possible to configure special handling of
@@ -57,22 +55,25 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 		other structs (array of structs) are following the current struct.
 		& TODO \\
 	\hline FR09 & Integers may be an enumerated named value or a bit string.
+		TODO!!!
 		& TODO \\
-	\hline FR10 & The dissectors produced shall be able to handle binary input
-		from at least Windows 32bit and 64bit, Solaris 64bit and Sparc.
-		Example: BOOL is 1 byte on Solaris and 4 bytes on Win32. Endian and
-		alignment also differs between the architectures. & TODO \\
+	\hline FR10 & The dissectors must be able to handle binary input which size
+		and endian depends on originating platform. & TODO \\
 	\hline
 \end{tabular}
 \end{table}
 
 \begin{table}[h] \center
 \caption{Non-Functional Requirements\label{tab:nonfuncreq}}
-\begin{tabular}{| c | p{11cm} | c |}
+\begin{tabular}{| c | p{9cm} | c |}
 	\hline ID & Description & Priority \\
 	\hline NR01 & The utility shall be able to run on Windows 32bit \& 64bit,
 		Solaris 64bit and Sparc. & TODO \\
 	\hline NR02 & The utility shall be able to run in batch mode. & TODO \\
+	\hline NR03 & The utility needs to have flexible configuration. & TODO \\
+	\hline NR04 & The configuration needs to be well documentet. & TODO \\
+	\hline NR05 & The utility and its code should have some documentation
+		& TODO \\
 	\hline
 \end{tabular}
 \end{table}

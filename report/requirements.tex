@@ -1,0 +1,60 @@
+%\chapter{Use Cases}
+%\section{Actors}
+%\section{High-Level Use Case Diagram}
+%\section{Low-Level Use Case Diagrams}
+
+\chapter{Overview}
+
+\section{Introduction}
+This document contains requirements for an utility that allows Wireshark to
+interpret the binary representations of C-language structs. While C structs
+seldom are exchanged across networks, they are sometimes used in inter-process
+communication. The purpose of the utility described here is to provide
+Wireshark with the capability of automatically dissecting the binary
+representation of a C struct, as long as its definition is known.
+
+The expected work flow for the utility is to read one or more C header files,
+which contain struct definitions, and output Wireshark dissectors, implemented
+in Lua scripts. A configuration file or source scode annotations in the header
+files may be used when additional configuration is required.
+
+\section{Requirements}
+An overview over both functional and non-functional requirements.
+
+TODO: create less detailed lists of those found futher down.
+
+\chapter{Prioritization}
+
+\chapter{Functional Requirements}
+\begin{description}
+	\item[F01] The utility shall be able to read basic C language struct
+		definitions, and generate a Wireshark dissector for the binary
+		representation of the structs.
+	\item[F02] The utility shall support structs with any of the basic data
+		types (e.g. int, boolean, float, char) and structs.
+	\item[F03] The utility shall be able to follow \#include <...> statements.
+		This allows parsing structs that depend on structs or defines from
+		other header files.
+	\item[F04] The dissector shall be able to recognize invalid values for a
+		struct member. Allowed ranges should be specified by configuration. An
+		example is an integer that indictates a percentage between 0 and 100.
+	\item[F05] A struct may have a header and/or trailer (other registered
+		protocol). This must be configurable.
+	\item[F06] The dissector shall be able to display each struct member.
+		Structs within structs shall also be dissected and displayed.
+	\item[F07] It shall be possible to configure special handling of specific
+		data types. E.g. a 'time\_t' may be interpreted to contain a unixtime
+		value, and be displayed as a date.
+	\item[F08] An integer member may indicate that a variable number of other
+		structs (array of structs) are following the current struct.
+	\item[F09] Integers may be an enumerated named value or a bit string.
+	\item[F10] The dissectors produced shall be able to handle binary input
+		from at least Windows 32bit and 64bit, Solaris 64bit and Sparc.
+		Example: BOOL is 1 byte on Solaris and 4 bytes on Win32. Endian and
+		alignment also differs between the architectures.
+\end{description}
+
+\chapter{Non-Functional Requirements}
+
+\chapter{Test plan?}
+

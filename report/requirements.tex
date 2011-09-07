@@ -1,11 +1,20 @@
-\chapter{Use Cases}
-\section{Actors}
-\section{High-Level Use Case Diagram}
-\section{Low-Level Use Case Diagrams}
+%===================
+%\chapter{Use Cases}
+%===================
+%\section{Actors}
+% * Configurer
+% * User of our solution
+% * User of wireshark dissectors
+%\section{High-Level Use Case Diagram}
+%\section{Low-Level Use Case Diagrams}
 
+
+%=================
 \chapter{Overview}
+%=================
 
 \section{Introduction}
+%---------------------
 This document contains requirements for an utility that allows Wireshark to
 interpret the binary representations of C-language structs. While C structs
 seldom are exchanged across networks, they are sometimes used in inter-process
@@ -19,6 +28,7 @@ in Lua scripts. A configuration file or source code annotations in the header
 files may be used when additional configuration is required.
 
 \section{Requirements}
+%---------------------
 An overview over both functional and non-functional requirements.
 See \autoref{chap:requirements} for more detailed description of the requirements.
 
@@ -28,72 +38,79 @@ See \autoref{chap:requirements} for more detailed description of the requirement
 	\item[FR03] Support C preprocessor \#include \#define etc.
 	\item[FR04] Recognize invalid values for struct members
 	\item[FR05] A struct may have a header and/or trailer
-	\item[FR06] Support also structs within structs
+	\item[FR06] Support structs within structs
 	\item[FR07] Support custom handling of specific data types
 	\item[FR08] Support integers which indicate array of structs are following
 	\item[FR09] Configuration for enumerated named value or a bit strings
 	\item[FR10] Handle platform dependent endian and type sizes
+	\item[FR11] Support internationalization and localization
 	\item[NR01] Run on Windows 32bit \& 64bit, Solaris 64bit and Sparc
 	\item[NR02] Be able to run in batch mode
 	\item[NR03] Need to have flexible configuration
 	\item[NR04] The configuration needs to be well documented
 \end{description}
 
-\chapter{Prioritization}
 
+%=======================
+\chapter{Prioritization}
+%=======================
+
+
+%=====================
 \chapter{Requirements}
+%=====================
 \label{chap:requirements}
 \autoref{tab:funcreq} lists the functional requirements and their priority,
 while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 
-\begin{table}[h] \center
+\begin{table}[ht] \center
 \caption{Functional Requirements\label{tab:funcreq}}
 \begin{tabular}{| c | p{9cm} | c |}
 	\hline ID & Description & Priority \\
     \hline FR01 & The utility shall be able to read basic C language struct
 		definitions, and generate a Wireshark dissector for the binary
-		representation of the structs. & TODO \\
+		representation of the structs. & High \\
 	\hline FR02 & The utility shall support structs with the following basic
 		data types: int, float, char, boolean, structs, unions, array and
-		enums. & TODO \\
+		enums. & High \\
 	\hline FR03 & The utility must support the following C preprocessor
 		directives and macros: \verb+#include+, \verb+#define+, \verb+#if+,
 		\verb+WIN32+, \verb+_WIN32+, \verb+_WIN64+, \verb+__sparc__+,
-		\verb+__sparc+ and \verb+sun+ & TODO \\
+		\verb+__sparc+ and \verb+sun+ & Medium \\
 	\hline FR04 & The dissector shall be able to recognize invalid values for
 		a struct member. Allowed ranges should be specified by configuration.
-		& TODO \\
+		& Low \\
 	\hline FR05 & A struct may have a header and/or trailer (other registered
-		protocol), which must be configurable. & TODO \\
-	\hline FR06 & The dissector shall be able to display each struct member.
-		Structs within structs shall also be dissected and displayed. & TODO \\
+		protocol), which must be configurable. & Low \\
+	\hline FR06 & The dissector shall display each struct member, and support
+		structs within structs. & Medium \\
 	\hline FR07 & Configuration must support custom handling of
 		specific data types. E.g. a 'time\_t' may be interpreted to contain a
-		unixtime value, and be displayed as a date. & TODO \\
+		unixtime value, and be displayed as a date. & Low \\
 	\hline FR08 & Configuration must support integer members which indicate
 		that a variable number of other structs (array of structs) are
-		following the current struct. & TODO \\
+		following the current struct. & High \\
 	\hline FR09 & Configuration must support integer members which represent
-		enumerated named value or a bit string. & TODO \\
+		enumerated named value or a bit string. & Medium \\
 	\hline FR10 & The dissectors must be able to handle binary input which size
-		and endian depends on originating platform. & TODO \\
+		and endian depends on originating platform. Flags within message
+		headers should signal the platform. & High \\
+	\hline FR11 & Support i18n, internationalization and localization, in both
+		input and configuration. & ??? \\
 	\hline
 \end{tabular}
 \end{table}
 
-\begin{table}[h] \center
+\begin{table}[ht] \center
 \caption{Non-Functional Requirements\label{tab:nonfuncreq}}
 \begin{tabular}{| c | p{9cm} | c |}
 	\hline ID & Description & Priority \\
 	\hline NR01 & The utility shall be able to run on Windows 32bit \& 64bit,
-		Solaris 64bit and Sparc. & TODO \\
-	\hline NR02 & The utility shall be able to run in batch mode. & TODO \\
-	\hline NR03 & The utility needs to have flexible configuration. & TODO \\
-	\hline NR04 & The configuration needs to be well documented. & TODO \\
+		Solaris 64bit and Sparc. & High \\
+	\hline NR02 & The utility shall be able to run in batch mode. & High \\
+	\hline NR03 & The utility needs to have flexible configuration. & Medium \\
+	\hline NR04 & The configuration needs to be well documented. & Low \\
 	\hline
 \end{tabular}
 \end{table}
-
-\chapter{Test plan}
-TODO
 

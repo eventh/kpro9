@@ -3,5 +3,7 @@
 *.toc
 *.out
 *.class
+*.pdf
+*.synctex.gz
 /misc
 /source/grammar/output

@@ -1,3 +1,9 @@
+%======================================================
+% This file generates the whole report for the project
+% Run with "pdflatex report.tex" twice to create pdf
+%
+% Use *_standalone.tex to generate standalone parts
+%======================================================
 \documentclass[a4paper, 11pt]{report}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -36,8 +42,13 @@ which then will do something to make something easier.
 
 \tableofcontents
 
+\part{Some latex commands}
 \include{latex_syntax}
-\include{project_plan}
-\include{project_requirements}
+
+\part{Project Plan}
+\include{plan}
+
+\part{Project Requirements}
+\include{requirements}
 
 \end{document}

@@ -1,0 +1,66 @@
+ 
+
+\documentclass[a4paper, 11pt]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx} % support graphics
+\usepackage{hyperref} % links in the document
+\usepackage{float} % position of figures
+\usepackage{paralist} % inline lists
+
+%\setcounter{tocdepth}{1} % Depth of table of contents
+
+% Configure links in pdfs
+\hypersetup{
+    bookmarksopen=false, % Hide bookmarks menu
+    colorlinks=true, % Don't wrap links in colored boxes
+}
+
+\title{Wireshark:\\ Automated generation of protocol dissectors\\
+		Project Requirements}
+\author{by Erik Bergersen, Sondre Johan Mannsverk,\\ Terje Snarby,
+		Even Wiik Thomassen, Lars Solvoll Tønder,\\ Sigurd Wien
+		and Jaroslav Fibichr}
+\date{\today}
+
+\begin{document}
+
+\chapter{Test Plan}
+
+This chapter presents the test plan for our solution. The test plan is based on  the standards set by the IEEE829-1998 standard for software testing, but with a few changes to better fit with our project. The purpose of this plan is to have a structured way of preforming tests, as well as providing the developers with a list of specific component-behaviours, based on the functional requirements. This will assist the developers working on the different components by giving them a list of objectives that should be solved during development of the different components. 
+
+\section{Templates for testing}
+
+\begin{table}
+\caption {Test case template}
+\begin{tabular}{| l | l |}
+Portion & Description\\
+\hline\hline\\
+Test identifier & Test ID\\
+Tester & Team member responsible for the test\\
+Prerequisites & Conditions that needs to be fulfilled before starting the test\\
+Feature & Feature to test\\
+Execution & Steps to be executed in the test\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\caption{Test report template}
+\begin{tabular}{| l | l |}
+Portion & Description\\
+\hline\hline\\
+Test identifier & Test ID\\
+Tester & Team member responsible for the test\\
+Date & The date the testing took place\\
+Result & Success \\
+\hline
+\end{tabular}
+
+\end{table}
+
+
+
+
+\end{document}

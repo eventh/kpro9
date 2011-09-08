@@ -1,30 +1,28 @@
 #! /usr/bin/env python
 """
-TODO
+A module for creating Wireshark dissectors for C structs.
 """
 import sys
-from pycparser import parse_file
+import cparser
+import struct
 import lua
 
 
 def main():
     if len(sys.argv) < 2:
-        print("Please provide a file to parse")
+        print("Please provide a C file to parse")
         exit()
 
+    # Parse the given C file to create an AST
     filename = sys.argv[1]
-
-    # Portable cpp path for Windows and Linux/Unix
-    CPPPATH = './utils/cpp.exe' if sys.platform == 'win32' else 'cpp'
-
-    ast = parse_file(filename, use_cpp=True,
-            cpp_path=CPPPATH,
-            cpp_args=r'-I/utils/fake_libc_include')
-
+    ast = cparser.parse(filename)
     ast.show()
 
-    members = {"type": "int", "name": "char", "time": "int"}
-    lua.create("test.lua", "internal_snd", members)
+    # Recursivly decent AST to find structs
+    structs = struct.find_structs(ast)
+
+    # Generate lua dissectors
+    lua.write(structs)
 
 if __name__ == "__main__":
     main()

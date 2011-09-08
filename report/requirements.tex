@@ -1,3 +1,4 @@
+%\chapter*{Requirements}
 %===================
 %\chapter{Use Cases}
 %===================
@@ -7,7 +8,6 @@
 % * User of wireshark dissectors
 %\section{High-Level Use Case Diagram}
 %\section{Low-Level Use Case Diagrams}
-
 
 %=================
 \chapter{Overview}
@@ -43,7 +43,6 @@ See \autoref{chap:requirements} for more detailed description of the requirement
 	\item[FR08] Support integers which indicate array of structs are following
 	\item[FR09] Configuration for enumerated named value or a bit strings
 	\item[FR10] Handle platform dependent endian and type sizes
-	\item[FR11] Support internationalization and localization
 	\item[NR01] Run on Windows 32bit \& 64bit, Solaris 64bit and Sparc
 	\item[NR02] Be able to run in batch mode
 	\item[NR03] Need to have flexible configuration
@@ -95,8 +94,6 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 	\hline FR10 & The dissectors must be able to handle binary input which size
 		and endian depends on originating platform. Flags within message
 		headers should signal the platform. & High \\
-	\hline FR11 & Support i18n, internationalization and localization, in both
-		input and configuration. & ??? \\
 	\hline
 \end{tabular}
 \end{table}
@@ -105,8 +102,8 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 \caption{Non-Functional Requirements\label{tab:nonfuncreq}}
 \begin{tabular}{| c | p{9cm} | c |}
 	\hline ID & Description & Priority \\
-	\hline NR01 & The utility shall be able to run on Windows 32bit \& 64bit,
-		Solaris 64bit and Sparc. & High \\
+	\hline NR01 & The utility shall be able to run on Windows and Solaris,
+		32bit and 64bit, Intel and Sparc platform. & High \\
 	\hline NR02 & The utility shall be able to run in batch mode. & High \\
 	\hline NR03 & The utility needs to have flexible configuration. & Medium \\
 	\hline NR04 & The configuration needs to be well documented. & Low \\

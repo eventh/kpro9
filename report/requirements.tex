@@ -27,8 +27,8 @@ in Lua scripts. A configuration file or source code annotations in the header
 files may be used when additional configuration is required.
 
 \subsection{List of requirements}
-See \autoref{sec:reqslist} for more detailed description of the
-requirements.
+See \autoref{tab:funcreq} and \autoref{tab:nonfuncreq} for more detailed
+description of the requirements.
 
 \begin{description}
     \item[FR01] Read C structs and generate Wireshark dissectors
@@ -66,11 +66,23 @@ does not use our utility himself, but uses the output dissectors in Wireshark.
 \end{description}
 
 \subsection{Use Case Diagrams}
-
+TODO!! Desperately need help for this....
 
 \section{Prioritization}
 %-----------------------
 \label{sec:reqspriority}
+The team has prioritized the requirements in three categories:
+\begin{inparaenum}[\itshape a\upshape)]
+	\item High,
+	\item Medium or
+	\item Low.
+\end{inparaenum} 
+
+\begin{description}
+	\item[High] Core functionality of the utility which must be implemented.
+	\item[Medium] Requirements that will improve the value of the utility.
+	\item[Low] Requirements that will not add much value to the utility.
+\end{description}
 
 \section{List of requirements}
 %-----------------------------

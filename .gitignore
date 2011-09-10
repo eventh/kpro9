@@ -5,5 +5,8 @@
 *.class
 *.pdf
 *.synctex.gz
+*.swp
 /misc
-/source/grammar/output
+/source/__pycache__/
+/source/lextab.py
+/source/yacctab.py

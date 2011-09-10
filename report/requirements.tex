@@ -1,21 +1,20 @@
-%\chapter*{Requirements}
-%===================
-%\chapter{Use Cases}
-%===================
-%\section{Actors}
-% * Configurer
-% * User of our solution
-% * User of wireshark dissectors
-%\section{High-Level Use Case Diagram}
-%\section{Low-Level Use Case Diagrams}
+%=====================
+\chapter{Requirements}
+%=====================
+\label{chap:requirements}
+This chapter describes an utility that creates Wireshark dissectors from C
+header files. The dissectors must interpret binary representations of C
+structs. In \autoref{sec:reqsoverview} we give a high level overview of the
+utility and its requirements, \autoref{sec:usecases} provides use cases for the
+utility, \autoref{sec:reqspriority} explains how we prioritizes the
+requirements and \autoref{sec:reqslist} lists all the functional and
+non-function requirements and their priority. Since this project follows Scrum,
+each sprint chapter contains its own backlog.
 
-%=================
-\chapter{Overview}
-%=================
-
-\section{Introduction}
-%---------------------
-This document contains requirements for an utility that allows Wireshark to
+\section{Overview}
+%-----------------
+\label{sec:reqsoverview}
+This chapter specifies requirements for an utility that allows Wireshark to
 interpret the binary representations of C-language structs. While C structs
 seldom are exchanged across networks, they are sometimes used in inter-process
 communication. The purpose of the utility described here is to provide
@@ -26,11 +25,6 @@ The expected work flow for the utility is to read one or more C header files,
 which contain struct definitions, and output Wireshark dissectors, implemented
 in Lua scripts. A configuration file or source code annotations in the header
 files may be used when additional configuration is required.
-
-\section{Requirements}
-%---------------------
-An overview over both functional and non-functional requirements.
-See \autoref{chap:requirements} for more detailed description of the requirements.
 
 \begin{description}
     \item[FR01] Read C structs and generate Wireshark dissectors
@@ -49,16 +43,30 @@ See \autoref{chap:requirements} for more detailed description of the requirement
 	\item[NR04] The configuration needs to be well documented
 \end{description}
 
+See \autoref{sec:reqslist} for more detailed description of the
+requirements.
 
-%=======================
-\chapter{Prioritization}
-%=======================
+\section{Use Cases}
+%------------------
+\label{sec:usecases}
+
+\subsection{Actors}
+% * Configurer
+% * User of our solution
+% * User of wireshark dissectors
+
+\subsection{High-Level Use Case Diagram}
+
+\subsection{Low-Level Use Case Diagrams}
 
 
-%=====================
-\chapter{Requirements}
-%=====================
-\label{chap:requirements}
+\section{Prioritization}
+%-----------------------
+\label{sec:reqspriority}
+
+\section{List of requirements}
+%-----------------------------
+\label{sec:reqslist}
 \autoref{tab:funcreq} lists the functional requirements and their priority,
 while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 

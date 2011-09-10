@@ -14,17 +14,21 @@ each sprint chapter contains its own backlog.
 \section{Overview}
 %-----------------
 \label{sec:reqsoverview}
-This chapter specifies requirements for an utility that allows Wireshark to
-interpret the binary representations of C-language structs. While C structs
-seldom are exchanged across networks, they are sometimes used in inter-process
-communication. The purpose of the utility described here is to provide
-Wireshark with the capability of automatically dissecting the binary
-representation of a C struct, as long as its definition is known.
+We are to create an utility that allows Wireshark to interpret the binary
+representations of C-language structs. While C structs seldom are exchanged
+across networks, they are sometimes used in inter-process communication. The
+purpose of the utility described here is to provide Wireshark with the
+capability of automatically dissecting the binary representation of a C struct,
+as long as its definition is known.
 
 The expected work flow for the utility is to read one or more C header files,
 which contain struct definitions, and output Wireshark dissectors, implemented
 in Lua scripts. A configuration file or source code annotations in the header
 files may be used when additional configuration is required.
+
+\subsection{List of requirements}
+See \autoref{sec:reqslist} for more detailed description of the
+requirements.
 
 \begin{description}
     \item[FR01] Read C structs and generate Wireshark dissectors
@@ -43,21 +47,25 @@ files may be used when additional configuration is required.
 	\item[NR04] The configuration needs to be well documented
 \end{description}
 
-See \autoref{sec:reqslist} for more detailed description of the
-requirements.
-
 \section{Use Cases}
 %------------------
 \label{sec:usecases}
 
 \subsection{Actors}
-% * Configurer
-% * User of our solution
-% * User of wireshark dissectors
+An actor specifies a role played by an external person or thing that interact
+with our utility. We have three types of actors to consider. First is the
+primary actor which in our case is the user of our utility. He who feeds it a
+C file to generate dissectors. A secondary actor is someone who configures our
+utility to change the output of it. Finally we have an offstage actor which
+does not use our utility himself, but uses the output dissectors in Wireshark.
 
-\subsection{High-Level Use Case Diagram}
+\begin{description}
+	\item[User] Primary actor - The user of our utility.
+	\item[Configurer] Secondary actor - Configures the output of our utility.
+	\item[Dissector] Offstage actor - User of Wireshark dissectors.
+\end{description}
 
-\subsection{Low-Level Use Case Diagrams}
+\subsection{Use Case Diagrams}
 
 
 \section{Prioritization}

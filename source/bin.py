@@ -4,7 +4,7 @@ A module for creating Wireshark dissectors for C structs.
 """
 import sys
 import cparser
-import struct
+import cstruct
 import lua
 
 
@@ -19,7 +19,7 @@ def main():
     ast.show()
 
     # Recursivly decent AST to find structs
-    structs = struct.find_structs(ast)
+    structs = cstruct.find_structs(ast)
 
     # Generate lua dissectors
     lua.write(structs)

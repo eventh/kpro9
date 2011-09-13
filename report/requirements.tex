@@ -30,22 +30,8 @@ files may be used when additional configuration is required.
 See \autoref{tab:funcreq} and \autoref{tab:nonfuncreq} for more detailed
 description of the requirements.
 
-dsfsdfsdf
 \begin{description}
     \item[FR01] Read C structs and generate Wireshark dissectors
-	\item[FR02] Support structs with basic C data types
-	\item[FR03] Support C preprocessor \#include \#define etc.
-	\item[FR04] Recognize invalid values for struct members
-	\item[FR05] A struct may have a header and/or trailer
-	\item[FR06] Support structs within structs
-	\item[FR07] Support custom handling of specific data types
-	\item[FR08] Support integers which indicate array of structs are following
-	\item[FR09] Configuration for enumerated named value or a bit strings
-	\item[FR10] Handle platform dependent endian and type sizes
-	\item[NR01] Run on Windows 32bit \& 64bit, Solaris 64bit and Sparc
-	\item[NR02] Be able to run in batch mode
-	\item[NR03] Need to have flexible configuration
-	\item[NR04] The configuration needs to be well documented
 \end{description}
 
 \section{Use Cases}
@@ -91,52 +77,112 @@ The team has prioritized the requirements in three categories:
 \autoref{tab:funcreq} lists the functional requirements and their priority,
 while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 
-\begin{table}[ht] \center
+\begin{table}[ht] \small \center
 \caption{Functional Requirements\label{tab:funcreq}}
-\begin{tabular}{| c | p{9cm} | c |}
-	\hline ID & Description & Priority \\
-    \hline FR01 & The utility shall be able to read basic C language struct
-		definitions, and generate a Wireshark dissector for the binary
-		representation of the structs. & High \\
-	\hline FR02 & The utility shall support structs with the following basic
-		data types: int, float, char, boolean, structs, unions, array and
-		enums. & High \\
-	\hline FR03 & The utility must support the following C preprocessor
-		directives and macros: \verb+#include+, \verb+#define+, \verb+#if+,
-		\verb+WIN32+, \verb+_WIN32+, \verb+_WIN64+, \verb+__sparc__+,
-		\verb+__sparc+ and \verb+sun+ & Medium \\
-	\hline FR04 & The dissector shall be able to recognize invalid values for
+\begin{tabular}{c | p{9cm} | c  c }
+	ID & Description & Pri. & Comp. \\ \hline \hline
+	FR1 & The utility must be able to read basic C language
+		struct definitions from C header files.
+		& & \\
+	FR1-A & The utility must support the following basic data types:
+		int, float, char and boolean.
+		& H & L \\
+	FR1-B & The utility must support members of type enums.
+		& H & L \\
+	FR1-C & The utility must support members of type structs.
+		& H & M \\
+	FR1-D & The utility must support members of type unions.
+		& M & M \\
+	FR1-E & The utility must support member of type array.
+		& H & M \\ \hline
+	FR2 & The utility must be able to generate lua-script for Wireshark
+		dissectors for the binary representation of C struct.
+		& & \\
+	FR2-A & The dissector shall be able to display simple structs.
+		& H & L \\
+	FR2-B & The dissector shall be able to support structs within
+		structs.
+		& M & M \\
+	FR2-C & The dissector must support Wiresharks built-in filter and
+		search on attributes.
+		& H & L \\ \hline
+	FR3 & The utility must support C preprocessor directives and macros.
+		& & \\
+	FR3-A & The utility shall support \#include.
+		& H & L \\
+	FR3-B & The utility shall support \#define and \#if.
+		& H & L \\
+	FR3-C & The utility shall support WIN32, \_WIN32, \_WIN64,
+		\_\_sparc\_\_, \_\_sparc and sun.
+		& M & H \\ \hline
+	FR4 & The utility must support user configuration.
+		& & \\
+	FR4-A & The dissector shall be able to recognize invalid values for
 		a struct member. Allowed ranges should be specified by configuration.
-		& Low \\
-	\hline FR05 & A struct may have a header and/or trailer (other registered
-		protocol), which must be configurable. & Low \\
-	\hline FR06 & The dissector shall display each struct member, and support
-		structs within structs. & Medium \\
-	\hline FR07 & Configuration must support custom handling of
-		specific data types. E.g. a 'time\_t' may be interpreted to contain a
-		unixtime value, and be displayed as a date. & Low \\
-	\hline FR08 & Configuration must support integer members which indicate
-		that a variable number of other structs (array of structs) are
-		following the current struct. & High \\
-	\hline FR09 & Configuration must support integer members which represent
-		enumerated named value or a bit string. & Medium \\
-	\hline FR10 & The dissectors must be able to handle binary input which size
-		and endian depends on originating platform. Flags within message
-		headers should signal the platform. & High \\
-	\hline
+		& L & L \\
+	FR4-B & Configuration must support integer members which represent
+		enumerated named value or a bit string.
+		& M & L \\
+	FR4-C & Configuration must support custom handling of specific data
+		types. E.g. a 'time\_t' may be interpreted to contain a unixtime value,
+		and be displayed as a date.
+		& L & M \\ \hline
+	FR5 & A struct may have a header and/or trailer (other registered
+		protocol). The configuration must support the use of integer members to
+		indicate the number of other structs that will follow in the trailer
+		& Low & High \\ \hline
+	FR6 & The dissectors must be able to handle binary input which size
+		and endian depends on originating platform.
+		& & \\
+	FR6-A & Flags must be specified for each platform.
+		& M & M \\
+	FR6-B & Flags within message headers should signal the platform.
+		& M & H \\ \hline
+	FR7 & The utility shall support parameters from command line.
+		& & \\
+	FR7-A & Command line shall support parameters for c-header file.
+		& H & L \\
+	FR7-B & Command line shall support for configuration file.
+		& H & L \\
+	FR7-C & Command line shall support batch mode of c-header and
+		configuration file.
+		& L & M \\
+	FR7-D & When running batch mode, dissectors that already are
+		generated, shall not be regenerated, if the source are not modified
+		since last run.
+		& L & M \\ \hline
 \end{tabular}
 \end{table}
 
-\begin{table}[ht] \center
+\begin{table}[ht] \small \center
 \caption{Non-Functional Requirements\label{tab:nonfuncreq}}
-\begin{tabular}{| c | p{9cm} | c |}
-	\hline ID & Description & Priority \\
-	\hline NR01 & The utility shall be able to run on Windows and Solaris,
-		32bit and 64bit, Intel and Sparc platform. & High \\
-	\hline NR02 & The utility shall be able to run in batch mode. & High \\
-	\hline NR03 & The utility needs to have flexible configuration. & Medium \\
-	\hline NR04 & The configuration needs to be well documented. & Low \\
-	\hline
+\begin{tabular}{c | p{9cm} | c  c }
+	ID & Description & Pri. & Comp. \\ \hline \hline
+	NR1 & The utility shall be able to run on latest Windows and Solaris
+		operating system.
+		& M & L \\ \hline
+	NR2 & The dissector shall be able to run on Windows x86, Windows x86-64,
+		Solaris x86, Solaris x86-64 and Solaris SPARC.
+		& M & M \\ \hline
+	NR3 & The utilities user interface shall be command line. No clicking!.
+		& H & L \\ \hline
+	NR4 & The configuration shall have sufficient documentation to allow a
+		person with no previous knowledge of the system to be able to use it
+		to generate LUA-scripts after X hours of reading.
+		& M & M \\ \hline
+	NR5 & The configuration should have sufficient documentation to allow a
+		person, already proficient with the system, to understand the code
+		well enough to be able to extend it’s functionality after Y hours of
+		reading.
+		& M & M \\ \hline
+	NR6 & The utility code should follow standard python coding convention as
+		specified by PEP8, and try to follow python style guidelines defined
+		by PEP20.
+		& H & L \\ \hline
+	NR7 & The utilities code should be documented by python docstrings which
+		should explain the use of the code. Python modules, classes, functions
+		and methods should have docstrings.
+		& M & L \\
 \end{tabular}
 \end{table}
 

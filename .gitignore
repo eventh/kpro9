@@ -4,6 +4,7 @@
 *.out
 *.class
 *.synctex.gz
+*.pdf
 *.swp
 /misc
 /source/__pycache__/

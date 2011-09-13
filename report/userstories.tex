@@ -1,0 +1,46 @@
+\section{User Stories}
+
+The developer in this context is the developers at Thales Norway AS \newline
+The customer is this context is the customers of Thales Norway AS
+
+\begin{table}[ht] \center
+\caption{Sprint 1 Backlog}
+
+\begin{tabular}{l p{12cm} }
+FR01: 	&As a developer, I want that the utility can read basic C language struct definitions from C header files.\\
+FR01A: 	&As a developer, I want to genereate a Lua-script from a c header files, with a struct that contains basic data types(int, float, char, boolean)\\
+FR01B: 	&As a developer, I want to genereate a Lua-script from a c header files, with a struct that contains enums\\
+FR01C: 	&As a developer, I want to genereate a Lua-script from a c header files, with a struct that contains other structs\\
+FR01D: 	&As a developer, I want to genereate a Lua-script from a c header files, with a struct that contains unions\\
+FR01E: 	&As a developer, I want to genereate a Lua-script from a c header files, with a struct that contains arrays\\
+
+FR02:		&As a developer, I want to generate lua-script for Wireshark dissectors for the binary representation of C struct.\\
+FR02A: 	&As a customer, I want that the dissector is able to display simple C structs.\\
+FR02B: 	&As a customer, I want that the dissector is able to display C struct, that contains other structs.\\
+FR02C: 	&As a customer, I want to use Wiresharks built-in filter and search on attributes, on the dissectors.\\
+
+FR03:		&As a developer, I want that the utility supports C preprocessor directives and macros\\
+FR03A:	&As a developer, I want support for \#include in the utility\\
+FR03B:	&As a developer, I want support for \#define and \#if in the utility\\
+FR03C:	&As a developer, I want that the utility supports WIN32, \_WIN32, \_WIN64, \_\_sparc\_\_, \_\_sparc and sun macros.\\
+
+FR04: 	&As a developer, I want that the utility supports user configuration\\
+FR04A: 	&As a customer, I want see when a there is a invalid value for a struct member\\
+		&As a developer, I want to specifiy allowed ranges for the value of a struct member\\
+FR04B:	&As a developer, I want support for integer member which represent enumreated named value or bit string, in configuration\\
+FR04C:	&As a developer, I want support for custom handling of specified data types(e.g. time\_t)\\
+
+FR05:		&As a developer, I want support in configuration to handle structs with header and/or trailer\\
+
+FR06:		&As a developer, I want dissectors that are able to handle binary input which size and denian depends on originating platform.\\
+FR06A:	&As a developer, I want specified flags for each platform.\\
+FR06B:	&As a developer, I want that flags within message headers should signal the platform\\
+
+FR07:		&As a developer, I want to specify parameters from command-line\\
+FR07A:	&As a developer, I want to specify parameters for c-header file from command-line\\
+FR07B:	&As a developer, I want to specify parameters for configuration file from command-line\\
+FR07C:	&As a developer, I want start a batch mode of c-header and configuration file from command-line\\
+FR07D:	&As a developer, I do not want to regenerate dissectors that not are modified since last run, when running batch mode\\
+\end{tabular}
+\end{table}
+

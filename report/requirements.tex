@@ -78,14 +78,15 @@ The team has prioritized the requirements in three categories:
 \label{sec:reqslist}
 \autoref{tab:funcreq} lists the functional requirements, while
 \autoref{tab:nonfuncreq} lists the non-functional requirements. Each
-requirement have a priority and a complexity: High (H), Medium (M) or
-Low (L).
+requirement have a priority (Pri) and a complexity (Cmp): High (H), 
+Medium (M) or Low (L).
 
 \begin{table}[ht] \footnotesize \center
 \caption{Functional Requirements\label{tab:funcreq}}
-\begin{tabularx}{\textwidth}{l X c c}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X c c}
 	\toprule
-	ID & Description & Pri. & Comp. \\
+	ID & Description & Pri. & Cmp. \\
 	\midrule
 	FR1 & The utility must be able to read basic C language
 		struct definitions from C header files.
@@ -164,42 +165,50 @@ Low (L).
 		since last run.
 		& L & M \\
 	\bottomrule
-\end{tabularx}
+\end{tabularx}}
 \end{table}
+
+
 
 \begin{table}[ht] \footnotesize \center
 \caption{Non-Functional Requirements\label{tab:nonfuncreq}}
-\begin{tabularx}{\textwidth}{l X c c}
-%\begin{tabular}{l p{8.5cm} c  c}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X c c}
 	\toprule
-	ID & Description & Pri. & Comp. \\
+	ID & Description & Pri. & Cmp. \\
 	\midrule
 	NR1 & The utility shall be able to run on latest Windows and Solaris
 		operating system.
 		& M & L \\
+	\addlinespace
 	NR2 & The dissector shall be able to run on Windows x86, Windows x86-64,
 		Solaris x86, Solaris x86-64 and Solaris SPARC.
 		& M & M \\
+	\addlinespace
 	NR3 & The utilities user interface shall be command line. No clicking!.
 		& H & L \\
+	\addlinespace
 	NR4 & The configuration shall have sufficient documentation to allow a
 		person with no previous knowledge of the system to be able to use it
 		to generate LUA-scripts after X hours of reading.
 		& M & M \\
+	\addlinespace
 	NR5 & The configuration should have sufficient documentation to allow a
 		person, already proficient with the system, to understand the code
 		well enough to be able to extend it’s functionality after Y hours of
 		reading.
 		& M & M \\
+	\addlinespace
 	NR6 & The utility code should follow standard python coding convention as
 		specified by PEP8, and try to follow python style guidelines defined
 		by PEP20.
 		& H & L \\
+	\addlinespace
 	NR7 & The utilities code should be documented by python docstrings which
 		should explain the use of the code. Python modules, classes, functions
 		and methods should have docstrings.
 		& M & L \\
 	\bottomrule
-\end{tabularx}
+\end{tabularx}}
 \end{table}
 

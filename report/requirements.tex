@@ -1,6 +1,7 @@
 %=====================
 \chapter{Requirements}
 %=====================
+\begin{comment}
 \label{chap:requirements}
 This chapter describes an utility that creates Wireshark dissectors from C
 header files. The dissectors must interpret binary representations of C
@@ -70,20 +71,25 @@ The team has prioritized the requirements in three categories:
 	\item[Medium] Requirements that will improve the value of the utility.
 	\item[Low] Requirements that will not add much value to the utility.
 \end{description}
+\end{comment}
 
 \section{List of requirements}
 %-----------------------------
 \label{sec:reqslist}
-\autoref{tab:funcreq} lists the functional requirements and their priority,
-while \autoref{tab:nonfuncreq} lists the non-functional requirements.
+\autoref{tab:funcreq} lists the functional requirements, while
+\autoref{tab:nonfuncreq} lists the non-functional requirements. Each
+requirement have a priority and a complexity: High (H), Medium (M) or
+Low (L).
 
-\begin{table}[ht] \small \center
+\begin{table}[ht] \footnotesize \center
 \caption{Functional Requirements\label{tab:funcreq}}
-\begin{tabular}{c | p{9cm} | c  c }
-	ID & Description & Pri. & Comp. \\ \hline \hline
+\begin{tabularx}{\textwidth}{l X c c}
+	\toprule
+	ID & Description & Pri. & Comp. \\
+	\midrule
 	FR1 & The utility must be able to read basic C language
 		struct definitions from C header files.
-		& & \\
+		& H & \\
 	FR1-A & The utility must support the following basic data types:
 		int, float, char and boolean.
 		& H & L \\
@@ -94,10 +100,11 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 	FR1-D & The utility must support members of type unions.
 		& M & M \\
 	FR1-E & The utility must support member of type array.
-		& H & M \\ \hline
+		& H & M \\
+	\midrule
 	FR2 & The utility must be able to generate lua-script for Wireshark
 		dissectors for the binary representation of C struct.
-		& & \\
+		& H & \\
 	FR2-A & The dissector shall be able to display simple structs.
 		& H & L \\
 	FR2-B & The dissector shall be able to support structs within
@@ -105,18 +112,20 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 		& M & M \\
 	FR2-C & The dissector must support Wiresharks built-in filter and
 		search on attributes.
-		& H & L \\ \hline
+		& H & L \\
+	\midrule
 	FR3 & The utility must support C preprocessor directives and macros.
-		& & \\
+		& H & \\
 	FR3-A & The utility shall support \#include.
 		& H & L \\
 	FR3-B & The utility shall support \#define and \#if.
 		& H & L \\
-	FR3-C & The utility shall support WIN32, \_WIN32, \_WIN64,
-		\_\_sparc\_\_, \_\_sparc and sun.
-		& M & H \\ \hline
+	FR3-C & The utility shall support \verb+WIN32+, \verb+_WIN32+,
+		\verb+_WIN64+, \verb+__sparc__+, \verb+__sparc+ and \verb+sun+.
+		& M & H \\
+	\midrule
 	FR4 & The utility must support user configuration.
-		& & \\
+		& M & \\
 	FR4-A & The dissector shall be able to recognize invalid values for
 		a struct member. Allowed ranges should be specified by configuration.
 		& L & L \\
@@ -126,20 +135,23 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 	FR4-C & Configuration must support custom handling of specific data
 		types. E.g. a 'time\_t' may be interpreted to contain a unixtime value,
 		and be displayed as a date.
-		& L & M \\ \hline
+		& L & M \\
+	\midrule
 	FR5 & A struct may have a header and/or trailer (other registered
 		protocol). The configuration must support the use of integer members to
 		indicate the number of other structs that will follow in the trailer
-		& Low & High \\ \hline
+		& L & H \\
+	\midrule
 	FR6 & The dissectors must be able to handle binary input which size
 		and endian depends on originating platform.
-		& & \\
+		& M & \\
 	FR6-A & Flags must be specified for each platform.
 		& M & M \\
 	FR6-B & Flags within message headers should signal the platform.
-		& M & H \\ \hline
+		& M & H \\
+	\midrule
 	FR7 & The utility shall support parameters from command line.
-		& & \\
+		& H & \\
 	FR7-A & Command line shall support parameters for c-header file.
 		& H & L \\
 	FR7-B & Command line shall support for configuration file.
@@ -150,39 +162,44 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 	FR7-D & When running batch mode, dissectors that already are
 		generated, shall not be regenerated, if the source are not modified
 		since last run.
-		& L & M \\ \hline
-\end{tabular}
+		& L & M \\
+	\bottomrule
+\end{tabularx}
 \end{table}
 
-\begin{table}[ht] \small \center
+\begin{table}[ht] \footnotesize \center
 \caption{Non-Functional Requirements\label{tab:nonfuncreq}}
-\begin{tabular}{c | p{9cm} | c  c }
-	ID & Description & Pri. & Comp. \\ \hline \hline
+\begin{tabularx}{\textwidth}{l X c c}
+%\begin{tabular}{l p{8.5cm} c  c}
+	\toprule
+	ID & Description & Pri. & Comp. \\
+	\midrule
 	NR1 & The utility shall be able to run on latest Windows and Solaris
 		operating system.
-		& M & L \\ \hline
+		& M & L \\
 	NR2 & The dissector shall be able to run on Windows x86, Windows x86-64,
 		Solaris x86, Solaris x86-64 and Solaris SPARC.
-		& M & M \\ \hline
+		& M & M \\
 	NR3 & The utilities user interface shall be command line. No clicking!.
-		& H & L \\ \hline
+		& H & L \\
 	NR4 & The configuration shall have sufficient documentation to allow a
 		person with no previous knowledge of the system to be able to use it
 		to generate LUA-scripts after X hours of reading.
-		& M & M \\ \hline
+		& M & M \\
 	NR5 & The configuration should have sufficient documentation to allow a
 		person, already proficient with the system, to understand the code
 		well enough to be able to extend it’s functionality after Y hours of
 		reading.
-		& M & M \\ \hline
+		& M & M \\
 	NR6 & The utility code should follow standard python coding convention as
 		specified by PEP8, and try to follow python style guidelines defined
 		by PEP20.
-		& H & L \\ \hline
+		& H & L \\
 	NR7 & The utilities code should be documented by python docstrings which
 		should explain the use of the code. Python modules, classes, functions
 		and methods should have docstrings.
 		& M & L \\
-\end{tabular}
+	\bottomrule
+\end{tabularx}
 \end{table}
 

@@ -1,16 +1,17 @@
 %=====================
 \chapter{Requirements}
 %=====================
-\begin{comment}
+%\begin{comment}
 \label{chap:requirements}
 This chapter describes an utility that creates Wireshark dissectors from C
 header files. The dissectors must interpret binary representations of C
 structs. In \autoref{sec:reqsoverview} we give a high level overview of the
 utility and its requirements, \autoref{sec:usecases} provides use cases for the
 utility, \autoref{sec:reqspriority} explains how we prioritizes the
-requirements and \autoref{sec:reqslist} lists all the functional and
-non-function requirements and their priority. Since this project follows Scrum,
-each sprint chapter contains its own backlog.
+requirements, \autoref{sec:reqscompl} explains how we estimate their
+complexity, \autoref{sec:reqslist} lists all the functional and non-function
+requirements, and \autoref{sec:prodbacklog} contains the complete product
+backlog.
 
 \section{Overview}
 %-----------------
@@ -28,12 +29,58 @@ in Lua scripts. A configuration file or source code annotations in the header
 files may be used when additional configuration is required.
 
 \subsection{List of requirements}
-See \autoref{tab:funcreq} and \autoref{tab:nonfuncreq} for more detailed
+\autoref{tab:reqsoverview} is an overview of all the requirements. See
+\autoref{tab:funcreq} and \autoref{tab:nonfuncreq} for more detailed
 description of the requirements.
 
-\begin{description}
-    \item[FR01] Read C structs and generate Wireshark dissectors
-\end{description}
+\begin{table}[H] \small \center
+\caption{Requirements overview\label{tab:reqsoverview}}
+\begin{tabular}{l l}
+	\toprule ID & Description \\ \midrule
+	FR1 & Read basic C struct definitions \\
+	FR1-A & Support data types: int, float, char and boolean \\
+	FR1-B & Support members of type enums \\
+	FR1-C & Support members of type structs \\
+	FR1-D & Support members of type unions \\
+	FR1-E & Support member of type array \\
+	\addlinespace
+	FR2 & Generate Wireshark dissectors in Lua \\
+	FR2-A & Display simple structs \\
+	FR2-B & Support display of structs within structs \\
+	FR2-C & Support Wireshark filter and search on attributes \\
+	\addlinespace
+	FR3 & Support C preprocessor directives and macros \\
+	FR3-A & Support \#include \\
+	FR3-B & Support \#define and \#if \\
+	FR3-C & Support \verb+WIN32+, \verb+_WIN64+, \verb+__sparc+ etc \\
+	\addlinespace
+	FR4 & Support user configuration \\
+	FR4-A & Recognize invalid values for struct members \\
+	FR4-B & Support enumerated named values or a bit strings \\
+	FR4-C & Custom handling of specific data types \\
+	\addlinespace
+	FR5 & Structs with headers and/or trailers \\
+	\addlinespace
+	FR6 & Handle input which size and endian depends on platform \\
+	FR6-A & Flags specified for each platform \\
+	FR6-B & Flags which signal the platform \\
+	\addlinespace
+	FR7 & Support parameters from command line \\
+	FR7-A & Support parameters for c-header file \\
+	FR7-B & Support for configuration file \\
+	FR7-C & Support batch mode of c-header and configuration \\
+	FR7-D & Don't regenerate dissectors \\
+	\addlinespace
+	NR1 & Run on latest Windows \& Solaris OS \\
+	NR2 & Dissector run on Windows \& Solaris, Intel \& Sparc \\
+	NR3 & User interface shall be command line \\
+	NR4 & Sufficient documentation for generating Lua-scripts \\
+	NR5 & Sufficient documentation for extending functionality \\
+	NR6 & Code should follow PEP8 and PEP20 \\
+	NR7 & Code should be documented by docstrings \\
+	\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Use Cases}
 %------------------
@@ -47,10 +94,12 @@ C file to generate dissectors. A secondary actor is someone who configures our
 utility to change the output of it. Finally we have an offstage actor which
 does not use our utility himself, but uses the output dissectors in Wireshark.
 
+We have defined two use case actors for our utility. The customer has
+specified that the user is the most important actor.
 \begin{description}
-	\item[User] Primary actor - The user of our utility.
-	\item[Configurer] Secondary actor - Configures the output of our utility.
-	\item[Dissector] Offstage actor - User of Wireshark dissectors.
+	\item[User] User of the generated Wireshark dissectors, offstage actor
+	\item[Developer] User and configurer of utility, primary and secondary
+		actor
 \end{description}
 
 \subsection{Use Case Diagrams}
@@ -59,7 +108,8 @@ TODO!! Desperately need help for this....
 \section{Prioritization}
 %-----------------------
 \label{sec:reqspriority}
-The team has prioritized the requirements in three categories:
+The team has, in cooperation with the customer, prioritized the requirements
+in three categories:
 \begin{inparaenum}[\itshape a\upshape)]
 	\item High,
 	\item Medium or
@@ -71,7 +121,24 @@ The team has prioritized the requirements in three categories:
 	\item[Medium] Requirements that will improve the value of the utility.
 	\item[Low] Requirements that will not add much value to the utility.
 \end{description}
-\end{comment}
+
+\section{Complexity}
+%-------------------
+\label{sec:reqscompl}
+The team has estimated the complexity for each requirement. We use the same
+categories as for requirements priority:
+\begin{inparaenum}[\itshape a\upshape)]
+	\item High,
+	\item Medium or
+	\item Low.
+\end{inparaenum} 
+
+\begin{description}
+	\item[High] Functionality which seems difficult and non-trivial to create.
+	\item[Medium] Functionality that seems time consuming but straight forward.
+	\item[Low] Requirements that are trivial to implement.
+\end{description}
+%\end{comment}
 
 \section{List of requirements}
 %-----------------------------
@@ -89,53 +156,53 @@ Medium (M) or Low (L).
 	ID & Description & Pri. & Cmp. \\
 	\midrule
 	FR1 & The utility must be able to read basic C language
-		struct definitions from C header files.
+		struct definitions from C header files
 		& H & \\
 	FR1-A & The utility must support the following basic data types:
-		int, float, char and boolean.
+		int, float, char and boolean
 		& H & L \\
-	FR1-B & The utility must support members of type enums.
+	FR1-B & The utility must support members of type enums
 		& H & L \\
-	FR1-C & The utility must support members of type structs.
+	FR1-C & The utility must support members of type structs
 		& H & M \\
-	FR1-D & The utility must support members of type unions.
+	FR1-D & The utility must support members of type unions
 		& M & M \\
-	FR1-E & The utility must support member of type array.
+	FR1-E & The utility must support member of type array
 		& H & M \\
 	\midrule
 	FR2 & The utility must be able to generate lua-script for Wireshark
-		dissectors for the binary representation of C struct.
+		dissectors for the binary representation of C struct
 		& H & \\
-	FR2-A & The dissector shall be able to display simple structs.
+	FR2-A & The dissector shall be able to display simple structs
 		& H & L \\
 	FR2-B & The dissector shall be able to support structs within
-		structs.
+		structs
 		& M & M \\
 	FR2-C & The dissector must support Wiresharks built-in filter and
-		search on attributes.
+		search on attributes
 		& H & L \\
 	\midrule
-	FR3 & The utility must support C preprocessor directives and macros.
+	FR3 & The utility must support C preprocessor directives and macros
 		& H & \\
-	FR3-A & The utility shall support \#include.
+	FR3-A & The utility shall support \#include
 		& H & L \\
-	FR3-B & The utility shall support \#define and \#if.
+	FR3-B & The utility shall support \#define and \#if
 		& H & L \\
 	FR3-C & The utility shall support \verb+WIN32+, \verb+_WIN32+,
-		\verb+_WIN64+, \verb+__sparc__+, \verb+__sparc+ and \verb+sun+.
+		\verb+_WIN64+, \verb+__sparc__+, \verb+__sparc+ and \verb+sun+
 		& M & H \\
 	\midrule
-	FR4 & The utility must support user configuration.
+	FR4 & The utility must support user configuration
 		& M & \\
 	FR4-A & The dissector shall be able to recognize invalid values for
-		a struct member. Allowed ranges should be specified by configuration.
+		a struct member. Allowed ranges should be specified by configuration
 		& L & L \\
 	FR4-B & Configuration must support integer members which represent
-		enumerated named value or a bit string.
+		enumerated named value or a bit string
 		& M & L \\
 	FR4-C & Configuration must support custom handling of specific data
 		types. E.g. a 'time\_t' may be interpreted to contain a unixtime value,
-		and be displayed as a date.
+		and be displayed as a date
 		& L & M \\
 	\midrule
 	FR5 & A struct may have a header and/or trailer (other registered
@@ -144,31 +211,29 @@ Medium (M) or Low (L).
 		& L & H \\
 	\midrule
 	FR6 & The dissectors must be able to handle binary input which size
-		and endian depends on originating platform.
+		and endian depends on originating platform
 		& M & \\
-	FR6-A & Flags must be specified for each platform.
+	FR6-A & Flags must be specified for each platform
 		& M & M \\
-	FR6-B & Flags within message headers should signal the platform.
+	FR6-B & Flags within message headers should signal the platform
 		& M & H \\
 	\midrule
-	FR7 & The utility shall support parameters from command line.
+	FR7 & The utility shall support parameters from command line
 		& H & \\
-	FR7-A & Command line shall support parameters for c-header file.
+	FR7-A & Command line shall support parameters for c-header file
 		& H & L \\
-	FR7-B & Command line shall support for configuration file.
+	FR7-B & Command line shall support for configuration file
 		& H & L \\
 	FR7-C & Command line shall support batch mode of c-header and
-		configuration file.
+		configuration file
 		& L & M \\
 	FR7-D & When running batch mode, dissectors that already are
 		generated, shall not be regenerated, if the source are not modified
-		since last run.
+		since last run
 		& L & M \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
-
-
 
 \begin{table}[ht] \footnotesize \center
 \caption{Non-Functional Requirements\label{tab:nonfuncreq}}
@@ -178,37 +243,65 @@ Medium (M) or Low (L).
 	ID & Description & Pri. & Cmp. \\
 	\midrule
 	NR1 & The utility shall be able to run on latest Windows and Solaris
-		operating system.
+		operating system
 		& M & L \\
 	\addlinespace
 	NR2 & The dissector shall be able to run on Windows x86, Windows x86-64,
-		Solaris x86, Solaris x86-64 and Solaris SPARC.
+		Solaris x86, Solaris x86-64 and Solaris SPARC
 		& M & M \\
 	\addlinespace
-	NR3 & The utilities user interface shall be command line. No clicking!.
+	NR3 & The utilities user interface shall be command line. No clicking!
 		& H & L \\
 	\addlinespace
 	NR4 & The configuration shall have sufficient documentation to allow a
 		person with no previous knowledge of the system to be able to use it
-		to generate LUA-scripts after X hours of reading.
+		to generate LUA-scripts after X hours of reading
 		& M & M \\
 	\addlinespace
 	NR5 & The configuration should have sufficient documentation to allow a
 		person, already proficient with the system, to understand the code
 		well enough to be able to extend it’s functionality after Y hours of
-		reading.
+		reading
 		& M & M \\
 	\addlinespace
 	NR6 & The utility code should follow standard python coding convention as
 		specified by PEP8, and try to follow python style guidelines defined
-		by PEP20.
+		by PEP20
 		& H & L \\
 	\addlinespace
 	NR7 & The utilities code should be documented by python docstrings which
 		should explain the use of the code. Python modules, classes, functions
-		and methods should have docstrings.
+		and methods should have docstrings
 		& M & L \\
 	\bottomrule
 \end{tabularx}}
+\end{table}
+
+\section{Production backlog}
+%---------------------------
+\label{sec:prodbacklog}
+\autoref{tab:prodbacklog} contains a complete product backlog.
+
+\begin{table}[ht] \small \center
+\caption{Product Backlog \label{tab:prodbacklog}}
+\begin{tabularx}{\textwidth}{l X c c}
+	\toprule
+	& & \multicolumn{2}{c}{Hours} \\
+	\cmidrule(r){3-4}
+	Req. & Description & Est. & Act. \\
+	\midrule
+	FR1-A & Support basic data types: int, float, char, boolean & 5 & -\\	
+	\addlinespace
+	FR2-A & The dissector shall be able to display simple structs & 10 & -\\
+	\addlinespace
+	FR3-A & The utility shall support \#include & 1 & -\\
+	FR3-B & The utility shall support \#define and \#if & 1 & -\\	
+	\addlinespace
+	FR4-A & Recognition of invalid values for a struct member & 20 & -\\
+	\addlinespace
+	FR7-A & Command line shall support parameters for c-header file & 2 & -\\
+	FR7-B & Command line shall support for configuration file & 5 & -\\
+	\bottomrule
+\end{tabularx}
 \end{table}
 

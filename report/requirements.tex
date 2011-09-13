@@ -1,36 +1,34 @@
-%===================
-%\chapter{Use Cases}
-%===================
-%\section{Actors}
-% * Configurer
-% * User of our solution
-% * User of wireshark dissectors
-%\section{High-Level Use Case Diagram}
-%\section{Low-Level Use Case Diagrams}
+%=====================
+\chapter{Requirements}
+%=====================
+\label{chap:requirements}
+This chapter describes an utility that creates Wireshark dissectors from C
+header files. The dissectors must interpret binary representations of C
+structs. In \autoref{sec:reqsoverview} we give a high level overview of the
+utility and its requirements, \autoref{sec:usecases} provides use cases for the
+utility, \autoref{sec:reqspriority} explains how we prioritizes the
+requirements and \autoref{sec:reqslist} lists all the functional and
+non-function requirements and their priority. Since this project follows Scrum,
+each sprint chapter contains its own backlog.
 
-
-%=================
-\chapter{Overview}
-%=================
-
-\section{Introduction}
-%---------------------
-This document contains requirements for an utility that allows Wireshark to
-interpret the binary representations of C-language structs. While C structs
-seldom are exchanged across networks, they are sometimes used in inter-process
-communication. The purpose of the utility described here is to provide
-Wireshark with the capability of automatically dissecting the binary
-representation of a C struct, as long as its definition is known.
+\section{Overview}
+%-----------------
+\label{sec:reqsoverview}
+We are to create an utility that allows Wireshark to interpret the binary
+representations of C-language structs. While C structs seldom are exchanged
+across networks, they are sometimes used in inter-process communication. The
+purpose of the utility described here is to provide Wireshark with the
+capability of automatically dissecting the binary representation of a C struct,
+as long as its definition is known.
 
 The expected work flow for the utility is to read one or more C header files,
 which contain struct definitions, and output Wireshark dissectors, implemented
 in Lua scripts. A configuration file or source code annotations in the header
 files may be used when additional configuration is required.
 
-\section{Requirements}
-%---------------------
-An overview over both functional and non-functional requirements.
-See \autoref{chap:requirements} for more detailed description of the requirements.
+\subsection{List of requirements}
+See \autoref{tab:funcreq} and \autoref{tab:nonfuncreq} for more detailed
+description of the requirements.
 
 \begin{description}
     \item[FR01] Read C structs and generate Wireshark dissectors
@@ -43,23 +41,52 @@ See \autoref{chap:requirements} for more detailed description of the requirement
 	\item[FR08] Support integers which indicate array of structs are following
 	\item[FR09] Configuration for enumerated named value or a bit strings
 	\item[FR10] Handle platform dependent endian and type sizes
-	\item[FR11] Support internationalization and localization
 	\item[NR01] Run on Windows 32bit \& 64bit, Solaris 64bit and Sparc
 	\item[NR02] Be able to run in batch mode
 	\item[NR03] Need to have flexible configuration
 	\item[NR04] The configuration needs to be well documented
 \end{description}
 
+\section{Use Cases}
+%------------------
+\label{sec:usecases}
 
-%=======================
-\chapter{Prioritization}
-%=======================
+\subsection{Actors}
+An actor specifies a role played by an external person or thing that interact
+with our utility. We have three types of actors to consider. First is the
+primary actor which in our case is the user of our utility. He who feeds it a
+C file to generate dissectors. A secondary actor is someone who configures our
+utility to change the output of it. Finally we have an offstage actor which
+does not use our utility himself, but uses the output dissectors in Wireshark.
 
+\begin{description}
+	\item[User] Primary actor - The user of our utility.
+	\item[Configurer] Secondary actor - Configures the output of our utility.
+	\item[Dissector] Offstage actor - User of Wireshark dissectors.
+\end{description}
 
-%=====================
-\chapter{Requirements}
-%=====================
-\label{chap:requirements}
+\subsection{Use Case Diagrams}
+TODO!! Desperately need help for this....
+
+\section{Prioritization}
+%-----------------------
+\label{sec:reqspriority}
+The team has prioritized the requirements in three categories:
+\begin{inparaenum}[\itshape a\upshape)]
+	\item High,
+	\item Medium or
+	\item Low.
+\end{inparaenum} 
+
+\begin{description}
+	\item[High] Core functionality of the utility which must be implemented.
+	\item[Medium] Requirements that will improve the value of the utility.
+	\item[Low] Requirements that will not add much value to the utility.
+\end{description}
+
+\section{List of requirements}
+%-----------------------------
+\label{sec:reqslist}
 \autoref{tab:funcreq} lists the functional requirements and their priority,
 while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 
@@ -95,8 +122,6 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 	\hline FR10 & The dissectors must be able to handle binary input which size
 		and endian depends on originating platform. Flags within message
 		headers should signal the platform. & High \\
-	\hline FR11 & Support i18n, internationalization and localization, in both
-		input and configuration. & ??? \\
 	\hline
 \end{tabular}
 \end{table}
@@ -105,8 +130,8 @@ while \autoref{tab:nonfuncreq} lists the non-functional requirements.
 \caption{Non-Functional Requirements\label{tab:nonfuncreq}}
 \begin{tabular}{| c | p{9cm} | c |}
 	\hline ID & Description & Priority \\
-	\hline NR01 & The utility shall be able to run on Windows 32bit \& 64bit,
-		Solaris 64bit and Sparc. & High \\
+	\hline NR01 & The utility shall be able to run on Windows and Solaris,
+		32bit and 64bit, Intel and Sparc platform. & High \\
 	\hline NR02 & The utility shall be able to run in batch mode. & High \\
 	\hline NR03 & The utility needs to have flexible configuration. & Medium \\
 	\hline NR04 & The configuration needs to be well documented. & Low \\

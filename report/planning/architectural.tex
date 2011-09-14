@@ -6,8 +6,12 @@
 \usepackage{hyperref} % links in the document
 \usepackage{float} % position of figures
 \usepackage{paralist} % inline lists
-
-%\setcounter{tocdepth}{1} % Depth of table of contents
+\usepackage{verbatim} % multiline comments
+\usepackage[table]{xcolor} % table row coloring
+\usepackage{booktabs} % Professional tables
+\usepackage{tabularx} % Simple column stretching
+\usepackage{multirow} % Row spanning
+\usepackage{array} 
 
 % Configure links in pdfs
 \hypersetup{
@@ -15,21 +19,23 @@
     colorlinks=true, % Don't wrap links in colored boxes
 }
 
-\title{Wireshark:\\ Automated generation of protocol dissectors\\
-		Project Requirements}
-\author{by Erik Bergersen, Sondre Johan Mannsverk,\\ Terje Snarby,
-		Even Wiik Thomassen, Lars Solvoll Tønder,\\ Sigurd Wien
-		and Jaroslav Fibichr}
+\title{Project Requirements}
+\author{Kpro group 9}
 \date{\today}
 
 \begin{document}
+%\maketitle
+%\tableofcontents
 
 \chapter{Architectural Description}
 
 This chapter introduces the architectural documents pertaining to our solution. The team followed the definition of software architecture defined by Len Bass, Paul Clements and Rick Kazman: "The software architecture of a program or computing
-system is the structure of structures of the system, which comprise software elements, the externally visible properties of those elements, and the relationships between them." The purpose of this document is to describe our architecture in a structured way so that it can be used not only by the team, but also as an aid for other stakeholders who are trying to understand the system.
+system is the structure of structures of the system, which comprise software elements, the externally visible properties of those elements, and the relationships between them."
+
+The purpose of this document is to describe our architecture in a structured way so that it can be used not only by the team, but also as an aid for other stakeholders who are trying to understand the system.
 
 \section{Architectural Drivers}
 
 
 \end {document}
+

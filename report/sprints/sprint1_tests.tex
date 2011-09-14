@@ -1,30 +1,4 @@
-\documentclass[a4paper, 11pt]{report}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage[english]{babel}
-\usepackage{graphicx} % support graphics
-\usepackage{hyperref} % links in the document
-\usepackage{float} % position of figures
-\usepackage{paralist} % inline lists
-\usepackage{tabularx}
-
-%\setcounter{tocdepth}{1} % Depth of table of contents
-
-% Configure links in pdfs
-\hypersetup{
-    bookmarksopen=false, % Hide bookmarks menu
-    colorlinks=true, % Don't wrap links in colored boxes
-}
-
-\title{Wireshark:\\ Automated generation of protocol dissectors\\
-		Project Requirements}
-\author{by Erik Bergersen, Sondre Johan Mannsverk,\\ Terje Snarby,
-		Even Wiik Thomassen, Lars Solvoll Tønder,\\ Sigurd Wien
-		and Jaroslav Fibichr}
-\date{\today}
-
-\begin{document}
-
+\section{Sprint 1 Tests}
 \begin{table}[H]
 \begin{tabularx}{\textwidth}{l X}
 \hline\hline
@@ -79,11 +53,11 @@ Expected result & 1. Wireshark should be able to load the dissector without any 
 \hline\hline
 Portion & Description\\[0.5ex]
 \hline
-Test identifier & TID04 supporting #include\\[0.5ex]
+Test identifier & TID04 supporting \#include\\[0.5ex]
 Tester & Team member responsible for the test\\[0.5ex]
 Prerequisites & The utility has to be up and running\\[0.5ex]
-Feature & Test that our utility supports c-header files with the #include directive \\
-Execution & 1. Write the name of a C-header file with an #include directive
+Feature & Test that our utility supports c-header files with the \#include directive \\
+Execution & 1. Write the name of a C-header file with an \#include directive
 		2. Read the output\\
 Expected result & 2.The program should provide the user with some text expressing the success of the LUA-file\\ generation\\[0.5ex]
 \hline\hline
@@ -93,11 +67,11 @@ Expected result & 2.The program should provide the user with some text expressin
 \hline\hline
 Portion & Description\\[0.5ex]
 \hline
-Test identifier & TID05 supporting #define and #if\\[0.5ex]
+Test identifier & TID05 supporting \#define and \#if\\[0.5ex]
 Tester & Team member responsible for the test\\[0.5ex]
 Prerequisites & The utility has to be up and running\\[0.5ex]
-Feature & Test that our utility supports c-header files with #define and #if directives \\
-Execution & 1. Write the name of a C-header file with a #define and #if directives
+Feature & Test that our utility supports c-header files with \#define and \#if directives \\
+Execution & 1. Write the name of a C-header file with a \#define and \#if directives
 		2. Read the output\\
 Expected result & 2.The program should provide the user with some text expressing the success of the LUA-file generation\\[0.5ex]
 \hline\hline
@@ -116,8 +90,5 @@ Expected result & PLACEHOLDER FOR NOW\\[0.5ex]
 \hline\hline
 \end{tabularx}
 
-
-
-
 \end{table}
-\end{document}
+

@@ -52,7 +52,7 @@ Tester & Team member responsible for the test\\[0.5ex]
 Prerequisites & The program has to have been started\\[0.5ex]
 Feature & Test that our utility will be able to make a dissectors for C-header files including the following basic data types: int, float, char and boolean \\
 Execution & 1. Write the name of a c-header file which includes the aforementioned basic data types.\newline
-		2. Read the output given by the program 
+		2. Read the output given by the program\\ 
 Expected result & 2.The program should provide the user with some text expressing the success of the LUA-file generation\\[0.5ex]
 \hline\hline
 \end{tabularx}
@@ -64,13 +64,59 @@ Portion & Description\\[0.5ex]
 \hline
 Test identifier & TID03 Displaying simple structs\\[0.5ex]
 Tester & Team member responsible for the test\\[0.5ex]
-Prerequisites & None\\[0.5ex]
+Prerequisites & The utility has already made a dissector\\[0.5ex]
 Feature & Test that our utility is able to generate dissectors that displays simple structs \\
-Execution & 1. Write the name of a c-header file which includes the aforementioned basic data types.\newline
-		2. Read the output given by the program 
+Execution & 1. Open wireshark and run the dissector.\newline
+		2. Run the dissector on some captured data of simple structs
+		3. Read the output \\
+Expected result & 1. Wireshark should be able to load the dissector without any errors \newline
+			3. Wireshark should display the data inside the structs sent in the capture data \\[0.5ex]
+\hline\hline
+\end{tabularx}
+
+
+\begin{tabularx}{\textwidth}{l X}
+\hline\hline
+Portion & Description\\[0.5ex]
+\hline
+Test identifier & TID04 supporting #include\\[0.5ex]
+Tester & Team member responsible for the test\\[0.5ex]
+Prerequisites & The utility has to be up and running\\[0.5ex]
+Feature & Test that our utility supports c-header files with the #include directive \\
+Execution & 1. Write the name of a C-header file with an #include directive
+		2. Read the output\\
+Expected result & 2.The program should provide the user with some text expressing the success of the LUA-file\\ generation\\[0.5ex]
+\hline\hline
+\end{tabularx}
+
+\begin{tabularx}{\textwidth}{l X}
+\hline\hline
+Portion & Description\\[0.5ex]
+\hline
+Test identifier & TID05 supporting #define and #if\\[0.5ex]
+Tester & Team member responsible for the test\\[0.5ex]
+Prerequisites & The utility has to be up and running\\[0.5ex]
+Feature & Test that our utility supports c-header files with #define and #if directives \\
+Execution & 1. Write the name of a C-header file with a #define and #if directives
+		2. Read the output\\
 Expected result & 2.The program should provide the user with some text expressing the success of the LUA-file generation\\[0.5ex]
 \hline\hline
 \end{tabularx}
+
+\begin{tabularx}{\textwidth}{l X}
+\hline\hline
+Portion & Description\\[0.5ex]
+\hline
+Test identifier & TID06 supporting configuration files\\[0.5ex]
+Tester & Team member responsible for the test\\[0.5ex]
+Prerequisites & The utility has to be up and running\\[0.5ex]
+Feature & Test that our utility supports reading data from a configuration file \\[0.5ex]
+Execution & PLACEHOLDER FOR NOW\\[0.5ex]
+Expected result & PLACEHOLDER FOR NOW\\[0.5ex]
+\hline\hline
+\end{tabularx}
+
+
 
 
 \end{table}

@@ -48,6 +48,7 @@ description of the requirements.
 	FR2-A & Display simple structs \\
 	FR2-B & Support display of structs within structs \\
 	FR2-C & Support Wireshark filter and search on attributes \\
+	FR2-D & Recognize invalid values for a struct member \\
 	\addlinespace
 	FR3 & Support C preprocessor directives and macros \\
 	FR3-A & Support \#include \\
@@ -55,7 +56,7 @@ description of the requirements.
 	FR3-C & Support \verb+WIN32+, \verb+_WIN64+, \verb+__sparc+ etc \\
 	\addlinespace
 	FR4 & Support user configuration \\
-	FR4-A & Recognize invalid values for struct members \\
+	FR4-A & Support valid ranges for struct members \\
 	FR4-B & Support enumerated named values or a bit strings \\
 	FR4-C & Custom handling of specific data types \\
 	\addlinespace
@@ -166,6 +167,7 @@ Medium (M) or Low (L).
 	FR2-A & The dissector shall be able to display simple structs & H & L \\
 	FR2-B & The dissector shall be able to support structs within structs & M & M \\
 	FR2-C & The dissector must support Wiresharks built-in filter and search on attributes & H & L \\
+	FR2-D & The dissector shall be able to recognize invalid values for a struct member & L & L \\
 	\midrule
 	FR3 & The utility must support C preprocessor directives and macros & H & \\
 	FR3-A & The utility shall support \#include & H & L \\
@@ -173,7 +175,7 @@ Medium (M) or Low (L).
 	FR3-C & The utility shall support \verb+WIN32+, \verb+_WIN32+, \verb+_WIN64+, \verb+__sparc__+, \verb+__sparc+ and \verb+sun+ & M & H \\
 	\midrule
 	FR4 & The utility must support user configuration & M & \\
-	FR4-A & The dissector shall be able to recognize invalid values for a struct member. Allowed ranges should be specified by configuration & L & L \\
+	FR4-A & Configuration must support valid ranges for struct members & L & L \\
 	FR4-B & Configuration must support integer members which represent enumerated named value or a bit string & M & L \\
 	FR4-C & Configuration must support custom handling of specific data types. E.g. a 'time\_t' may be interpreted to contain a unixtime value, and be displayed as a date & L & M \\
 	\midrule

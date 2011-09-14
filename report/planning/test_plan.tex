@@ -1,37 +1,45 @@
+%==================
 \chapter{Test Plan}
-
-This chapter presents the test plan for our solution. The test plan is based on  the standards set by the IEEE829-1998 standard for software testing, but with a few changes to better fit with our project. The purpose of this plan is to have a structured way of preforming tests, as well as providing the developers with a list of specific component-behaviors.The tests will be based on functional as well as non functional requirements, deterring architectural drift and enforcing our design plans for the system.
+%==================
+This chapter presents the test plan for our solution. The test plan is based on
+the standards set by the IEEE829-1998 standard for software testing, but with a
+few changes to better fit with our project. The purpose of this plan is to have
+a structured way of preforming tests, as well as providing the developers with
+a list of specific component-behaviors.The tests will be based on functional as
+well as non functional requirements, deterring architectural drift and
+enforcing our design plans for the system.
 
 \section{Templates for testing}
+%------------------------------
+\autoref{tab:testcase} and \autoref{tab:testreport} are templates we'll be
+using for testing purposes.
 
-Here we will present the different templates we'll be using for testing purposes\\
-
-\begin{table}[H]
-\caption{Test case template}
+\begin{table}[ht] \small \center
+\caption{Test case template \label{tab:testcase}}
 \begin{tabular}{l l}
-\hline\hline
-Portion & Description\\[0.5ex]
-\hline
-Test identifier & Test ID and description\\[0.5ex]
-Tester & Team member responsible for the test\\[0.5ex]
-Prerequisites & Conditions that needs to be fulfilled before starting the test\\[0.5ex]
-Feature & Feature to test\\[0.5ex]
-Execution & Steps to be executed in the test\\[0.5ex]
-\hline\hline
+	\toprule
+	Portion & Description \\
+	\midrule
+	Description & Description of requirement \\
+	Tester & Team member responsible for the test \\
+	Prerequisites & Conditions that needs to be fulfilled before starting the test \\
+	Feature & Feature to test \\
+	Execution & Steps to be executed in the test \\
+	\bottomrule
 \end{tabular}
 \end{table}
 
-\begin{table}[H]
-\caption{Test report template}
+\begin{table}[ht] \small \center
+\caption{Test report template \label{tab:testreport}}
 \begin{tabular}{l l}
-\hline\hline
-Portion & Description\\[0.5ex]
-\hline
-Test identifier & Test ID and description\\[0.5ex]
-Tester & Team member responsible for the test\\[0.5ex]
-Date & The date the testing took place\\[0.5ex]
-Result & Success \\[0.5ex]
-\hline\hline
+	\toprule
+	Portion & Description \\
+	\midrule
+	Description & Description of requirement \\
+	Tester & Team member responsible for the test \\
+	Date & The date the testing took place \\
+	Result & Success \\
+	\bottomrule
 \end{tabular}
 \end{table}
 

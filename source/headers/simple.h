@@ -5,6 +5,7 @@ struct basic {
     unsigned char grey;
 
     // Ints
+    short z;
     int size;
     signed int y;
     unsigned int x;
@@ -14,6 +15,7 @@ struct basic {
     long long int red;
     unsigned long long pink;
     long blue;
+    signed tester;
 
     // Single and double precision
     float value;

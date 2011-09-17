@@ -21,7 +21,7 @@ def body(struct):
 
     for member in struct.members:
         out.append('f.%s = ProtoField.%s ("%s.%s", "%s")' % (
-            member.name, map_type(member.type_),
+            member.name, map_type(member.type),
             struct.name, member.name, member.name))
 
     out.append('\nfunction PROTOCOL.dissector (buffer, pinfo, tree)')
@@ -29,8 +29,11 @@ def body(struct):
     out.append('\tpinfo.cols.info:append (" (" .. PROTOCOL.description .. ")")')
     out.append('')
 
+    offset = 0
     for member in struct.members:
-        out.append('\tsubtree:add (f.%s, buffer(0,0))' % member.name)
+        out.append('\tsubtree:add (f.%s, buffer(%i,%i))' % (
+                                member.name,offset, member.size))
+        offset += member.size
 
     out.append('end\n\nluastructs_dt:add (1, PROTOCOL)\n')
 
@@ -41,8 +44,4 @@ def generate(struct):
     return '%s\n%s\n' % (header(struct), body(struct))
 
 
-def write(structs):
-    for struct in structs:
-        with open('%s.lua' % struct.name, 'w') as f:
-            f.write(generate(struct))
 

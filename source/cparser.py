@@ -8,27 +8,85 @@ import sys
 from pycparser import parse_file, c_ast
 
 
-def parse(filename):
-    # Portable cpp path for Windows and Linux/Unix
-    CPPPATH = './utils/cpp.exe' if sys.platform == 'win32' else 'cpp'
+def parse(filename, use_cpp=True, fake_includes=True, cpp_args=None):
+    """Parse a C file, returns abstract syntax tree.
 
-    ast = parse_file(filename, use_cpp=True,
-            cpp_path=CPPPATH,
-            cpp_args=r'-I/utils/fake_libc_include')
+    use_cpp: Enable or disable the C preprocessor
+    fake_includes: Add fake includes for libc header files
+    cpp_args: Provide additional arguments for the C preprocessor
+    """
+    if cpp_args is None:
+        cpp_args = []
+    if fake_includes:
+        cpp_args.append(r'-I/utils/fake_libc_include')
+
+    if sys.platform == 'win32':
+        cpp_path = './utils/cpp.exe' # Windows don't come with a CPP
+    elif sys.platform == 'darwin':
+        cpp_path = 'gcc' # Fix for a bug in Mac GCC 4.2.1
+        cpp_args.append('-E')
+    else:
+        cpp_path = 'cpp'
+
+    # Generate an abstract syntax tree
+    ast = parse_file(filename, use_cpp=use_cpp,
+            cpp_path=cpp_path, cpp_args=cpp_args)
 
     return ast
 
 
-class Struct:
+class CStruct:
     def __init__(self, name, members):
         self.name = name
         self.members = members
 
 
-class Member:
-    def __init__(self, name, type_):
+class CStructMember:
+    def __init__(self, name, ctype, type, size):
         self.name = name
-        self.type_ = type_
+        self.ctype = ctype
+        self.type = type
+        self.size = size
+
+
+# Mapping of c type and their default size in bytes.
+C_SIZE_MAP = {
+        'bool': 1,
+        'char': 1,
+        'signed char': 1,
+        'unsigned char': 1,
+        'short': 2,
+        'short int': 2,
+        'signed short int': 2,
+        'unsigned short int': 2,
+        'int': 4,
+        'signed int': 4,
+        'unsigned int': 4,
+        'long': 8,
+        'long int': 8,
+        'signed long int': 8,
+        'unsigned long int': 8,
+        'long long': 8,
+        'long long int': 8,
+        'signed long long int': 8,
+        'unsigned long long int': 8,
+        'float': 4,
+        'double': 8,
+        'long double': 16,
+        'pointer': 4,
+}
+
+
+def _size_of(ctype):
+    if ctype in C_SIZE_MAP.keys():
+        return C_SIZE_MAP[ctype]
+
+    if ctype == 'enum':
+        return 7
+    elif ctype == 'array':
+        return 13
+    else:
+        return 1
 
 
 class StructVisitor(c_ast.NodeVisitor):
@@ -38,35 +96,60 @@ class StructVisitor(c_ast.NodeVisitor):
         self.structs = []
 
     def visit_Struct(self, node):
+        """Visit a Struct node in the AST."""
         # Visit children
         c_ast.NodeVisitor.generic_visit(self, node)
 
-        # Find the member values
+        # Find the member definitions
         members = []
-        for child in node.children():
-            if not isinstance(child, c_ast.Decl):
-                raise Exception("invalid struct member")
-            members.append(self.handle_Member(child))
+        for decl in node.children():
+            child = decl.children()[0]
+
+            if isinstance(child, c_ast.TypeDecl):
+                members.append(self.handle_type_decl(child))
+            elif isinstance(child, c_ast.ArrayDecl):
+                members.append(self.handle_array_decl(child))
+            elif isinstance(child, c_ast.PtrDecl):
+                members.append(self.handle_ptr_decl(child))
+            else:
+                raise Exception("Unknown struct member type")
 
         # Create the struct
-        struct = Struct(node.name, members)
+        struct = CStruct(node.name, members)
         self.structs.append(struct)
 
-    def handle_Member(self, node):
+    def handle_type_decl(self, node):
+        """Find member details in a type declaration."""
         child = node.children()[0]
-        if isinstance(child, c_ast.TypeDecl):
-            if isinstance(child.type, c_ast.Enum):
-                type_ = "enum"
-            elif isinstance(child.type, c_ast.Union):
-                type_ = "union"
-            else:
-                type_ = ' '.join(child.type.names)
-        elif isinstance(child, c_ast.ArrayDecl):
-            type_ = "array"
-        else:
-            type_ = "unknown"
+        if isinstance(child, c_ast.IdentifierType):
+            ctype = ' '.join(reversed(child.names))
+            type = child.names[0]
+        elif isinstance(child, c_ast.Enum):
+            ctype = "enum"
+            type = "enum"
+        elif isinstance(child, c_ast.Union):
+            ctype = "union"
+            type = "union"
 
-        return Member(node.name, type_)
+        return CStructMember(node.declname, ctype, type, _size_of(ctype))
+
+    def handle_array_decl(self, node):
+        """Find member details in an array declaration."""
+        type_decl, constant = node.children()
+        child = self.handle_type_decl(type_decl)
+
+        ctype = child.ctype
+        type = child.type
+        size = int(constant.value) * _size_of(child.size)
+
+        return CStructMember(type_decl.declname, ctype, type, size)
+
+    def handle_ptr_decl(self, node):
+        """Find member details in a pointer declaration."""
+        type_decl = node.children()[0]
+        ctype = type = 'pointer' # Shortcut as pointers not a requirement
+        size = _size_of(ctype)
+        return CStructMember(type_decl.declname, ctype, type, size)
 
 
 def find_structs(ast):
@@ -74,7 +157,6 @@ def find_structs(ast):
     visitor = StructVisitor()
     visitor.visit(ast)
     return visitor.structs
-
 
 
 if __name__ == "__main__":

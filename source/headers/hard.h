@@ -39,4 +39,9 @@ struct basic {
     // Pointers (not a requirement)
     int *pointer;
     struct basic *self;
+
+    // Constants & violative (not a requirement)
+    int const dog;
+    volatile int cat;
+    const volatile unsigned char kitten;
 };

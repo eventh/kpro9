@@ -5,34 +5,42 @@ A module for parsing C files, and searching AST for struct definitions.
 Requires PLY and pycparser.
 """
 import sys
-from pycparser import parse_file, c_ast
+import pycparser
+from pycparser import c_ast, c_parser
 
 
-def parse(filename, use_cpp=True, fake_includes=True, cpp_args=None):
+def parse_file(filename, use_cpp=True, fake_includes=True, cpp_args=None):
     """Parse a C file, returns abstract syntax tree.
 
     use_cpp: Enable or disable the C preprocessor
     fake_includes: Add fake includes for libc header files
     cpp_args: Provide additional arguments for the C preprocessor
     """
-    if cpp_args is None:
-        cpp_args = []
-    if fake_includes:
-        cpp_args.append(r'-I/utils/fake_libc_include')
+    cpp_path = 'cpp'
 
-    if sys.platform == 'win32':
-        cpp_path = './utils/cpp.exe' # Windows don't come with a CPP
-    elif sys.platform == 'darwin':
-        cpp_path = 'gcc' # Fix for a bug in Mac GCC 4.2.1
-        cpp_args.append('-E')
-    else:
-        cpp_path = 'cpp'
+    if use_cpp:
+        if cpp_args is None:
+            cpp_args = []
+        if fake_includes:
+            cpp_args.append(r'-I/utils/fake_libc_include')
+
+        if sys.platform == 'win32':
+            cpp_path = './utils/cpp.exe' # Windows don't come with a CPP
+        elif sys.platform == 'darwin':
+            cpp_path = 'gcc' # Fix for a bug in Mac GCC 4.2.1
+            cpp_args.append('-E')
 
     # Generate an abstract syntax tree
-    ast = parse_file(filename, use_cpp=use_cpp,
+    ast = pycparser.parse_file(filename, use_cpp=use_cpp,
             cpp_path=cpp_path, cpp_args=cpp_args)
 
     return ast
+
+
+def parse(text, filename=''):
+    """Parse C code and return an AST."""
+    parser = c_parser.CParser()
+    return parser.parse(text, filename)
 
 
 class CStruct:

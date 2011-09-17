@@ -14,7 +14,7 @@ def main():
 
     # Parse the given C file to create an AST
     filename = sys.argv[1]
-    ast = cparser.parse(filename)
+    ast = cparser.parse_file(filename)
     ast.show()
 
     # Recursivly decent AST to find structs

@@ -9,14 +9,17 @@ import pycparser
 from pycparser import c_ast, c_parser
 
 
-def parse_file(filename, use_cpp=True, fake_includes=True, cpp_args=None):
+def parse_file(filename, use_cpp=True,
+        fake_includes=True, cpp_args=None, cpp_path=None):
     """Parse a C file, returns abstract syntax tree.
 
     use_cpp: Enable or disable the C preprocessor
     fake_includes: Add fake includes for libc header files
     cpp_args: Provide additional arguments for the C preprocessor
+    cpp_path: The path to cpp.exe on windows
     """
-    cpp_path = 'cpp'
+    if cpp_path is None:
+        cpp_path = 'cpp'
 
     if use_cpp:
         if cpp_args is None:
@@ -24,11 +27,12 @@ def parse_file(filename, use_cpp=True, fake_includes=True, cpp_args=None):
         if fake_includes:
             cpp_args.append(r'-I/utils/fake_libc_include')
 
-        if sys.platform == 'win32':
+        # TODO: find a cleaner way to look for cpp on windows!
+        if sys.platform == 'win32' and cpp_path == 'cpp':
             cpp_path = './utils/cpp.exe' # Windows don't come with a CPP
-        elif sys.platform == 'darwin':
-            cpp_path = 'gcc' # Fix for a bug in Mac GCC 4.2.1
-            cpp_args.append('-E')
+        #elif sys.platform == 'darwin':
+        #    cpp_path = 'gcc' # Fix for a bug in Mac GCC 4.2.1
+        #    cpp_args.append('-E')
 
     # Generate an abstract syntax tree
     ast = pycparser.parse_file(filename, use_cpp=use_cpp,
@@ -169,7 +173,7 @@ def find_structs(ast):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        ast = parse(sys.argv[1])
+        ast = parse_file(sys.argv[1])
         ast.show()
     else:
         print("Please provide a C file to parse")

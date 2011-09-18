@@ -6,10 +6,12 @@
 *.synctex.gz
 *.pdf
 *.swp
+*.coverage
+*htmlcov/
+*__pycache__/
+*.idea
 .project
 /misc
-/.idea
-/source/__pycache__/
 /source/lextab.py
 /source/yacctab.py
 

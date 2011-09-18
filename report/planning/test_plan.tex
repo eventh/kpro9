@@ -27,6 +27,10 @@ Black box testing is a method of software testing where you test the functionali
 \autoref{tab:testcase} and \autoref{tab:testreport} are templates we'll be
 using for testing purposes.
 
+In order to standarize the testing process, the team decided on making templates for both the tests themselves and for reporting their results. The ones responsible for testing were given the task of filling out these tables to make sure they got filled out and stored properly.\\[0.5ex]
+
+The following table shows the template for each test case. All of the tests written for the utility will be in this format, and executed according to this document.\\[0.5ex]
+
 \begin{table}[ht] \small \center
 \caption{Test case template \label{tab:testcase}}
 \begin{tabular}{l l}
@@ -38,9 +42,12 @@ using for testing purposes.
 	Prerequisites & Conditions that needs to be fulfilled before starting the test \\
 	Feature & Feature to test \\
 	Execution & Steps to be executed in the test \\
+	Expected result & The expected output of the test
 	\bottomrule
 \end{tabular}
 \end{table}
+
+The following table shows the template for reporting the result of each test case.\\[0.5ex]
 
 \begin{table}[ht] \small \center
 \caption{Test report template \label{tab:testreport}}
@@ -51,8 +58,17 @@ using for testing purposes.
 	Description & Description of requirement \\
 	Tester & Team member responsible for the test \\
 	Date & The date the testing took place \\
-	Result & Success \\
+	Result & The success or failure of the test, and a comment on the result if needed \\
 	\bottomrule
 \end{tabular}
 \end{table}
+
+\section{Test Criterias}
+%--------------------------------
+An item will be considered to have passed a test if the actual result from the test matches the expected result from the test. An item will be considered to have failed the test if the output varies from the expected result. If there are any specifics as to why the test passed/failed which needs to be discussed, they will be listed as a comment to the result
+
+\section{Testing Responsibilities}
+%--------------------------------
+Each group member are responsible for writing their own unit tests while the test leader is responsible for the quality of the test plan and the tests. The tests will mainly not be executed by the same developers who wrote the code that is to undergo testing, but by others in the testing group with as little ownership of the code as possible. 
+
 

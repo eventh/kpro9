@@ -4,7 +4,7 @@ Module for testing the cparser module.
 Tests the C parser, the C preprocessor, and finding structs.
 """
 import sys, os
-from attest import Tests, assert_hook, reporters
+from attest import Tests, assert_hook
 from pycparser import c_ast
 
 try:
@@ -22,6 +22,7 @@ def _child(node, depth=1):
         child = child.children()[0]
         depth -= 1
     return child
+
 
 # Tests for cparser.parse()
 parse = Tests()
@@ -95,8 +96,8 @@ def create_ast():
     else:
         path = os.path.dirname(__file__)
 
-    cpp_h = os.path.join(path, 'test_cpp.h')
-    inc_h = os.path.join(path, 'test_include.h')
+    cpp_h = os.path.join(path, 'cpp.h')
+    inc_h = os.path.join(path, 'include.h')
     cpp_args = [r'-I%s' % os.path.abspath(path)]
     cpp_path = os.path.join(path, '../utils/cpp.exe') # Tmp hack
 
@@ -127,5 +128,5 @@ def cpp_include(ast):
 # Run all tests defined in this module, with PlainReporter
 if __name__ == '__main__':
     all_tests = Tests([parse, find_structs, cpp])
-    all_tests.run(reporters.PlainReporter())
+    all_tests.run()
 

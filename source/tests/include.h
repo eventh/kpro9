@@ -1,7 +1,7 @@
 /*
    A header file for testing C preprocessor
-   Should be included by test_cpp.h
-   Used in test_cparser.py
+   Should be included by cpp.h
+   Used in cparser.py
 */
 
 #define HARD 5

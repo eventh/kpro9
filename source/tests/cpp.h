@@ -1,6 +1,6 @@
 /*
    A header file for testing the C preprocessor
-   Used in test_cparser.py
+   Used in cparser.py
 */
 
 #define TEST 10
@@ -8,7 +8,7 @@
 // Test #include
 #define PLEASE_INCLUDE
 #ifdef PLEASE_INCLUDE
-#include "test_include.h"
+#include "include.h"
 #endif
 
 struct simple {

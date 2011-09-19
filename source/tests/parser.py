@@ -31,7 +31,7 @@ parse = Tests()
 def parse_basic_types():
     """Test that our parser support structs with basic types."""
     ast = cparser.parse('struct simple { int a; float b; char c;};')
-    struct = ast.children()[0].children()[0]
+    struct = _child(ast, 2)
     a, b, c = struct.children()
 
     assert struct.name == 'simple'
@@ -125,7 +125,6 @@ def cpp_include(ast):
     assert int(_child(c, 3).children()[1].value) == 5
 
 
-# Run all tests defined in this module, with PlainReporter
 if __name__ == '__main__':
     all_tests = Tests([parse, find_structs, cpp])
     all_tests.run()

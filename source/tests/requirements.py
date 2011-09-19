@@ -79,7 +79,69 @@ def req_1e():
     assert _child(ast, 6).names[0] == 'int'
 
 
+# Tests for the second requirement, generate dissectors in lua
+# FR2: The utility must be able to generate lua dissectors for
+#      the binary representation of C struct
+# FR2-A: The dissector shall be able to display simple structs
+# FR2-B: The dissector shall be able to support structs within structs
+# FR2-C: The dissector must support Wiresharks built-in
+#        filter and search on attributes
+# FR2-D: The dissector shall be able to recognize invalid
+#        values for a struct member
+# Probably best to implement these later!
+
+
+# Tests for the third requirement, C preprocessor directives and macros
+# FR3: The utility must support C preprocessor directives and macros
+cpp = Tests()
+
+@cpp.context
+def create_ast():
+    """Parse a C headerfile with C preprocessor, and create an AST."""
+    # Find the header files and cpp if we are run from a different folder
+    if __name__ == '__main__':
+        path = os.path.dirname(sys.argv[0])
+    else:
+        path = os.path.dirname(__file__)
+
+    cpp_h = os.path.join(path, 'cpp.h')
+    inc_h = os.path.join(path, 'include.h')
+    cpp_args = [r'-I%s' % os.path.abspath(path)]
+    cpp_path = os.path.join(path, '../utils/cpp.exe') # Tmp hack
+
+    assert os.path.isfile(cpp_h) and os.path.isfile(inc_h)
+    ast = cparser.parse_file(cpp_h, cpp_args=cpp_args, cpp_path=cpp_path)
+    yield ast
+
+# FR3-A: The utility shall support #include
+@cpp.test
+def req_3a(ast):
+    """Test requirement FR3-A: Support for #include."""
+    assert ast
+    a, b, c = ast.children()
+    assert _child(c, 5).names[0] == 'bool'
+    assert int(_child(c, 3).children()[1].value) == 5
+
+# FR3-B: The utility shall support #define and #if
+@cpp.test
+def req_3b(ast):
+    """Test requirement FR3-B: Support for #define and #if."""
+    a, b, c = ast.children()
+    assert _child(b, 1).name == 'simple'
+    assert _child(b, 2).name == 'arr'
+    assert isinstance(_child(b, 3), c_ast.ArrayDecl)
+    type_decl, constant = _child(b, 3).children()
+    assert constant.type == 'int'
+    assert int(constant.value) == 10
+
+# FR3-C: Support WIN32, _WIN32, _WIN64, __sparc__, __sparc and sun
+@cpp.test
+def req_3c(ast):
+    """Test requirement FR3-C: Support for platform specific macros."""
+    pass
+
+
 if __name__ == '__main__':
-    all_tests = Tests([parse_structs])
+    all_tests = Tests([parse_structs, cpp])
     all_tests.run()
 

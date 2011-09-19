@@ -23,7 +23,9 @@ def main():
     # Generate and write lua dissectors
     for struct in structs:
         if struct.name:
-            code = dissector.generate(struct)
+            proto = dissector.Protocol(struct.name)
+            code = proto.create(struct)
+
             with open('%s.lua' % struct.name, 'w') as f:
                 f.write(code)
 

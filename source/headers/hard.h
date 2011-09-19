@@ -38,7 +38,7 @@ struct basic {
 
     // Pointers (not a requirement)
     int *pointer;
-    struct basic *self;
+    //struct basic *self; Bug!
 
     // Constants & violative (not a requirement)
     int const dog;

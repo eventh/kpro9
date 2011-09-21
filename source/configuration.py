@@ -31,6 +31,9 @@ DEFAULT_C_SIZE_MAP = {
         'pointer': 4,
 }
 
+ValidRangeType = ['short', 'short int', 'signed short int', 'unsigned short int', 'int', 'signed int', 'unsigned int', 'long', 'long int', 
+'signed long int', 'unsigned long int', 'long long', 'long long int', 'signed long long int', 'unsigned long long int', 'float', 'double',
+        'long double']
 
 class Config:
     """Holds global configuration."""

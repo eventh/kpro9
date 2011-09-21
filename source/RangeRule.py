@@ -15,17 +15,17 @@ class RangeRule():
         else:
             raise ConfigError()
 
-	def __convert(value):
-		try:
-			value = int(value)
-		except AttributeError:
-			try:
-				value = float(value)
-			except AttributeError
-				raise ConfigError()
+    def __convert(value):
+        try:
+            value = int(value)
+        except AttributeError:
+            try:
+                value = float(value)
+            except AttributeError:
+                raise ConfigError()
                     
-		return value
-	
+        return value
+    
     def setMinvalue(self, minvalue):
         self.minvalue = __convert(minvalue)
     

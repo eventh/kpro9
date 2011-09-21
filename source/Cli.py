@@ -7,7 +7,7 @@ def main():
             ' dissectors from C structs.')
 
     # C-header file
-    parser.add_argument('-ch', '--cheader', nargs='?',
+    parser.add_argument('-ch', '--cheader', nargs='*',
             help='C-header file to parse', metavar='HEADER')
 
     # Configuration file
@@ -16,7 +16,7 @@ def main():
             nargs='?', type=argparse.FileType('r'), default=sys.stdin)
 
     # Write output to destination file
-    parser.add_argument('-output', nargs='?', help='Write output to file',
+    parser.add_argument('-output', nargs='*', help='Write output to file',
             metavar='FILE', dest='test.txt',
             type=argparse.FileType('w'), default=sys.stdout)
 

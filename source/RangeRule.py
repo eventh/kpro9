@@ -4,18 +4,18 @@ class ConfigError(Exception):
     pass
 
 class RangeRule():
-    def __init__(self, file, struct, member, type, minvalue, maxvalue):
+    def __init__(self, file, struct, member):
         self.file = file
         self.struct = struct
         self.member = member
         
     def setType(self, type):
-        if type in Configuration.ValidRangeType:
+        if type in configuration.ValidRangeType:
             self.type = type
         else:
             raise ConfigError()
 
-    def __convert(value):
+    def _convert(self, value):
         try:
             value = int(value)
         except AttributeError:
@@ -27,8 +27,8 @@ class RangeRule():
         return value
     
     def setMinvalue(self, minvalue):
-        self.minvalue = __convert(minvalue)
+        self.minvalue = self._convert(minvalue)
     
-    def setMaxValue(self, maxvalue):
-        self.maxvalue = __convert(maxvalue)
+    def setMaxvalue(self, maxvalue):
+        self.maxvalue = self._convert(maxvalue)
             

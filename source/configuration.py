@@ -78,18 +78,17 @@ class StructConfig:
             return Config.size_map[ctype]
 
 def handleRangeRules(rangerules):
-    for i in range(len(rangerules)):
-        if not rangerules[i]['struct'] in Config.structs:
-            StructConfig(rangerules[i]['struct'])
-        rule = RangeRule(rangerules[i]['file'], rangerules[i]['struct'], rangerules[i]['member'])
-        rule.setType(rangerules[i]['type'])
-        rule.setMinvalue(rangerules[i]['minvalue'])
-        rule.setMaxvalue(rangerules[i]['maxvalue'])
-        Config.structs.get(rangerules[i]['struct']).rules[rangerules[i]['member']] = rule
-        #print("rule:", i+1)
-        #print(Config.structs.get(rangerules[i]['struct']).rules.get(rangerules[i]['member']).type)
-        #print(Config.structs.get(rangerules[i]['struct']).rules.get(rangerules[i]['member']).minvalue)
-        #print(Config.structs.get(rangerules[i]['struct']).rules.get(rangerules[i]['member']).maxvalue)
+    for rule in rangerules:
+        if not rule['struct'] in Config.structs:
+            StructConfig(rule['struct'])
+        curr = RangeRule(rule['file'], rule['struct'], rule['member'])
+        curr.setType(rule['type'])
+        curr.setMinvalue(rule['minvalue'])
+        curr.setMaxvalue(rule['maxvalue'])
+        Config.structs.get(rule['struct']).rules[rule['member']] = curr
+        print(Config.structs.get(rule['struct']).rules.get(rule['member']).type)
+        print(Config.structs.get(rule['struct']).rules.get(rule['member']).minvalue)
+        print(Config.structs.get(rule['struct']).rules.get(rule['member']).maxvalue)
 
 def parse(filename):
     """Parse a configuration file."""

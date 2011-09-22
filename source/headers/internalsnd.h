@@ -5,6 +5,8 @@
 
 #define STRING_LEN 30
 
+typedef int time_t;
+
 struct internal_snd {
    int    type;
    char   name[STRING_LEN];

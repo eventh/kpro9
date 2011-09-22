@@ -29,6 +29,16 @@ function Type:getSize(flag)
   return self._defualt_size
 end
 
+function Type:getEndian(flag)
+  local flag_config = self._flag_configs[flag]
+
+  if not (flag_config == nil) then
+    return flag_config._endian
+  end
+
+  return self._defualt_endian
+end
+
 types = {}
 
 types["int"] = Type:new("int", 4, "big")
@@ -37,9 +47,9 @@ types["char"] = Type:new("char", 4, nil)
 
 types["long"] = Type:new("long", 8, "little")
 
-print(int:getSize(1))
+print(types["int"]:getSize(1))
 
 int:add(1, 8, "big")
 
-print(int:getSize(1))
+print(types["int"]:getSize(1))
 

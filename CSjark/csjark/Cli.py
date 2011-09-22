@@ -26,11 +26,18 @@ def main():
     parser.add_argument('-output', nargs='*',
             type=str, help='Write output to file')
 
+    #A file extension checker
+    #recognizing header files
+    def filetype(file):
+        return file.split(".")[-1]
+    print(filetype('Cli.py'))
+    
     args = parser.parse_args()
     if len(sys.argv) > 1:
         print(args)
     else:
         parser.print_help()
+
 
 if __name__ == "__main__":
     main()

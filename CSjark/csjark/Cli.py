@@ -29,7 +29,10 @@ def main():
             type=str, help='Write output to file')
 
     args = parser.parse_args()
-    print(args)
+    if len(sys.argv) > 1:
+        print(args)
+    else:
+        parser.print_help()
 
 if __name__ == "__main__":
     main()

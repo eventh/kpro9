@@ -18,12 +18,10 @@ def main():
     #Followed by input and output files
     # C-header file
     parser.add_argument('-ch', '--cheader', nargs='*',
-            type=str,
-            help='C-header file to parse')
+            type=str, help='C-header file to parse')
     # Configuration file
     parser.add_argument('-c', '--config', nargs='*',
-            type=str,
-            action='store',help='Configuration file')
+            type=str, action='store',help='Configuration file')
     # Write output to destination file
     parser.add_argument('-output', nargs='*',
             type=str, help='Write output to file')

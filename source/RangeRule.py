@@ -1,4 +1,6 @@
-import configuration
+ValidRangeType = ['short', 'short int', 'signed short int', 'unsigned short int', 'int', 'signed int', 'unsigned int', 'long', 'long int', 
+'signed long int', 'unsigned long int', 'long long', 'long long int', 'signed long long int', 'unsigned long long int', 'float', 'double',
+        'long double']
 
 class ConfigError(Exception):
     pass
@@ -10,7 +12,7 @@ class RangeRule():
         self.member = member
         
     def setType(self, type):
-        if type in configuration.ValidRangeType:
+        if type in ValidRangeType:
             self.type = type
         else:
             raise ConfigError()

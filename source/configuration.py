@@ -3,6 +3,8 @@ A module for configuration of our utility.
 
 Should parse config files and create which the parser can use.
 """
+import yaml
+from RangeRule import RangeRule
 
 # Mapping of c type and their default size in bytes.
 DEFAULT_C_SIZE_MAP = {
@@ -30,10 +32,6 @@ DEFAULT_C_SIZE_MAP = {
         'long double': 16,
         'pointer': 4,
 }
-
-ValidRangeType = ['short', 'short int', 'signed short int', 'unsigned short int', 'int', 'signed int', 'unsigned int', 'long', 'long int', 
-'signed long int', 'unsigned long int', 'long long', 'long long int', 'signed long long int', 'unsigned long long int', 'float', 'double',
-        'long double']
 
 class Config:
     """Holds global configuration."""
@@ -81,5 +79,20 @@ class StructConfig:
 
 def parse(filename):
     """Parse a configuration file."""
-    pass
+    stream = open(filename, 'r')
+    config = yaml.load(stream)
+    rules = []
+    
+    print(config.keys())
+    
+    for i in range(len(config['RangeRule'])):
+        b = RangeRule(0,0,0)
+        a = RangeRule(config['RangeRule'][i]['file'], config['RangeRule'][i]['struct'], config['RangeRule'][i]['member'])
+        a.setType(config['RangeRule'][i]['type'])
+        a.setMinvalue(config['RangeRule'][i]['minvalue'])
+        a.setMaxvalue(config['RangeRule'][i]['maxvalue'])
+        rules.append(a)
+     
+    print(len(config['RangeRule']), "config rules parsed")
 
+parse('configuration/example.yml')

@@ -16,3 +16,5 @@
 .project
 /misc
 /CSjark/docs/_build
+/CSjark/docs/_static
+/CSjark/docs/_template

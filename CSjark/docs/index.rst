@@ -6,6 +6,11 @@
 Welcome to CSjark's documentation!
 ==================================
 
+CSjark is an tool for automatic generation of Wireshark dissectors from
+C struct defintions, written in python.
+
+It requires python 3.2.2, PLY, pycparser and pyYAML.
+
 Contents:
 
 .. toctree::

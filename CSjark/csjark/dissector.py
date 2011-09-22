@@ -8,17 +8,8 @@ OTHER_TYPES = ["float", "double", "string", "stringz", "bytes",
 VALID_PROTOTYPES = INT_TYPES + OTHER_TYPES
 
 
-LUA_TYPES = {
-        "int": "uint32",
-        "array": "string",
-}
-
-def map_type(c_type):
-    return LUA_TYPES.get(c_type, c_type)
-
-
 class Field:
-    def __init__(self, name, type, size, protocol):
+    def __init__(self, name, type, size, protocol=None):
         self.name = name
         self.type = type
         self.size = size
@@ -60,8 +51,13 @@ class IntRange(Field):
 class Protocol:
     counter = 0
 
-    def __init__(self, name, id=None):
+    def __init__(self, name, fields=None, id=None):
         self.name = name
+
+        if fields is None:
+            fields = []
+        self.fields = fields
+
         if id is None:
             Protocol.counter += 1
             self.id = Protocol.counter
@@ -72,7 +68,6 @@ class Protocol:
         self.field_var = 'f'
         self.dissector = 'luastructs.message'
 
-        self.fields = []
         self.data = []
 
     def add_header(self):
@@ -107,11 +102,9 @@ class Protocol:
         self.data.append('end')
         self.data.append('')
 
-    def create(self, struct):
-        # Temp create field
-        for m in struct.members:
-            field = Field(m.name, map_type(m.type), m.size, self)
-            self.fields.append(field)
+    def create(self):
+        for field in self.fields:
+            field.protocol = self # Temp hack
 
         self.add_header()
         self.add_fields()

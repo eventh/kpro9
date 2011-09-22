@@ -7,6 +7,8 @@ Requires PLY and pycparser.
 import sys
 import pycparser
 from pycparser import c_ast, c_parser
+from config import DEFAULT_C_SIZE_MAP
+from dissector import Protocol, Field
 
 
 def parse_file(filename, use_cpp=True,
@@ -47,51 +49,19 @@ def parse(text, filename=''):
     return parser.parse(text, filename)
 
 
-class CStruct:
-    def __init__(self, name, members):
-        self.name = name
-        self.members = members
-
-
-class CStructMember:
-    def __init__(self, name, ctype, type, size):
-        self.name = name
-        self.ctype = ctype
-        self.type = type
-        self.size = size
-
-
-# Mapping of c type and their default size in bytes.
-C_SIZE_MAP = {
-        'bool': 1,
-        'char': 1,
-        'signed char': 1,
-        'unsigned char': 1,
-        'short': 2,
-        'short int': 2,
-        'signed short int': 2,
-        'unsigned short int': 2,
-        'int': 4,
-        'signed int': 4,
-        'unsigned int': 4,
-        'long': 8,
-        'long int': 8,
-        'signed long int': 8,
-        'unsigned long int': 8,
-        'long long': 8,
-        'long long int': 8,
-        'signed long long int': 8,
-        'unsigned long long int': 8,
-        'float': 4,
-        'double': 8,
-        'long double': 16,
-        'pointer': 4,
+LUA_TYPES = {
+        "int": "uint32",
+        "array": "string",
 }
 
 
+def _map_type(c_type):
+    return LUA_TYPES.get(c_type, c_type)
+
+
 def _size_of(ctype):
-    if ctype in C_SIZE_MAP.keys():
-        return C_SIZE_MAP[ctype]
+    if ctype in DEFAULT_C_SIZE_MAP.keys():
+        return DEFAULT_C_SIZE_MAP[ctype]
 
     if ctype == 'enum':
         return 7
@@ -126,42 +96,44 @@ class StructVisitor(c_ast.NodeVisitor):
             else:
                 raise Exception("Unknown struct member type")
 
-        # Create the struct
-        struct = CStruct(node.name, members)
-        self.structs.append(struct)
+        # Create the protocol for the struct
+        if node.name:
+            protocol = Protocol(node.name, members)
+            self.structs.append(protocol)
 
     def handle_type_decl(self, node):
         """Find member details in a type declaration."""
         child = node.children()[0]
         if isinstance(child, c_ast.IdentifierType):
             ctype = ' '.join(reversed(child.names))
-            type = child.names[0]
         elif isinstance(child, c_ast.Enum):
             ctype = "enum"
-            type = "enum"
         elif isinstance(child, c_ast.Union):
             ctype = "union"
-            type = "union"
 
-        return CStructMember(node.declname, ctype, type, _size_of(ctype))
+        field = Field(node.declname, _map_type(ctype), _size_of(ctype))
+        field._ctype = ctype # Tmp hack!
+        return field
 
     def handle_array_decl(self, node):
         """Find member details in an array declaration."""
         type_decl, constant = node.children()
         child = self.handle_type_decl(type_decl)
 
-        ctype = child.ctype
-        type = child.type
+        ctype = child._ctype
         size = int(constant.value) * _size_of(child.size)
 
-        return CStructMember(type_decl.declname, ctype, type, size)
+        field = Field(type_decl.declname, _map_type(ctype), size)
+        field._ctype = ctype # Tmp hack!
+        return field
 
     def handle_ptr_decl(self, node):
         """Find member details in a pointer declaration."""
         type_decl = node.children()[0]
-        ctype = type = 'pointer' # Shortcut as pointers not a requirement
-        size = _size_of(ctype)
-        return CStructMember(type_decl.declname, ctype, type, size)
+        ctype = 'pointer' # Shortcut as pointers not a requirement
+        field = Field(type_decl.declname, ctype, _size_of(ctype))
+        field._ctype = ctype # Tmp hack!
+        return field
 
 
 def find_structs(ast):

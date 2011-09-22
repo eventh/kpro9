@@ -18,16 +18,13 @@ def main():
     ast.show()
 
     # Recursivly decent AST to find structs
-    structs = cparser.find_structs(ast)
+    protocols = cparser.find_structs(ast)
 
     # Generate and write lua dissectors
-    for struct in structs:
-        if struct.name:
-            proto = dissector.Protocol(struct.name)
-            code = proto.create(struct)
-
-            with open('%s.lua' % struct.name, 'w') as f:
-                f.write(code)
+    for proto in protocols:
+        code = proto.create()
+        with open('%s.lua' % proto.name, 'w') as f:
+            f.write(code)
 
 
 if __name__ == "__main__":

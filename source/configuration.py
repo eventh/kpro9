@@ -68,6 +68,7 @@ class StructConfig:
     def __init__(self, name):
         Config.structs[name] = self
         self.name = name
+        self.rules = {}
         self.size_map = {}
 
     def get_size_of(self, ctype):
@@ -76,23 +77,27 @@ class StructConfig:
         else:
             return Config.size_map[ctype]
 
+def handleRangeRules(rangerules):
+    for i in range(len(rangerules)):
+        if not rangerules[i]['struct'] in Config.structs:
+            StructConfig(rangerules[i]['struct'])
+        rule = RangeRule(rangerules[i]['file'], rangerules[i]['struct'], rangerules[i]['member'])
+        rule.setType(rangerules[i]['type'])
+        rule.setMinvalue(rangerules[i]['minvalue'])
+        rule.setMaxvalue(rangerules[i]['maxvalue'])
+        Config.structs.get(rangerules[i]['struct']).rules[rangerules[i]['member']] = rule
+        #print("rule:", i+1)
+        #print(Config.structs.get(rangerules[i]['struct']).rules.get(rangerules[i]['member']).type)
+        #print(Config.structs.get(rangerules[i]['struct']).rules.get(rangerules[i]['member']).minvalue)
+        #print(Config.structs.get(rangerules[i]['struct']).rules.get(rangerules[i]['member']).maxvalue)
 
 def parse(filename):
     """Parse a configuration file."""
     stream = open(filename, 'r')
     config = yaml.load(stream)
-    rules = []
     
-    print(config.keys())
+    handleRangeRules(config['RangeRule'])
     
-    for i in range(len(config['RangeRule'])):
-        b = RangeRule(0,0,0)
-        a = RangeRule(config['RangeRule'][i]['file'], config['RangeRule'][i]['struct'], config['RangeRule'][i]['member'])
-        a.setType(config['RangeRule'][i]['type'])
-        a.setMinvalue(config['RangeRule'][i]['minvalue'])
-        a.setMaxvalue(config['RangeRule'][i]['maxvalue'])
-        rules.append(a)
-     
-    print(len(config['RangeRule']), "config rules parsed")
+    print("Config file parsed")
 
 parse('configuration/example.yml')

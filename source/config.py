@@ -4,7 +4,7 @@ A module for configuration of our utility.
 Should parse config files and create which the parser can use.
 """
 import yaml
-from RangeRule import RangeRule
+
 
 # Mapping of c type and their default size in bytes.
 DEFAULT_C_SIZE_MAP = {
@@ -33,6 +33,14 @@ DEFAULT_C_SIZE_MAP = {
         'pointer': 4,
 }
 
+# List of valid C types
+VALID_C_TYPES = DEFAULT_C_SIZE_MAP.keys()
+
+
+class ConfigError(Exception):
+    pass
+
+
 class Config:
     """Holds global configuration."""
     singleton = None
@@ -54,6 +62,7 @@ class FileConfig:
     def __init__(self, filename):
         Config.files[filename] = self
         self.filename = filename
+        self.rules = []
         self.size_map = {}
 
     def get_size_of(self, ctype):
@@ -68,7 +77,7 @@ class StructConfig:
     def __init__(self, name):
         Config.structs[name] = self
         self.name = name
-        self.rules = {}
+        self.rules = []
         self.size_map = {}
 
     def get_size_of(self, ctype):
@@ -77,26 +86,53 @@ class StructConfig:
         else:
             return Config.size_map[ctype]
 
-def handleRangeRules(rangerules):
-    for rule in rangerules:
-        if not rule['struct'] in Config.structs:
-            StructConfig(rule['struct'])
-        curr = RangeRule(rule['file'], rule['struct'], rule['member'])
-        curr.setType(rule['type'])
-        curr.setMinvalue(rule['minvalue'])
-        curr.setMaxvalue(rule['maxvalue'])
-        Config.structs.get(rule['struct']).rules[rule['member']] = curr
-        print(Config.structs.get(rule['struct']).rules.get(rule['member']).type)
-        print(Config.structs.get(rule['struct']).rules.get(rule['member']).minvalue)
-        print(Config.structs.get(rule['struct']).rules.get(rule['member']).maxvalue)
+
+class RangeRule:
+    def __init__(self, obj):
+        # Member represents a struct member whom should be validated
+        self.member = obj['member']
+
+        # Min and max represents the endpoints of the valid range
+        self.min = self.max = None
+        if 'min' in obj:
+            self.min = float(obj['min'])
+        if 'max' in obj:
+            self.max = float(obj['max'])
+
+
+def _handle_file(obj, rule):
+    if 'file' in obj:
+        name = obj['file']
+        if name not in Config.files.keys():
+            FileConfig(name)
+        config = Config.files[name]
+        config.rules.append(rule)
+
+def _handle_struct(obj, rule):
+    if 'struct' in obj:
+        name = obj['struct']
+        if name not in Config.structs.keys():
+            StructConfig(name)
+        config = Config.structs[name]
+        config.rules.append(rule)
+
 
 def parse(filename):
     """Parse a configuration file."""
-    stream = open(filename, 'r')
-    config = yaml.load(stream)
-    
-    handleRangeRules(config['RangeRule'])
-    
-    print("Config file parsed")
+    with open(filename, 'r') as f:
+        obj = yaml.load(f)
+    #print(obj)
 
-parse('configuration/example.yml')
+    # Deal with range rules
+    for rule_obj in obj['RangeRule']:
+        rule = RangeRule(rule_obj)
+        _handle_file(rule_obj, rule)
+        _handle_struct(rule_obj, rule)
+
+    print("Config file '%s' parsed" % filename)
+    print(Config.structs)
+
+
+if __name__ == '__main__':
+    parse('etc/example.yml')
+

@@ -2,13 +2,6 @@ import sys
 import argparse
 
 
-def Cli():
-    verbose = False
-    debug = False
-    cpp = True
-
-
-
 def main():
     parser = argparse.ArgumentParser(description='Generate Wireshark'
             ' dissectors from C structs.')
@@ -36,7 +29,7 @@ def main():
             type=str, help='Write output to file')
 
     args = parser.parse_args()
-    parser.print_usage()
+    print(args)
 
 if __name__ == "__main__":
     main()

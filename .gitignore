@@ -11,8 +11,7 @@
 *htmlcov/
 *__pycache__/
 *.idea
+*/lextab.py
+*/yacctab.py
 .project
 /misc
-/source/lextab.py
-/source/yacctab.py
-

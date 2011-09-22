@@ -107,7 +107,7 @@ def create_ast():
     cpp_h = os.path.join(path, 'cpp.h')
     inc_h = os.path.join(path, 'include.h')
     cpp_args = [r'-I%s' % os.path.abspath(path)]
-    cpp_path = os.path.join(path, '../utils/cpp.exe') # Tmp hack
+    cpp_path = os.path.join(path, '../../utils/cpp.exe') # Tmp hack
 
     assert os.path.isfile(cpp_h) and os.path.isfile(inc_h)
     ast = cparser.parse_file(cpp_h, cpp_args=cpp_args, cpp_path=cpp_path)

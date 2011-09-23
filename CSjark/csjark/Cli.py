@@ -40,25 +40,25 @@ def main():
     #make for loop for support of multiple header files at once
     if args.header:
         if not os.path.exists(args.header):
-            print('Error: headerfile does not exist')
+            #sys.exit('Error: headerfile does not exist')
+            sys.exit(2)
 
     if args.config:
         if not os.path.exists(args.config):
-            print('Error: configfile does not exist')
+            #sys.exit('Error: configfile does not exist')
+            sys.exit(2)
 
 
     if len(sys.argv) > 1:
         print(args)
         if args.header:
-            if os.path.exists(args.header):
-                cparser.parse_file(args.header , use_cpp=args.cpp)
-            else:
-                print('error')
+            cparser.parse_file(args.header , use_cpp=args.cpp)
+        else:
+            print('Something went wrong')
         if args.config:
-            if os.path.exists(args.config):
-                config.parse_file(args.config)
-            else:
-                print('error')
+            config.parse_file(args.config)
+        else:
+            print('Something went wrong')
     else:
         parser.print_help()
 

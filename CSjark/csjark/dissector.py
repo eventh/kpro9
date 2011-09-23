@@ -9,11 +9,11 @@ VALID_PROTOTYPES = INT_TYPES + OTHER_TYPES
 
 
 class Field:
-    def __init__(self, name, type, size, protocol=None):
+    def __init__(self, name, type, size):
         self.name = name
         self.type = type
         self.size = size
-        self.protocol = protocol
+        self.protocol = None
 
     def get_def_extra(self):
         """Overload to add extra code above field definition."""
@@ -51,12 +51,8 @@ class IntRange(Field):
 class Protocol:
     counter = 0
 
-    def __init__(self, name, fields=None, id=None):
+    def __init__(self, name, id=None):
         self.name = name
-
-        if fields is None:
-            fields = []
-        self.fields = fields
 
         if id is None:
             Protocol.counter += 1
@@ -64,13 +60,18 @@ class Protocol:
         else:
             self.id = id
 
+        self.fields = []
+        self.data = []
         self.var = 'proto_{name}'.format(name=self.name)
         self.field_var = 'f'
         self.dissector = 'luastructs.message'
 
-        self.data = []
+    def add_field(self, field):
+        """Add a field to the dissector, updates the fields protocol."""
+        field.protocol = self
+        self.fields.append(field)
 
-    def add_header(self):
+    def _header_defintion(self):
         proto = 'local {var} = Proto("{name}", "struct {name}")'
         table = 'local luastructs_dt = DissectorTable.get("{dissector}")'
 
@@ -78,13 +79,13 @@ class Protocol:
         self.data.append(table.format(dissector=self.dissector))
         self.data.append('')
 
-    def add_fields(self):
+    def _fields_definition(self):
         decl = 'local {field_var} = {var}.fields'
         self.data.append(decl.format(field_var=self.field_var, var=self.var))
         self.data.extend([f.get_definition() for f in self.fields])
         self.data.append('')
 
-    def add_dissector(self):
+    def _dissector_func(self):
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
         sub_tree = '\tlocal subtree = tree:add({var}, buffer())'
         desc = '\tpinfo.cols.info:append(" (" .. {var}.description .. ")")'
@@ -103,12 +104,9 @@ class Protocol:
         self.data.append('')
 
     def create(self):
-        for field in self.fields:
-            field.protocol = self # Temp hack
-
-        self.add_header()
-        self.add_fields()
-        self.add_dissector()
+        self._header_defintion()
+        self._fields_definition()
+        self._dissector_func()
 
         end = 'luastructs_dt:add({id}, {var})\n'
         self.data.append(end.format(id=self.id, var=self.var))

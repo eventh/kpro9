@@ -7,7 +7,7 @@ Requires PLY and pycparser.
 import sys
 import pycparser
 from pycparser import c_ast, c_parser
-from config import DEFAULT_C_SIZE_MAP
+from config import DEFAULT_C_SIZE_MAP, DEFAULT_C_TYPE_MAP
 from dissector import Protocol, Field
 
 
@@ -49,17 +49,13 @@ def parse(text, filename=''):
     return parser.parse(text, filename)
 
 
-LUA_TYPES = {
-        "int": "uint32",
-        "array": "string",
-}
-
-
-def _map_type(c_type):
-    return LUA_TYPES.get(c_type, c_type)
+def _map_type(ctype):
+    """Find the wireshark type for a ctype."""
+    return DEFAULT_C_TYPE_MAP.get(ctype, ctype)
 
 
 def _size_of(ctype):
+    """Find the size of a c type in bytes."""
     if ctype in DEFAULT_C_SIZE_MAP.keys():
         return DEFAULT_C_SIZE_MAP[ctype]
 
@@ -82,26 +78,28 @@ class StructVisitor(c_ast.NodeVisitor):
         # Visit children
         c_ast.NodeVisitor.generic_visit(self, node)
 
+        # No support for typedef structs yet!
+        if not node.name:
+            return
+
+        # Create the protocol for the struct
+        protocol = Protocol(node.name)
+        self.structs.append(protocol)
+
         # Find the member definitions
-        members = []
         for decl in node.children():
             child = decl.children()[0]
 
             if isinstance(child, c_ast.TypeDecl):
-                members.append(self.handle_type_decl(child))
+                field = self.handle_type_decl(child, protocol)
             elif isinstance(child, c_ast.ArrayDecl):
-                members.append(self.handle_array_decl(child))
+                field = self.handle_array_decl(child, protocol)
             elif isinstance(child, c_ast.PtrDecl):
-                members.append(self.handle_ptr_decl(child))
+                field = self.handle_ptr_decl(child, protocol)
             else:
                 raise Exception("Unknown struct member type")
 
-        # Create the protocol for the struct
-        if node.name:
-            protocol = Protocol(node.name, members)
-            self.structs.append(protocol)
-
-    def handle_type_decl(self, node):
+    def handle_type_decl(self, node, proto):
         """Find member details in a type declaration."""
         child = node.children()[0]
         if isinstance(child, c_ast.IdentifierType):
@@ -111,29 +109,31 @@ class StructVisitor(c_ast.NodeVisitor):
         elif isinstance(child, c_ast.Union):
             ctype = "union"
 
-        field = Field(node.declname, _map_type(ctype), _size_of(ctype))
-        field._ctype = ctype # Tmp hack!
-        return field
+        type = _map_type(ctype)
+        size = _size_of(ctype)
+        proto.add_field(Field(node.declname, type, size))
 
-    def handle_array_decl(self, node):
+    def handle_array_decl(self, node, proto):
         """Find member details in an array declaration."""
         type_decl, constant = node.children()
-        child = self.handle_type_decl(type_decl)
+        child = type_decl.children()[0]
+        if isinstance(child, c_ast.IdentifierType):
+            if child.names[0] == 'char':
+                ctype = 'string'
+            else:
+                ctype = ' '.join(reversed(child.names))
+        else:
+            raise Exception('array of different types not supported yet.')
 
-        ctype = child._ctype
-        size = int(constant.value) * _size_of(child.size)
+        type = _map_type(ctype)
+        size = int(constant.value) * _size_of(ctype)
+        proto.add_field(Field(type_decl.declname, type, size))
 
-        field = Field(type_decl.declname, _map_type(ctype), size)
-        field._ctype = ctype # Tmp hack!
-        return field
-
-    def handle_ptr_decl(self, node):
+    def handle_ptr_decl(self, node, proto):
         """Find member details in a pointer declaration."""
         type_decl = node.children()[0]
         ctype = 'pointer' # Shortcut as pointers not a requirement
-        field = Field(type_decl.declname, ctype, _size_of(ctype))
-        field._ctype = ctype # Tmp hack!
-        return field
+        proto.add_field(Field(type_decl.declname, ctype, _size_of(ctype)))
 
 
 def find_structs(ast):

@@ -6,6 +6,34 @@ Should parse config files and create which the parser can use.
 import yaml
 
 
+# Mapping of c type and their wireshark field type.
+DEFAULT_C_TYPE_MAP = {
+        'bool': 'bool',
+        'char': 'string',
+        'signed char': 'string',
+        'unsigned char': 'string',
+        'short': "int16",
+        'short int': "int16",
+        'signed short int': "int16",
+        'unsigned short int': "uint16",
+        "int": "int32",
+        'signed int': "int32",
+        'unsigned int': "uint32",
+        'long': "int64",
+        'long int': "int64",
+        'signed long int': "int64",
+        'unsigned long int': "uint64",
+        'long long': "int64",
+        'long long int': "int64",
+        'signed long long int': "int64",
+        'unsigned long long int': "uint64",
+        'float': 'float',
+        'double': 'double',
+        'long double': 'todo',
+        'pointer': 'int32',
+}
+
+
 # Mapping of c type and their default size in bytes.
 DEFAULT_C_SIZE_MAP = {
         'bool': 1,
@@ -38,6 +66,7 @@ VALID_C_TYPES = DEFAULT_C_SIZE_MAP.keys()
 
 
 class ConfigError(Exception):
+    """Exception raised by invalid configuration."""
     pass
 
 
@@ -120,7 +149,7 @@ def _handle_struct(obj, rule):
 def parse(filename):
     """Parse a configuration file."""
     with open(filename, 'r') as f:
-        obj = yaml.load(f)
+        obj = yaml.safe_load(f)
     #print(obj)
 
     # Deal with range rules

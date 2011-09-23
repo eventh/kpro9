@@ -131,10 +131,13 @@ class RangeRule:
             raise ConfigError('RangeRule needs atleast a min or max value.')
 
 
-def parse_file(filename):
+def parse_file(filename, only_text=None):
     """Parse a configuration file."""
-    with open(filename, 'r') as f:
-        obj = yaml.safe_load(f)
+    if only_text is not None:
+        obj = yaml.safe_load(only_text)
+    else:
+        with open(filename, 'r') as f:
+            obj = yaml.safe_load(f)
 
     # Deal with range rules
     for rule in obj['RangeRules']:

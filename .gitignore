@@ -18,3 +18,4 @@
 /CSjark/docs/_build
 /CSjark/docs/_static
 /CSjark/docs/_template
+/CSjark/csjark/*.lua

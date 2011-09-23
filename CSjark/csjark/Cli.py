@@ -7,6 +7,8 @@ import config
 def main():
     parser = argparse.ArgumentParser(description='Generate Wireshark'
             ' dissectors from C structs.')
+    
+    parser.add_argument('header', nargs='?', action='store')
     #Flags listed first:
     # Verbose flag
     parser.add_argument('-v', '--verbose', action='store_true',
@@ -28,20 +30,14 @@ def main():
     # Write output to destination file
     parser.add_argument('-output', nargs='*',
             type=str, help='Write output to file')
-    parser.add_argument('header', nargs='?')
 
     args = parser.parse_args()
     if len(sys.argv) > 1:
         print(args)
         if args.header:
-            cparser.parse_file(hfile)
+            cparser.parse_file('header')
     else:
         parser.print_help()
-
-
-    def parseConfig():
-
-        config.parse_file('filename')
 
 
 if __name__ == "__main__":

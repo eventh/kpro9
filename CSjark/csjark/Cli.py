@@ -25,6 +25,7 @@ def main():
     # Write output to destination file
     parser.add_argument('-output', nargs='*',
             type=str, help='Write output to file')
+    parser.add_argument('header', nargs='?')
 
     #A file extension checker
     #recognizing header files

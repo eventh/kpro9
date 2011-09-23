@@ -31,7 +31,7 @@ def main():
     'to parse')
     # Write output to destination file
     parser.add_argument('-output', nargs='*',
-            type=str, help='Write output to file')
+            type=str, dest='output', help='Write output to file')
 
 
 
@@ -48,7 +48,12 @@ def main():
             #sys.exit('Error: configfile does not exist')
             sys.exit(2)
 
+            '''
+    if args.output:
+        if not os.path.exists(args.output):
 
+
+'''
     if len(sys.argv) > 1:
         print(args)
         if args.header:

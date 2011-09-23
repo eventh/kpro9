@@ -2,6 +2,7 @@ import sys
 import argparse
 import cparser
 import config
+import os
 
 
 def main():
@@ -31,16 +32,27 @@ def main():
     parser.add_argument('-output', nargs='*',
             type=str, help='Write output to file')
 
+
+
     args = parser.parse_args()
+
+    def checkInput():
+        #check header input
+        if os.path.exists(args.header):
+            
+
+
+
+
     if len(sys.argv) > 1:
         print(args)
         if args.header:
-            if os.path.exist(args.header):
+            if os.path.exists(args.header):
                 cparser.parse_file(args.header , use_cpp=args.cpp)
             else:
                 print('error')
         if args.config:
-            if os.path.exist(args.config):
+            if os.path.exists(args.config):
                 config.parse_file(args.config)
             else:
                 print('error')

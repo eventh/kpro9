@@ -31,7 +31,10 @@ def main():
 
     def parseHeader():
         cparser.parse_file('lol')
-    
+
+    def parseConfig():
+        config.parse('filename')
+
     args = parser.parse_args()
     if len(sys.argv) > 1:
         print(args)

@@ -146,7 +146,7 @@ def _handle_struct(obj, rule):
         config.rules.append(rule)
 
 
-def parse(filename):
+def parse_file(filename):
     """Parse a configuration file."""
     with open(filename, 'r') as f:
         obj = yaml.safe_load(f)

@@ -1,6 +1,10 @@
-RangeRule:
-  - file: examplestruct.h
-    struct: example_struct
+RangeRules:
+  - struct: example_struct
     member: percent
+    min: 0
+    max: 100
+
+  - struct: example_struct
+    type: int
     min: 0
     max: 100

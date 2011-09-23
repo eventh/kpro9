@@ -3,6 +3,7 @@ A module for configuration of our utility.
 
 Should parse config files and create which the parser can use.
 """
+import sys
 import yaml
 
 
@@ -70,56 +71,50 @@ class ConfigError(Exception):
     pass
 
 
-class Config:
-    """Holds global configuration."""
-    singleton = None
-    files = {}
-    structs = {}
-    size_map = DEFAULT_C_SIZE_MAP.copy()
-
-    def __init__(self):
-        if Config.singleton is not None:
-            raise Exception('Cant have several global config objects.')
-        Config.singleton = self
-
-    def get_size_of(self, ctype):
-        return self.size_map[ctype]
-
-class FileConfig:
-    """Holds configuration for a specific source file."""
-
-    def __init__(self, filename):
-        Config.files[filename] = self
-        self.filename = filename
-        self.rules = []
-        self.size_map = {}
-
-    def get_size_of(self, ctype):
-        if ctype in self.size_map:
-            return self.size_map[ctype]
-        else:
-            return Config.size_map[ctype]
-
 class StructConfig:
     """Holds configuration for a specific struct."""
+    configs = {}
 
     def __init__(self, name):
-        Config.structs[name] = self
-        self.name = name
-        self.rules = []
-        self.size_map = {}
+        StructConfig.configs[name] = self
 
-    def get_size_of(self, ctype):
-        if ctype in self.size_map:
-            return self.size_map[ctype]
+        self.name = name
+        self.members = {}
+        self.types = {}
+
+    def add_member_rule(self, member, rule):
+        if member not in self.members.keys():
+            self.members[member] = []
+        self.members[member].append(rule)
+
+    def add_type_rule(self, type, rule):
+        if type not in self.types.keys():
+            self.types[type] = []
+        self.types[type].append(rule)
+
+    @classmethod
+    def find(cls, name):
+        if name not in cls.configs.keys():
+            return cls(name)
         else:
-            return Config.size_map[ctype]
+            return cls.configs[name]
 
 
 class RangeRule:
     def __init__(self, obj):
-        # Member represents a struct member whom should be validated
-        self.member = obj['member']
+        self.struct = obj['struct']
+        conf = StructConfig.find(self.struct)
+
+        # A range rule refers either to a type or a member
+        self.member = self.type = None
+        if 'member' in obj:
+            self.member = obj['member']
+            conf.add_member_rule(self.member, self)
+        elif 'type' in obj:
+            self.type = obj['type']
+            conf.add_type_rule(self.type, self)
+        else:
+            raise ConfigError('RangeRule needs either a type or member.')
 
         # Min and max represents the endpoints of the valid range
         self.min = self.max = None
@@ -127,41 +122,25 @@ class RangeRule:
             self.min = float(obj['min'])
         if 'max' in obj:
             self.max = float(obj['max'])
-
-
-def _handle_file(obj, rule):
-    if 'file' in obj:
-        name = obj['file']
-        if name not in Config.files.keys():
-            FileConfig(name)
-        config = Config.files[name]
-        config.rules.append(rule)
-
-def _handle_struct(obj, rule):
-    if 'struct' in obj:
-        name = obj['struct']
-        if name not in Config.structs.keys():
-            StructConfig(name)
-        config = Config.structs[name]
-        config.rules.append(rule)
+        if self.min is None and self.max is None:
+            raise ConfigError('RangeRule needs atleast a min or max value.')
 
 
 def parse_file(filename):
     """Parse a configuration file."""
     with open(filename, 'r') as f:
         obj = yaml.safe_load(f)
-    #print(obj)
 
     # Deal with range rules
-    for rule_obj in obj['RangeRule']:
-        rule = RangeRule(rule_obj)
-        _handle_file(rule_obj, rule)
-        _handle_struct(rule_obj, rule)
-
-    print("Config file '%s' parsed" % filename)
-    print(Config.structs)
+    for rule in obj['RangeRules']:
+        RangeRule(rule)
 
 
 if __name__ == '__main__':
-    parse('etc/example.yml')
+    if len(sys.argv) > 1:
+        parse_file(sys.argv[1])
+    else:
+        parse_file('etc/example.yml')
+    print(StructConfig.configs)
+
 

@@ -26,7 +26,7 @@ def main():
             type=str, help='C-header file to parse')
     # Configuration file
     parser.add_argument('-c', '--config', nargs='*',
-            type=str, action='store',help='Configuration file')
+            type=str, dest='config', action='store',help='Configuration file')
     # Write output to destination file
     parser.add_argument('-output', nargs='*',
             type=str, help='Write output to file')
@@ -35,7 +35,15 @@ def main():
     if len(sys.argv) > 1:
         print(args)
         if args.header:
-            cparser.parse_file(args.header)
+            if os.path.exist(args.header):
+                cparser.parse_file(args.header , use_cpp=args.cpp)
+            else:
+                print('error')
+        if args.config:
+            if os.path.exist(args.config):
+                config.parse_file(args.config)
+            else:
+                print('error')
     else:
         parser.print_help()
 

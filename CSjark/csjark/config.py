@@ -82,6 +82,11 @@ class StructConfig:
         self.members = {}
         self.types = {}
 
+    def get_rules(self, member, type):
+        rules = self.members.get(member, [])
+        rules.extend(self.types.get(type, []))
+        return rules
+
     def add_member_rule(self, member, rule):
         if member not in self.members.keys():
             self.members[member] = []
@@ -135,6 +140,8 @@ def parse_file(filename):
     for rule in obj['RangeRules']:
         RangeRule(rule)
 
+    print("Parsed config file '%s' successfully." % filename)
+
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
@@ -142,5 +149,4 @@ if __name__ == '__main__':
     else:
         parse_file('etc/example.yml')
     print(StructConfig.configs)
-
 

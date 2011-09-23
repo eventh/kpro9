@@ -66,14 +66,14 @@ def create_structs():
     };
     '''
     ast = cparser.parse(code, 'test')
-    yield cparser.find_structs(ast)[0].members
+    yield cparser.find_structs(ast)[0].fields
 
 @find_structs.test
 def find_basic_types(structs):
     """Test that we find structs which has members of basic types."""
     a, b, c = structs[:3]
     assert a.name == 'a' and b.name == 'b' and c.name == 'c'
-    assert a.type == 'int' and b.type == 'float' and c.type == 'char'
+    assert a.type == 'int32' and b.type == 'float' and c.type == 'string'
     assert a.size == 4 and b.size == 4 and c.size == 1
 
 @find_structs.test
@@ -81,7 +81,7 @@ def find_array_types(structs):
     """Test that we find structs which has arrays as members."""
     a, b = structs[3:5]
     assert a.name == 'str' and b.name == 'd'
-    assert a.type == 'char' and b.type == 'float'
+    assert a.type == 'string' and b.type == 'float'
 
 
 # Tests for the C preprocessor

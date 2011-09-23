@@ -91,11 +91,11 @@ class StructVisitor(c_ast.NodeVisitor):
             child = decl.children()[0]
 
             if isinstance(child, c_ast.TypeDecl):
-                field = self.handle_type_decl(child, protocol)
+                self.handle_type_decl(child, protocol)
             elif isinstance(child, c_ast.ArrayDecl):
-                field = self.handle_array_decl(child, protocol)
+                self.handle_array_decl(child, protocol)
             elif isinstance(child, c_ast.PtrDecl):
-                field = self.handle_ptr_decl(child, protocol)
+                self.handle_ptr_decl(child, protocol)
             else:
                 raise Exception("Unknown struct member type")
 

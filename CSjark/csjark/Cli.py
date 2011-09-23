@@ -35,7 +35,7 @@ def main():
     if len(sys.argv) > 1:
         print(args)
         if args.header:
-            cparser.parse_file('header')
+            cparser.parse_file(args.header)
     else:
         parser.print_help()
 

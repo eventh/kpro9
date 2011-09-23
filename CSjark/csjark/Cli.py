@@ -20,6 +20,7 @@ def main():
     #Followed by input and output files
     # C-header file
     parser.add_argument('-ch', '--cheader', nargs='*',
+            action='store', dest='hfile',
             type=str, help='C-header file to parse')
     # Configuration file
     parser.add_argument('-c', '--config', nargs='*',
@@ -29,17 +30,18 @@ def main():
             type=str, help='Write output to file')
     parser.add_argument('header', nargs='?')
 
-    def parseHeader():
-        cparser.parse_file('lol')
-
-    def parseConfig():
-        config.parse_file('filename')
-
     args = parser.parse_args()
     if len(sys.argv) > 1:
         print(args)
+        if args.header:
+            cparser.parse_file(hfile)
     else:
         parser.print_help()
+
+
+    def parseConfig():
+
+        config.parse_file('filename')
 
 
 if __name__ == "__main__":

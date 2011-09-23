@@ -37,7 +37,14 @@ def main():
 
     args = parser.parse_args()
 
-    
+    #make for loop for support of multiple header files at once
+    if args.header:
+        if not os.path.exists(args.header):
+            print('Error: headerfile does not exist')
+
+    if args.config:
+        if not os.path.exists(args.config):
+            print('Error: configfile does not exist')
 
 
     if len(sys.argv) > 1:

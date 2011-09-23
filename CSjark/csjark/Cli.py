@@ -1,5 +1,7 @@
 import sys
 import argparse
+import cparser
+import config
 
 
 def main():
@@ -27,11 +29,8 @@ def main():
             type=str, help='Write output to file')
     parser.add_argument('header', nargs='?')
 
-    #A file extension checker
-    #recognizing header files
-    def filetype(file):
-        return file.split(".")[-1]
-    print(filetype('Cli.py'))
+    def parseHeader():
+        cparser.parse_file('lol')
     
     args = parser.parse_args()
     if len(sys.argv) > 1:

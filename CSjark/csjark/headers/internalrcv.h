@@ -3,10 +3,10 @@
  * Copyright 2011, Stig Bjorlykke <stig@bjorlykke.org>
  */
 
+#include "time.h"
+
 #define INTERNALRCV 2
 #define STRING_LEN 26
-
-typedef int time_t;
 
 struct internal_rcv {
    int    type;

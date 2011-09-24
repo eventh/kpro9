@@ -27,7 +27,7 @@ def parse_file(filename, use_cpp=True,
         if cpp_args is None:
             cpp_args = []
         if fake_includes:
-            cpp_args.append(r'-I/../utils/fake_libc_include')
+            cpp_args.append(r'-I../utils/fake_libc_include')
 
         # TODO: find a cleaner way to look for cpp on windows!
         if sys.platform == 'win32' and cpp_path == 'cpp':

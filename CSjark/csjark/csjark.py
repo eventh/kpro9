@@ -78,6 +78,7 @@ def parse_args():
 
 def create_dissector(filename, use_cpp):
     ast = cparser.parse_file(filename, use_cpp=use_cpp)
+
     if Cli.verbose:
         ast.show()
 
@@ -97,9 +98,15 @@ def main():
     for filename in configs:
         config.parse_file(filename)
 
+        if Cli.verbose:
+            print("Parsed config file '%s' successfully." % filename)
+
     # Create dissectors
     for filename in headers:
         create_dissector(filename, cpp)
+
+        if Cli.verbose:
+            print("Parsed header file '%s' successfully." % filename)
 
 
 if __name__ == "__main__":

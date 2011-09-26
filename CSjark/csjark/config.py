@@ -143,13 +143,11 @@ def parse_file(filename, only_text=None):
     for rule in obj['RangeRules']:
         RangeRule(rule)
 
-    print("Parsed config file '%s' successfully." % filename)
-
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         parse_file(sys.argv[1])
+        print(StructConfig.configs)
     else:
-        parse_file('etc/example.yml')
-    print(StructConfig.configs)
+        print("Please provide a YAML config file to parse")
 

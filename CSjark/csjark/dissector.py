@@ -13,9 +13,11 @@ class Field:
         self.name = name
         self.type = type
         self.size = size
-        self.protocol = None
 
-    def get_def_extra(self):
+        self.protocol = None
+        self.value_var = '%s_value' % self.name
+
+    def get_def_before(self):
         """Overload to add extra code above field definition."""
         return []
 
@@ -25,27 +27,54 @@ class Field:
         args = {'var': self.protocol.field_var, 'name': self.name,
                 'protocol': self.protocol.name, 'type': self.type}
 
-        data = self.get_def_extra()
+        data = self.get_def_before()
         data.append(t.format(**args))
         return '\n'.join(data)
 
-    def get_code_extra(self):
+    def get_code_before(self):
         """Overload to add extra code above the field code."""
+        return []
+
+    def get_code_after(self):
+        """Overload to add extra code below the field code."""
         return []
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
-        t = '\tsubtree:add ({var}.{name}, buffer({offset},{size}))'
+        t = '\tlocal {value} = subtree:add({var}.{name},' \
+                'buffer({offset},{size}):{type}())'
         args = {'var': self.protocol.field_var, 'name': self.name,
-                'offset': offset, 'size': self.size}
+                'type': self.type, 'offset': offset,
+                'size': self.size, 'value': self.value_var}
 
-        data = self.get_code_extra()
+        data = []
+        data.extend(self.get_code_before())
         data.append(t.format(**args))
+        data.extend(self.get_code_after())
         return '\n'.join(data)
 
 
-class IntRange(Field):
-    pass
+class RangeField(Field):
+    def __init__(self, min, max, *args, **vargs):
+        super().__init__(*args, **vargs)
+        self.min = min
+        self.max = max
+
+    def get_code_after(self):
+        data = []
+
+        def create_test(var, value, test='>'):
+            data.append('\tlocal %s = %s' % (var, value))
+            data.append('\tif (%s %s %s) then' % (var, test, self.value_var))
+            data.append('\t\t%s:append_text("INVALID")' % self.value_var)
+            data.append('\tend')
+
+        if self.min is not None:
+            create_test('%s_min' % self.name, self.min, '>')
+        if self.max is not None:
+            create_test('%s_max' % self.name, self.max, '<')
+
+        return data
 
 
 class Protocol:

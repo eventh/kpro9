@@ -7,8 +7,9 @@ Requires PLY and pycparser.
 import sys
 import pycparser
 from pycparser import c_ast, c_parser
-from config import DEFAULT_C_SIZE_MAP, DEFAULT_C_TYPE_MAP, StructConfig
-from dissector import Protocol, Field
+from config import DEFAULT_C_SIZE_MAP, DEFAULT_C_TYPE_MAP
+from config import StructConfig, RangeRule
+from dissector import Protocol, Field, RangeField
 
 
 def parse_file(filename, use_cpp=True,
@@ -119,15 +120,22 @@ class StructVisitor(c_ast.NodeVisitor):
     def _create_field(self, proto, conf, name, ctype, size=None):
         """Create a dissector field representing the struct member."""
         # Find all rules relevant for this field
+        range_rules = None
+
         if conf is not None:
             rules = conf.get_rules(name, ctype)
+            range_rules = [i for i in rules if isinstance(i, RangeRule)]
 
         # Map from C to wireshark values
         type_ = self._map_type(ctype)
         if size is None:
             size = self._size_of(ctype)
 
-        proto.add_field(Field(name, type_, size))
+        if range_rules:
+            proto.add_field(RangeField(range_rules[0].min,
+                                range_rules[0].max, name, type_, size))
+        else:
+            proto.add_field(Field(name, type_, size))
 
     def _map_type(self, ctype):
         """Find the wireshark type for a ctype."""

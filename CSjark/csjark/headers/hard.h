@@ -16,7 +16,7 @@ enum cardsuit {
    SPADES
 };
 
-struct basic {
+struct hard {
     // Boolean
     bool test;
 

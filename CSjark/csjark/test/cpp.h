@@ -1,6 +1,5 @@
 /*
    A header file for testing the C preprocessor
-   Used in parser.py
 */
 
 #define TEST 10

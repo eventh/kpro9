@@ -1,10 +1,15 @@
 import sys
 import argparse
+import cparser
+import config
+import os
 
 
 def main():
     parser = argparse.ArgumentParser(description='Generate Wireshark'
             ' dissectors from C structs.')
+    
+    parser.add_argument('header', nargs='?', action='store')
     #Flags listed first:
     # Verbose flag
     parser.add_argument('-v', '--verbose', action='store_true',
@@ -18,24 +23,47 @@ def main():
     #Followed by input and output files
     # C-header file
     parser.add_argument('-ch', '--cheader', nargs='*',
+            action='store', dest='hfile',
             type=str, help='C-header file to parse')
     # Configuration file
     parser.add_argument('-c', '--config', nargs='*',
-            type=str, action='store',help='Configuration file')
+            type=str, dest='config', action='store',help='Configuration file'
+    'to parse')
     # Write output to destination file
     parser.add_argument('-output', nargs='*',
-            type=str, help='Write output to file')
-    parser.add_argument('header', nargs='?')
+            type=str, dest='output', help='Write output to file')
 
-    #A file extension checker
-    #recognizing header files
-    def filetype(file):
-        return file.split(".")[-1]
-    print(filetype('Cli.py'))
-    
+
+
     args = parser.parse_args()
+
+    #make for loop for support of multiple header files at once
+    if args.header:
+        if not os.path.exists(args.header):
+            #sys.exit('Error: headerfile does not exist')
+            sys.exit(2)
+
+    if args.config:
+        if not os.path.exists(args.config):
+            #sys.exit('Error: configfile does not exist')
+            sys.exit(2)
+
+            '''
+    if args.output:
+        if not os.path.exists(args.output):
+
+
+'''
     if len(sys.argv) > 1:
         print(args)
+        if args.header:
+            cparser.parse_file(args.header , use_cpp=args.cpp)
+        else:
+            print('Something went wrong')
+        if args.config:
+            config.parse_file(args.config)
+        else:
+            print('Something went wrong')
     else:
         parser.print_help()
 

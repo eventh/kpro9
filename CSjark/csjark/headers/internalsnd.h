@@ -3,9 +3,9 @@
  * Copyright 2011, Stig Bjorlykke <stig@bjorlykke.org>
  */
 
-#define STRING_LEN 30
+#include "time.h"
 
-typedef int time_t;
+#define STRING_LEN 30
 
 struct internal_snd {
    int    type;

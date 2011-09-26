@@ -7,7 +7,7 @@ Requires PLY and pycparser.
 import sys
 import pycparser
 from pycparser import c_ast, c_parser
-from config import DEFAULT_C_SIZE_MAP, DEFAULT_C_TYPE_MAP
+from config import DEFAULT_C_SIZE_MAP, DEFAULT_C_TYPE_MAP, StructConfig
 from dissector import Protocol, Field
 
 
@@ -27,7 +27,7 @@ def parse_file(filename, use_cpp=True,
         if cpp_args is None:
             cpp_args = []
         if fake_includes:
-            cpp_args.append(r'-I/../utils/fake_libc_include')
+            cpp_args.append(r'-I../utils/fake_libc_include')
 
         # TODO: find a cleaner way to look for cpp on windows!
         if sys.platform == 'win32' and cpp_path == 'cpp':
@@ -49,29 +49,11 @@ def parse(text, filename=''):
     return parser.parse(text, filename)
 
 
-def _map_type(ctype):
-    """Find the wireshark type for a ctype."""
-    return DEFAULT_C_TYPE_MAP.get(ctype, ctype)
-
-
-def _size_of(ctype):
-    """Find the size of a c type in bytes."""
-    if ctype in DEFAULT_C_SIZE_MAP.keys():
-        return DEFAULT_C_SIZE_MAP[ctype]
-
-    if ctype == 'enum':
-        return 7
-    elif ctype == 'array':
-        return 13
-    else:
-        return 1
-
-
 class StructVisitor(c_ast.NodeVisitor):
     """A class which visit struct nodes in the AST."""
 
     def __init__(self):
-        self.structs = []
+        self.structs = [] # All structs encountered in this AST
 
     def visit_Struct(self, node):
         """Visit a Struct node in the AST."""
@@ -83,23 +65,26 @@ class StructVisitor(c_ast.NodeVisitor):
             return
 
         # Create the protocol for the struct
-        protocol = Protocol(node.name)
-        self.structs.append(protocol)
+        proto = Protocol(node.name)
+        self.structs.append(proto)
+
+        # Find config rules
+        conf = StructConfig.configs.get(node.name, None)
 
         # Find the member definitions
         for decl in node.children():
             child = decl.children()[0]
 
             if isinstance(child, c_ast.TypeDecl):
-                self.handle_type_decl(child, protocol)
+                self.handle_type_decl(child, proto, conf)
             elif isinstance(child, c_ast.ArrayDecl):
-                self.handle_array_decl(child, protocol)
+                self.handle_array_decl(child, proto, conf)
             elif isinstance(child, c_ast.PtrDecl):
-                self.handle_ptr_decl(child, protocol)
+                self.handle_ptr_decl(child, proto, conf)
             else:
                 raise Exception("Unknown struct member type")
 
-    def handle_type_decl(self, node, proto):
+    def handle_type_decl(self, node, proto, conf):
         """Find member details in a type declaration."""
         child = node.children()[0]
         if isinstance(child, c_ast.IdentifierType):
@@ -108,12 +93,9 @@ class StructVisitor(c_ast.NodeVisitor):
             ctype = "enum"
         elif isinstance(child, c_ast.Union):
             ctype = "union"
+        self._create_field(proto, conf, node.declname, ctype)
 
-        type = _map_type(ctype)
-        size = _size_of(ctype)
-        proto.add_field(Field(node.declname, type, size))
-
-    def handle_array_decl(self, node, proto):
+    def handle_array_decl(self, node, proto, conf):
         """Find member details in an array declaration."""
         type_decl, constant = node.children()
         child = type_decl.children()[0]
@@ -125,15 +107,38 @@ class StructVisitor(c_ast.NodeVisitor):
         else:
             raise Exception('array of different types not supported yet.')
 
-        type = _map_type(ctype)
-        size = int(constant.value) * _size_of(ctype)
-        proto.add_field(Field(type_decl.declname, type, size))
+        size = int(constant.value) * self._size_of(ctype)
+        self._create_field(proto, conf, type_decl.declname, ctype, size=size)
 
-    def handle_ptr_decl(self, node, proto):
+    def handle_ptr_decl(self, node, proto, conf):
         """Find member details in a pointer declaration."""
         type_decl = node.children()[0]
         ctype = 'pointer' # Shortcut as pointers not a requirement
-        proto.add_field(Field(type_decl.declname, ctype, _size_of(ctype)))
+        self._create_field(proto, conf, type_decl.declname, ctype)
+
+    def _create_field(self, proto, conf, name, ctype, size=None):
+        """Create a dissector field representing the struct member."""
+        # Find all rules relevant for this field
+        if conf is not None:
+            rules = conf.get_rules(name, ctype)
+
+        # Map from C to wireshark values
+        type_ = self._map_type(ctype)
+        if size is None:
+            size = self._size_of(ctype)
+
+        proto.add_field(Field(name, type_, size))
+
+    def _map_type(self, ctype):
+        """Find the wireshark type for a ctype."""
+        return DEFAULT_C_TYPE_MAP.get(ctype, ctype)
+
+    def _size_of(self, ctype):
+        """Find the size of a c type in bytes."""
+        if ctype in DEFAULT_C_SIZE_MAP.keys():
+            return DEFAULT_C_SIZE_MAP[ctype]
+        else:
+            return 1
 
 
 def find_structs(ast):

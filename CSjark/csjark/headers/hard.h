@@ -1,4 +1,4 @@
-#include "headers\stdbool.h"
+#include "stdbool.h"
 
 #define ITEMS 10
 #define STRING_LEN 30

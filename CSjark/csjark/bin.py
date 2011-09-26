@@ -5,12 +5,17 @@ A module for creating Wireshark dissectors for C structs.
 import sys
 import cparser
 import dissector
+import config
 
 
 def main():
     if len(sys.argv) < 2:
         print("Please provide a C file to parse")
-        exit()
+        sys.exit(2)
+
+    # Parse a config file
+    if len(sys.argv) > 2:
+        config.parse_file(sys.argv[2])
 
     # Parse the given C file to create an AST
     filename = sys.argv[1]

@@ -13,9 +13,7 @@ class Field:
         self.name = name
         self.type = type
         self.size = size
-
         self.protocol = None
-        self.value_var = '%s_value' % self.name
 
     def get_def_before(self):
         """Overload to add extra code above field definition."""
@@ -31,27 +29,12 @@ class Field:
         data.append(t.format(**args))
         return '\n'.join(data)
 
-    def get_code_before(self):
-        """Overload to add extra code above the field code."""
-        return []
-
-    def get_code_after(self):
-        """Overload to add extra code below the field code."""
-        return []
-
     def get_code(self, offset):
         """Get the code for dissecting this field."""
-        t = '\tlocal {value} = subtree:add({var}.{name},' \
-                'buffer({offset},{size}):{type}())'
+        t = '\tsubtree:add({var}.{name}, buffer({offset}, {size}))'
         args = {'var': self.protocol.field_var, 'name': self.name,
-                'type': self.type, 'offset': offset,
-                'size': self.size, 'value': self.value_var}
-
-        data = []
-        data.extend(self.get_code_before())
-        data.append(t.format(**args))
-        data.extend(self.get_code_after())
-        return '\n'.join(data)
+                'offset': offset, 'size': self.size,}
+        return t.format(**args)
 
 
 class RangeField(Field):
@@ -60,13 +43,27 @@ class RangeField(Field):
         self.min = min
         self.max = max
 
-    def get_code_after(self):
+    def get_code(self, offset):
+        """Get the code for dissecting this field."""
         data = []
 
+        # Local var definitions
+        t = '\tlocal {name} = subtree:add({var}.{name}, buffer({offset}, {size}))'
+        args = {'var': self.protocol.field_var, 'name': self.name,
+                'offset': offset, 'size': self.size}
+
+        data.append(t.format(**args))
+
+        # Test the value
         def create_test(var, value, test='>'):
+            type_ = self.type
+            if type_[-2:] in ('16', '32'):
+                type_ = type_[:-2]
+            data.append('\tlocal %s_val = buffer(%i, %i):%s()' % (
+                            self.name, offset, self.size, type_))
             data.append('\tlocal %s = %s' % (var, value))
-            data.append('\tif (%s %s %s) then' % (var, test, self.value_var))
-            data.append('\t\t%s:append_text("INVALID")' % self.value_var)
+            data.append('\tif (%s %s %s_val) then' % (var, test, self.name))
+            data.append('\t\t%s:append_text(" INVALID")' % self.name)
             data.append('\tend')
 
         if self.min is not None:
@@ -74,7 +71,7 @@ class RangeField(Field):
         if self.max is not None:
             create_test('%s_max' % self.name, self.max, '<')
 
-        return data
+        return '\n'.join(data)
 
 
 class Protocol:

@@ -1,0 +1,5 @@
+RangeRules:
+  - struct: age_test
+    member: age
+    min: 0
+    max: 100

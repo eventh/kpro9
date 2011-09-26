@@ -32,9 +32,9 @@ def parse_file(filename, use_cpp=True,
         # TODO: find a cleaner way to look for cpp on windows!
         if sys.platform == 'win32' and cpp_path == 'cpp':
             cpp_path = '../utils/cpp.exe' # Windows don't come with a CPP
-        #elif sys.platform == 'darwin':
-        #    cpp_path = 'gcc' # Fix for a bug in Mac GCC 4.2.1
-        #    cpp_args.append('-E')
+        elif sys.platform == 'darwin':
+            cpp_path = 'gcc' # Fix for a bug in Mac GCC 4.2.1
+            cpp_args.append('-E')
 
     # Generate an abstract syntax tree
     ast = pycparser.parse_file(filename, use_cpp=use_cpp,

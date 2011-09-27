@@ -1,3 +1,295 @@
-\chapter{Project Description}
-Project name: Wireshark: Automated generation of protocol dissectors
-Project sponsor: Thales Norway AS
+\section{Project Plan}
+
+
+\subsection{Measurement of Project Effects}
+Automatic generation of Lua scripts from c-header files would bring considerable resource savings in the customers usual work process. Time (and therefore financial resources) will be  be saved by delivery of the solution every time they need to know the contents of investigated IPC messages that include C struct(s).
+
+The most of the savings will be caused by enabling filtering of the messages by the specific attribute in the C struct in Wireshark. Once this will be possible, a lot of unnecessary searching can be omitted.
+
+Before the project start, C structs were investigated in two ways. The first, manual method, which means counting individual bytes of the binary file that includes data in C structs. This is possible only for small-sized messages. For bigger messages, this method is inapplicable, since the message can consist of several thousands bytes. The second method consists of writing the dissector (as Lua script) manually for the specific C header. Also, this method cannot be used for more complex C structs, i.e. those using nested structs. So far, there has been written about 10 Lua scripts manually.
+
+According to the customer, there are approximately 3000 messages that include C structs and those need to be dissected by the solution. Time spent to write a dissector for a message manually depends on the struct’s complexity. For trivial messages, it takes 15 minutes to create a dissector manually. It took about 1 hour for the most complicated dissectors that were developed by the customer so far.
+
+If 1 hour is the average time for creating a dissector for 1 message, our solution will save about 3000 hours of work. Due to everyday workload of the customer’s development team, this amount of time could never be used to accomplish such a task.
+
+None of the workaround methods mentioned above is capable of processing messages with C structs that are big and complex. Time savings in these cases are not easily estimated.
+
+Also, sometimes a representative of Thales Norway AS has to physically move to the their customer’s site to solve a problem. With the delivered solution, in some cases, this will be no longer necessary and the problem will be solved remotely by sending capture files to Thales and solving it in-house. Savings in this case are not only time-based but it will also directly cut the transportation costs and it will increase the satisfaction for the client.
+
+\subsection{Limitations}
+As in all other projects, the project members have to deal with various limitations and constraints given either by the customer or simply by the fact that they are students.
+
+\subsubsection{Technical Limitations}
+\begin{itemize}
+	\item \textbf{C preprocessor:} To fulfill all the requirements we might need to either modify an existing preprocessor or write our own, which can be a huge undertaking.
+	\item \textbf{Platforms:} SPARC platform that are required for the program are not available to the project group. 
+\end{itemize}
+
+\subsubsection{Non-technical Limitations}
+\begin{itemize}
+	\item \textbf{Experience:} None in the group has experience with Lua-scripts, running a project with larger team, or has planned a project before.
+	\item \textbf{Time:} The project group has limited time of 12 weeks and a project deadline that cannot be changed. Also, the team consists of 7 members that have different schedules and so finding a time when everyone is available for a meeting might be difficult. These limitations might lead to considerable delays in the project progress.
+	\item \textbf{Language:}         Language: In this project the team will have to write and speak in English, which is a second language for all team members. This may lead to misunderstandings and will negatively affect the time it takes to write the report.
+\end{itemize}
+
+\subsection{Tool Selection}
+To support collaboration and project management the team has considered and selected the listed tools for use in this project.
+
+\begin{itemize}
+\item \textbf{Git \& Github:} 
+
+The team has selected Git as the version control system, hosted at Github.com.
+
+We had experience with CVS, SVN, Git and Mercurial, and although everyone knew SVN and only two knew Git, we selected Git for this project. We evaluated free hosting sites of version control systems, which could also provide us with other collaborative features that we wanted. github.com, bitbucket.com and sourceforge.net all provided wiki and issue tracker in addition to free version control system hosting. We eliminated sourceforge.net because their focus is divided between software users and developers, while the other two sites are fully focused on developers. The two remaining sites provides almost identical features, where one focuses on Git and the other on Mercurial.
+
+Github with Git version control system was selected because more team members knew Git than Mercurial. By selecting a newer version control system like Git, we get advantageous features like branches and distributed repository model. Since we use different platforms, we will also use different git clients, but for Windows most of the group has selected tortoisegit.
+
+\item \textbf{Skype:} 
+
+Skype is an application which allows the user to make video and voice chats over the Internet, including conference calls and chatting. The team will use Skype to communicate and collaborate when we are not physically at the same location at the same time.
+
+\item \textbf{Google Docs:} 
+
+Google Docs is web-based office suite, which include documents, spreadsheets and presentations. It makes it possible to collaborate in real-time. For this project we are going to use Google Docs to collaborate on document drafts, and to share documents within the team and with the teams advisor.
+
+\item \textbf{LaTeX}
+
+LaTeX is a document markup language and document preparation system used to create reports, articles and books. LaTeX was chosen by the group for its high quality typesetting which produces professional looking documents, and because it is suitable for larger scientific reports. LaTeX also provides automatic numbering of chapter and sections, automatic generation of table of contents, cross-referencing and bibliography management. Since LaTeX files are plain text files they are suitable for versioning with a version control system like Git. We will use LaTeX to write the final project report, and we have created a few templates for test plans and minutes.
+
+\item \textbf{Mailing list}
+
+For asynchronous communication the team uses an electronic mailing list provided by IDI, NTNU.
+
+\item \textbf{Google Calendar}
+
+Since all team members have google accounts, we have created a google calendar to help schedule and keep track of meetings. A single calendar which all members can include in their own prevents misunderstandings and duplication of work.
+
+\end{itemize}
+
+\subsection{Based on the planned effort}
+Calculations done by the course staff suggests that each student should use 325 person-hours distributed over 13 weeks. Our group, consisting of seven students, will have a total of 2275 person-hours to spend on the project. 
+
+\subsection{Schedule of Results}
+This project will have two deliveries, pre-delivery and final delivery.  The milestones and sprints are listed below. \newline
+\textbf{Milestones}
+
+\begin{tabular}{l  l}
+	30. August & Project start \\
+	6. October & Pre-delivery of project report \\
+	24. November & Final delivery of project report \\
+	24. November & Presentation and project demo \\
+\end{tabular}
+\newline
+\textbf{Sprints}
+
+\begin{tabular}{l  l}
+	Sprint I & 14. September - 27. September \\
+	Sprint II & 5. October - 18. October \\
+	Sprint III & 19. October - 1. November  \\
+	Sprint IV & 2. November - 15. November \\
+\end{tabular}
+
+\subsection{Concrete Project Work Plan}
+The two first weeks on the project will be used on planning and pre study.
+The project will be divided into 3 sprints, that will last for three weeks. Each sprint will have a total of 525 person-hours.
+The last 1.5 week will be used to finish the final report and prepare for the presentation. 
+
+\subsubsection{Work Breakdown Structure}
+
+\includegraphics[scale=0.80]{./planning/img/wbs.png}
+
+\subsubsection{Gantt Daiagram}
+
+\includegraphics[scale=0.48]{./planning/img/gantt.png}
+
+\section{Project Organization}
+
+\subsection{Project Organization}
+
+\includegraphics[scale=0.45]{./planning/img/organization.png}
+
+\begin{tabular}{|l | p{10cm}|}
+	\hline
+	\textbf{Role name} & \textbf{Main responsibilities}  \\ \hline
+	Project manager & Responsible for having an overview of the project, delegating jobs and resolving conflicts. \\ \hline
+	Advisor contact & Responsible for distributing information between the group and the advisor. \\ \hline
+	Organizer & Responsible for setting up and informing the group about the meeting schedule. \\ \hline
+	Document master & Responsible for document quality and quantity. \\ \hline
+	System architect & The lead designer of the system. \\ \hline
+	Lead programmer & Makes sure everyone follows the agreed code standards and ensures the quality of the code. \\ \hline
+	Customer contact & Responsible for distributing information between the group and the customer. \\ \hline
+	Technically responsible & Finds good technical solutions and makes sure that the essential tools are operative. \\ \hline
+	Technology evangelist & Brings in ideas about new technologies and tools. \\ \hline
+	Scrum master & Responsible for scrum meetings. \\ \hline
+	Lead tester & Responsible for good test coverage, both unit and end to end, and to ensure the quality of those tests. \\ \hline
+	Secretary & Takes note from each meetings and stores it in the cloud. Responsible for preparing minutes for advisor/customer. \\ \hline
+
+\end{tabular}
+
+\subsection{Partners}
+
+\subsubsection{Customers}
+The customer of this project is Thales Norway AS, which are located at Lerkendal Stadium, Strindv 1, 7030 Trondheim.
+The table below show the customer contacts of this project.
+
+\begin{tabular}{|l |l |l |}
+	\hline
+	\textbf{Name} & \textbf{Mobile} & \textbf{E-mail}  \\ \hline
+	Christian Tellefsen & 959 98 765 & christian.telefsen@thalesgroup.com \\ \hline
+	Stig Bjørlykke & 982 29 806 & stig.bjorlykke@thalesgroup.com \\ \hline
+\end{tabular}
+
+
+\subsubsection{Developers}
+This group consist of 7 members.
+
+\begin{tabular}{|l |l |l |}
+	\hline
+	\textbf{Name} & \textbf{Mobile} & \textbf{E-mail}  \\ \hline
+	Terje Snarby & 915 27 390 & snarby@stud.ntnu.no \\ \hline
+	Even Wiik Thomassen & 991 61 929 & evenwiik@stud.ntnu.no \\ \hline
+	Sondre Johan Mannsverk & 948 15 506 & sondrejo@stud.ntnu.no \\ \hline
+	Erik Bergersen & 917 48 305 & eribe@stud.ntnu.no \\ \hline
+	Lars Solvoll Tønder & 976 00 317 & larssot@stud.ntnu.no \\ \hline
+	Sigrud Wien & 472 54 625 & sigurdw@stud.ntnu.no \\ \hline
+	Jaroslav Fibichr & 451 26 314 & jaroslaf@stud.ntnu.no \\ \hline
+\end{tabular}
+
+\subsubsection{Advisors}
+Advisors are listed below.
+
+\begin{tabular}{|l |l |l |}
+	\hline
+	\textbf{Name} & \textbf{Mobile} & \textbf{E-mail}  \\ \hline
+	Daniela Soares Cruzes & 942 49 891 & dcruzes@idi.ntnu.no \\ \hline
+	Maria Carolina Mello Passos & & mariacm@idi.ntnu.no \\ \hline
+\end{tabular}
+
+\section{Quality Assurance}
+
+\subsection{Time of response}
+
+\subsubsection{Customer Interaction}
+MISSING!!!
+
+\subsubsection{Advisor interaction}
+All written documents must be provided to Daniela before 14:00 the day before advisor meeting. This includes meeting agenda, status report and table of reported effort data. The group is responsible for booking a meeting room for all the advisor meetings. Minutes from the advisor meeting has to be delivered for approval the day after before 12:00. The weekly advisor meeting is at 10:30 every Friday. 
+
+\subsubsection{Project Meetings}
+We have agreed to have three weekly meetings
+\begin{itemize}
+	\item Monday 12-14
+	\item Wednesday 12-17
+	\item Friday 10-13
+\end{itemize}
+
+\subsection{Routines for ensuring quality internally}
+We will organize in pairs when producing items, where the pair reviews each others work. This is to try to find more errors and to get some extra perspective on style and solutions.
+
+We also has assigned quality assurance responsibilities for three subjects: documents, code and tests. The respective team members will try to have a birds eye overview in their area to catch further errors.
+
+\subsection{Phase result approval}
+To ensure the quality of deliverable results, we have have, the group members responsible for quality assurance for a given subject will either read through, or delegate that that task to another free group member.
+
+We will also present the results for the customer. They will then have an opportunity to point out problems and misunderstandings, and suggest solutions. We will then try to correct the problems and the reiterate the quality assurance.
+
+\subsection{Procedures for customer meetings}
+All customer meetings should be called with time, place, agenda specified. All background documents relevant to the meetings should also be supplied. This is to ensure efficient and effective meetings.
+
+All customer meetings should be summarised in a document (minute). This document should include:
+\begin{itemize}
+	\item Time of meeting
+	\item Place
+	\item Meeting responsible
+	\item Names of the attendees
+	\item Decisions
+	\item Actions
+	\item Clarifications
+	\item A rough timeline of the above
+\end{itemize}
+
+This summary should be done and sent to the customer by 12:00 the day after the meeting. If the customer does not approve the minutes, the minutes should again be corrected by and sent 12:00 the following day.
+
+The customer contact is responsible for the above tasks.
+
+\subsection{Procedures for advisor meetings}
+A meeting with the advisor should be called before 12:00 the day before the meeting, and this calling should include:
+\begin{itemize}
+	\item Time
+	\item Place
+	\item Agenda
+	\item Relevant documents
+	\item Minutes for the last meeting
+\end{itemize}
+The meetings should be summarized. The summary should include:
+\begin{itemize}
+	\item Time of meeting
+	\item Place
+	\item Names of the attendees
+	\item Decisions
+	\item Actions
+	\item Clarifications
+	\item A rough timeline of the above
+\end{itemize}
+The minutes should be written and sent before to the advisor for approval before 12:00 the day after the meeting. If the advisor should reject the minutes, they should be corrected and resent 12:00 the day following the rejection.
+
+\subsection{Document templates and Standards}
+
+\textbf{The group has created templates for:}
+\begin{itemize}
+	\item Meeting agenda
+	\item Status report
+	\item Meeting minutes
+\end{itemize}
+\textbf{Standard for organizing files:} \newline
+We use GitHub and Google Docs to store the files included in this project. The location of a file is dependent on what type the file is. 
+\begin{itemize}
+	\item All source code is to be saved in the GitHub repository under source/. This ensures that all the team members have the current version of the code.
+		\begin{verbatim}
+CSjark/
+    csjark/  -- todays source/, for source code
+        test/  -- for unit tests
+        etc/  -- for configuration files
+        headers/  -- header files used to test the program
+    bin/  -- file for executing our program
+    docs/  -- for CSjark-specific documentation
+    utils/  -- for cpp.exe and fake header files
+		\end{verbatim}
+	\item All textual documents that are completed will be put in the docs/ folder.
+	\item All LaTeX documents are stored in the Github repository under report/.
+\end{itemize}
+\textbf{Standard for naming files:} \newline
+The file name should consist of the name of the document(meeting minutes, agenda, phasedoc, e.g.) and the date, if applicable. \newline
+\textbf{Standard for coding style:} \newline
+The programming language used to implement the utility specified by the customer requirements are Python. The coding style the team has agreed upon is the Python Standard Styling Guide as defined by PEP8(LINK) (Python Enhancement Proposals \#8). In addition the design should attempt to be pythonic, as detailed by PEP20(LINK).
+
+\subsection{Version Control Procedures}
+Every relevant digital item should be pushed to our repository at github, and checked out by other participants. Those who works on a given item should commit and push their changes often, so that others can be as up to date as possible. All digital items should be labeled with a version number, starting at version 1. If an item goes under review and is deemed insufficient by the customer or  , the version number should also be incremented by one for each revision of the document
+
+Relevant digital items includes source code, documents, picture files, binary blobs, etc.
+
+NB: Google docs is not to be used for version control, so every document written there should also be pushed to git hub.
+
+\subsection{Internal Reports}
+Some of the groups internal activities should be documented. This includes:
+\begin{itemize}
+	\item Activities, what is done, and what remains
+	\item Minutes for internal meetings
+	\item Milestones, done/not done.
+	\item Person-hours
+\end{itemize}
+These reports should follow the templates specified in Templates and Standards (A4) if applicable.
+
+\section{Risk Management}
+
+\textbf{R1. Choosing an incompatible technical solution} - The team decides to use a technical solution that is not suited for the given problem, or decides on an implementation that is too time consuming. \newline
+\textbf{R2. Too much focus on report} -  We spend too much time working on the report and neglect the implementation. \newline
+\textbf{R3. Too much focus on implementation} - We spend too much time working on the implementation and neglect writing all the needed documentation for the report. \newline
+\textbf{R4. Illness/Absence} - Members of the team become ill or are otherwise unavailable. \newline
+\textbf{R5. Conflicts within group} - Internal conflicts which are destructive to the groups ability to work together. \newline
+\textbf{R6. Lack of technical competence} - The team lack the needed technical ability to solve the given problem. \newline
+\textbf{R7. Miscommunication within team} - Team members don’t know what to do, or misunderstands the task given to them. \newline
+\textbf{R8. Miscommunication with customer} - The team misunderstands the requirements given by the customer. \newline
+\textbf{R9. Lack of experience with Scrum} - The team does not have any experience in doing Scrum projects. \newline
+
+

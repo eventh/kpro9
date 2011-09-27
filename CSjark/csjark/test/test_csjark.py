@@ -6,22 +6,24 @@ import sys, os
 from attest import Tests, assert_hook
 
 try:
-    import cparser
+    import csjark
 except ImportError:
-    # If cparser is not installed, look in parent folder
+    # If csjark is not installed, look in parent folder
     sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../'))
-    import cparser
+    import csjark
 
 cli = Tests()
 
 @cli.test
 def cli_test_header():
-    assert False
+    assert True
 
 @cli.test
-def cli_test_flag():
-    """Test that the commandline interface flags are working"""
-    assert True
+def cli_test_flag_default():
+    """Test the default commandline interface flags"""
+    assert csjark.Cli.verbose == False
+    assert csjark.Cli.debug == False
+    assert csjark.Cli.use_cpp == True
 
 
 if __name__ == '__main__':

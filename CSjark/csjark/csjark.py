@@ -1,6 +1,27 @@
 #! /usr/bin/env python3
 """
 A module for creating Wireshark dissectors from C structs.
+
+Usage:
+---------
+csjark.py [-h] [-verbose] [-debug] [-nocpp]
+          [-input [header [header ...]]]
+          [-config [config [config ...]]] [-output [output]]
+          [header]
+
+positional arguments:
+  header                C file to parse
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -verbose              print detailed information
+  -debug                print debugging information
+  -nocpp                disable C preprocessor
+  -input [header [header ...]]
+                        C file(s) to parse
+  -config [config [config ...]]
+                        configuration file(s) to parse
+  -output [output]      write output to file
 """
 import sys
 import os
@@ -12,72 +33,74 @@ import dissector
 
 
 class Cli:
+    """A class for handling command line interface parsing."""
     verbose = False
     debug = False
+    use_cpp = True
+
+    @classmethod
+    def parse_args(cls):
+        """Parse arguments given in sys.argv."""
+        parser = argparse.ArgumentParser(
+                description='Generate Wireshark dissectors from C structs.')
+
+        # A single C header file
+        parser.add_argument('header', nargs='?',
+                help='C file to parse')
+
+        # Verbose flag
+        parser.add_argument('-verbose', action='store_true',
+                help='print detailed information')
+
+        # Debug flag
+        parser.add_argument('-debug', action='store_true',
+                help='print debugging information')
+
+        # No CPP flag
+        parser.add_argument('-nocpp', action='store_false',
+                dest='cpp', help='disable C preprocessor')
+
+        # A list of C header files
+        parser.add_argument('-input', metavar='header',
+                default=[], nargs='*', help='C file(s) to parse')
+
+        # Configuration file
+        parser.add_argument('-config', metavar='config', default=[],
+                nargs='*', help='configuration file(s) to parse')
+
+        # Write output to destination file
+        parser.add_argument('-output', metavar='output',
+                nargs='?', help='write output to file')
+
+        # Parse arguments
+        args = parser.parse_args()
+
+        cls.verbose = args.verbose
+        cls.debug = args.debug
+        cls.use_cpp = args.cpp
+
+        headers = args.input
+        if args.header:
+            headers.append(args.header)
+
+        # Need to provide either a header file or a config file
+        if len(sys.argv) < 2 or (not headers and not args.config):
+            parser.print_help()
+            sys.exit(2)
+
+        # Make sure the files provided actually exists
+        missing = [i for i in headers + args.config if
+                    os.path.exists(os.path.join(sys.argv[0], i))]
+        if missing:
+            print('Unknown file(s): %s' % ', '.join(missing))
+            sys.exit(2)
+
+        return headers, args.config
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(
-            description='Generate Wireshark dissectors from C structs.')
-
-    parser.add_argument('header', nargs='?')
-
-    # Verbose flag
-    parser.add_argument('-verbose', action='store_true',
-            help='Print information about AST tree, ect.')
-
-    # Debug flag
-    parser.add_argument('-debug', action='store_true', help='Enable debugger')
-
-    # No CPP flag
-    parser.add_argument('-nocpp', action='store_false',
-            dest='cpp', help='Disable C preprocessor')
-
-    # C-header file
-    parser.add_argument('-ch', '--cheader',
-            nargs='*', help='C-header file to parse')
-
-    # Configuration file
-    parser.add_argument('-c', '--config',
-            nargs='*', help='Configuration file to parse')
-
-    # Write output to destination file
-    parser.add_argument('-output', nargs='?', help='Write output to file')
-
-    # Parse arguments
-    args = parser.parse_args()
-
-    Cli.verbose = args.verbose
-    Cli.debug = args.debug
-
-    headers = []
-    if args.header:
-        headers.append(args.header)
-    if args.cheader:
-        headers.extend(args.cheader)
-
-    if args.config:
-        configs = args.config
-    else:
-        configs = []
-
-    # Need to provide either a header file or a config file
-    if len(sys.argv) < 2 or (not headers and not configs):
-        parser.print_help()
-        sys.exit(2)
-
-    # Make sure the files provided actually exists
-    missing = [i for i in headers + configs if
-                os.path.exists(os.path.join(sys.argv[0], i))]
-    if missing:
-        print('Unknown file(s): %s' % ', '.join(missing))
-        sys.exit(2)
-
-    return headers, configs, args.cpp
-
-
-def create_dissector(filename, use_cpp):
-    ast = cparser.parse_file(filename, use_cpp=use_cpp)
+def create_dissector(filename):
+    """Create a Wireshark dissector from 'filename'."""
+    ast = cparser.parse_file(filename, use_cpp=Cli.use_cpp)
 
     if Cli.verbose:
         ast.show()
@@ -92,7 +115,8 @@ def create_dissector(filename, use_cpp):
 
 
 def main():
-    headers, configs, cpp = parse_args()
+    """Run the CSjark program."""
+    headers, configs = Cli.parse_args()
 
     # Parse config files
     for filename in configs:
@@ -103,7 +127,7 @@ def main():
 
     # Create dissectors
     for filename in headers:
-        create_dissector(filename, cpp)
+        create_dissector(filename)
 
         if Cli.verbose:
             print("Parsed header file '%s' successfully." % filename)

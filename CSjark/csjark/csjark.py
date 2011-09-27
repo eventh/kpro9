@@ -7,10 +7,11 @@ Usage:
 csjark.py [-h] [-verbose] [-debug] [-nocpp]
           [-input [header [header ...]]]
           [-config [config [config ...]]] [-output [output]]
-          [header]
+          [header] [config]
 
 positional arguments:
   header                C file to parse
+  config                config file to parse
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -22,6 +23,9 @@ optional arguments:
   -config [config [config ...]]
                         configuration file(s) to parse
   -output [output]      write output to file
+
+Example:
+"python csjark.py -v -nocpp headerfile.h configfile.yml"
 """
 import sys
 import os
@@ -45,28 +49,30 @@ class Cli:
                 description='Generate Wireshark dissectors from C structs.')
 
         # A single C header file
-        parser.add_argument('header', nargs='?',
-                help='C file to parse')
+        parser.add_argument('header', nargs='?', help='C file to parse')
+
+        # A single config file
+        parser.add_argument('config', nargs='?', help='config file to parse')
 
         # Verbose flag
         parser.add_argument('-verbose', action='store_true',
-                help='print detailed information')
+                default=cls.verbose, help='print detailed information')
 
         # Debug flag
         parser.add_argument('-debug', action='store_true',
-                help='print debugging information')
+                default=cls.debug, help='print debugging information')
 
         # No CPP flag
-        parser.add_argument('-nocpp', action='store_false',
-                dest='cpp', help='disable C preprocessor')
+        parser.add_argument('-nocpp', action='store_false', dest='cpp',
+                default=cls.use_cpp, help='disable C preprocessor')
 
         # A list of C header files
         parser.add_argument('-input', metavar='header',
                 default=[], nargs='*', help='C file(s) to parse')
 
         # Configuration file
-        parser.add_argument('-config', metavar='config', default=[],
-                nargs='*', help='configuration file(s) to parse')
+        parser.add_argument('-config', metavar='config', dest='configs',
+                 default=[], nargs='*', help='configuration file(s) to parse')
 
         # Write output to destination file
         parser.add_argument('-output', metavar='output',
@@ -83,19 +89,23 @@ class Cli:
         if args.header:
             headers.append(args.header)
 
+        configs = args.configs
+        if args.config:
+            configs.append(args.config)
+
         # Need to provide either a header file or a config file
-        if len(sys.argv) < 2 or (not headers and not args.config):
+        if len(sys.argv) < 2 or (not headers and not configs):
             parser.print_help()
             sys.exit(2)
 
         # Make sure the files provided actually exists
-        missing = [i for i in headers + args.config if
+        missing = [i for i in headers + configs if
                     os.path.exists(os.path.join(sys.argv[0], i))]
         if missing:
             print('Unknown file(s): %s' % ', '.join(missing))
             sys.exit(2)
 
-        return headers, args.config
+        return headers, configs
 
 
 def create_dissector(filename):

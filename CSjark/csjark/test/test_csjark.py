@@ -12,18 +12,20 @@ except ImportError:
     sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../'))
     import cparser
 
-cli_test = Tests()
+cli = Tests()
 
-@cli_test.test
+@cli.test
+def cli_test_header():
+    assert False
+
+@cli.test
 def cli_test_flag():
     """Test that the commandline interface flags are working"""
     assert True
 
 
-
-
 if __name__ == '__main__':
-    all_tests = Tests([cli_test])
+    all_tests = Tests([cli])
     all_tests.run()
 
     

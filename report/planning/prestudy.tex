@@ -256,7 +256,7 @@ tree as XML, which our utility then will need to parse. Clang provides bindings
 for Python so there it can be used as a library, but its drawback is a lack of
 flexibility, much like GCC.
 
-\section{Wireshark}
+\subsection{Wireshark}
 Wireshark is a free, open source network protocol analyzer. It lets you capture
 and browse traffic running through a computer network. Wireshark is currently
 being developed by the Wireshark team, a group of networking experts spanning
@@ -273,7 +273,7 @@ monitoring inter-process communication where it is important to have a tool
 which can easily be extended to dissect and display structures and data types
 unique to the organization.
 
-\section{Lua}
+\subsection{Lua}
 Lua is a multi-paradigm, dynamically typed programming language which is
 designed to be lightweight so it can easily be embedded into applications.
 Lua has only a few basic data structures: boolean, numbers, strings and table.
@@ -287,7 +287,7 @@ Wireshark supports dissectors written in both C and Lua, Lua is preferred
 because they can be added without recompiling Wireshark. Lua dissectors
 interface with Wireshark through a simple API.
 
-\section{Configuration}
+\subsection{Configuration}
 Our utility needs a flexible configuration, simply because some of the
 information we need to display does not exist in the C header files. For
 example there exist no clear relationship between enumerated values in messages
@@ -301,7 +301,7 @@ configuration will also need to support:
 		certain cases.
 \end{itemize}
 
-\subsection{ASN.1}
+\subsubsection{ASN.1}
 Abstract Syntax Notation One (ASN.1) is a notation for describing data
 structures, the standard is defined by ISO 8824. ASN.1 is used for
 representing, encoding, transferring and decoding of data. It provides a
@@ -312,7 +312,7 @@ Our customer uses ASN.1 for configuration of other utilities, and has therefore
 suggested we investigate it for our utility. There exist two python libraries
 for parsing of ASN.1
 
-\subsection{YAML}
+\subsubsection{YAML}
 YAML (YAML Ain't Markup Language) is a data serialization format. It's designed
 to be easy to read and write for humans. YAML syntax was designed to be easily
 mapped to data types common to most high-level languages. While most
@@ -324,7 +324,7 @@ Python, PHP, Ruby, and Javascript.
 PyYAML is a parser for the python programming language, and it is available for
 version 3.2 of python. The parser is licensed under MIT.
 
-\subsection{configparser}
+\subsubsection{configparser}
 configparser is a module to manage user-editable configuration files for an
 application. The configuration files are organized into sections, and each
 section can contain name-value pairs for configuration data. Value
@@ -334,7 +334,7 @@ values that depend on one another.
 configparser module is a standard part of Python, therefore there is no need
 to additional installation and configuration.
 
-\subsection{ConfigObj}
+\subsubsection{ConfigObj}
 ConfigObj is a simple but powerful config file reader and writer (originally
 based on ConfigParser). Its main feature is that it is very easy to use, with
 a straightforward programmer's interface and a simple syntax for config files.
@@ -350,27 +350,8 @@ Among others, it has these additional features:
 \noindent Currently, ConfigObj module exists only for Python up to version
 2.7. It is under BSD license.
 
-\subsection{Evaluation}
-According to the given requirements, we decided to use YAML for handling
-configuration files for our purposes. The choice was made dependently on used
-programming language decisions. Because the latest version of Python
-specification (currently 3.2) was chosen, the range of possible configuration
-file solutions was reduced. Therefore, although ASN.1 and ConfigObj are very
-suitable for our task, they were eliminated (those parsers are available only
-up to version 2.7), which left us 2 main possibilities: YAML and configparser.
-Configparser turned out to be not sufficient for us, because mainly it lacks
-lists. These we need for description of hiearchical structures of the C
-headers. YAML has only two minor disadvantages we should be aware of. First,
-there is no type validation mechanism, so we will have to create our validation
-manually. Second, it is an external library. We find this drawback minor for
-now but it can turn up to be a problem in the future. Except for these issues,
-YAML (toghether with PyYAML) seems to have a good potential for creating
-flexible configuration support for our solution.
-
-Some of the possible advantages and drawbacks of solutions taken into
-consideration are depicted in table below:
-
 \section{Integrated Development Environment}
+%-------------------------------------------
 
 \subsection{PyCharm}
 Pycharm is a cross platform, proprietary IDE for python. It has good support
@@ -410,18 +391,8 @@ its weakness, it is very difficult for new vim users to learn how to use it
 effectively. Therefore we do not suggest any team member which is not already
 experienced with Vim to try it.
 
-\subsection{Integrated Development Environment Choice}
-PyCharm is by far the best IDE evaluated in terms of functionality, and it is
-the one that mirrors Eclipse the most, which is an advantage, since most team
-members are best acquainted with Eclipse. It will be the recommended IDE for
-this project, given that we can acquire classroom licenses.
-
-On the other hand, there is no real reason to dictate the use of IDE, since
-what determines the productivity of a team member is more how well you know
-the specific tool you are using. It will therefore be up to each team member
-to choose what IDE/text editor they want to use.
-
 \section{Evaluation and Conclusion}
+%----------------------------------
 
 \subsection{Development Process Choice}
 We have chosen scrum for our development strategy. We do not have a lot of
@@ -484,19 +455,75 @@ A challenge with using Python is the fact that not all team members have
 sufficient experience with it. Most team members must therefore do some self
 study of varying level before we start the first sprint.
 
+\subsection{Configuration Choice}
+According to the given requirements, we decided to use YAML for handling
+configuration files for our purposes. The choice was made dependently on used
+programming language decisions. Because the latest version of Python
+specification (currently 3.2) was chosen, the range of possible configuration
+file solutions was reduced. Therefore, although ASN.1 and ConfigObj are very
+suitable for our task, they were eliminated (those parsers are available only
+up to version 2.7), which left us 2 main possibilities: YAML and configparser.
+Configparser turned out to be not sufficient for us, because mainly it lacks
+lists. These we need for description of hiearchical structures of the C
+headers. YAML has only two minor disadvantages we should be aware of. First,
+there is no type validation mechanism, so we will have to create our validation
+manually. Second, it is an external library. We find this drawback minor for
+now but it can turn up to be a problem in the future. Except for these issues,
+YAML (toghether with PyYAML) seems to have a good potential for creating
+flexible configuration support for our solution.
+
+Some of the possible advantages and drawbacks of solutions taken into
+consideration are depicted in table below:
+\begin{table}[H] \footnotesize \center
+\caption{Configuration overview}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{X X X X X}
+	\toprule
+	& YAML & configparser & ConfigObj & ASN.1 \\
+	\midrule
+	Advantages &
+	+Simplicity\newline +Flexibility &
+	+Easy to use &
+	+Easy to use\newline +Flexibility\newline +Nesting\newline +Type validation &
+	+Customer wants it \\
+	\addlinespace
+	Drawbacks &
+	-External library\newline -No type validation &
+	-Lacks nesting\newline -Lacks lists\newline -No type validation &
+	-External library\newline -Lacks lists &
+	-External library\newline -Too generic \\
+	\addlinespace
+	Current version & 3.10 & 3.2 & 4.7.2 & 0.0.13 \\
+	Supported python & 2.7 and 3.3 & 2.7 and 3.3 & 2.7 & 2.7 \\
+	License & MIT & PSF L & BSD-new & BSD \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\subsection{Integrated Development Environment Choice}
+PyCharm is by far the best IDE evaluated in terms of functionality, and it is
+the one that mirrors Eclipse the most, which is an advantage, since most team
+members are best acquainted with Eclipse. It will be the recommended IDE for
+this project, given that we can acquire classroom licenses.
+
+On the other hand, there is no real reason to dictate the use of IDE, since
+what determines the productivity of a team member is more how well you know
+the specific tool you are using. It will therefore be up to each team member
+to choose what IDE/text editor they want to use.
+
 \section{Framework}
 Even will descripe the framework we have decided to create?
 
 \section{Versions}
-
 The versions of the different tools and libraries we are using.
 \begin{description}
 	\item[Python] CPython 3.2.2, the latest standard python implementation
 		which means we won’t support other python implementation like PyPy,
 		jython or ironpython in the near future.
 	\item[PLY] 3.4, latest stable verison.
-	\item[pycparser] 2.04, latest stable version.
-	\item[Attest] 0.6-dev, latest development version (latest stable don’t
+	\item[pycparser] 2.05-dev, latest development version (stable don't
+		support \_Bool type)
+	\item[Attest] 0.6-dev, latest development version (stable don’t
 		support python3.2)
 	\item[WireShark] 1.7.0-SVN, latest nightly build, bleeding edge
 	\item[Lua] 5.1.4, latest stable version

@@ -21,19 +21,19 @@ def cli_test_header():
 @cli.test
 def cli_test_flag_verbose():
     """Test the default commandline interface flags"""
-    csjark.Cli.parse_args(['-verbose'])
+    csjark.Cli.parse_args(['-verbose', 'cpp.h'])
     assert csjark.Cli.verbose == True
 
 @cli.test
 def cli_test_flag_debug():
     """Test the default commandline interface flags"""
-    csjark.Cli.parse_args(['-debug'])
+    csjark.Cli.parse_args(['-debug', 'cpp.h'])
     assert csjark.Cli.debug == True
 
 @cli.test
 def cli_test_flag_nocpp():
     """Test the default commandline interface flags"""
-    csjark.Cli.parse_args(['-nocpp'])
+    csjark.Cli.parse_args(['-nocpp', 'cpp.h'])
     assert csjark.Cli.use_cpp == False
 
 if __name__ == '__main__':

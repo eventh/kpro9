@@ -12,37 +12,29 @@ except ImportError:
     sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../'))
     import csjark
 
+
 cli = Tests()
-
-@cli.test
-def cli_test_header():
-    csjark.parse_args()
-    assert True
-
-@cli.test
-def cli_test_flag_default():
-    """Test the default commandline interface flags"""
-    assert csjark.Cli.verbose == False
-    assert csjark.Cli.debug == False
-    assert csjark.Cli.use_cpp == True
 
 @cli.test
 def cli_test_flag_verbose():
     """Test the default commandline interface flags"""
-    assert csjark.Cli.verbose == False
+    csjark.Cli.parse_args(['-verbose', 'cpp.h'])
+    assert csjark.Cli.verbose == True
 
 @cli.test
 def cli_test_flag_debug():
     """Test the default commandline interface flags"""
-    assert csjark.Cli.debug == False
+    csjark.Cli.parse_args(['-debug', 'cpp.h'])
+    assert csjark.Cli.debug == True
 
 @cli.test
-def cli_test_flag_use_cpp():
+def cli_test_flag_nocpp():
     """Test the default commandline interface flags"""
+    csjark.Cli.parse_args(['-nocpp', 'cpp.h'])
     assert csjark.Cli.use_cpp == False
+
 
 if __name__ == '__main__':
     all_tests = Tests([cli])
     all_tests.run()
 
-    

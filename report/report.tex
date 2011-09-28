@@ -18,6 +18,7 @@
 \usepackage{tabularx} % Simple column stretching
 \usepackage{multirow} % Row spanning
 \usepackage{array}
+\usepackage{longtable}
 
 %\setcounter{tocdepth}{1} % Depth of table of contents
 
@@ -49,11 +50,12 @@ which then will do something to make something easier.
 \tableofcontents
 
 \part{Planning \& Requirements}
+\include{./planning/project_directive}
 \include{./planning/plan}
+\include{./planning/prestudy}
 \include{./planning/requirements}
 \include{./planning/product_backlog}
 \include{./planning/test_plan}
-%\include{./planning/prestudy}
 
 \part{Sprints}
 \include{./sprints/sprint1}

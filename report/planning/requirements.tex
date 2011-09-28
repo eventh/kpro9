@@ -219,50 +219,84 @@ Medium (M) or Low (L).
 \end{table}
 
 \section{User Stories}
+This sections shows the user stories, these are display in table \ref{tab:user_stories1} and table \ref{tab:user_stories2}.
 The developer in this context is the developers at Thales Norway AS. \newline
 The administrator is this context is the users of the dissectors. \newline
 \begin{table}[ht] \footnotesize \center
-\caption{User stories}
+\caption{User stories part 1} \label{tab:user_stories1}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
-	Req. & User story \\
+	Header. & Value \\
 	\midrule
-	FR01: 	&As a developer, I want that the utility can read basic C language struct definitions from C header files, so that I can generate Lua-scripts for wireshark.\\
-	FR01A: 	&As a developer,I want to support structs with basic data types(int, float, char, boolean), so that I can generate Lua-scripts.\\
-	FR01B: 	&As a developer, I want to support structs with enums, so that I can generate Lua-scripts.\\
-	FR01C: 	&As a developer, I want to support structs with other structs, so that I can generate Lua-scripts.\\
-	FR01D: 	&As a developer, I want to support structs with unions, so that I can generate Lua-scripts.\\
-	FR01E: 	&As a developer, I want to support structs with arrays, so that I can generate Lua-scripts.\\
+	ID:			& US01 \\
+	Requirements:	& FR01A, FR03B, FR07A \\
+	User Story:		& As a developer I want to generate a Lua-script from command-line from a C header file with a struct using basic C data types, so I get a dissector for Wireshark \\
 	\midrule
-	FR02:		&As a developer, I want to generate lua-script for Wireshark dissectors for the binary representation of C struct.\\
-	FR02A: 	&As a administrator, I want that the dissector is able to display simple C structs.\\
-	FR02B: 	&As a administrator, I want that the dissector is able to display C struct, that contains other structs.\\
-	FR02C: 	&As a administrator, I want to use Wiresharks built-in filter and search on attributes, on the dissectors.\\
-	FR02D:	&As a administrator, I want see when a there is a invalid value for a struct member\\
+	ID:			& US02 \\
+	Requirements:	& FR02A \\
+	User Story:		& As a administrator,, I want to use the dissector for simple structs in Wireshark, so that I can display structs without binary representation. \\
 	\midrule
-	FR03:		&As a developer, I want that the utility supports C preprocessor directives and macros\\
-	FR03A:	&As a developer, I want support for \#include in the utility\\
-	FR03B:	&As a developer, I want support for \#define and \#if in the utility\\
-	FR03C:	&As a developer, I want that the utility supports WIN32, \_WIN32, \_WIN64, \_\_sparc\_\_, \_\_sparc and sun macros.\\
+	ID:			& US03 \\
+	Requirements:	& FR04A, FR07B \\
+	User Story:		& As a developer, I want to configure allowed ranges for struct members, so that I can display invalid values in the dissector. \\
 	\midrule
-	FR04: 	&As a developer, I want that the utility supports user configuration\\
-	FR04A: 	&As a developer, I want to specifiy allowed ranges for the value of a struct member\\
-	FR04B:	&As a developer, I want support for integer member which represent enumreated named value or bit string, in configuration\\
-	FR04C:	&As a developer, I want support for custom handling of specified data types(e.g. time\_t)\\
+	ID:			& US04 \\
+	Requirements:	& FR02D \\
+	User Story:		& As a administrator, I want to see invalid struct values in wireshark, so that I easier can easier can recognize invalid values. \\
 	\midrule
-	FR05:	&As a developer, I want support in configuration to handle structs with header and/or trailer\\
+	ID:			& US05 \\
+	Requirements:	&  FR01C, FR03A \\
+	User Story:		& As a developer, I want to support structs with structs, so that I can generate dissector for Wireshark \\
 	\midrule
-	FR06:	&As a developer, I want dissectors that are able to handle binary input which size and denian depends on originating platform.\\
-	FR06A:	&As a developer, I want specified flags for each platform.\\
-	FR06B:	&As a developer, I want that flags within message headers should signal the platform\\
+	ID:			& US06 \\
+	Requirements:	& FR02B \\
+	User Story:		&  As a administrator, I want to use the dissector for structs with other structs in Wireshark, so that I can display structs without binary representation. \\
 	\midrule
-	FR07:	&As a developer, I want to specify parameters from command-line\\
-	FR07A:	&As a developer, I want to specify parameters for c-header file from command-line\\
-	FR07B:	&As a developer, I want to specify parameters for configuration file from command-line\\
-	FR07C:	&As a developer, I want start a batch mode of c-header and configuration file from command-line\\
-	FR07D:	&As a developer, I do not want to regenerate dissectors that not are modified since last run, when running batch mode\\
+	ID:			& US07 \\
+	Requirements:	&  FR02C \\
+	User Story:		&  As a administrator, I want to use Wireshark built-in filter and search, so that I easier can find attributes. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
+\begin{table}[ht] \footnotesize \center
+\caption{User stories part 2} \label{tab:user_stories2}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header. & Value \\
+	\midrule
+	ID:			& US08 \\
+	Requirements:	&  FR01B, FR03B, FR04B \\
+	User Story:		& As a developer, I want support for integer member which represent enumerated value or bit string in the configuration, so that I can display named values in the dissector. \\
+	\midrule
+	ID:			& US09 \\
+	Requirements:	& FR01D, FR01E \\
+	User Story:		& As a developer, I want to support structs wither unions and arrays, so that I can generate Lua-scripts for more complex C structs. \\
+	\midrule
+	ID:			& US10 \\
+	Requirements:	&  FR07C, FR07D \\
+	User Story:		& As a developer, I want to generate Lua-script in batch mode, without regenerating header files that are not modified since last, so that I can generate several Lua-scripts faster. \\
+	\midrule
+	ID:			& US11 \\
+	Requirements:	&  FR05 \\
+	User Story:		& As a developer, I want support in configuration to handle structs with header and/or trailer, so that I can display structs sent in a serie. \\
+	\midrule
+	ID:			& US12 \\
+	Requirements:	&  FR03B, FR03C \\
+	User Story:		& As a developer I want support for C preprocessor directives and macro, so that I am able to generate Lua-scripts from c header files that are created for use on multiple platforms. \\
+	\midrule
+	ID:			& US13 \\
+	Requirements:	& FR06A, FR06B \\
+	User Story:		& As a developer, I want dissectors that are able to handle binary input which size and endian depends on originating platform, so that I can display these values correctly in Wireshark.  \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+
+
+
+
+
+
 

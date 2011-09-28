@@ -15,19 +15,12 @@ class Field:
         self.size = size
         self.protocol = None
 
-    def get_def_before(self):
-        """Overload to add extra code above field definition."""
-        return []
-
     def get_definition(self):
         """Get the ProtoField definition for this Field."""
         t = '{var}.{name} = ProtoField.{type}("{protocol}.{name}", "{name}")'
         args = {'var': self.protocol.field_var, 'name': self.name,
                 'protocol': self.protocol.name, 'type': self.type}
-
-        data = self.get_def_before()
-        data.append(t.format(**args))
-        return '\n'.join(data)
+        return t.format(**args)
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""

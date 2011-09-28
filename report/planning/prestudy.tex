@@ -1,0 +1,527 @@
+%==========================
+\chapter{Preliminary Study}
+%==========================
+This chapter presents the preliminary studies for this project. This includes
+the technology and methodology used to develop the utility, and an evaluation
+of choices we made in the beginning of the project. It also includes a
+comparison to existing solution.
+
+\section{Similar Solutions}
+%--------------------------
+
+\subsection{idl2wrs}
+A tool for generating Wireshark dissectors from IDL files. The tool is written
+in python, and generates dissectors in C from IDL specifications. Interface
+Description Language (IDL) is used to interface in a language-neutral way,
+which enables communication between software of different languages. It is
+used for example in Sun RPC and CORBA. Since idl2wrs takes input in a different
+language than us, and creates dissectors in a different language than us, we
+can not reuse any of its code. Instead we will look at its architecture and
+data structures, especially how it generates dissectors.
+
+\subsection{asn2wrs}
+This is a compiler which are used to create dissectors for wireshark for a
+specified protocol. The tool uses ASN.1 to describe the protocol, and compile a
+plugin for wireshark. To use the compiler, four files is need as input, an
+ASN-1 protocol description, a configuration files(.cnf) and two template files.
+The main reasons to use asn2wrs to create dissectors, is that it speeds up the
+development, since it only is necessary to recompile the plugin, and to allow
+flexibility since it’s easy to distribute the plugin. Disadvantages with this
+solution is that the code and makefiles are more complex. This solution is not
+an alternative for our customer since the will need to rewrite their c-structs
+to ASN.1 descriptions, which will take very long time, due to larges header
+files and the amount of header files.
+http://wiki.wireshark.org/Asn2wrs
+http://wiki.wireshark.org/ASN1_plugin
+
+\section{Software Development Methodology}
+%-----------------------------------------
+
+\subsection{Waterfall}
+Waterfall is a software development methodology based on sequential phases.
+These phases can be the following: requirement specification, design,
+implementation, integration, testing, deployment and maintenance. In its pure
+form, these phases are non overlapping and one way only, which means that each
+phase must be fully completed before the next can begin. Following is a short
+description of each phase:
+
+\subsubsection{Requirement specification}
+This phase is about receiving requirements from a customer and then formalising
+these into concrete functional and non-functional requirements. These will
+again be further broken down into smaller work items that are easy to quantify
+in terms of time of use and importance. These metrics may help distinguish
+which features that are to be prioritised.
+
+\subsubsection{Design}
+The design phase is about planning how to implement the features from the
+requirement phase. The goal is to make a precise software architecture for the
+project that dictates most of the implementation phase. This may include (but
+not limited to) making class diagrams, data flow diagrams, state machines, user
+interface mockups, etc.
+
+\subsubsection{Implementation}
+This phase is about implementing/coding the design made in the design phase on
+a component level.
+
+\subsubsection{Integration}
+This phase is about integrating the different components that results from the
+implementation phase.
+
+\subsubsection{Testing}
+The testing phase aims to thoroughly test the result of the implementation and
+integration phase. The goal is to find and fix bugs introduced in both these
+phases.
+
+\subsubsection{Deployment}
+The deployment phase is about delivering the resulting software to the
+customer. This may include installing the software on their systems. This is
+also the phase where the customer either accepts or rejects the resulting
+software.
+
+\subsubsection{Maintenance}
+Large software projects are almost impossible to get completely bug free, and
+therefore a certain amount of maintenance may be required. The obvious tasks
+are to either fix or provide viable workarounds for problems that appear during
+normal use. Maintenance may also include developing new features that the
+customer finds the need for.
+
+\subsection{Scrum}
+Scrum is an agile development methodology based on the philosophy that it is
+impossible to completely and accurately plan everything in a software project
+before you begin. It is therefore more or less based on iterations of the
+phases described under waterfall(FIX LINK), but instead of having these phases
+being strictly sequential, they are run in a more 'as needed' basis. Each
+iteration in scrum is called a sprint and is typically lasting from two and up
+to four weeks. This time period is fixed for each project, so the sprint will
+always end on time. To make this possible, features that are not completed on
+time is deferred to a later sprint. Each sprint should result in a runnable
+product that potentially could deliver some value to the customer, even if this
+requires some redundant work.
+
+\noindent A Scrum project has three main roles:
+\begin{description}
+	\item[Scrum master] has the responsibility of maintaining the process and
+		for removing obstacles for other team members. In short, the scrum
+		master tries to keep the other team members focused on their tasks.
+	\item[Product owner] represents and speaks for the customer. Not
+		necessarily a part of the customers organization, but must have the
+		stated authorities.
+	\item[Team members] responsible for making and delivering the product.
+		Should consist of a self organizing team of five to nine persons with
+		cross functional skill set.
+\end{description}
+
+\noindent There are also tree main artifacts:
+\begin{description}
+	\item[Product backlog] contains a high level description of all the desired
+		features for the project. These should be prioritised based on their
+		business value and evolve along with the project.
+	\item[Sprint backlog] contains what the team is committed to complete over
+		the next sprint. These commitments are features broken down into work
+		items. These items should not be larger than 16 hours of work, and they
+		should be described so that everyone in the team could contribute to
+		implementing them.
+	\item[Burn down chart] A daily updated chart consisting of what work
+		remains in the sprint. Its purpose is both to show what work to do next
+		and to give a visual representation of the work progress.
+\end{described}
+
+A sprint begins with the sprint planning meeting. This meeting consists of two
+stages. In the first, the team and the product owner prioritizes the product
+backlog. In the second. the team discusses what features they can commit to
+(based on priority) and brakes these down into work items, which are added to
+the sprint backlog. This should include giving each item an estimated
+completion time.
+
+The sprint itself consists of producing what is required for completing work
+items, updating the burn down chart and daily scrum meetings. In these daily
+meetings each team member gives the rest a short update of what they did
+yesterday, what they plan to do today and what problems might be in their way.
+These problems should not be discussed in this meeting, but rather dealt with
+separately after the meeting (this is the scrum masters responsibility).
+
+At the end of the sprint cycle, the team should hold a scrum review meeting.
+This meeting is about discussing what was completed and what was not, and to
+demonstrate the completed features for the customer.
+
+After the review meeting, a separate retrospect meeting should be held with all
+the team members where all members shares their reflection of how the sprint
+went and how to improve for the next sprint. This is important for making
+continues improvements to the process.
+
+\section{Development Languages and Technologies}
+%-----------------------------------------------
+
+We estimate that the most challenging part of the utility will be parsing of C
+header files. There are three distinct paths for solving it.
+\begin{enumerate}
+	\item We can build our own custom parser.
+	\item We can use one or more libraries which does the parsing for us.
+	\item We can use a complete tool chain like GCC or Clang.
+\end{enumerate}
+
+\noindent Each of these options has their advantages and drawbacks. While a
+custom parser would give us complete control over each part of the parsing, it
+would be a tremendous undertaking depending of how much of the C language
+specification and C preprocessor directives we have to support. On the other
+hand using a tool chain would add a large dependency to our solution, and is
+non-trivial to install and use on the Windows platform.
+
+We intend to investigate these possible solutions in Java first, and if
+necessarily also investigate other programming languages if Java is not suited.
+
+\subsection{Java}
+Java is an object-oriented, structured, imperative, statically typed
+programming language. It was originally developed by Sun Microsystems, which
+is now a subsidiary of Oracle Corporation. Java was released in 1995, and it
+derived much of its syntax from C and C++, but with fewer low-level facilities.
+Java’s strength are portability, automatic memory management, security, good
+documentation and an extensive standard library. Java has several tools and
+libraries of varying quality for creating parsers, like ANTLR and JAVACC.
+
+\subsubsection{ANTLR}
+ANother Tool for Language Recognition (ANTLR) is a compiler compiler tool for
+creating lexers and parsers from grammar files. It can create these compilers
+for several different target languages, including Java and Python. There exists
+ANTLR grammar files for C, C preprocessor and ASN.1. These configure ANTLR to
+create Java lexers and parsers which reads and validates inputted source code
+files.
+
+\subsection{Python}
+Python is a general-purpose, multi-paradigm, object-oriented, imperative,
+dynamically typed programming language. It was created by Guido van Rossum,
+and is today developed by Python Software Foundation and the Python community.
+Python’s strength include automatic memory management, large and comprehensive
+standard library, portability, powerful but very clear, concise and simple
+syntax. There exists several pure Python libraries for creating lexers and
+parsers, like PLY, pycparser and cppheaderparser.
+
+\subsubsection{PLY}
+PLY is a python alternative to the popular lexer and parser compilers lex and
+yacc. It also comes with a 95\% completed C preprocessor in case we are
+required to modify the preprocessor for our utility. Other special purpose
+parsers like pycparser and cppheaderparser use PLY.
+
+\subsubsection{pycparser}
+There are two python C parsers with the same name, pycparser (from google code)
+and PyCParser (from github). While they both aim to solve the same problem, the
+first one appears to have better documentation, be a more mature project and
+support more of the C99 specification. pycparser requires PLY to work.
+
+\subsubsection{cppheaderparser}
+Cppheaderparser is a parser for C++ header files written in python. It is an
+alternative for pycparser in case we need to parse C++ files instead of simply
+C files. It depends on PLY.
+
+\subsubsection{Testing frameworks}
+Python has several frameworks for unit testing, we decided to look at nose,
+py.test and Attest to find which would best suit our needs. They are somewhat
+similar, being modern python testing frameworks, but they differ in maturity
+and what is often called magic in the python community. py.test is the most
+mature but also the most magic, it uses a lot of introspection to discover
+tests and it has no API. nose is heavily influenced by py.test, but it tries to
+be more explicit, and provides an API. Attest is the youngest testing
+framework, and it like nose has little magic but instead focuses on providing
+a very pythonic API. Being the youngest also means it has the least
+documentation, functionality and plugins. Therefore Attest might be the easiest
+testing framework to learn. Independent of testing framework, we can use
+coverage.py for testing how well our unit tests cover our code.
+
+\subsubsection{Sphinx}
+Sphinx is a python tool for writing documentation, that makes it easy to create
+intelligent and beautiful documentation. It is used for the standard python
+documentation, and it is  popular in the python community. Sphinx uses
+reStructuredText as its markup language, which is a easy-to-read,
+what-you-see-is-what-you-get plaintext markup syntax and parser system. Our use
+case for sphinx is writing documentation for our utility, how to use it and
+configure it. We might also use readthedocs.org for free hosting of
+documentation, and which support automatic pulling and compiling of
+documentation from our github repository whenever we push any changes.
+
+\subsection{GCC}
+GNU Compiler Collection (GCC) is a compiler system which has front ends which
+parse C and C++ code, written in C and C++. It can be used in our utility as
+an external tool which does the parsing and outputs an intermediate language
+representation which we can parse/search to find the C struct definitions. Its
+drawbacks are a lack of flexibility if we need to change its behaviour, and we
+will still need to write a custom parser or use something like GCC-XML and an
+XML parser. 
+
+\subsection{Clang}
+Clang is a compiler front end for C, C++, Objective-C and Objective-C++,
+written in C++. Clang differ from GCC as it behaves as a library rather than an
+external tool, but for Java we will have to use it like GCC because there
+aren’t any Clang Java bindings. It supports outputting the abstract syntax
+tree as XML, which our utility then will need to parse. Clang provides bindings
+for Python so there it can be used as a library, but its drawback is a lack of
+flexibility, much like GCC.
+
+\section{Wireshark}
+Wireshark is a free, open source network protocol analyzer. It lets you capture
+and browse traffic running through a computer network. Wireshark is currently
+being developed by the Wireshark team, a group of networking experts spanning
+the globe. Because of its rich set of features and ease of use, Wireshark is de
+facto standard in many different industries and educational institutions.
+Wireshark is able to display, dissect and display data from a plethora of
+different protocols. One of its strengths lies in the ease of which developers
+can add their own dissectors, post-dissectors and taps. Dissectors can be
+written in either C or LUA. Most dissectors are written in C for increased
+speed. Lua-scripts are mostly used as prototypes or to process non time crucial
+data as they don’t need compilation to be used. Our customer uses Wireshark not
+only to browse through and filter regular networking traffic, but also for
+monitoring inter-process communication where it is important to have a tool
+which can easily be extended to dissect and display structures and data types
+unique to the organization.
+
+\section{Lua}
+Lua is a multi-paradigm, dynamically typed programming language which is
+designed to be lightweight so it can easily be embedded into applications.
+Lua has only a few basic data structures: boolean, numbers, strings and table.
+But Lua still implements advanced features such as first-class functions,
+garbage collection, closures, coroutines and dynamic module loading. Lua was
+created in 1993 at the Pontifical Catholic University of Rio de Janeiro, in
+Brazil.
+
+The output of our utility will be Wireshark dissectors written in Lua. While
+Wireshark supports dissectors written in both C and Lua, Lua is preferred
+because they can be added without recompiling Wireshark. Lua dissectors
+interface with Wireshark through a simple API.
+
+\section{Configuration}
+Our utility needs a flexible configuration, simply because some of the
+information we need to display does not exist in the C header files. For
+example there exist no clear relationship between enumerated values in messages
+and their names. These must be provided through a configuration. The
+configuration will also need to support:
+\begin{itemize}
+	\item Defining data constraints, so the dissector can recognize invalid
+		values for a struct member.
+	\item Defining custom handling of special data types.
+	\item  And possibly allow custom Lua dissectors to be defined and used in
+		certain cases.
+\end{itemize}
+
+\subsection{ASN.1}
+Abstract Syntax Notation One (ASN.1) is a notation for describing data
+structures, the standard is defined by ISO 8824. ASN.1 is used for
+representing, encoding, transferring and decoding of data. It provides a
+fundamental tool to be used in application, which make it possible to exchange
+information in a independent way.
+
+Our customer uses ASN.1 for configuration of other utilities, and has therefore
+suggested we investigate it for our utility. There exist two python libraries
+for parsing of ASN.1
+
+\subsection{YAML}
+YAML (YAML Ain't Markup Language) is a data serialization format. It's designed
+to be easy to read and write for humans. YAML syntax was designed to be easily
+mapped to data types common to most high-level languages. While most
+programming languages can use YAML for data serialization, YAML excels in
+working with those languages that are fundamentally built around the three
+basic primitives. These include the new wave of agile languages such as Perl,
+Python, PHP, Ruby, and Javascript.
+
+PyYAML is a parser for the python programming language, and it is available for
+version 3.2 of python. The parser is licensed under MIT.
+
+\subsection{configparser}
+configparser is a module to manage user-editable configuration files for an
+application. The configuration files are organized into sections, and each
+section can contain name-value pairs for configuration data. Value
+interpolation using Python formatting strings is also supported, to build
+values that depend on one another.
+
+configparser module is a standard part of Python, therefore there is no need
+to additional installation and configuration.
+
+\subsection{ConfigObj}
+ConfigObj is a simple but powerful config file reader and writer (originally
+based on ConfigParser). Its main feature is that it is very easy to use, with
+a straightforward programmer's interface and a simple syntax for config files.
+Among others, it has these additional features:
+\begin{itemize}
+	\item Nested sections (subsections), to any level
+	\item List values
+	\item Multiple line values
+	\item String interpolation (substitution)
+	\item Integrated with a powerful validation system
+\end{itemize}
+
+\noindent Currently, ConfigObj module exists only for Python up to version
+2.7. It is under BSD license.
+
+\subsection{Evaluation}
+According to the given requirements, we decided to use YAML for handling
+configuration files for our purposes. The choice was made dependently on used
+programming language decisions. Because the latest version of Python
+specification (currently 3.2) was chosen, the range of possible configuration
+file solutions was reduced. Therefore, although ASN.1 and ConfigObj are very
+suitable for our task, they were eliminated (those parsers are available only
+up to version 2.7), which left us 2 main possibilities: YAML and configparser.
+Configparser turned out to be not sufficient for us, because mainly it lacks
+lists. These we need for description of hiearchical structures of the C
+headers. YAML has only two minor disadvantages we should be aware of. First,
+there is no type validation mechanism, so we will have to create our validation
+manually. Second, it is an external library. We find this drawback minor for
+now but it can turn up to be a problem in the future. Except for these issues,
+YAML (toghether with PyYAML) seems to have a good potential for creating
+flexible configuration support for our solution.
+
+Some of the possible advantages and drawbacks of solutions taken into
+consideration are depicted in table below:
+
+\section{Integrated Development Environment}
+
+\subsection{PyCharm}
+Pycharm is a cross platform, proprietary IDE for python. It has good support
+for text editing, syntax highlighting, auto indentation, code navigation, code
+completion and automatic error checking. There is also a decent debugger and
+unit test support that can help finding errors and integrated version control
+support (including git), which makes it easy to synchronize with a remote
+repository. Most mentioned functions is also paired with keyboard shortcuts.
+
+The downside with Pycharm is that it requires a relative expensive license. It
+is, however, possible to apply for classroom licenses that are free of charge.
+The latter is a requirement to make this IDE a viable option.
+
+\subsection{Pyscripter}
+Pyscripter is a Windows only, open source IDE for python. It has support for
+basic text editing functions relevant to programming like syntax highlighting,
+auto indentation, code completion, debugger and file management. It also has
+some support for navigation the code, for example by offering to find the next
+point in the code that references a certain variable or function. The mentioned
+function mostly has keyboard shortcuts.
+
+It does not have support for automatic error checking in the program, so it
+won’t alert the user of spelling and syntax errors. It also lacks integration
+with any version control systems like git or svn. The code completion and
+code navigation is a little lacking. It will for example not suggest importing
+files if you reference a class from another module and it cannot give a
+complete list of usages of a function.
+
+\subsection{Vim}
+Vim is cross-platform, open source text editor originally created for the
+Amiga. It is not regarded as an IDE, but it provides all the regular features
+of text editors, including syntax highlighting, auto-completion,
+auto-indentation, searching, multiple undo and redo etc. It can be configured
+to support almost everything modern IDE’s support, and its extensive
+customizability is considered parts of its strength. But it is also parts of
+its weakness, it is very difficult for new vim users to learn how to use it
+effectively. Therefore we do not suggest any team member which is not already
+experienced with Vim to try it.
+
+\subsection{Integrated Development Environment Choice}
+PyCharm is by far the best IDE evaluated in terms of functionality, and it is
+the one that mirrors Eclipse the most, which is an advantage, since most team
+members are best acquainted with Eclipse. It will be the recommended IDE for
+this project, given that we can acquire classroom licenses.
+
+On the other hand, there is no real reason to dictate the use of IDE, since
+what determines the productivity of a team member is more how well you know
+the specific tool you are using. It will therefore be up to each team member
+to choose what IDE/text editor they want to use.
+
+\section{Evaluation and Conclusion}
+
+\subsection{Development Process Choice}
+We have chosen scrum for our development strategy. We do not have a lot of
+experience with software development either individually or as a group, so we
+have little personal knowledge of how much we are able to produce, and the
+task may present challenges that we are not prepared for when the project
+starts. For these reasons we believe that we need to take an agile approach to
+this project. This way, we may both learn as we go, an adjust later iterations
+by the result of the previous. We may also have something to deliver even if we
+do not have time to implement all the desired features.
+
+The scrum methodology fits these goals perfectly, and is therefore a natural
+choice. The risk factor here is that all team members are mostly unfamiliar
+with scrum, while we have at least a little knowledge about waterfall. We do,
+however, think that the time and risk of learning will not be much compared to
+the benefit it will give us over waterfall.
+
+\subsection{Development Languages and Technologies Choice}
+We originally selected Java as our programming language because it would run on
+all the platforms required, it offered automatic memory management so it would
+be easier to debug, and it was the only language everyone on the team had
+experience with. We considered most strongly the second of the three outlined
+possible solutions to parsing. We felt that writing our own C parser with C
+preprocessor would possibly take up a lot of the available time of the project,
+while the third option of using GCC or Clang would add a large dependency which
+our customer would want to avoid. GCC and Clang is also not trivial to install
+on Windows.
+
+Using Java with ANTLR to generate C preprocessor, C lexer and C parser looked
+very promising at first. Further inspections revealed that the C preprocessor
+grammar was written in 2006, and had stopped working in 2008 as newer version
+of ANTLR were not backwards compatible. The C grammar only provided validation
+of the parsing, and did not create an abstract syntax tree, so it would require
+some modification to get an output to work with. We did not test the ASN.1
+grammar but comments inside it did not inspire confidence. It was clear that
+this solution would require a lot of tinkering to get working, and ANTLR’s lack
+of documentation was a huge risk for our project. This plus feedback from our
+customer made us consider other programming languages for developing our
+utility.
+
+We looked at Python because our customer would prefer us to use it, and because
+we had a Python-fanatic on our team. We found several Python libraries for
+parsing of C files, and even one for parsing C++ header files.
+
+We decided to use Python for this project because the parsing libraries for
+Python came in working condition with decent documentation, and because we
+were able to create a small working prototype in Python in just a few hours.
+We estimate that it would take at least a week to achieve the same result in
+Java.
+
+We also decided to use python libraries PLY and pycparser. We favored pycparser
+over PyCParser and cppheaderparser because it has better documentation, seems
+to be a more mature project, and it supports the complete C99 specification,
+which PyCParser does not.
+
+For unit testing we have selected the Attest library, as it is the simplest of
+the ones considered, and therefore easiest to learn.
+
+A challenge with using Python is the fact that not all team members have
+sufficient experience with it. Most team members must therefore do some self
+study of varying level before we start the first sprint.
+
+\section{Framework}
+Even will descripe the framework we have decided to create?
+
+\section{Versions}
+
+The versions of the different tools and libraries we are using.
+\begin{description}
+	\item[Python] CPython 3.2.2, the latest standard python implementation
+		which means we won’t support other python implementation like PyPy,
+		jython or ironpython in the near future.
+	\item[PLY] 3.4, latest stable verison.
+	\item[pycparser] 2.04, latest stable version.
+	\item[Attest] 0.6-dev, latest development version (latest stable don’t
+		support python3.2)
+	\item[WireShark] 1.7.0-SVN, latest nightly build, bleeding edge
+	\item[Lua] 5.1.4, latest stable version
+	\item[PyYAML] 3.10, latest stable version
+\end{description}
+
+\section{IP Rights / License}
+The customer has explained that they do not intend to distribute our utility,
+and that we are free to license it as open source if we want to, under
+whichever license we feel is most suited. They suggested GNU GPL as Wireshark
+is released under it.
+
+The libraries and tools we depend upon and interact with has their own licenses
+which we need to consider when we select a license for our utility.
+\begin{description}
+	\item[Wireshark] GNU GPL
+	\item[PLY] BSD-new
+	\item[pycparser] BSD-new
+	\item[Python-ASN1] - MIT
+	\item[pyYAML] - MIT
+	\item[ConfigObj] - BSD
+\end{description}
+
+\noindent Some of the requirements for our utility might require us to modify
+the C preprocessor in PLY and the pycparser library, which made us consider
+the BSD the most suited license for us. Since it also gives us the option to
+later move to a more restrictive license like GPL, we decided to use it.
+

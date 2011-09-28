@@ -16,6 +16,7 @@ cli = Tests()
 
 @cli.test
 def cli_test_header():
+    csjark.parse_args()
     assert True
 
 @cli.test
@@ -25,6 +26,20 @@ def cli_test_flag_default():
     assert csjark.Cli.debug == False
     assert csjark.Cli.use_cpp == True
 
+@cli.test
+def cli_test_flag_verbose():
+    """Test the default commandline interface flags"""
+    assert csjark.Cli.verbose == False
+
+@cli.test
+def cli_test_flag_debug():
+    """Test the default commandline interface flags"""
+    assert csjark.Cli.debug == False
+
+@cli.test
+def cli_test_flag_use_cpp():
+    """Test the default commandline interface flags"""
+    assert csjark.Cli.use_cpp == False
 
 if __name__ == '__main__':
     all_tests = Tests([cli])

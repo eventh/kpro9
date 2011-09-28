@@ -83,29 +83,6 @@ description of the requirements.
 \end{tabular}
 \end{table}
 
-\section{Use Cases}
-%------------------
-\label{sec:usecases}
-
-\subsection{Actors}
-An actor specifies a role played by an external person or thing that interact
-with our utility. We have three types of actors to consider. First is the
-primary actor which in our case is the user of our utility. He who feeds it a
-C file to generate dissectors. A secondary actor is someone who configures our
-utility to change the output of it. Finally we have an offstage actor which
-does not use our utility himself, but uses the output dissectors in Wireshark.
-
-We have defined two use case actors for our utility. The customer has
-specified that the user is the most important actor.
-\begin{description}
-	\item[User] User of the generated Wireshark dissectors, offstage actor
-	\item[Developer] User and configurer of utility, primary and secondary
-		actor
-\end{description}
-
-\subsection{Use Case Diagrams}
-TODO!! Desperately need help for this....
-
 \section{Prioritization}
 %-----------------------
 \label{sec:reqspriority}
@@ -293,8 +270,43 @@ The administrator is this context is the users of the dissectors. \newline
 \end{tabularx}}
 \end{table}
 
+\section{Use Cases}
+%------------------
+\label{sec:usecases}
 
+\subsection{Actors}
+An actor specifies a role played by an external person or thing that interact
+with our utility. We have three types of actors to consider. First is the
+primary actor which in our case is the user of our utility. He who feeds it a
+C file to generate dissectors. A secondary actor is someone who configures our
+utility to change the output of it. Finally we have an offstage actor which
+does not use our utility himself, but uses the output dissectors in Wireshark.
 
+We have defined two use case actors for our utility. The customer has
+specified that the user is the most important actor.
+\begin{description}
+	\item[Administrator] User of the generated Wireshark dissectors, offstage actor
+	\item[Developer] User and configurer of utility, primary and secondary actor
+\end{description}
+
+\subsection{Use Cases}
+This sections contains use case diagrams for the two actors, and detailed textual use cases for these diagrams.
+\subsubsection{Use Case Diagrams}
+Figure \ref{fig:uc_adm} shows the use case diagram for the administrator, and figure \ref{fig:uc_dev} is the use case diagram for the developer.
+\begin{figure}[here]
+\includegraphics[scale=1]{./planning/img/administrator.png}
+\caption{Use Case Diagram: Administrator}
+\label{fig:uc_adm}
+\end{figure}
+
+\begin{figure}[here]
+\includegraphics[scale=1]{./planning/img/developer.png}
+\caption{Use Case Diagram: Developer}
+\label{fig:uc_dev}
+\end{figure}
+
+\subsubsection{Textual Use Cases}
+TODO!!!
 
 
 

@@ -100,7 +100,7 @@ class Cli:
             configs.append(namespace.config)
 
         # Need to provide either a header file or a config file
-        if len(sys.argv) < 2 or (not headers and not configs):
+        if not headers and not configs:
             parser.print_help()
             sys.exit(2)
 

@@ -12,11 +12,8 @@ except ImportError:
     sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../'))
     import csjark
 
-cli = Tests()
 
-@cli.test
-def cli_test_header():
-    assert True
+cli = Tests()
 
 @cli.test
 def cli_test_flag_verbose():
@@ -36,8 +33,8 @@ def cli_test_flag_nocpp():
     csjark.Cli.parse_args(['-nocpp', 'cpp.h'])
     assert csjark.Cli.use_cpp == False
 
+
 if __name__ == '__main__':
     all_tests = Tests([cli])
     all_tests.run()
 
-    

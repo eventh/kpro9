@@ -9,7 +9,7 @@
 	Portion & Description \\
 	\midrule
 	Description & Supporting parameters for c-header file \\
-	Tester & Team member responsible for the test \\
+	Tester & Lars Solvoll Tønder \\
 	Prerequisites & The program has to have been compiled on the system \\
 	Feature & Test that we are able to feed the solution with a c-header file and have it get dissected \\
 	\addlinespace
@@ -31,7 +31,7 @@
 	Portion & Description \\
 	\midrule
 	Description & Supporting basic data types \\
-	Tester & Team member responsible for the test \\
+	Tester & Lars Solvoll Tønder \\
 	Prerequisites & The program has to have been started \\
 	Feature & Test that our utility will be able to make a dissectors for C-header files including the following basic data types: int, float, char and boolean \\
 	\addlinespace
@@ -75,7 +75,7 @@
 	Description & Supporting \#include \\
 	Tester & Team member responsible for the test \\
 	Prerequisites & The utility has to be up and running \\
-	Feature & Test that our utility supports c-header files with the \#include directive \\
+	Feature & Test that our utility supports c-header files with the #include directive \\
 	\addlinespace
 	\multirow{2}{*}{Execution} & 1. Write the name of a C-header file with an \#include directive \\
 	& 2. Read the output \\
@@ -95,7 +95,7 @@
 	Description & Supporting \#define and \#if \\
 	Tester & Team member responsible for the test \\
 	Prerequisites & The utility has to be up and running \\
-	Feature & Test that our utility supports c-header files with \#define and \#if directives \\
+	Feature & Test that our utility supports c-header files with #define and #if directives \\
 	\addlinespace
 	\multirow{2}{*}{Execution} & 1. Write the name of a C-header file with a \#define and \#if directives \\
 	& 2. Read the output \\
@@ -138,7 +138,7 @@
 	Prerequisites & The utility must have already loaded a configuration file and generated a dissector for a given header file\\
 	Feature & Test that our utility recognizes invalid values for struct members specified in the config file. \\
 	\addlinespace
-	\multirow{3}{*}{Execution} & 1. Feed the utility with the name of a header file that has structs with restrictions on them set in the config file. \\
+	\multirow{3}{*}{Execution} & 1. Feed the utility with the name of a header and a config-file, where the config file sets restrictions on the members of the header file. \\
 	\addlinespace
 	& 2. Use the resulting dissector on some capture data for wireshark that contains struct members with invalid values. \\
 	\addlinespace

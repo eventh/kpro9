@@ -55,21 +55,21 @@ class RangeField(Field):
         data.append(t.format(**args))
 
         # Test the value
-        def create_test(var, value, test='>'):
+        def create_test(var, value, test, warn):
             type_ = self.type
             if type_[-2:] in ('16', '32'):
                 type_ = type_[:-2]
             data.append('\tlocal %s_val = buffer(%i, %i):%s()' % (
                             self.name, offset, self.size, type_))
-            data.append('\tlocal %s = %s' % (var, value))
-            data.append('\tif (%s %s %s_val) then' % (var, test, self.name))
-            data.append('\t\t%s:append_text(" INVALID")' % self.name)
+            data.append('\tif (%s %s %s_val) then' % (value, test, self.name))
+            data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, '
+                            '"Should be %s %s")' % (self.name, warn, value))
             data.append('\tend')
 
         if self.min is not None:
-            create_test('%s_min' % self.name, self.min, '>')
+            create_test('%s_min' % self.name, self.min, '>', 'larger than')
         if self.max is not None:
-            create_test('%s_max' % self.name, self.max, '<')
+            create_test('%s_max' % self.name, self.max, '<', 'smaller than')
 
         return '\n'.join(data)
 

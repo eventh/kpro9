@@ -12,14 +12,12 @@ function proto_age_test.dissector(buffer, pinfo, tree)
 	subtree:add(f.name, buffer(0, 10))
 	local age = subtree:add(f.age, buffer(10, 4))
 	local age_val = buffer(10, 4):int()
-	local age_min = 0.0
-	if (age_min > age_val) then
-		age:append_text(" INVALID")
+	if (0.0 > age_val) then
+		age:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0.0")
 	end
 	local age_val = buffer(10, 4):int()
-	local age_max = 100.0
-	if (age_max < age_val) then
-		age:append_text(" INVALID")
+	if (100.0 < age_val) then
+		age:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 100.0")
 	end
 end
 

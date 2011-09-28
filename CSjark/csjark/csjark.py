@@ -43,8 +43,11 @@ class Cli:
     use_cpp = True
 
     @classmethod
-    def parse_args(cls):
-        """Parse arguments given in sys.argv."""
+    def parse_args(cls, args=None):
+        """Parse arguments given in sys.argv.
+
+        'args' is a list of strings to parse instead of sys.argv.
+        """
         parser = argparse.ArgumentParser(
                 description='Generate Wireshark dissectors from C structs.')
 
@@ -79,19 +82,22 @@ class Cli:
                 nargs='?', help='write output to file')
 
         # Parse arguments
-        args = parser.parse_args()
+        if args is None:
+            namespace = parser.parse_args()
+        else:
+            namespace = parser.parse_args(args)
 
-        cls.verbose = args.verbose
-        cls.debug = args.debug
-        cls.use_cpp = args.cpp
+        cls.verbose = namespace.verbose
+        cls.debug = namespace.debug
+        cls.use_cpp = namespace.cpp
 
-        headers = args.input
-        if args.header:
-            headers.append(args.header)
+        headers = namespace.input
+        if namespace.header:
+            headers.append(namespace.header)
 
-        configs = args.configs
-        if args.config:
-            configs.append(args.config)
+        configs = namespace.configs
+        if namespace.config:
+            configs.append(namespace.config)
 
         # Need to provide either a header file or a config file
         if len(sys.argv) < 2 or (not headers and not configs):
@@ -123,6 +129,8 @@ def create_dissector(filename):
         with open('%s.lua' % proto.name, 'w') as f:
             f.write(code)
 
+    return len(protocols)
+
 
 def main():
     """Run the CSjark program."""
@@ -136,11 +144,15 @@ def main():
             print("Parsed config file '%s' successfully." % filename)
 
     # Create dissectors
+    dissectors = 0
     for filename in headers:
-        create_dissector(filename)
+        dissectors += create_dissector(filename)
 
         if Cli.verbose:
             print("Parsed header file '%s' successfully." % filename)
+
+    print("Successfully parsed %i file(s), created %i dissector(s)." % (
+            len(headers), dissectors))
 
 
 if __name__ == "__main__":

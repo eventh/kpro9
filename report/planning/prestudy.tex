@@ -11,9 +11,12 @@ made. In \autoref{sec:pre:framework} we provide a description of the framework
 our utility will require. At the end of the chapter, in
 \autoref{sec:pre:license}, we describe the license of our utility.
 
+
+%--------------------------
 \section{Similar Solutions}
 %--------------------------
 \label{sec:pre:similar}
+
 We started by searching for existing solutions in the problem space. This
 search turned up idl2wrs\footnote{\url{http://wiki.wireshark.org/idl2wrs}}.
 The other solution was suggested by our customer,
@@ -21,6 +24,7 @@ Asn2wrs\footnote{\url{http://wiki.wireshark.org/Asn2wrs}}.
 Both of these solutions are bundled with Wireshark.
 
 \subsection{idl2wrs}
+%-------------------
 A tool for generating Wireshark dissectors from IDL files. The tool is written
 in python, and generates dissectors in C from IDL specifications. Interface
 Description Language (IDL) is used to interface in a language-neutral way,
@@ -30,7 +34,8 @@ language than us, and creates dissectors in a different language than us, we
 can not reuse any of its code. Instead we will look at its architecture and
 data structures, especially how it generates dissectors.
 
-\subsection{asn2wrs}
+\subsection{Asn2wrs}
+%-------------------
 A tool for generating Wireshark dissectors from ASN.1 protocols. It requires
 four input files: an ASN-1 protocol description, a configuration file and two
 template files. Advantages of using Asn2wrs are faster development from
@@ -39,11 +44,14 @@ are that code and makefiles are more complex. Our customer can't use this
 solution as it would require them to rewrite their C structs to ASN.1
 descriptions, which would take very long time.
 
+
+%-----------------------------------------
 \section{Software Development Methodology}
 %-----------------------------------------
 \label{sec:pre:method}
 
 \subsection{Waterfall}
+%---------------------
 \label{sec:pre:waterfall}
 Waterfall is a software development methodology based on sequential phases.
 It consist of the following phases: requirement specification, design,
@@ -92,6 +100,7 @@ normal use. Maintenance may also include developing new features that the
 customer finds the need for.
 
 \subsection{Scrum}
+%-----------------
 Scrum is an agile development methodology based on the philosophy that it is
 impossible to completely and accurately plan everything in a software project
 before you begin. It is therefore more or less based on iterations of the
@@ -155,157 +164,11 @@ the team members where all members shares their reflections of how the sprint
 went and how to improve the next sprint. This is important for improving the
 process.
 
-\section{Development Languages and Technologies}
-%-----------------------------------------------
-\label{sec:pre:langs}
 
-We estimate that the most challenging part of the utility will be parsing of C
-header files. There are three distinct paths for solving it.
-\begin{enumerate}
-	\item We can build our own custom parser.
-	\item We can use one or more libraries which does the parsing for us.
-	\item We can use a complete tool chain like GCC or Clang.
-\end{enumerate}
-
-\noindent Each of these options has their advantages and drawbacks. While a
-custom parser would give us complete control over each part of the parsing, it
-would be a tremendous undertaking depending of how much of the C language
-specification and C preprocessor directives we have to support. On the other
-hand using a tool chain would add a large dependency to our solution, and is
-non-trivial to install and use on the Windows platform.
-
-We intend to investigate these possible solutions in Java first, and if
-necessarily also investigate other programming languages if Java is not suited.
-
-\subsection{Java}
-\begin{wrapfigure}{r}{1.3cm}
-	\begin{center}
-	\vspace{-30pt}
-		\includegraphics[width=1.3cm]{./planning/img/java-logo}
-	\vspace{-30pt}
-	\end{center}
-\end{wrapfigure}
-Java is an object-oriented, structured, imperative, statically typed
-programming language. It was originally developed by Sun Microsystems, which
-is now a subsidiary of Oracle Corporation. Java was released in 1995, and it
-derived much of its syntax from C and C++, but with fewer low-level facilities.
-Java’s strength are portability, automatic memory management, security, good
-documentation and an extensive standard library. Java has several tools and
-libraries of varying quality for creating parsers, like ANTLR and JAVACC.
-
-\subsubsection{ANTLR}
-\begin{wrapfigure}{r}{2.5cm}
-	\begin{center}
-	\vspace{-30pt}
-		\includegraphics[width=2.5cm]{./planning/img/antlr_logo}
-	\vspace{-30pt}
-	\end{center}
-\end{wrapfigure}
-ANother Tool for Language Recognition (ANTLR) is a compiler compiler tool for
-creating lexers and parsers from grammar files. It can create these compilers
-for several different target languages, including Java and Python. There exists
-ANTLR grammar files for C, C preprocessor and ASN.1. These configure ANTLR to
-create Java lexers and parsers which reads and validates inputted source code
-files.
-
-\subsection{Python}
-\begin{wrapfigure}{r}{2.1cm}
-	\begin{center}
-	\vspace{-30pt}
-		\includegraphics[width=2.1cm]{./planning/img/python_logo}
-	\vspace{-30pt}
-	\end{center}
-\end{wrapfigure}
-Python is a general-purpose, multi-paradigm, object-oriented, imperative,
-dynamically typed programming language. It was created by Guido van Rossum,
-and is today developed by Python Software Foundation and the Python community.
-Python’s strength include automatic memory management, large and comprehensive
-standard library, portability, powerful but very clear, concise and simple
-syntax. There exists several pure Python libraries for creating lexers and
-parsers, like PLY, pycparser and cppheaderparser.
-
-\subsubsection{PLY}
-PLY is a python alternative to the popular lexer and parser compilers lex and
-yacc. It also comes with a 95\% completed C preprocessor in case we are
-required to modify the preprocessor for our utility. Other special purpose
-parsers like pycparser and cppheaderparser use PLY.
-
-\subsubsection{pycparser}
-There are two python C parsers with the same name, pycparser (from google code)
-and PyCParser (from github). While they both aim to solve the same problem, the
-first one appears to have better documentation, be a more mature project and
-support more of the C99 specification. pycparser requires PLY to work.
-
-\subsubsection{cppheaderparser}
-Cppheaderparser is a parser for C++ header files written in python. It is an
-alternative for pycparser in case we need to parse C++ files instead of simply
-C files. It depends on PLY.
-
-\subsubsection{Testing frameworks}
-Python has several frameworks for unit testing, we decided to look at nose,
-py.test and Attest to find which would best suit our needs. They are somewhat
-similar, being modern python testing frameworks, but they differ in maturity
-and what is often called magic in the python community. py.test is the most
-mature but also the most magic, it uses a lot of introspection to discover
-tests and it has no API. nose is heavily influenced by py.test, but it tries to
-be more explicit, and provides an API. Attest is the youngest testing
-framework, and it like nose has little magic but instead focuses on providing
-a very pythonic API. Being the youngest also means it has the least
-documentation, functionality and plugins. Therefore Attest might be the easiest
-testing framework to learn. Independent of testing framework, we can use
-coverage.py for testing how well our unit tests cover our code.
-
-\subsubsection{Sphinx}
-\begin{wrapfigure}{r}{2.7cm}
-	\begin{center}
-	\vspace{-30pt}
-		\includegraphics[width=2.7cm]{./planning/img/sphinx_logo}
-	\vspace{-30pt}
-	\end{center}
-\end{wrapfigure}
-Sphinx is a python tool for writing documentation, that makes it easy to create
-intelligent and beautiful documentation. It is used for the standard python
-documentation, and it is  popular in the python community. Sphinx uses
-reStructuredText as its markup language, which is a easy-to-read,
-what-you-see-is-what-you-get plaintext markup syntax and parser system. Our use
-case for sphinx is writing documentation for our utility, how to use it and
-configure it. We might also use readthedocs.org for free hosting of
-documentation, and which support automatic pulling and compiling of
-documentation from our github repository whenever we push any changes.
-
-\subsection{GCC}
-\begin{wrapfigure}{r}{1.5cm}
-	\begin{center}
-	\vspace{-30pt}
-		\includegraphics[width=1.5cm]{./planning/img/gcc_logo}
-	\vspace{-30pt}
-	\end{center}
-\end{wrapfigure}
-GNU Compiler Collection (GCC) is a compiler system which has front ends which
-parse C and C++ code, written in C and C++. It can be used in our utility as
-an external tool which does the parsing and outputs an intermediate language
-representation which we can parse/search to find the C struct definitions. Its
-drawbacks are a lack of flexibility if we need to change its behaviour, and we
-will still need to write a custom parser or use something like GCC-XML and an
-XML parser. 
-
-\subsection{Clang}
-\begin{wrapfigure}{r}{2.5cm}
-	\begin{center}
-	\vspace{-30pt}
-		\includegraphics[width=2.5cm]{./planning/img/llvm_logo}
-	\vspace{-30pt}
-	\end{center}
-\end{wrapfigure}
-Clang is a compiler front end for C, C++, Objective-C and Objective-C++,
-written in C++. Clang differ from GCC as it behaves as a library rather than an
-external tool, but for Java we will have to use it like GCC because there
-aren’t any Clang Java bindings. It supports outputting the abstract syntax
-tree as XML, which our utility then will need to parse. Clang provides bindings
-for Python so there it can be used as a library, but its drawback is a lack of
-flexibility, much like GCC. Clang is a part of the LLVM toolkit.
-
-\subsection{Wireshark}
+%------------------
+\section{Wireshark}
+%------------------
+\label{sec:pre:wireshark}
 \begin{wrapfigure}{r}{3.5cm}
 	\begin{center}
 	\vspace{-30pt}
@@ -329,7 +192,13 @@ monitoring inter-process communication where it is important to have a tool
 which can easily be extended to dissect and display structures and data types
 unique to the organization.
 
+%------------------------------
+\section{Programming Languages}
+%------------------------------
+\label{sec:pre:langs}
+
 \subsection{Lua}
+%---------------
 \begin{wrapfigure}{r}{2.5cm}
 	\begin{center}
 	\vspace{-30pt}
@@ -350,7 +219,123 @@ Wireshark supports dissectors written in both C and Lua, Lua is preferred
 because they can be added without recompiling Wireshark. Lua dissectors
 interface with Wireshark through a simple API.
 
-\subsection{Configuration}
+\subsection{Java}
+%----------------
+\begin{wrapfigure}{r}{1.3cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=1.3cm]{./planning/img/java-logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
+Java is an object-oriented, structured, imperative, statically typed
+programming language. It was originally developed by Sun Microsystems, which
+is now a subsidiary of Oracle Corporation. Java was released in 1995, and it
+derived much of its syntax from C and C++, but with fewer low-level facilities.
+Java’s strength are portability, automatic memory management, security, good
+documentation and an extensive standard library. Java has several tools and
+libraries of varying quality for creating parsers, like ANTLR and JAVACC.
+
+\subsection{Python}
+%------------------
+\begin{wrapfigure}{r}{2.1cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=2.1cm]{./planning/img/python_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
+Python is a general-purpose, multi-paradigm, object-oriented, imperative,
+dynamically typed programming language. It was created by Guido van Rossum,
+and is today developed by Python Software Foundation and the Python community.
+Python’s strength include automatic memory management, large and comprehensive
+standard library, portability, powerful but very clear, concise and simple
+syntax. There exists several pure Python libraries for creating lexers and
+parsers, like PLY, pycparser and cppheaderparser.
+
+
+%----------------
+\section{Parsers}
+%----------------
+\label{sec:pre:parsers}
+This section contains various tools and libraries we have looked at for solving
+the challenge of parsing C header files. 
+
+\subsection{ANTLR}
+%-----------------
+\begin{wrapfigure}{r}{2.5cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=2.5cm]{./planning/img/antlr_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
+ANother Tool for Language Recognition (ANTLR) is a compiler compiler tool for
+creating lexers and parsers from grammar files. It can create these compilers
+for several different target languages, including Java and Python. There exists
+ANTLR grammar files for C, C preprocessor and ASN.1. These configure ANTLR to
+create Java lexers and parsers which reads and validates inputted source code
+files.
+
+\subsection{PLY}
+%---------------
+PLY is a python alternative to the popular lexer and parser compilers lex and
+yacc. It also comes with a 95\% completed C preprocessor in case we are
+required to modify the preprocessor for our utility. Other special purpose
+parsers like pycparser and cppheaderparser use PLY.
+
+\subsection{pycparser}
+%---------------------
+There are two python C parsers with the same name, pycparser (from google code)
+and PyCParser (from github). While they both aim to solve the same problem, the
+first one appears to have better documentation, be a more mature project and
+support more of the C99 specification. pycparser requires PLY to work.
+
+\subsection{cppheaderparser}
+%---------------------------
+Cppheaderparser is a parser for C++ header files written in python. It is an
+alternative for pycparser in case we need to parse C++ files instead of simply
+C files. It depends on PLY.
+
+\subsection{GCC}
+%---------------
+\begin{wrapfigure}{r}{1.5cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=1.5cm]{./planning/img/gcc_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
+GNU Compiler Collection (GCC) is a compiler system which has front ends which
+parse C and C++ code, written in C and C++. It can be used in our utility as
+an external tool which does the parsing and outputs an intermediate language
+representation which we can parse/search to find the C struct definitions. Its
+drawbacks are a lack of flexibility if we need to change its behaviour, and we
+will still need to write a custom parser or use something like GCC-XML and an
+XML parser. 
+
+\subsection{Clang}
+%-----------------
+\begin{wrapfigure}{r}{2.5cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=2.5cm]{./planning/img/llvm_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
+Clang is a compiler front end for C, C++, Objective-C and Objective-C++,
+written in C++. Clang differ from GCC as it behaves as a library rather than an
+external tool, but for Java we will have to use it like GCC because there
+aren’t any Clang Java bindings. It supports outputting the abstract syntax
+tree as XML, which our utility then will need to parse. Clang provides bindings
+for Python so there it can be used as a library, but its drawback is a lack of
+flexibility, much like GCC. Clang is a part of the LLVM toolkit.
+
+
+%----------------------
+\section{Configuration}
+%----------------------
+\label{sec:pre:config}
 Our utility needs a flexible configuration, simply because some of the
 information we need to display does not exist in the C header files. For
 example there exist no clear relationship between enumerated values in messages
@@ -364,7 +349,8 @@ configuration will also need to support:
 		certain cases.
 \end{itemize}
 
-\subsubsection{ASN.1}
+\subsection{ASN.1}
+%-----------------
 Abstract Syntax Notation One (ASN.1) is a notation for describing data
 structures, the standard is defined by ISO 8824. ASN.1 is used for
 representing, encoding, transferring and decoding of data. It provides a
@@ -375,7 +361,8 @@ Our customer uses ASN.1 for configuration of other utilities, and has therefore
 suggested we investigate it for our utility. There exist two python libraries
 for parsing of ASN.1
 
-\subsubsection{YAML}
+\subsection{YAML}
+%----------------
 \begin{wrapfigure}{r}{3cm}
 	\begin{center}
 	\vspace{-30pt}
@@ -394,7 +381,8 @@ Python, PHP, Ruby, and Javascript.
 PyYAML is a parser for the python programming language, and it is available for
 version 3.2 of python. The parser is licensed under MIT.
 
-\subsubsection{configparser}
+\subsection{configparser}
+%------------------------
 configparser is a module to manage user-editable configuration files for an
 application. The configuration files are organized into sections, and each
 section can contain name-value pairs for configuration data. Value
@@ -404,7 +392,8 @@ values that depend on one another.
 configparser module is a standard part of Python, therefore there is no need
 to additional installation and configuration.
 
-\subsubsection{ConfigObj}
+\subsection{ConfigObj}
+%---------------------
 ConfigObj is a simple but powerful config file reader and writer (originally
 based on ConfigParser). Its main feature is that it is very easy to use, with
 a straightforward programmer's interface and a simple syntax for config files.
@@ -420,9 +409,53 @@ Among others, it has these additional features:
 \noindent Currently, ConfigObj module exists only for Python up to version
 2.7. It is under BSD license.
 
-\subsection{Integrated Development Environment}
 
-\subsubsection{PyCharm}
+%---------------------
+\section{Unit Testing}
+%---------------------
+\label{sec:pre:testing}
+Python has several frameworks for unit testing, we decided to look at nose,
+py.test and Attest to find which would best suit our needs. They are somewhat
+similar, being modern python testing frameworks, but they differ in maturity
+and what is often called magic in the python community. py.test is the most
+mature but also the most magic, it uses a lot of introspection to discover
+tests and it has no API. nose is heavily influenced by py.test, but it tries to
+be more explicit, and provides an API. Attest is the youngest testing
+framework, and it like nose has little magic but instead focuses on providing
+a very pythonic API. Being the youngest also means it has the least
+documentation, functionality and plugins. Therefore Attest might be the easiest
+testing framework to learn. Independent of testing framework, we can use
+coverage.py for testing how well our unit tests cover our code.
+
+
+%----------------------------------
+\section{Sphinx \& readthedocs.org}
+%----------------------------------
+\label{sec:pre:sphinx}
+\begin{wrapfigure}{r}{2.7cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=2.7cm]{./planning/img/sphinx_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
+Sphinx is a python tool for writing documentation, that makes it easy to create
+intelligent and beautiful documentation. It is used for the standard python
+documentation, and it is  popular in the python community. Sphinx uses
+reStructuredText as its markup language, which is a easy-to-read,
+what-you-see-is-what-you-get plaintext markup syntax and parser system. Our use
+case for sphinx is writing documentation for our utility, how to use it and
+configure it. We might also use readthedocs.org for free hosting of
+documentation, and which support automatic pulling and compiling of
+documentation from our github repository whenever we push any changes.
+
+%-------------------------------------------
+\section{Integrated Development Environment}
+%-------------------------------------------
+\label{sec:pre:ide}
+
+\subsection{PyCharm}
+%-------------------
 \begin{wrapfigure}{r}{3.5cm}
 	\begin{center}
 	\vspace{-30pt}
@@ -441,7 +474,8 @@ The downside with Pycharm is that it requires a relative expensive license. It
 is, however, possible to apply for classroom licenses that are free of charge.
 The latter is a requirement to make this IDE a viable option.
 
-\subsubsection{PyScripter}
+\subsection{PyScripter}
+%----------------------
 \begin{wrapfigure}{r}{3cm}
 	\begin{center}
 	\vspace{-30pt}
@@ -463,7 +497,8 @@ code navigation is a little lacking. It will for example not suggest importing
 files if you reference a class from another module and it cannot give a
 complete list of usages of a function.
 
-\subsubsection{Vim}
+\subsection{Vim}
+%---------------
 \begin{wrapfigure}{r}{2cm}
 	\begin{center}
 	\vspace{-30pt}
@@ -481,11 +516,14 @@ its weakness, it is very difficult for new vim users to learn how to use it
 effectively. Therefore we do not suggest any team member which is not already
 experienced with Vim to try it.
 
+
+%----------------------------------
 \section{Evaluation and Conclusion}
 %----------------------------------
 \label{sec:pre:eval}
 
 \subsection{Development Process Choice}
+%--------------------------------------
 We have chosen scrum for our development strategy. We do not have a lot of
 experience with software development either individually or as a group, so we
 have little personal knowledge of how much we are able to produce, and the
@@ -502,6 +540,7 @@ however, think that the time and risk of learning will not be much compared to
 the benefit it will give us over waterfall.
 
 \subsection{Development Languages and Technologies Choice}
+%---------------------------------------------------------
 We originally selected Java as our programming language because it would run on
 all the platforms required, it offered automatic memory management so it would
 be easier to debug, and it was the only language everyone on the team had
@@ -547,6 +586,7 @@ sufficient experience with it. Most team members must therefore do some self
 study of varying level before we start the first sprint.
 
 \subsection{Configuration Choice}
+%--------------------------------
 According to the given requirements, we decided to use YAML for handling
 configuration files for our purposes. The choice was made dependently on used
 programming language decisions. Because the latest version of Python
@@ -592,6 +632,7 @@ consideration are depicted in table below:
 \end{table}
 
 \subsection{Integrated Development Environment Choice}
+%-----------------------------------------------------
 PyCharm is by far the best IDE evaluated in terms of functionality, and it is
 the one that mirrors Eclipse the most, which is an advantage, since most team
 members are best acquainted with Eclipse. It will be the recommended IDE for
@@ -602,12 +643,15 @@ what determines the productivity of a team member is more how well you know
 the specific tool you are using. It will therefore be up to each team member
 to choose what IDE/text editor they want to use.
 
+
+%------------------
 \section{Framework}
 %------------------
 \label{sec:pre:framework}
 Even will descripe the framework we have decided to create?
 
 \subsection{Versions}
+%--------------------
 The versions of the different tools and libraries we are using.
 \begin{description}
 	\item[Python] CPython 3.2.2, the latest standard python implementation
@@ -622,8 +666,10 @@ The versions of the different tools and libraries we are using.
 	\item[WireShark] 1.7.0-SVN, latest nightly build, bleeding edge
 \end{description}
 
+
+%-----------------------------
 \section{IP Rights \& License}
-%----------------------------
+%-----------------------------
 \label{sec:pre:license}
 The customer has explained that they do not intend to distribute our utility,
 and that we are free to license it as open source if we want to, under

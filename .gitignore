@@ -15,6 +15,7 @@
 */yacctab.py
 .project
 /misc
+/report/*.bat
 /CSjark/docs/_build
 /CSjark/docs/_static
 /CSjark/docs/_template

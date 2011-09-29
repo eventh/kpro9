@@ -2,14 +2,26 @@
 \chapter{Preliminary Studies}
 %============================
 This chapter presents the preliminary studies for this project.
-In \autoref{sec:pre:similar} we have examined existing solutions, in
+In \autoref{sec:pre:similar} we have examined existing solutions, and in
 \autoref{sec:pre:method} we provide a description of two popular software
-development methodology, in \autoref{sec:pre:langs} we describe possible
-languages and technology necessary for developing the utility, and in
-\autoref{sec:pre:eval} we provide the justifications for the choices we have
-made. In \autoref{sec:pre:framework} we provide a description of the framework
-our utility will require. At the end of the chapter, in
-\autoref{sec:pre:license}, we describe the license of our utility.
+development methodology.
+
+Wireshark, which out utility should create dissectors for, are described in
+\autoref{sec:pre:wireshark}.
+\hyperref[sec:pre:langs]{Section \ref*{sec:pre:langs}} contains the different
+programming languages we might need, while \autoref{sec:pre:parsers}
+describe possible solutions for parsing C header files.
+\hyperref[sec:pre:config]{Section \ref*{sec:pre:config}} outlines possible
+configuration libraries, and \autoref{sec:pre:testing} discusses possible unit
+testing frameworks. In \autoref{sec:pre:docs} we describe a framework for
+writing user documentation and \autoref{sec:pre:ide} describes different
+integrated development environments.
+
+\hyperref[sec:pre:eval]{Section \ref*{sec:pre:eval}} provides the
+justifications for the choices we have made, and in
+\autoref{sec:pre:framework} we describe the framework our utility will require.
+At the end of the chapter, in \autoref{sec:pre:license}, we describe the
+license of our utility.
 
 
 %--------------------------
@@ -224,7 +236,7 @@ interface with Wireshark through a simple API.
 \begin{wrapfigure}{r}{1.3cm}
 	\begin{center}
 	\vspace{-30pt}
-		\includegraphics[width=1.3cm]{./planning/img/java-logo}
+		\includegraphics[width=1.3cm]{./planning/img/java_logo}
 	\vspace{-30pt}
 	\end{center}
 \end{wrapfigure}
@@ -254,9 +266,9 @@ syntax. There exists several pure Python libraries for creating lexers and
 parsers, like PLY, pycparser and cppheaderparser.
 
 
-%----------------
-\section{Parsers}
-%----------------
+%-----------------------------------
+\section{Parsers Libraries \& Tools}
+%-----------------------------------
 \label{sec:pre:parsers}
 This section contains various tools and libraries we have looked at for solving
 the challenge of parsing C header files. 
@@ -428,10 +440,12 @@ testing framework to learn. Independent of testing framework, we can use
 coverage.py for testing how well our unit tests cover our code.
 
 
-%----------------------------------
-\section{Sphinx \& readthedocs.org}
-%----------------------------------
-\label{sec:pre:sphinx}
+%---------------------------
+\section{User Documentation}
+%---------------------------
+\label{sec:pre:docs}
+
+\subsection{Sphinx}
 \begin{wrapfigure}{r}{2.7cm}
 	\begin{center}
 	\vspace{-30pt}
@@ -445,7 +459,10 @@ documentation, and it is  popular in the python community. Sphinx uses
 reStructuredText as its markup language, which is a easy-to-read,
 what-you-see-is-what-you-get plaintext markup syntax and parser system. Our use
 case for sphinx is writing documentation for our utility, how to use it and
-configure it. We might also use readthedocs.org for free hosting of
+configure it.
+
+\subsection{ReadTheDocs.org}
+We might also use readthedocs.org for free hosting of
 documentation, and which support automatic pulling and compiling of
 documentation from our github repository whenever we push any changes.
 

@@ -16,11 +16,11 @@ The overall goal of the sprint 1 is to create a preliminary design and implement
 
 \subsection{Back log}
 %-----------------
-The first sprint we will implement eight requirements. Below we have listed each requirement with a time estimate.\\
+The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}-\ref{tab:sp1_req2d}  list each requirement with a time estimate.\\
 \autoref{tab:sprint1req} is the sprint backlog for the first phase. \\
 \autoref{tab:sprint1time} is the time table for the first phase. \\
-\begin{table}[ht] \small \center
-\caption{Sprint 1 Requirement FR7-A}
+\begin{table}[!ht] \small \center
+\caption{Sprint 1 Requirement FR7-A} \label{tab:sp1_req7a}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -33,8 +33,8 @@ The first sprint we will implement eight requirements. Below we have listed each
 \end{tabular}
 \end{table}
 
-\begin{table}[ht] \small \center
-\caption{Sprint 1 Requirement FR1-A}
+\begin{table}[!ht] \small \center
+\caption{Sprint 1 Requirement FR1-A} \label{tab:sp1_req1a}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -47,8 +47,8 @@ The first sprint we will implement eight requirements. Below we have listed each
 \end{tabular}
 \end{table}
 
-\begin{table}[ht] \small \center
-\caption{Sprint 1 Requirement FR2-A}
+\begin{table}[!ht] \small \center
+\caption{Sprint 1 Requirement FR2-A} \label{tab:sp1_req2a}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -61,8 +61,8 @@ The first sprint we will implement eight requirements. Below we have listed each
 \end{tabular}
 \end{table}
 
-\begin{table}[ht] \small \center
-\caption{Sprint 1 Requirement FR3-A}
+\begin{table}[!ht] \small \center
+\caption{Sprint 1 Requirement FR3-A} \label{tab:sp1_req3a}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -75,8 +75,8 @@ The first sprint we will implement eight requirements. Below we have listed each
 \end{tabular}
 \end{table}
 
-\begin{table}[ht] \small \center
-\caption{Sprint 1 Requirement FR3-B}
+\begin{table}[!ht] \small \center
+\caption{Sprint 1 Requirement FR3-B} \label{tab:sp1_req3b}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -89,8 +89,8 @@ The first sprint we will implement eight requirements. Below we have listed each
 \end{tabular}
 \end{table}
 
-\begin{table}[ht] \small \center
-\caption{Sprint 1 Requirement FR7-B}
+\begin{table}[!ht] \small \center
+\caption{Sprint 1 Requirement FR7-B} \label{tab:sp1_req7b}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -103,8 +103,8 @@ The first sprint we will implement eight requirements. Below we have listed each
 \end{tabular}
 \end{table}
 
-\begin{table}[ht] \small \center
-\caption{Sprint 1 Requirement FR4-A}
+\begin{table}[!ht] \small \center
+\caption{Sprint 1 Requirement FR4-A}\label{tab:sp1_req4a}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -117,8 +117,8 @@ The first sprint we will implement eight requirements. Below we have listed each
 \end{tabular}
 \end{table}
 
-\begin{table}[ht] \small \center
-\caption{Sprint 1 Requirement FR2-D}
+\begin{table}[!ht] \small \center
+\caption{Sprint 1 Requirement FR2-D} \label{tab:sp1_req2d}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -131,7 +131,7 @@ The first sprint we will implement eight requirements. Below we have listed each
 \end{tabular}
 \end{table}
 
-\begin{table}[ht] \small \center
+\begin{table}[!ht] \small \center
 \caption{Sprint 1 Requirements \label{tab:sprint1req}}
 \begin{tabularx}{\textwidth}{l l X c c}
 	\toprule
@@ -160,7 +160,7 @@ The first sprint we will implement eight requirements. Below we have listed each
 \end{tabularx}
 \end{table}
 
-\begin{table}[ht] \small \center
+\begin{table}[!ht] \small \center
 \caption{Sprint 1 Timetable\label{tab:sprint1time}}
 \begin{tabularx}{\textwidth}{X c c}
 	\toprule
@@ -187,8 +187,8 @@ This section introduces the design of the system modules implemented in sprint 1
 \subsection{Utility}
 Figure \ref{fig:sp1_class} illustrates the current class diagram for this sprint 1. The CSjark module contains the main method of the utility and is responsible for running the program. The utility will typically start off by using cparser to parse the c-header file given to the utility as a command line argument. Cparser will then use the config module to ensure that the parsing is done correctly after the configuration, and then generate protocols and fields to be used in the CSjark module. The CSjark module then generates a wireshark dissector in LUA code by going through the protocols and fields generated earlier by the cparser module. 
 
-\begin{figure}[here]
-\includegraphics[scale=0.4]{./sprints/img/class_diagram_s1.png}
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s1.png}
 \caption{Class Diagram}
 \label{fig:sp1_class}
 \end{figure}
@@ -200,15 +200,15 @@ In this sprint we have created a very naive implementation of the utility. It su
 We have decided to use YAML as our configuration format. In this sprint we have added support for range specification.
 A user can specify the ranges of the members of a struct, from a minimum to a maximum.
 In figure \ref{fig:dissector_screenshot} below you can see how Wireshark displays a member that has an invalid range. \newline
-\begin{figure}[here]
-\includegraphics[width=1.2\textwidth]{./sprints/img/wireshark_outofrange.png}
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{./sprints/img/wireshark_outofrange.png}
 \caption{Wireshark dissector}
 \label{fig:dissector_screenshot}
 \end{figure}	
 
 The tool uses a command line interface. The user inputs a header-file and optionally a configuration file to the command line, and the program outputs a Lua-script.  Below you can see a figure \ref{fig:cmd_screenshot} that illustrates how the program is run.
-\begin{figure}[here]
-\includegraphics[width=1.2\textwidth]{./sprints/img/cmd_agetest_run.png}
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{./sprints/img/cmd_agetest_run.png}
 \caption{Command line}
 \label{fig:cmd_screenshot}
 \end{figure}
@@ -232,7 +232,7 @@ During the sprint the team executed a total of 7 tests with names as seen below\
 \end{itemize}
 
 \subsection{Test Results}
-
+The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
 \begin{table}[!ht] \footnotesize \center
 \caption{Supporting parameters for c-header file \label{tab:sp1_tid01}}
 \noindent\makebox[\textwidth]{%
@@ -258,7 +258,7 @@ During the sprint the team executed a total of 7 tests with names as seen below\
 	Description & Supporting basic data types \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 27.09.2011 \\
-	Result & Failure.Failure. The program supports the use of int, float, char and boolean, but did not inform the user of the result\\
+	Result & Failure. The program supports the use of int, float, char and boolean, but did not inform the user of the result\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -359,8 +359,8 @@ The first sprint resulted in a solid core for our project. The customer was happ
 
 The burndown chart shows the progress during the first sprint. The team made an effort in making a correct estimation. This is reflected in the chart, as the estimated and actual hours are  following each other closely. At the end actual hours stops at 11 hours, which means we have some undone tasks. These are put back in the product backlog, and will probably be part of the next sprint. 
 
-\begin{figure}[here]
-\includegraphics[width=1.2\textwidth]{./sprints/img/burndown_chart_s1.png}
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{./sprints/img/burndown_chart_s1.png}
 \caption{Burndown chart}
 \label{fig:sp1_burndown}
 \end{figure}

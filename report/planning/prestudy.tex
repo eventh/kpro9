@@ -178,6 +178,13 @@ We intend to investigate these possible solutions in Java first, and if
 necessarily also investigate other programming languages if Java is not suited.
 
 \subsection{Java}
+\begin{wrapfigure}{r}{1.3cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=1.3cm]{./planning/img/java-logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
 Java is an object-oriented, structured, imperative, statically typed
 programming language. It was originally developed by Sun Microsystems, which
 is now a subsidiary of Oracle Corporation. Java was released in 1995, and it
@@ -187,6 +194,13 @@ documentation and an extensive standard library. Java has several tools and
 libraries of varying quality for creating parsers, like ANTLR and JAVACC.
 
 \subsubsection{ANTLR}
+\begin{wrapfigure}{r}{2.5cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=2.5cm]{./planning/img/antlr_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
 ANother Tool for Language Recognition (ANTLR) is a compiler compiler tool for
 creating lexers and parsers from grammar files. It can create these compilers
 for several different target languages, including Java and Python. There exists
@@ -195,6 +209,13 @@ create Java lexers and parsers which reads and validates inputted source code
 files.
 
 \subsection{Python}
+\begin{wrapfigure}{r}{2.1cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=2.1cm]{./planning/img/python_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
 Python is a general-purpose, multi-paradigm, object-oriented, imperative,
 dynamically typed programming language. It was created by Guido van Rossum,
 and is today developed by Python Software Foundation and the Python community.
@@ -235,6 +256,13 @@ testing framework to learn. Independent of testing framework, we can use
 coverage.py for testing how well our unit tests cover our code.
 
 \subsubsection{Sphinx}
+\begin{wrapfigure}{r}{2.7cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=2.7cm]{./planning/img/sphinx_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
 Sphinx is a python tool for writing documentation, that makes it easy to create
 intelligent and beautiful documentation. It is used for the standard python
 documentation, and it is  popular in the python community. Sphinx uses
@@ -246,6 +274,13 @@ documentation, and which support automatic pulling and compiling of
 documentation from our github repository whenever we push any changes.
 
 \subsection{GCC}
+\begin{wrapfigure}{r}{1.5cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=1.5cm]{./planning/img/gcc_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
 GNU Compiler Collection (GCC) is a compiler system which has front ends which
 parse C and C++ code, written in C and C++. It can be used in our utility as
 an external tool which does the parsing and outputs an intermediate language
@@ -255,15 +290,29 @@ will still need to write a custom parser or use something like GCC-XML and an
 XML parser. 
 
 \subsection{Clang}
+\begin{wrapfigure}{r}{2.5cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=2.5cm]{./planning/img/llvm_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
 Clang is a compiler front end for C, C++, Objective-C and Objective-C++,
 written in C++. Clang differ from GCC as it behaves as a library rather than an
 external tool, but for Java we will have to use it like GCC because there
 aren’t any Clang Java bindings. It supports outputting the abstract syntax
 tree as XML, which our utility then will need to parse. Clang provides bindings
 for Python so there it can be used as a library, but its drawback is a lack of
-flexibility, much like GCC.
+flexibility, much like GCC. Clang is a part of the LLVM toolkit.
 
 \subsection{Wireshark}
+\begin{wrapfigure}{r}{3.5cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=3.5cm]{./planning/img/wireshark_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
 Wireshark is a free, open source network protocol analyzer. It lets you capture
 and browse traffic running through a computer network. Wireshark is currently
 being developed by the Wireshark team, a group of networking experts spanning
@@ -281,6 +330,13 @@ which can easily be extended to dissect and display structures and data types
 unique to the organization.
 
 \subsection{Lua}
+\begin{wrapfigure}{r}{2.5cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=2.5cm]{./planning/img/lua_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
 Lua is a multi-paradigm, dynamically typed programming language which is
 designed to be lightweight so it can easily be embedded into applications.
 Lua has only a few basic data structures: boolean, numbers, strings and table.
@@ -320,6 +376,13 @@ suggested we investigate it for our utility. There exist two python libraries
 for parsing of ASN.1
 
 \subsubsection{YAML}
+\begin{wrapfigure}{r}{3cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=3cm]{./planning/img/pyyaml_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
 YAML (YAML Ain't Markup Language) is a data serialization format. It's designed
 to be easy to read and write for humans. YAML syntax was designed to be easily
 mapped to data types common to most high-level languages. While most
@@ -360,6 +423,13 @@ Among others, it has these additional features:
 \subsection{Integrated Development Environment}
 
 \subsubsection{PyCharm}
+\begin{wrapfigure}{r}{3.5cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=3.5cm]{./planning/img/pycharm_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
 Pycharm is a cross platform, proprietary IDE for python. It has good support
 for text editing, syntax highlighting, auto indentation, code navigation, code
 completion and automatic error checking. There is also a decent debugger and
@@ -371,7 +441,14 @@ The downside with Pycharm is that it requires a relative expensive license. It
 is, however, possible to apply for classroom licenses that are free of charge.
 The latter is a requirement to make this IDE a viable option.
 
-\subsubsection{Pyscripter}
+\subsubsection{PyScripter}
+\begin{wrapfigure}{r}{3cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=3cm]{./planning/img/pyscripter_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
 Pyscripter is a Windows only, open source IDE for python. It has support for
 basic text editing functions relevant to programming like syntax highlighting,
 auto indentation, code completion, debugger and file management. It also has
@@ -387,6 +464,13 @@ files if you reference a class from another module and it cannot give a
 complete list of usages of a function.
 
 \subsubsection{Vim}
+\begin{wrapfigure}{r}{2cm}
+	\begin{center}
+	\vspace{-30pt}
+		\includegraphics[width=2cm]{./planning/img/vim_logo}
+	\vspace{-30pt}
+	\end{center}
+\end{wrapfigure}
 Vim is cross-platform, open source text editor originally created for the
 Amiga. It is not regarded as an IDE, but it provides all the regular features
 of text editors, including syntax highlighting, auto-completion,

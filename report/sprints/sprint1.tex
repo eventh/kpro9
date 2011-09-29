@@ -218,3 +218,61 @@ The tool uses a command line interface. The user inputs a header-file and option
 \section{Customer Feedback}
 
 \section{Sprint Evaluation}
+This section contains the team evaulation of the first sprint.
+\subsection{Review}
+The first sprint is over and the team has implemented a working utility. During the sprint planning we decided which requirements from the product backlog that we were to fulfill during the first sprint. The product backlog contains a prioritized list of requirements. We decided to include the requirements that had the highest prioritization. These requirements were basic, but essential and therefore high prioritized.
+   
+The lack of prior knowledge to scrum made planning and execution of the sprint complicated for the team. We did not agree within the team of how to do it, and wasted some time on discussion going back and forth. In the end we understood that we gave a too high level description of the requirements, and had to redo previous work. This was time consuming, stealing person-hours from other parts of the sprint.
+
+Each requirement is divided in four parts: design, implementation, testing and documentation. We currently have most of these parts covered, except documentation for all files and unit test for the dissector file. This work is postponed till the second sprint.
+
+The first sprint resulted in a solid core for our project. The customer was happy with the first demo they got, the utility even run on Mac (which was overwhelming for Stig). We feel that we have a good start and are confident that we will be able to give the customer the product that they want in the end.
+
+The burndown chart shows the progress during the first sprint. The team made an effort in making a correct estimation. This is reflected in the chart, as the estimated and actual hours are  following each other closely. At the end actual hours stops at 11 hours, which means we have some undone tasks. These are put back in the product backlog, and will probably be part of the next sprint. 
+
+\begin{figure}[here]
+\includegraphics[width=1.2\textwidth]{./sprints/img/burndown_chart_s1.png}
+\caption{Burndown chart}
+\label{fig:sp1_burndown}
+\end{figure}
+
+\subsection{Positive Experiences}
+\begin{itemize}
+	\item Good customer communication and relation from the beginning
+	\item Implementation was easy
+	\item Most of the requirements for this sprint were completed
+	\begin{itemize} 
+		\item all design, implementation and testing were completed
+		\item documentation had to be putted back in the product backlog 
+	\end{itemize}
+	\item Errors and bugs were detected and corrected swiftly and with relative ease
+	\item The team functioned well, with sufficient discussions and conflicts
+\end{itemize}
+\subsection{Negative Experiences}
+\begin{itemize}
+	\item Hard for the team members to “give” 25 person-hours each week
+	\begin{itemize}
+		\item to understand that it is needed
+		\item to free up so many hours, and still have time to do other subjects
+	\end{itemize}
+	\item Hard to find time for meeting/work where all team members was able to meet
+	\item One member of the team got sick
+	\item We did not document the process and work during the first sprint well enough, which was a burden at the end of the sprint
+	\item We did perhaps not understand scrum properly, which resulted in extra work
+\end{itemize}
+\subsection{Planned Actions}
+\textbf{Better sprint planning} \newline
+In order to avoid having to redo much of the work because of incorrect/poorly sprint planning, we have decided to do this properly next time. We have learned what we need to have in place and how to document it from this sprint. \newline
+\textbf{Design early in the sprint} \newline
+The design should be in place early in the sprint. This is related to better sprint planning, the planning should be so detailed/good that additional design is not necessary. This is important for understanding and being able to estimate hours and divide work. \newline
+\textbf{Documenting in parallel while implementing} \newline
+We suffered from the problem code first, then document. This is not a good practise in team divided work. We will try to do the documentation as we code.
+The documents for the project report also experienced a standstill while the team worked on implementation. Writing parts of sprint documentation while having the sprint is a much better way to work, then most part of the documentation is already done before the sprint evaluation. \newline
+\textbf{Split coding and report writing between team members} \newline
+Not all the team members have to do coding. It is important to maintain a steady progress making the project report (which our grade evaluation is based on), while doing the implementation. Responsibilities for coding and report will be assigned next sprint. \newline
+\subsection{Barriers}
+Some of the team members has experience some technical difficulties with their Git client, and others had problems setting up PyCharm. Problems rose as we realized that there would be hard setting up the programs on different platforms (Windows and Mac).
+
+We had problems with c parser library(pycparser), which did not support \_Bool type, specified in the C99 standard. A patch for this was written by Even, and was later included in the pycparser library. There was also problems with the testing framework(attest), this framework did not have support for Windows command line prompt, a patch was written and was later added to their library.
+
+Some team members had conflicting deadlines for deliveries in different courses.  

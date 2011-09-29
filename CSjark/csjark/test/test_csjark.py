@@ -21,6 +21,7 @@ def cli_headerfile1():
     headers, configs = csjark.Cli.parse_args(['cpp.h', '-verbose', '-debug'])
     assert len(headers) == 1
 
+#test for requirement FR07A
 @cli.test
 def cli_headerfile2():
     """Test the default commandline interface flags"""
@@ -28,6 +29,7 @@ def cli_headerfile2():
                                               '-i', 'include.h'])
     assert len(headers) == 2
 
+#test for requirement FR07B
 @cli.test
 def cli_headerfile_and_configfile():
     """Test the default commandline interface flags"""

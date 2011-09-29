@@ -1,13 +1,24 @@
-%==========================
-\chapter{Preliminary Study}
-%==========================
-This chapter presents the preliminary studies for this project. This includes
-the technology and methodology used to develop the utility, and an evaluation
-of choices we made in the beginning of the project. It also includes a
-comparison to existing solution.
+%============================
+\chapter{Preliminary Studies}
+%============================
+This chapter presents the preliminary studies for this project.
+In \autoref{sec:pre:similar} we have examined existing solutions, in
+\autoref{sec:pre:method} we provide a description of two popular software
+development methodology, in \autoref{sec:pre:langs} we describe possible
+languages and technology necessary for developing the utility, and in
+\autoref{sec:pre:eval} we provide the justifications for the choices we have
+made. In \autoref{sec:pre:framework} we provide a description of the framework
+our utility will require. At the end of the chapter, in
+\autoref{sec:pre:license}, we describe the license of our utility.
 
 \section{Similar Solutions}
 %--------------------------
+\label{sec:pre:similar}
+We started by searching for existing solutions in the problem space. This
+search turned up idl2wrs\footnote{\url{http://wiki.wireshark.org/idl2wrs}}.
+The other solution was suggested by our customer,
+Asn2wrs\footnote{\url{http://wiki.wireshark.org/Asn2wrs}}.
+Both of these solutions are bundled with Wireshark.
 
 \subsection{idl2wrs}
 A tool for generating Wireshark dissectors from IDL files. The tool is written
@@ -20,44 +31,39 @@ can not reuse any of its code. Instead we will look at its architecture and
 data structures, especially how it generates dissectors.
 
 \subsection{asn2wrs}
-This is a compiler which are used to create dissectors for wireshark for a
-specified protocol. The tool uses ASN.1 to describe the protocol, and compile a
-plugin for wireshark. To use the compiler, four files is need as input, an
-ASN-1 protocol description, a configuration files(.cnf) and two template files.
-The main reasons to use asn2wrs to create dissectors, is that it speeds up the
-development, since it only is necessary to recompile the plugin, and to allow
-flexibility since it’s easy to distribute the plugin. Disadvantages with this
-solution is that the code and makefiles are more complex. This solution is not
-an alternative for our customer since the will need to rewrite their c-structs
-to ASN.1 descriptions, which will take very long time, due to larges header
-files and the amount of header files.
-http://wiki.wireshark.org/Asn2wrs
-http://wiki.wireshark.org/ASN1\_plugin
+A tool for generating Wireshark dissectors from ASN.1 protocols. It requires
+four input files: an ASN-1 protocol description, a configuration file and two
+template files. Advantages of using Asn2wrs are faster development from
+easier recompilation, and plugins which are easy to distribute. Disadvantages
+are that code and makefiles are more complex. Our customer can't use this
+solution as it would require them to rewrite their C structs to ASN.1
+descriptions, which would take very long time.
 
 \section{Software Development Methodology}
 %-----------------------------------------
+\label{sec:pre:method}
 
 \subsection{Waterfall}
+\label{sec:pre:waterfall}
 Waterfall is a software development methodology based on sequential phases.
-These phases can be the following: requirement specification, design,
-implementation, integration, testing, deployment and maintenance. In its pure
+It consist of the following phases: requirement specification, design,
+implementation, integration, testing, deployment, and maintenance. In its pure
 form, these phases are non overlapping and one way only, which means that each
-phase must be fully completed before the next can begin. Following is a short
-description of each phase:
+phase must be fully completed before the next can begin.
 
 \subsubsection{Requirement specification}
 This phase is about receiving requirements from a customer and then formalising
 these into concrete functional and non-functional requirements. These will
 again be further broken down into smaller work items that are easy to quantify
 in terms of time of use and importance. These metrics may help distinguish
-which features that are to be prioritised.
+which features are to be prioritised.
 
 \subsubsection{Design}
 The design phase is about planning how to implement the features from the
 requirement phase. The goal is to make a precise software architecture for the
 project that dictates most of the implementation phase. This may include (but
 not limited to) making class diagrams, data flow diagrams, state machines, user
-interface mockups, etc.
+interface mock-ups, etc.
 
 \subsubsection{Implementation}
 This phase is about implementing/coding the design made in the design phase on
@@ -89,16 +95,16 @@ customer finds the need for.
 Scrum is an agile development methodology based on the philosophy that it is
 impossible to completely and accurately plan everything in a software project
 before you begin. It is therefore more or less based on iterations of the
-phases described under waterfall(FIX LINK), but instead of having these phases
-being strictly sequential, they are run in a more 'as needed' basis. Each
-iteration in scrum is called a sprint and is typically lasting from two and up
-to four weeks. This time period is fixed for each project, so the sprint will
-always end on time. To make this possible, features that are not completed on
-time is deferred to a later sprint. Each sprint should result in a runnable
-product that potentially could deliver some value to the customer, even if this
-requires some redundant work.
+waterfall phases described in \autoref{sec:pre:waterfall}, but instead of
+having these phases being strictly sequential, they are run in a more
+'as needed' basis. Each iteration in scrum is called a sprint and is typically
+lasting from two and up to four weeks. This time period is fixed for each
+project, so the sprint will always end on time. To make this possible, features
+that are not completed on time is deferred to a later sprint. Each sprint
+should result in a runnable product that potentially could deliver some value
+to the customer, even if this requires some redundant work.
 
-\noindent A Scrum project has three main roles:
+\subsubsection{Main scrum roles}
 \begin{description}
 	\item[Scrum master] has the responsibility of maintaining the process and
 		for removing obstacles for other team members. In short, the scrum
@@ -111,7 +117,7 @@ requires some redundant work.
 		cross functional skill set.
 \end{description}
 
-\noindent There are also tree main artifacts:
+\subsubsection{Scrum artifacts}
 \begin{description}
 	\item[Product backlog] contains a high level description of all the desired
 		features for the project. These should be prioritised based on their
@@ -126,17 +132,17 @@ requires some redundant work.
 		and to give a visual representation of the work progress.
 \end{description}
 
-A sprint begins with the sprint planning meeting. This meeting consists of two
+A sprint begins with the sprint planning meeting, which consists of two
 stages. In the first, the team and the product owner prioritizes the product
-backlog. In the second. the team discusses what features they can commit to
-(based on priority) and brakes these down into work items, which are added to
+backlog. In the second, the team discusses what features they can commit to
+(based on priority) and brake these down into work items, which are added to
 the sprint backlog. This should include giving each item an estimated
 completion time.
 
 The sprint itself consists of producing what is required for completing work
-items, updating the burn down chart and daily scrum meetings. In these daily
-meetings each team member gives the rest a short update of what they did
-yesterday, what they plan to do today and what problems might be in their way.
+items, updating the burn down chart, and daily scrum meetings. In these daily
+meetings each team member provides a short update of what they did the day
+before, what they plan to do today and what problems might be in their way.
 These problems should not be discussed in this meeting, but rather dealt with
 separately after the meeting (this is the scrum masters responsibility).
 
@@ -145,12 +151,13 @@ This meeting is about discussing what was completed and what was not, and to
 demonstrate the completed features for the customer.
 
 After the review meeting, a separate retrospect meeting should be held with all
-the team members where all members shares their reflection of how the sprint
-went and how to improve for the next sprint. This is important for making
-continues improvements to the process.
+the team members where all members shares their reflections of how the sprint
+went and how to improve the next sprint. This is important for improving the
+process.
 
 \section{Development Languages and Technologies}
 %-----------------------------------------------
+\label{sec:pre:langs}
 
 We estimate that the most challenging part of the utility will be parsing of C
 header files. There are three distinct paths for solving it.
@@ -350,10 +357,9 @@ Among others, it has these additional features:
 \noindent Currently, ConfigObj module exists only for Python up to version
 2.7. It is under BSD license.
 
-\section{Integrated Development Environment}
-%-------------------------------------------
+\subsection{Integrated Development Environment}
 
-\subsection{PyCharm}
+\subsubsection{PyCharm}
 Pycharm is a cross platform, proprietary IDE for python. It has good support
 for text editing, syntax highlighting, auto indentation, code navigation, code
 completion and automatic error checking. There is also a decent debugger and
@@ -365,7 +371,7 @@ The downside with Pycharm is that it requires a relative expensive license. It
 is, however, possible to apply for classroom licenses that are free of charge.
 The latter is a requirement to make this IDE a viable option.
 
-\subsection{Pyscripter}
+\subsubsection{Pyscripter}
 Pyscripter is a Windows only, open source IDE for python. It has support for
 basic text editing functions relevant to programming like syntax highlighting,
 auto indentation, code completion, debugger and file management. It also has
@@ -380,7 +386,7 @@ code navigation is a little lacking. It will for example not suggest importing
 files if you reference a class from another module and it cannot give a
 complete list of usages of a function.
 
-\subsection{Vim}
+\subsubsection{Vim}
 Vim is cross-platform, open source text editor originally created for the
 Amiga. It is not regarded as an IDE, but it provides all the regular features
 of text editors, including syntax highlighting, auto-completion,
@@ -393,6 +399,7 @@ experienced with Vim to try it.
 
 \section{Evaluation and Conclusion}
 %----------------------------------
+\label{sec:pre:eval}
 
 \subsection{Development Process Choice}
 We have chosen scrum for our development strategy. We do not have a lot of
@@ -512,9 +519,11 @@ the specific tool you are using. It will therefore be up to each team member
 to choose what IDE/text editor they want to use.
 
 \section{Framework}
+%------------------
+\label{sec:pre:framework}
 Even will descripe the framework we have decided to create?
 
-\section{Versions}
+\subsection{Versions}
 The versions of the different tools and libraries we are using.
 \begin{description}
 	\item[Python] CPython 3.2.2, the latest standard python implementation
@@ -523,14 +532,15 @@ The versions of the different tools and libraries we are using.
 	\item[PLY] 3.4, latest stable verison.
 	\item[pycparser] 2.05-dev, latest development version (stable don't
 		support \_Bool type)
+	\item[PyYAML] 3.10, latest stable version
 	\item[Attest] 0.6-dev, latest development version (stable don’t
 		support python3.2)
 	\item[WireShark] 1.7.0-SVN, latest nightly build, bleeding edge
-	\item[Lua] 5.1.4, latest stable version
-	\item[PyYAML] 3.10, latest stable version
 \end{description}
 
-\section{IP Rights / License}
+\section{IP Rights \& License}
+%----------------------------
+\label{sec:pre:license}
 The customer has explained that they do not intend to distribute our utility,
 and that we are free to license it as open source if we want to, under
 whichever license we feel is most suited. They suggested GNU GPL as Wireshark

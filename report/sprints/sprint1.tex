@@ -185,7 +185,7 @@ The first sprint we will implement eight requirements. Below we have listed each
 This section introduces the design of the system modules implemented in sprint 1
 
 \subsection{Utility}
-Figure \ref{fig:sp1_class} illustrates the current class diagram for this sprint 1.The CSjark module contains the main method of the utility and is responsible for running the program. The utility will typically start off by using cparser to parse the c-header file given to the utility as a command line argument. Cparser will then use the config module to ensure that the parsing is done correctly after the configuration, and then generate protocols and fields to be used in the CSjark module. The CSjark module then generates a wireshark dissector in LUA code by going through the protocols and fields generated earlier by the cparser module. 
+Figure \ref{fig:sp1_class} illustrates the current class diagram for this sprint 1. The CSjark module contains the main method of the utility and is responsible for running the program. The utility will typically start off by using cparser to parse the c-header file given to the utility as a command line argument. Cparser will then use the config module to ensure that the parsing is done correctly after the configuration, and then generate protocols and fields to be used in the CSjark module. The CSjark module then generates a wireshark dissector in LUA code by going through the protocols and fields generated earlier by the cparser module. 
 
 \begin{figure}[here]
 \includegraphics[scale=0.4]{./sprints/img/class_diagram_s1.png}

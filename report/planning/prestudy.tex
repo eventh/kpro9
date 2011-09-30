@@ -189,27 +189,34 @@ process.
 	\end{center}
 \end{wrapfigure}
 Wireshark\footnote{\url{http://www.wireshark.org/}} is a free, open source
-network protocol analyzer. It lets you capture
-and browse traffic running through a computer network. Wireshark is currently
-being developed by the Wireshark team, a group of networking experts spanning
-the globe. Because of its rich set of features and ease of use, Wireshark is de
-facto standard in many different industries and educational institutions.
-Wireshark is able to display, dissect and display data from a plethora of
-different protocols. One of its strengths lies in the ease of which developers
-can add their own dissectors, post-dissectors and taps. Dissectors can be
-written in either C or LUA. Most dissectors are written in C for increased
-speed. Lua-scripts are mostly used as prototypes or to process non time crucial
-data as they don't need compilation to be used. Our customer uses Wireshark not
-only to browse through and filter regular networking traffic, but also for
-monitoring inter-process communication where it is important to have a tool
-which can easily be extended to dissect and display structures and data types
-unique to the organization.
+network protocol analyzer. It lets you capture and browse traffic running
+through a computer network. Wireshark is currently being developed by the
+Wireshark team, a group of networking experts spanning the globe. Because of
+its rich set of features and ease of use, Wireshark is de facto standard in
+many different industries and the educational community. Wireshark is able to
+dissect and display data from a plethora of different protocols. One of its
+strengths lies in the ease of which developers can add their own dissectors,
+post-dissectors and taps.
+
+Dissectors can be written in either C or Lua. Most dissectors are written in C
+for increased speed. Lua-scripts are mostly used as prototypes or to process
+non time crucial data as they don't need compilation to be used. Our customer
+uses Wireshark not only to browse through and filter regular networking
+traffic, but also for monitoring inter-process communication where it is
+important to have a tool which can easily be extended to dissect and display
+structures and data types unique to the organization.
+
+Our utility should read C header files and create Wireshark dissectors written
+in Lua for structs found in the header files.
 
 
 %------------------------------
 \section{Programming Languages}
 %------------------------------
 \label{sec:pre:langs}
+The dissectors we have to generate are written in Lua, and we have looked at
+both Java and Python programming language for our utility. In this section we
+describe these different languages.
 
 \subsection{Lua}
 %---------------
@@ -221,13 +228,12 @@ unique to the organization.
 	\end{center}
 \end{wrapfigure}
 Lua\footnote{\url{http://www.lua.org/}} is a multi-paradigm, dynamically typed
-programming language which is
-designed to be lightweight so it can easily be embedded into applications.
-Lua has only a few basic data structures: boolean, numbers, strings and table.
-But Lua still implements advanced features such as first-class functions,
-garbage collection, closures, coroutines and dynamic module loading. Lua was
-created in 1993 at the Pontifical Catholic University of Rio de Janeiro, in
-Brazil.
+programming language which is designed to be lightweight so it can easily be
+embedded into applications. Lua has only a few basic data structures: boolean,
+numbers, strings and table. Still Lua implements advanced features such as
+first-class functions, garbage collection, closures, coroutines and dynamic
+module loading. Lua was created in 1993 at the Pontifical Catholic University
+of Rio de Janeiro, in Brazil.
 
 The output of our utility will be Wireshark dissectors written in Lua. While
 Wireshark supports dissectors written in both C and Lua, Lua is preferred
@@ -244,13 +250,14 @@ interface with Wireshark through a simple API.
 	\end{center}
 \end{wrapfigure}
 Java\footnote{\url{http://java.com/}} is an object-oriented, structured,
-imperative, statically typed
-programming language. It was originally developed by Sun Microsystems, which
-is now a subsidiary of Oracle Corporation. Java was released in 1995, and it
-derived much of its syntax from C and C++, but with fewer low-level facilities.
-Java’s strength are portability, automatic memory management, security, good
-documentation and an extensive standard library. Java has several tools and
-libraries of varying quality for creating parsers, like ANTLR and JAVACC.
+imperative, statically typed programming language. It was originally developed
+by Sun Microsystems, which is now a subsidiary of Oracle Corporation. Java was
+released in 1995, and it derived much of its syntax from C and C++, but with
+fewer low-level facilities. Java’s strength are portability, automatic memory
+management, security, good documentation and an extensive standard library.
+Java has several tools and libraries of varying quality for creating parsers,
+for example ANTLR and JAVACC. ANTLR is further describes in 
+\autoref{sec:pre:antlr}.
 
 \subsection{Python}
 %------------------
@@ -262,13 +269,14 @@ libraries of varying quality for creating parsers, like ANTLR and JAVACC.
 	\end{center}
 \end{wrapfigure}
 Python\footnote{\url{http://www.python.org/}} is a general-purpose,
-multi-paradigm, object-oriented, imperative,
-dynamically typed programming language. It was created by Guido van Rossum,
-and is today developed by Python Software Foundation and the Python community.
-Python’s strength include automatic memory management, large and comprehensive
-standard library, portability, powerful but very clear, concise and simple
-syntax. There exists several pure Python libraries for creating lexers and
-parsers, like PLY, pycparser and cppheaderparser.
+multi-paradigm, object-oriented, imperative, dynamically typed programming
+language. It was created by Guido van Rossum, and is today developed by Python
+Software Foundation and the Python community. Python’s strength include
+automatic memory management, large and comprehensive standard library,
+portability, powerful but very clear, concise and simple syntax. There exists
+several pure Python libraries for creating lexers and parsers, like PLY,
+pycparser and cppheaderparser. These are described further in
+\autoref{sec:pre:parsers}.
 
 
 %-----------------------------------
@@ -276,10 +284,11 @@ parsers, like PLY, pycparser and cppheaderparser.
 %-----------------------------------
 \label{sec:pre:parsers}
 This section contains various tools and libraries we have looked at for solving
-the challenge of parsing C header files. 
+the challenge of parsing C header files.
 
 \subsection{ANTLR}
 %-----------------
+\label{sec:pre:antlr}
 \begin{wrapfigure}{r}{2.5cm}
 	\begin{center}
 	\vspace{-30pt}
@@ -287,32 +296,37 @@ the challenge of parsing C header files.
 	\vspace{-30pt}
 	\end{center}
 \end{wrapfigure}
-ANother Tool for Language Recognition (ANTLR) is a compiler compiler tool for
-creating lexers and parsers from grammar files. It can create these compilers
-for several different target languages, including Java and Python. There exists
-ANTLR grammar files for C, C preprocessor and ASN.1. These configure ANTLR to
-create Java lexers and parsers which reads and validates inputted source code
-files.
+ANTLR\footnote{\url{http://www.antlr.org/}}, ANother Tool for Language
+Recognition, is a compiler toolkit for creating lexers and parsers from grammar
+files. It can create these compilers for several different target languages,
+including Java and Python. There exists ANTLR grammar files for the challenges
+we are facing: parsing C, C preprocessor step and parsing ASN.1. These grammars
+configure ANTLR to create Java lexers and parsers which reads and validates
+inputted source code files.
 
 \subsection{PLY}
 %---------------
-PLY is a python alternative to the popular lexer and parser compilers lex and
-yacc. It also comes with a 95\% completed C preprocessor in case we are
-required to modify the preprocessor for our utility. Other special purpose
-parsers like pycparser and cppheaderparser use PLY.
+PLY\footnote{\url{http://www.dabeaz.com/ply/}} is a python alternative to the
+popular lexer and parser compilers lex and yacc. It also comes with a 95\%
+completed C preprocessor in case we are required to modify the preprocessor
+for our utility. Other special purpose parsers like pycparser and
+cppheaderparser depends on PLY. These are described later in this section.
 
 \subsection{pycparser}
 %---------------------
-There are two python C parsers with the same name, pycparser (from google code)
-and PyCParser (from github). While they both aim to solve the same problem, the
-first one appears to have better documentation, be a more mature project and
-support more of the C99 specification. pycparser requires PLY to work.
+There are two python libraries for parsing C with the same name (but different
+capitalization), pycparser\footnote{\url{http://code.google.com/p/pycparser/}}
+and PyCParser\footnote{\url{https://github.com/albertz/PyCParser}}. While they
+both aim to solve almost the same problem, the first one appears to have better
+documentation, is a more mature project and support more of the C99
+specification. pycparser requires PLY to work.
 
 \subsection{cppheaderparser}
 %---------------------------
-Cppheaderparser is a parser for C++ header files written in python. It is an
-alternative for pycparser in case we need to parse C++ files instead of simply
-C files. It depends on PLY.
+Cppheaderparser\footnote{\url{http://sourceforge.net/projects/cppheaderparser/}}
+is a parser for C++ header files written in python. It is an alternative for
+pycparser in case we need to parse C++ files instead of simple C header files.
+It also depends on PLY.
 
 \subsection{GCC}
 %---------------
@@ -323,13 +337,13 @@ C files. It depends on PLY.
 	\vspace{-30pt}
 	\end{center}
 \end{wrapfigure}
-GNU Compiler Collection (GCC) is a compiler system which has front ends which
-parse C and C++ code, written in C and C++. It can be used in our utility as
-an external tool which does the parsing and outputs an intermediate language
-representation which we can parse/search to find the C struct definitions. Its
-drawbacks are a lack of flexibility if we need to change its behaviour, and we
-will still need to write a custom parser or use something like GCC-XML and an
-XML parser. 
+GNU Compiler Collection\footnote{\url{http://gcc.gnu.org/}} (GCC) is a
+compiler system which has front ends which parse C and C++ code, and is written
+in C and C++. It can be used in our utility as an external tool which does the
+parsing and then outputs an intermediate language representation which we can
+parse/search to find the C struct definitions. Its drawbacks are a lack of
+flexibility if we need to change its behaviour, and we will still need to write
+a custom parser or use something like GCC-XML and an XML parser.
 
 \subsection{Clang}
 %-----------------
@@ -340,18 +354,19 @@ XML parser.
 	\vspace{-30pt}
 	\end{center}
 \end{wrapfigure}
-Clang is a compiler front end for C, C++, Objective-C and Objective-C++,
-written in C++. Clang differ from GCC as it behaves as a library rather than an
-external tool, but for Java we will have to use it like GCC because there
-aren’t any Clang Java bindings. It supports outputting the abstract syntax
-tree as XML, which our utility then will need to parse. Clang provides bindings
-for Python so there it can be used as a library, but its drawback is a lack of
-flexibility, much like GCC. Clang is a part of the LLVM toolkit.
+Clang\footnote{\url{http://clang.llvm.org/}} is a compiler front end for C, 
+C++, Objective-C and Objective-C++, written in C++. Clang differ from GCC as it
+behaves as a library rather than an external tool, but for Java we will have to
+use it like GCC because there are no Java-Clang bindings. It supports
+outputting the abstract syntax tree as XML, which our utility then will need to
+parse. Clang provides bindings for python so there it can be used as a library,
+but its main drawback is, like GCC, a lack of flexibility. Clang is a part of
+the LLVM toolkit.
 
 
-%----------------------
-\section{Configuration}
-%----------------------
+%---------------------------------
+\section{Configuration Frameworks}
+%---------------------------------
 \label{sec:pre:config}
 Our utility needs a flexible configuration, simply because some of the
 information we need to display does not exist in the C header files. For
@@ -427,9 +442,9 @@ Among others, it has these additional features:
 2.7. It is under BSD license.
 
 
-%---------------------
-\section{Unit Testing}
-%---------------------
+%--------------------------------
+\section{Unit Testing Frameworks}
+%--------------------------------
 \label{sec:pre:testing}
 Python has several frameworks for unit testing, we decided to look at nose,
 py.test and Attest to find which would best suit our needs. They are somewhat
@@ -445,9 +460,9 @@ testing framework to learn. Independent of testing framework, we can use
 coverage.py for testing how well our unit tests cover our code.
 
 
-%---------------------------
-\section{User Documentation}
-%---------------------------
+%-------------------------------------
+\section{User Documentation Framework}
+%-------------------------------------
 \label{sec:pre:docs}
 
 \subsection{Sphinx}

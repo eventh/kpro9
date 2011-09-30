@@ -256,7 +256,7 @@ released in 1995, and it derived much of its syntax from C and C++, but with
 fewer low-level facilities. Java’s strength are portability, automatic memory
 management, security, good documentation and an extensive standard library.
 Java has several tools and libraries of varying quality for creating parsers,
-for example ANTLR and JAVACC. ANTLR is further describes in 
+for example ANTLR and JAVACC. A detailed description of ANTLR can be found in 
 \autoref{sec:pre:antlr}.
 
 \subsection{Python}
@@ -270,11 +270,11 @@ for example ANTLR and JAVACC. ANTLR is further describes in
 \end{wrapfigure}
 Python\footnote{\url{http://www.python.org/}} is a general-purpose,
 multi-paradigm, object-oriented, imperative, dynamically typed programming
-language. It was created by Guido van Rossum, and is today developed by Python
-Software Foundation and the Python community. Python’s strength include
+language. It was created by Guido van Rossum, and is today developed by python
+Software Foundation and the python community. Python’s strength include
 automatic memory management, large and comprehensive standard library,
 portability, powerful but very clear, concise and simple syntax. There exists
-several pure Python libraries for creating lexers and parsers, like PLY,
+several pure python libraries for creating lexers and parsers, like PLY,
 pycparser and cppheaderparser. These are described further in
 \autoref{sec:pre:parsers}.
 
@@ -368,18 +368,46 @@ the LLVM toolkit.
 \section{Configuration Frameworks}
 %---------------------------------
 \label{sec:pre:config}
-Our utility needs a flexible configuration, simply because some of the
-information we need to display does not exist in the C header files. For
-example there exist no clear relationship between enumerated values in messages
-and their names. These must be provided through a configuration. The
-configuration will also need to support:
+This section looks at different configuration frameworks for python. Our
+utility needs a flexible configuration, because some of the information we need
+to display does not exist in the C header files. For example there exist no
+clear relationship between enumerated values in messages and their names.
+These must be provided through a configuration. The configuration should also
+support the following:
 \begin{itemize}
 	\item Defining data constraints, so the dissector can recognize invalid
 		values for a struct member.
 	\item Defining custom handling of special data types.
-	\item  And possibly allow custom Lua dissectors to be defined and used in
-		certain cases.
+	\item Allow custom Lua dissectors to be defined and used in special cases.
 \end{itemize}
+
+\noindent Some of the possible advantages and drawbacks of the libraries
+described in this section can be found in \autoref{tab:pre:config}.
+\begin{table}[htbp] \footnotesize \center
+\caption{Configuration overview\label{tab:pre:config}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.1\textwidth}{X X X X X}
+	\toprule
+	& YAML & configparser & ConfigObj & ASN.1 \\
+	\midrule
+	Advantages &
+	+Simplicity\newline +Flexibility &
+	+Easy to use &
+	+Easy to use\newline +Flexibility\newline +Nesting\newline +Type \newline\hspace*{3mm}validation &
+	+Customer \hspace*{3mm}wants it \\
+	\addlinespace
+	Drawbacks &
+	-External library\newline -No type \newline\hspace*{2mm}validation &
+	-Lacks nesting\newline -Lacks lists\newline -No type \newline\hspace*{2mm}validation &
+	-External library\newline -Lacks lists &
+	-External library\newline -Too generic \\
+	\addlinespace
+	Current version & 3.10 & 3.2 & 4.7.2 & 0.0.13 \\
+	Supported python & 2.7 and 3.3 & 2.7 and 3.3 & 2.7 & 2.7 \\
+	License & MIT & PSF L & BSD-new & BSD \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
 
 \subsection{ASN.1}
 %-----------------
@@ -402,33 +430,36 @@ for parsing of ASN.1
 	\vspace{-30pt}
 	\end{center}
 \end{wrapfigure}
-YAML (YAML Ain't Markup Language) is a data serialization format. It's designed
-to be easy to read and write for humans. YAML syntax was designed to be easily
-mapped to data types common to most high-level languages. While most
-programming languages can use YAML for data serialization, YAML excels in
-working with those languages that are fundamentally built around the three
-basic primitives. These include the new wave of agile languages such as Perl,
-Python, PHP, Ruby, and Javascript.
+YAML\footnote{\url{http://yaml.org/}} (YAML Ain't Markup Language) is a data
+serialization format. It's designed to be easy to read and write for humans.
+YAML syntax was designed to be easily mapped to data types common to most
+high-level languages. While most programming languages can use YAML for data
+serialization, YAML excels in working with those languages that are
+fundamentally built around the three basic primitives. These include the new
+wave of agile languages such as Perl, Python, PHP, Ruby, and Javascript.
 
-PyYAML is a parser for the python programming language, and it is available for
-version 3.2 of python. The parser is licensed under MIT.
+PyYAML\footnote{\url{http://pyyaml.org/}} is a YAML parser for the python
+programming language, and it is available for both the 2.x and 3.x branch of
+python. It is licensed under MIT license.
 
 \subsection{configparser}
 %------------------------
-configparser is a module to manage user-editable configuration files for an
-application. The configuration files are organized into sections, and each
-section can contain name-value pairs for configuration data. Value
-interpolation using Python formatting strings is also supported, to build
-values that depend on one another.
+configparser
+\footnote{\url{http://docs.python.org/py3k/library/configparser.html}}
+is a python module to manage user-editable configuration files. The
+files are organized into sections, and each section can contain name-value
+pairs for configuration data. Value interpolation using python formatting
+strings is also supported, to build values that depend on one another.
 
-configparser module is a standard part of Python, therefore there is no need
-to additional installation and configuration.
+configparser module is a part of python standard library, and therefore does
+not require installation or configuration to use.
 
 \subsection{ConfigObj}
 %---------------------
-ConfigObj is a simple but powerful config file reader and writer (originally
-based on ConfigParser). Its main feature is that it is very easy to use, with
-a straightforward programmer's interface and a simple syntax for config files.
+ConfigObj\footnote{\url{http://www.voidspace.org.uk/python/configobj.html}} is
+a simple but powerful config file reader and writer (originally based on
+ConfigParser). Its main feature is that it is very easy to use, with a
+straightforward programmer's interface and a simple syntax for config files.
 Among others, it has these additional features:
 \begin{itemize}
 	\item Nested sections (subsections), to any level
@@ -438,7 +469,7 @@ Among others, it has these additional features:
 	\item Integrated with a powerful validation system
 \end{itemize}
 
-\noindent Currently, ConfigObj module exists only for Python up to version
+\noindent Currently, ConfigObj module exists only for python up to version
 2.7. It is under BSD license.
 
 
@@ -600,13 +631,13 @@ of documentation was a huge risk for our project. This plus feedback from our
 customer made us consider other programming languages for developing our
 utility.
 
-We looked at Python because our customer would prefer us to use it, and because
-we had a Python-fanatic on our team. We found several Python libraries for
+We looked at python because our customer would prefer us to use it, and because
+we had a python-fanatic on our team. We found several python libraries for
 parsing of C files, and even one for parsing C++ header files.
 
-We decided to use Python for this project because the parsing libraries for
-Python came in working condition with decent documentation, and because we
-were able to create a small working prototype in Python in just a few hours.
+We decided to use python for this project because the parsing libraries for
+python came in working condition with decent documentation, and because we
+were able to create a small working prototype in python in just a few hours.
 We estimate that it would take at least a week to achieve the same result in
 Java.
 
@@ -618,7 +649,7 @@ which PyCParser does not.
 For unit testing we have selected the Attest library, as it is the simplest of
 the ones considered, and therefore easiest to learn.
 
-A challenge with using Python is the fact that not all team members have
+A challenge with using python is the fact that not all team members have
 sufficient experience with it. Most team members must therefore do some self
 study of varying level before we start the first sprint.
 
@@ -626,7 +657,7 @@ study of varying level before we start the first sprint.
 %--------------------------------
 According to the given requirements, we decided to use YAML for handling
 configuration files for our purposes. The choice was made dependently on used
-programming language decisions. Because the latest version of Python
+programming language decisions. Because the latest version of python
 specification (currently 3.2) was chosen, the range of possible configuration
 file solutions was reduced. Therefore, although ASN.1 and ConfigObj are very
 suitable for our task, they were eliminated (those parsers are available only
@@ -639,34 +670,6 @@ manually. Second, it is an external library. We find this drawback minor for
 now but it can turn up to be a problem in the future. Except for these issues,
 YAML (toghether with PyYAML) seems to have a good potential for creating
 flexible configuration support for our solution.
-
-Some of the possible advantages and drawbacks of solutions taken into
-consideration are depicted in table below:
-\begin{table}[H] \footnotesize \center
-\caption{Configuration overview}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{X X X X X}
-	\toprule
-	& YAML & configparser & ConfigObj & ASN.1 \\
-	\midrule
-	Advantages &
-	+Simplicity\newline +Flexibility &
-	+Easy to use &
-	+Easy to use\newline +Flexibility\newline +Nesting\newline +Type validation &
-	+Customer wants it \\
-	\addlinespace
-	Drawbacks &
-	-External library\newline -No type validation &
-	-Lacks nesting\newline -Lacks lists\newline -No type validation &
-	-External library\newline -Lacks lists &
-	-External library\newline -Too generic \\
-	\addlinespace
-	Current version & 3.10 & 3.2 & 4.7.2 & 0.0.13 \\
-	Supported python & 2.7 and 3.3 & 2.7 and 3.3 & 2.7 & 2.7 \\
-	License & MIT & PSF L & BSD-new & BSD \\
-	\bottomrule
-\end{tabularx}}
-\end{table}
 
 \subsection{Integrated Development Environment Choice}
 %-----------------------------------------------------

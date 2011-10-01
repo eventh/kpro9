@@ -381,34 +381,6 @@ support the following:
 	\item Allow custom Lua dissectors to be defined and used in special cases.
 \end{itemize}
 
-\noindent Some of the possible advantages and drawbacks of the libraries
-described in this section can be found in \autoref{tab:pre:config}.
-\begin{table}[htbp] \footnotesize \center
-\caption{Configuration overview\label{tab:pre:config}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.1\textwidth}{X X X X X}
-	\toprule
-	& YAML & configparser & ConfigObj & ASN.1 \\
-	\midrule
-	Advantages &
-	+Simplicity\newline +Flexibility &
-	+Easy to use &
-	+Easy to use\newline +Flexibility\newline +Nesting\newline +Type \newline\hspace*{3mm}validation &
-	+Customer \hspace*{3mm}wants it \\
-	\addlinespace
-	Drawbacks &
-	-External library\newline -No type \newline\hspace*{2mm}validation &
-	-Lacks nesting\newline -Lacks lists\newline -No type \newline\hspace*{2mm}validation &
-	-External library\newline -Lacks lists &
-	-External library\newline -Too generic \\
-	\addlinespace
-	Current version & 3.10 & 3.2 & 4.7.2 & 0.0.13 \\
-	Supported python & 2.7 and 3.3 & 2.7 and 3.3 & 2.7 & 2.7 \\
-	License & MIT & PSF L & BSD-new & BSD \\
-	\bottomrule
-\end{tabularx}}
-\end{table}
-
 \subsection{ASN.1}
 %-----------------
 Abstract Syntax Notation One (ASN.1) is a notation for describing data
@@ -444,8 +416,7 @@ python. It is licensed under MIT license.
 
 \subsection{configparser}
 %------------------------
-configparser
-\footnote{\url{http://docs.python.org/py3k/library/configparser.html}}
+configparser\footnote{\url{http://docs.python.org/py3k/library/configparser.html}}
 is a python module to manage user-editable configuration files. The
 files are organized into sections, and each section can contain name-value
 pairs for configuration data. Value interpolation using python formatting
@@ -472,23 +443,79 @@ Among others, it has these additional features:
 \noindent Currently, ConfigObj module exists only for python up to version
 2.7. It is under BSD license.
 
+\subsection{Summary}
+%-------------------
+We have listed a summary of some of the advantages and drawbacks of the
+different configuration frameworks we looked at in \autoref{tab:pre:config}.
+\begin{table}[htbp] \footnotesize \center
+\caption{Configuration summary\label{tab:pre:config}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.1\textwidth}{X X X X X}
+	\toprule
+	& YAML & configparser & ConfigObj & ASN.1 \\
+	\midrule
+	Advantages &
+	+Simplicity\newline +Flexibility &
+	+Easy to use &
+	+Easy to use\newline +Flexibility\newline +Nesting\newline +Type \newline\hspace*{3mm}validation &
+	+Customer \hspace*{3mm}wants it \\
+	\addlinespace
+	Drawbacks &
+	-External library\newline -No type \newline\hspace*{2mm}validation &
+	-Lacks nesting\newline -Lacks lists\newline -No type \newline\hspace*{2mm}validation &
+	-External library\newline -Lacks lists &
+	-External library\newline -Too generic \\
+	\addlinespace
+	Latest version & 3.10 & 3.2 & 4.7.2 & 0.0.13 \\
+	Python branch & 2.7 and 3.3 & 2.7 and 3.3 & 2.7 & 2.7 \\
+	License & MIT & PSF L & BSD-new & BSD \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
 
 %--------------------------------
 \section{Unit Testing Frameworks}
 %--------------------------------
 \label{sec:pre:testing}
-Python has several frameworks for unit testing, we decided to look at nose,
-py.test and Attest to find which would best suit our needs. They are somewhat
-similar, being modern python testing frameworks, but they differ in maturity
-and what is often called magic in the python community. py.test is the most
-mature but also the most magic, it uses a lot of introspection to discover
-tests and it has no API. nose is heavily influenced by py.test, but it tries to
-be more explicit, and provides an API. Attest is the youngest testing
-framework, and it like nose has little magic but instead focuses on providing
-a very pythonic API. Being the youngest also means it has the least
-documentation, functionality and plugins. Therefore Attest might be the easiest
-testing framework to learn. Independent of testing framework, we can use
-coverage.py for testing how well our unit tests cover our code.
+There are many different unit testing frameworks for python. We have evaluated
+three of them, to see which best suits our utility, which we describe in this
+section.
+
+\subsection{py.test}
+%-------------------
+py.test\footnote{\url{http://pytest.org/latest/}} a mature full-featured testing
+tool. It runs on Python 2.4-3.2, PyPy and Jython-2.5.1 intepreters on both
+Windows and Posix platforms. It is well documented and popular in the python
+community. The best known project which uses it is PyPy, which has over 16,000
+unit tests. py.test discoverers tests automatically by searching for modules,
+classes, functions and methods which starts with "test\_". It uses the assert
+statement to test variables and values. These implicit behaviours makes tests
+easier to write and faster, but harder to learn and understand.
+
+\subsection{nose}
+%----------------
+nose\footnote{\url{http://readthedocs.org/docs/nose/en/latest/}}.
+
+\subsection{Attest}
+%------------------
+Attest\footnote{\url{http://packages.python.org/Attest/}}.
+
+\subsection{coverage.py}
+%-----------------------
+coverage.py\footnote{\url{http://nedbatchelder.com/code/coverage/}}.
+
+\subsection{Summary}
+%-------------------
+They are all somewhat similar, being modern python testing frameworks, but they
+differ in maturity and what is often called magic in the python community.
+py.test is the most mature but also the most magic, it uses a lot of
+introspection to discover tests and it has no API. nose is heavily influenced
+by py.test, but it tries to be more explicit, and provides an API. Attest is
+the youngest testing framework, and it like nose has little magic but instead
+focuses on providing a very pythonic API. Being the youngest also means it has
+the least documentation, functionality and plugins. Therefore Attest might be
+the easiest testing framework to learn.
 
 
 %-------------------------------------
@@ -497,6 +524,7 @@ coverage.py for testing how well our unit tests cover our code.
 \label{sec:pre:docs}
 
 \subsection{Sphinx}
+%------------------
 \begin{wrapfigure}{r}{2.7cm}
 	\begin{center}
 	\vspace{-30pt}
@@ -513,9 +541,11 @@ case for sphinx is writing documentation for our utility, how to use it and
 configure it.
 
 \subsection{ReadTheDocs.org}
+%---------------------------
 We might also use readthedocs.org for free hosting of
 documentation, and which support automatic pulling and compiling of
 documentation from our github repository whenever we push any changes.
+
 
 %-------------------------------------------
 \section{Integrated Development Environment}

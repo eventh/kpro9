@@ -9,13 +9,13 @@ development methodology.
 Wireshark, which out utility should create dissectors for, are described in
 \autoref{sec:pre:wireshark}.
 \hyperref[sec:pre:langs]{Section \ref*{sec:pre:langs}} contains the different
-programming languages we might need, while \autoref{sec:pre:parsers}
+programming languages we might use, while \autoref{sec:pre:parsers}
 describe possible solutions for parsing C header files.
 \hyperref[sec:pre:config]{Section \ref*{sec:pre:config}} outlines possible
 configuration libraries, and \autoref{sec:pre:testing} discusses possible unit
-testing frameworks. In \autoref{sec:pre:docs} we describe a framework for
-writing user documentation and \autoref{sec:pre:ide} describes different
-integrated development environments.
+testing frameworks. In \autoref{sec:pre:docs} we describe tools for creating
+user documentation and \autoref{sec:pre:ide} describes three integrated
+development environments.
 
 \hyperref[sec:pre:eval]{Section \ref*{sec:pre:eval}} provides the
 justifications for the choices we have made, and in
@@ -28,7 +28,6 @@ license of our utility.
 \section{Similar Solutions}
 %--------------------------
 \label{sec:pre:similar}
-
 We started by searching for existing solutions in the problem space. This
 search turned up idl2wrs\footnote{\url{http://wiki.wireshark.org/idl2wrs}}.
 The other solution was suggested by our customer,
@@ -61,6 +60,9 @@ descriptions, which would take very long time.
 \section{Software Development Methodology}
 %-----------------------------------------
 \label{sec:pre:method}
+In this section we describe two popular software development methodologies,
+while \autoref{sec:pre:devchoice} discusses which one we decided to use, and
+why.
 
 \subsection{Waterfall}
 %---------------------
@@ -214,7 +216,8 @@ in Lua for structs found in the header files.
 \label{sec:pre:langs}
 The dissectors we have to generate are written in Lua, and we have looked at
 both Java and Python programming language for our utility. In this section we
-describe these different languages.
+describe these different languages. In \autoref{sec:pre:langchoice} we describe
+which language we selected and why.
 
 \subsection{Lua}
 %---------------
@@ -276,7 +279,10 @@ pycparser and cppheaderparser. These are described further in
 %-----------------------------------
 \label{sec:pre:parsers}
 This section contains various tools and libraries we have looked at for solving
-the challenge of parsing C header files.
+the challenge of parsing C header files. They range from language-independent
+tools like GCC and Clang to Python-only libraries like PLY and pycparser. The
+justification for the ones we selected can be found in
+\autoref{sec:pre:langchoice}.
 
 \subsection{ANTLR}
 %-----------------
@@ -431,6 +437,9 @@ Among others, it has these additional features:
 %-------------------
 We have listed a summary of some of the advantages and drawbacks of the
 different configuration frameworks we looked at in \autoref{tab:pre:config}.
+Which framework we selected and why is described in
+\autoref{sec:pre:configchoice}.
+
 \begin{table}[htbp] \footnotesize \center
 \caption{Configuration summary\label{tab:pre:config}}
 \noindent\makebox[\textwidth]{%
@@ -554,10 +563,11 @@ generate output in several different formats, including html and latex/pdf.
 	\vspace{-20pt}
 \end{wrapfigure}
 Read the Docs\footnote{\url{http://readthedocs.org/docs/read-the-docs/}} is
-free hosting of documentation for the open source community.
-
-It support automatic pulling and compiling of
-documentation from our github repository whenever we push any changes.
+free hosting of documentation for the open source community. It supports Sphinx
+docs written with reStructuredText, and it can automatically pull from Git,
+Subversion, Bazaar, and Mercurial repositories. We can configure it so it
+automatically pulls and compiles our user documentation from our github
+repository whenever we push any changes.
 
 
 %-------------------------------------------
@@ -600,7 +610,7 @@ point in the code that references a certain variable or function. The mentioned
 function mostly has keyboard shortcuts.
 
 It does not have support for automatic error checking in the program, so it
-won’t alert the user of spelling and syntax errors. It also lacks integration
+will no alert the user of spelling and syntax errors. It also lacks integration
 with any version control systems like git or svn. The code completion and
 code navigation is a little lacking. It will for example not suggest importing
 files if you reference a class from another module and it cannot give a
@@ -613,16 +623,19 @@ complete list of usages of a function.
 	\includegraphics[width=1.5cm]{./planning/img/vim_logo}
 	\vspace{-20pt}
 \end{wrapfigure}
-Vim\footnote{\url{http://www.vim.org/}}
-is cross-platform, open source text editor originally created for the
-Amiga. It is not regarded as an IDE, but it provides all the regular features
-of text editors, including syntax highlighting, auto-completion,
-auto-indentation, searching, multiple undo and redo etc. It can be configured
-to support almost everything modern IDE’s support, and its extensive
-customizability is considered parts of its strength. But it is also parts of
-its weakness, it is very difficult for new Vim users to learn how to use it
-effectively. Therefore we do not suggest any team member which is not already
-experienced with Vim to try it.
+Vim\footnote{\url{http://www.vim.org/}} is cross-platform, open source text
+editor originally created for the Amiga. It is not regarded as an IDE, but it
+provides all the regular features of text editors, including syntax
+highlighting, auto-completion, auto-indentation, searching, multiple undo and
+redo. It can be configured to support almost everything modern IDE’s support,
+and its extensive customizability is considered parts of its strength. But it
+is also parts of its weakness, it is very difficult for new Vim users to learn
+how to use it effectively. Therefore we do not suggest any team member which is
+not already experienced with Vim to try it.
+
+\subsection{Summary}
+TODO: I plan to include a table with features of the different editors, if I
+find time for it.
 
 
 %----------------------------------
@@ -632,6 +645,7 @@ experienced with Vim to try it.
 
 \subsection{Development Process Choice}
 %--------------------------------------
+\label{sec:pre:devchoice}
 We have chosen scrum for our development strategy. We do not have a lot of
 experience with software development either individually or as a group, so we
 have little personal knowledge of how much we are able to produce, and the
@@ -649,6 +663,7 @@ the benefit it will give us over waterfall.
 
 \subsection{Development Languages and Technologies Choice}
 %---------------------------------------------------------
+\label{sec:pre:langchoice}
 We originally selected Java as our programming language because it would run on
 all the platforms required, it offered automatic memory management so it would
 be easier to debug, and it was the only language everyone on the team had
@@ -695,6 +710,7 @@ study of varying level before we start the first sprint.
 
 \subsection{Configuration Choice}
 %--------------------------------
+\label{sec:pre:configchoice}
 According to the given requirements, we decided to use YAML for handling
 configuration files for our purposes. The choice was made dependently on used
 programming language decisions. Because the latest version of python
@@ -713,6 +729,7 @@ flexible configuration support for our solution.
 
 \subsection{Integrated Development Environment Choice}
 %-----------------------------------------------------
+\label{sec:pre:idechoice}
 PyCharm is by far the best IDE evaluated in terms of functionality, and it is
 the one that mirrors Eclipse the most, which is an advantage, since most team
 members are best acquainted with Eclipse. It will be the recommended IDE for
@@ -723,28 +740,34 @@ what determines the productivity of a team member is more how well you know
 the specific tool you are using. It will therefore be up to each team member
 to choose what IDE/text editor they want to use.
 
-
-%------------------
-\section{Framework}
-%------------------
+\subsection{Our Framework}
+%-------------------------
 \label{sec:pre:framework}
-Even will descripe the framework we have decided to create?
+TODO: Even will descripe the framework we have decided to create?
 
 \subsection{Versions}
 %--------------------
-The versions of the different tools and libraries we are using.
-\begin{description}
-	\item[Python] CPython 3.2.2, the latest standard python implementation
-		which means we won’t support other python implementation like PyPy,
-		jython or ironpython in the near future.
-	\item[PLY] 3.4, latest stable verison.
-	\item[pycparser] 2.05-dev, latest development version (stable don't
-		support \_Bool type)
-	\item[PyYAML] 3.10, latest stable version
-	\item[Attest] 0.6-dev, latest development version (stable don’t
-		support python3.2)
-	\item[WireShark] 1.7.0-SVN, latest nightly build, bleeding edge
-\end{description}
+\label{sec:pre:versions}
+The versions of the different tools and libraries we are using can be found in
+\autoref{tab:pre:versions}.
+\begin{table}[!h] \footnotesize \center
+\vspace{-10pt}
+\caption{Versions of tools and libraries\label{tab:pre:versions}}
+\begin{tabular}{l l l}
+	\toprule
+	Library/Tool & Version & Why \\
+	\midrule
+	Python & CPython 3.2.2 & Latest stable standard python implementation \\
+	PLY & 3.4 & Latest stable version \\
+	pycparser & 2.05-dev & Development version, for \_Bool support \\
+	pyYAML & 3.10 & Latest stable version \\
+	Attest & 0.6-dev & Development version, for python 3.2 support \\
+	Sphinx & 1.0.8 & Latest stable version \\
+	WireShark & 1.7.0-SVN & Latest nightly build, for Lua support \\
+	\bottomrule
+\end{tabular}
+\vspace{-10pt}
+\end{table}
 
 
 %-----------------------------
@@ -756,19 +779,27 @@ and that we are free to license it as open source if we want to, under
 whichever license we feel is most suited. They suggested GNU GPL as Wireshark
 is released under it.
 
-The libraries and tools we depend upon and interact with has their own licenses
-which we need to consider when we select a license for our utility.
-\begin{description}
-	\item[Wireshark] GNU GPL
-	\item[PLY] BSD-new
-	\item[pycparser] BSD-new
-	\item[Python-ASN1] - MIT
-	\item[pyYAML] - MIT
-	\item[ConfigObj] - BSD
-\end{description}
+We needed to consider the licenses of the libraries and tools we depend upon
+when we decided which license to use. This is summarized by
+\autoref{tab:pre:licenses}.
+\begin{table}[!h] \small \center
+\vspace{-20pt}
+\caption{Licenses\label{tab:pre:licenses}}
+\begin{tabular}{l l}
+	\toprule
+	Wireshark & GNU GPL \\
+	PLY & BSD-new \\
+	pycparser & BSD-new \\
+	pyYAML & MIT \\
+	\midrule
+	Our utility & BSD-new \\
+	\bottomrule
+\end{tabular}
+\vspace{-10pt}
+\end{table}
 
 \noindent Some of the requirements for our utility might require us to modify
 the C preprocessor in PLY and the pycparser library, which made us consider
-the BSD the most suited license for us. Since it also gives us the option to
-later move to a more restrictive license like GPL, we decided to use it.
-
+the new 2-clause BSD license the most suited for us. Since it also gives us the
+option to later move to a more restrictive license like GPL, we decided to use
+it.

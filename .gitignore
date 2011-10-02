@@ -1,5 +1,7 @@
 *.aux
 *.log
+*.lof
+*.lot
 *.toc
 *.out
 *.class
@@ -15,8 +17,6 @@
 */yacctab.py
 .project
 /misc
-/report/*.bat
-/report/tmp
 /CSjark/docs/_build
 /CSjark/docs/_static
 /CSjark/docs/_template

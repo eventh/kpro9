@@ -29,6 +29,7 @@
     colorlinks=true, % Don't wrap links in colored boxes
 }
 
+
 %############
 % Top matter
 %############
@@ -101,6 +102,7 @@ TODO
 \addcontentsline{toc}{chapter}{List of Tables}
 \listoftables
 
+
 %###########################
 % Planning and Requirements
 %###########################
@@ -118,10 +120,10 @@ TODO
 \include{./planning/temp_design}
 
 
-%#############
+%#########
+% Sprints
+%#########
 \part{Sprints}
-%#############
-
 \include{./sprints/sprint1}
 \include{./sprints/sprint2}
 \include{./sprints/sprint3}
@@ -129,14 +131,25 @@ TODO
 
 \include{./sprints/sprint1_tests} % ????
 
-%##############################
+
+%###########################
+% Conclusion and Evaluation
+%###########################
 \part{Conclusion \& Evaluation}
-%##############################
+\include{./misc/architecture}
+\include{./misc/evaluation}
 
 
-%################
+%############
+% Appendices
+%############
 \part{Appendices}
-%################
 \appendix
+\include{./misc/acronyms}
+\include{./misc/glossary}
+\include{./misc/manual}
+\include{./misc/feedback}
+
 
 \end{document}
+

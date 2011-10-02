@@ -37,7 +37,7 @@ Both of these solutions are bundled with Wireshark.
 \subsection{idl2wrs}
 %-------------------
 A tool for generating Wireshark dissectors from IDL files. The tool is written
-in python, and generates dissectors in C from IDL specifications. Interface
+in Python, and generates dissectors in C from IDL specifications. Interface
 Description Language (IDL) is used to interface in a language-neutral way,
 which enables communication between software of different languages. It is
 used for example in Sun RPC and CORBA. Since idl2wrs takes input in a different
@@ -115,6 +115,7 @@ customer finds the need for.
 
 \subsection{Scrum}
 %-----------------
+\label{sec:pre:scrum}
 Scrum is an agile development methodology based on the philosophy that it is
 impossible to completely and accurately plan everything in a software project
 before you begin. It is therefore more or less based on iterations of the
@@ -241,6 +242,7 @@ interface with Wireshark through a simple API.
 
 \subsection{Java}
 %----------------
+\label{sec:pre:java}
 \begin{wrapfigure}{r}{1.3cm}
 	\vspace{-30pt}
 	\includegraphics[width=1.3cm]{./planning/img/java_logo}
@@ -258,6 +260,7 @@ for example ANTLR and JAVACC. A detailed description of ANTLR can be found in
 
 \subsection{Python}
 %------------------
+\label{sec:pre:python}
 \begin{wrapfigure}{r}{2cm}
 	\vspace{-20pt}
 	\includegraphics[width=2cm]{./planning/img/python_logo}
@@ -265,11 +268,11 @@ for example ANTLR and JAVACC. A detailed description of ANTLR can be found in
 \end{wrapfigure}
 Python\footnote{\url{http://www.python.org/}} is a general-purpose,
 multi-paradigm, object-oriented, imperative, dynamically typed programming
-language. It was created by Guido van Rossum, and is today developed by python
-Software Foundation and the python community. Python’s strength include
+language. It was created by Guido van Rossum, and is today developed by Python
+Software Foundation and the Python community. Python’s strength include
 automatic memory management, large and comprehensive standard library,
 portability, powerful but very clear, concise and simple syntax. There exists
-several pure python libraries for creating lexers and parsers, like PLY,
+several pure Python libraries for creating lexers and parsers, like PLY,
 pycparser and cppheaderparser. These are described further in
 \autoref{sec:pre:parsers}.
 
@@ -281,8 +284,8 @@ pycparser and cppheaderparser. These are described further in
 This section contains various tools and libraries we have looked at for solving
 the challenge of parsing C header files. They range from language-independent
 tools like GCC and Clang to Python-only libraries like PLY and pycparser. The
-justification for the ones we selected can be found in
-\autoref{sec:pre:langchoice}.
+justification for the libraries we selected can be found in
+\autoref{sec:pre:parserchoice}.
 
 \subsection{ANTLR}
 %-----------------
@@ -302,7 +305,7 @@ inputted source code files.
 
 \subsection{PLY}
 %---------------
-PLY\footnote{\url{http://www.dabeaz.com/ply/}} is a python alternative to the
+PLY\footnote{\url{http://www.dabeaz.com/ply/}} is a Python alternative to the
 popular lexer and parser compilers lex and yacc. It also comes with a 95\%
 completed C preprocessor in case we are required to modify the preprocessor
 for our utility. Other special purpose parsers like pycparser and
@@ -310,7 +313,8 @@ cppheaderparser depends on PLY. These are described later in this section.
 
 \subsection{pycparser}
 %---------------------
-There are two python libraries for parsing C with the same name (but different
+\label{sec:pre:pycparser}
+There are two Python libraries for parsing C with the same name (but different
 capitalization), pycparser\footnote{\url{http://code.google.com/p/pycparser/}}
 and PyCParser\footnote{\url{https://github.com/albertz/PyCParser}}. While they
 both aim to solve almost the same problem, the first one appears to have better
@@ -320,12 +324,13 @@ specification. pycparser requires PLY to work.
 \subsection{cppheaderparser}
 %---------------------------
 Cppheaderparser\footnote{\url{http://sourceforge.net/projects/cppheaderparser/}}
-is a parser for C++ header files written in python. It is an alternative for
+is a parser for C++ header files written in Python. It is an alternative for
 pycparser in case we need to parse C++ files instead of simple C header files.
 It also depends on PLY.
 
 \subsection{GCC}
 %---------------
+\label{sec:pre:gcc}
 \begin{wrapfigure}{r}{1.5cm}
 	\vspace{-20pt}
 	\includegraphics[width=1.5cm]{./planning/img/gcc_logo}
@@ -341,6 +346,7 @@ a custom parser or use something like GCC-XML and an XML parser.
 
 \subsection{Clang}
 %-----------------
+\label{sec:pre:clang}
 \begin{wrapfigure}{r}{2.5cm}
 	\vspace{-20pt}
 	\includegraphics[width=2.5cm]{./planning/img/llvm_logo}
@@ -351,7 +357,7 @@ C++, Objective-C and Objective-C++, written in C++. Clang differ from GCC as it
 behaves as a library rather than an external tool, but for Java we will have to
 use it like GCC because there are no Java-Clang bindings. It supports
 outputting the abstract syntax tree as XML, which our utility then will need to
-parse. Clang provides bindings for python so there it can be used as a library,
+parse. Clang provides bindings for Python so there it can be used as a library,
 but its main drawback is, like GCC, a lack of flexibility. Clang is a part of
 the LLVM toolkit.
 
@@ -360,9 +366,11 @@ the LLVM toolkit.
 \section{Configuration Frameworks}
 %---------------------------------
 \label{sec:pre:config}
-This section looks at different configuration frameworks for python. Our
-utility needs a flexible configuration, because some of the information we need
-to display does not exist in the C header files. For example there exist no
+This section looks at different configuration frameworks for Python. Which we
+selected and why is explained in \autoref{sec:pre:configchoice}.
+
+Our utility needs a flexible configuration, as some of the information we
+shall display does not exist in the files we parse. For example there are no
 clear relationship between enumerated values in messages and their names.
 These must be provided through a configuration. The configuration should also
 support the following:
@@ -382,11 +390,12 @@ fundamental tool to be used in application, which make it possible to exchange
 information in a independent way.
 
 Our customer uses ASN.1 for configuration of other utilities, and has therefore
-suggested we investigate it for our utility. There exist two python libraries
+suggested we investigate it for our utility. There exist two Python libraries
 for parsing of ASN.1
 
 \subsection{YAML}
 %----------------
+\label{sec:pre:yaml}
 \begin{wrapfigure}{r}{3cm}
 	\vspace{-30pt}
 	\includegraphics[width=3cm]{./planning/img/pyyaml_logo}
@@ -400,19 +409,19 @@ serialization, YAML excels in working with those languages that are
 fundamentally built around the three basic primitives. These include the new
 wave of agile languages such as Perl, Python, PHP, Ruby, and Javascript.
 
-PyYAML\footnote{\url{http://pyyaml.org/}} is a YAML parser for the python
+PyYAML\footnote{\url{http://pyyaml.org/}} is a YAML parser for the Python
 programming language, and it is available for both the 2.x and 3.x branch of
-python. It is licensed under MIT license.
+Python. It is licensed under MIT license.
 
 \subsection{configparser}
 %------------------------
 configparser\footnote{\url{http://docs.python.org/py3k/library/configparser.html}}
-is a python module to manage user-editable configuration files. The
+is a Python module to manage user-editable configuration files. The
 files are organized into sections, and each section can contain name-value
-pairs for configuration data. Value interpolation using python formatting
+pairs for configuration data. Value interpolation using Python formatting
 strings is also supported, to build values that depend on one another.
 
-configparser module is a part of python standard library, and therefore does
+configparser module is a part of Python standard library, and therefore does
 not require installation or configuration to use.
 
 \subsection{ConfigObj}
@@ -430,56 +439,23 @@ Among others, it has these additional features:
 	\item Integrated with a powerful validation system
 \end{itemize}
 
-\noindent Currently, ConfigObj module exists only for python up to version
+\noindent Currently, ConfigObj module exists only for Python up to version
 2.7. It is under BSD license.
-
-\subsection{Summary}
-%-------------------
-We have listed a summary of some of the advantages and drawbacks of the
-different configuration frameworks we looked at in \autoref{tab:pre:config}.
-Which framework we selected and why is described in
-\autoref{sec:pre:configchoice}.
-
-\begin{table}[htbp] \footnotesize \center
-\caption{Configuration summary\label{tab:pre:config}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.1\textwidth}{X X X X X}
-	\toprule
-	& YAML & configparser & ConfigObj & ASN.1 \\
-	\midrule
-	Advantages &
-	+Simplicity\newline +Flexibility &
-	+Easy to use &
-	+Easy to use\newline +Flexibility\newline +Nesting\newline +Type \newline\hspace*{3mm}validation &
-	+Customer \hspace*{3mm}wants it \\
-	\addlinespace
-	Drawbacks &
-	-External library\newline -No type \newline\hspace*{2mm}validation &
-	-Lacks nesting\newline -Lacks lists\newline -No type \newline\hspace*{2mm}validation &
-	-External library\newline -Lacks lists &
-	-External library\newline -Too generic \\
-	\addlinespace
-	Latest version & 3.10 & 3.2 & 4.7.2 & 0.0.13 \\
-	Python branch & 2.7 and 3.3 & 2.7 and 3.3 & 2.7 & 2.7 \\
-	License & MIT & PSF L & BSD-new & BSD \\
-	\bottomrule
-\end{tabularx}}
-\end{table}
 
 
 %--------------------------------
 \section{Unit Testing Frameworks}
 %--------------------------------
 \label{sec:pre:testing}
-There are many different unit testing frameworks for python. We have evaluated
+There are many different unit testing frameworks for Python. We have evaluated
 three of them, to see which best suits our utility, which we describe in this
-section.
+section. In \autoref{sec:pre:testchoice} we describe which we selected and why.
 
 \subsection{py.test}
 %-------------------
 py.test\footnote{\url{http://pytest.org/latest/}} a mature full-featured testing
 tool. It runs on Python 2.4-3.2, PyPy and Jython-2.5.1 intepreters on both
-Windows and Posix platforms. It is well documented and popular in the python
+Windows and Posix platforms. It is well documented and popular in the Python
 community. The best known project which uses it is PyPy, which has over 16,000
 unit tests. py.test discoverers tests automatically by searching for modules,
 classes, functions and methods which starts with "test\_". It uses the assert
@@ -489,15 +465,16 @@ easier to write and faster, but harder to learn and understand.
 \subsection{nose}
 %----------------
 nose\footnote{\url{http://readthedocs.org/docs/nose/en/latest/}} testing
-framework extends python's unittest library to make testing easier.
+framework extends Python's unittest library to make testing easier.
 It provides an alternative test discovery and running process for unittest,
 which is intended to mimic the behavior of py.test as much as is reasonably
 possible without resorting to too much magic. nose support easy-to-write
 plugins, and it comes bundled with the most popular ones. It supports both
-python 2.x and 3.x branches.
+Python 2.x and 3.x branches.
 
 \subsection{Attest}
 %------------------
+\label{sec:pre:attest}
 \begin{wrapfigure}{r}{3.2cm}
 	\vspace{-20pt}
 	\includegraphics[width=3.2cm]{./planning/img/pocoo_logo}
@@ -505,8 +482,8 @@ python 2.x and 3.x branches.
 \end{wrapfigure}
 Attest\footnote{\url{http://packages.python.org/Attest/}} is a test automation
 framework for Python emphasising modern idioms and conventions. It supports
-test collecting using python decorators, introspection of the assert statement,
-treating tests as python modules rather than scripts. Attest is a rather young
+test collecting using Python decorators, introspection of the assert statement,
+treating tests as Python modules rather than scripts. Attest is a rather young
 framework, with limited features and documentation. Attest is a sub-level
 project of the Pocoo project.
 
@@ -518,20 +495,8 @@ the effectiveness of unit tests, by showing which parts of the code are
 exercised by tests. coverage.py support Python 2.3 to 3.2. It can output
 results in plain text, html and XML.
 
-\subsection{Summary}
-%-------------------
-They are all somewhat similar, being modern python testing frameworks, but they
-differ in maturity and what is often called magic in the python community.
-py.test is the most mature but also the most magic, it uses a lot of
-introspection to discover tests and it has no API. nose is heavily influenced
-by py.test, but it tries to be more explicit, and provides an API. Attest is
-the youngest testing framework, and like nose, has less magic and focuses on
-providing a very pythonic API. Being the youngest also means it has the least
-documentation, functionality and plugins. Therefore Attest might be the easiest
-testing framework to learn.
 
-
-%-------------------------------------
+%---------------------------------
 \section{User Documentation Tools}
 %---------------------------------
 \label{sec:pre:docs}
@@ -546,17 +511,17 @@ hosting site for our user documentation.
 	\includegraphics[width=2.7cm]{./planning/img/sphinx_logo}
 	\vspace{-20pt}
 \end{wrapfigure}
-Sphinx\footnote{\url{http://sphinx.pocoo.org/}} is a python tool for writing
+Sphinx\footnote{\url{http://sphinx.pocoo.org/}} is a Python tool for writing
 documentation, that makes it easy to create intelligent and beautiful
-documentation. It is used for the standard python documentation, and it is
-popular in the python community. Sphinx uses reStructuredText as its markup
+documentation. It is used for the standard Python documentation, and it is
+popular in the Python community. Sphinx uses reStructuredText as its markup
 language, which is a easy-to-read, what-you-see-is-what-you-get plain text
 markup syntax and parser system. Our use case for sphinx is writing
 documentation for our utility, how to use it and configure it. Sphinx can
 generate output in several different formats, including html and latex/pdf.
 
 \subsection{Read the Docs}
-%---------------------------
+%-------------------------
 \begin{wrapfigure}{r}{1.2cm}
 	\vspace{-20pt}
 	\includegraphics[width=1.2cm]{./planning/img/readthedocs_logo}
@@ -583,7 +548,7 @@ repository whenever we push any changes.
 	\vspace{-20pt}
 \end{wrapfigure}
 PyCharm\footnote{\url{http://www.jetbrains.com/pycharm/}}
-is a cross platform, proprietary IDE for python. It has good support
+is a cross platform, proprietary IDE for Python. It has good support
 for text editing, syntax highlighting, auto indentation, code navigation, code
 completion and automatic error checking. There is also a decent debugger and
 unit test support that can help finding errors and integrated version control
@@ -602,7 +567,7 @@ The latter is a requirement to make this IDE a viable option.
 	\vspace{-20pt}
 \end{wrapfigure}
 PyScripter\footnote{\url{http://code.google.com/p/pyscripter/}}
-is a Windows only, open source IDE for python. It has support for
+is a Windows only, open source IDE for Python. It has support for
 basic text editing functions relevant to programming like syntax highlighting,
 auto indentation, code completion, debugger and file management. It also has
 some support for navigation the code, for example by offering to find the next
@@ -634,102 +599,7 @@ how to use it effectively. Therefore we do not suggest any team member which is
 not already experienced with Vim to try it.
 
 \subsection{Summary}
-TODO: I plan to include a table with features of the different editors, if I
-find time for it.
-
-
-%----------------------------------
-\section{Evaluation and Conclusion}
-%----------------------------------
-\label{sec:pre:eval}
-
-\subsection{Development Process Choice}
-%--------------------------------------
-\label{sec:pre:devchoice}
-We have chosen scrum for our development strategy. We do not have a lot of
-experience with software development either individually or as a group, so we
-have little personal knowledge of how much we are able to produce, and the
-task may present challenges that we are not prepared for when the project
-starts. For these reasons we believe that we need to take an agile approach to
-this project. This way, we may both learn as we go, an adjust later iterations
-by the result of the previous. We may also have something to deliver even if we
-do not have time to implement all the desired features.
-
-The scrum methodology fits these goals perfectly, and is therefore a natural
-choice. The risk factor here is that all team members are mostly unfamiliar
-with scrum, while we have at least a little knowledge about waterfall. We do,
-however, think that the time and risk of learning will not be much compared to
-the benefit it will give us over waterfall.
-
-\subsection{Development Languages and Technologies Choice}
-%---------------------------------------------------------
-\label{sec:pre:langchoice}
-We originally selected Java as our programming language because it would run on
-all the platforms required, it offered automatic memory management so it would
-be easier to debug, and it was the only language everyone on the team had
-experience with. We considered most strongly the second of the three outlined
-possible solutions to parsing. We felt that writing our own C parser with C
-preprocessor would possibly take up a lot of the available time of the project,
-while the third option of using GCC or Clang would add a large dependency which
-our customer would want to avoid. GCC and Clang is also not trivial to install
-on Windows.
-
-Using Java with ANTLR to generate C preprocessor, C lexer and C parser looked
-very promising at first. Further inspections revealed that the C preprocessor
-grammar was written in 2006, and had stopped working in 2008 as newer version
-of ANTLR were not backwards compatible. The C grammar only provided validation
-of the parsing, and did not create an abstract syntax tree, so it would require
-some modification to get an output to work with. We did not test the ASN.1
-grammar but comments inside it did not inspire confidence. It was clear that
-this solution would require a lot of tinkering to get working, and ANTLR’s lack
-of documentation was a huge risk for our project. This plus feedback from our
-customer made us consider other programming languages for developing our
-utility.
-
-We looked at python because our customer would prefer us to use it, and because
-we had a python-fanatic on our team. We found several python libraries for
-parsing of C files, and even one for parsing C++ header files.
-
-We decided to use python for this project because the parsing libraries for
-python came in working condition with decent documentation, and because we
-were able to create a small working prototype in python in just a few hours.
-We estimate that it would take at least a week to achieve the same result in
-Java.
-
-We also decided to use python libraries PLY and pycparser. We favored pycparser
-over PyCParser and cppheaderparser because it has better documentation, seems
-to be a more mature project, and it supports the complete C99 specification,
-which PyCParser does not.
-
-For unit testing we have selected the Attest library, as it is the simplest of
-the ones considered, and therefore easiest to learn.
-
-A challenge with using python is the fact that not all team members have
-sufficient experience with it. Most team members must therefore do some self
-study of varying level before we start the first sprint.
-
-\subsection{Configuration Choice}
-%--------------------------------
-\label{sec:pre:configchoice}
-According to the given requirements, we decided to use YAML for handling
-configuration files for our purposes. The choice was made dependently on used
-programming language decisions. Because the latest version of python
-specification (currently 3.2) was chosen, the range of possible configuration
-file solutions was reduced. Therefore, although ASN.1 and ConfigObj are very
-suitable for our task, they were eliminated (those parsers are available only
-up to version 2.7), which left us 2 main possibilities: YAML and configparser.
-Configparser turned out to be not sufficient for us, because mainly it lacks
-lists. These we need for description of hiearchical structures of the C
-headers. YAML has only two minor disadvantages we should be aware of. First,
-there is no type validation mechanism, so we will have to create our validation
-manually. Second, it is an external library. We find this drawback minor for
-now but it can turn up to be a problem in the future. Except for these issues,
-YAML (toghether with PyYAML) seems to have a good potential for creating
-flexible configuration support for our solution.
-
-\subsection{Integrated Development Environment Choice}
-%-----------------------------------------------------
-\label{sec:pre:idechoice}
+%-------------------
 PyCharm is by far the best IDE evaluated in terms of functionality, and it is
 the one that mirrors Eclipse the most, which is an advantage, since most team
 members are best acquainted with Eclipse. It will be the recommended IDE for
@@ -740,14 +610,169 @@ what determines the productivity of a team member is more how well you know
 the specific tool you are using. It will therefore be up to each team member
 to choose what IDE/text editor they want to use.
 
+
+%----------------------------------
+\section{Evaluation and Conclusion}
+%----------------------------------
+\label{sec:pre:eval}
+In this section we provide a justification for the choices we have made in
+regards to process, programming language, and libraries we will use. Then
+in \autoref{sec:pre:framework} we give a brief description of the framework
+we will construct for our utility.
+
+\subsection{Development Process Choice}
+%--------------------------------------
+\label{sec:pre:devchoice}
+We have chosen \hyperref[sec:pre:scrum]{scrum} for our development strategy.
+We do not have a lot of experience with software development either
+individually or as a group, so we have little personal knowledge of how much
+we are able to produce, and the task may present challenges that we are not
+prepared for when the project starts. For these reasons we believe that we
+need to take an agile approach to this project. This way, we may both learn as
+we go, an adjust later iterations by the result of the previous. We may also
+have something to deliver even if we do not have time to implement all the
+desired features.
+
+The scrum methodology fits these goals perfectly, and is therefore a natural
+choice. The risk factor here is that all team members are mostly unfamiliar
+with scrum, while we have at least a little knowledge about waterfall. We do,
+however, think that the time and risk of learning will not be much compared to
+the benefit it will give us over waterfall.
+
+\subsection{Programming Language Choice}
+%---------------------------------------
+\label{sec:pre:langchoice}
+We originally selected \hyperref[sec:pre:java]{Java} as our programming
+language because it would run on all the platforms required, it offered
+automatic memory management so it would be easier to debug, and it was the only
+language everyone on the team had experience with.
+
+We looked at \hyperref[sec:pre:antlr]{ANTLR} for generating
+C lexer and parser in Java, which looked very promising. It also provided
+grammar files for creating a C preprocessor in Java. Closer evaluation revealed
+that the C preprocessor grammar was written in 2006, and had stopped working in
+2008 as newer versions of ANTLR was not backwards compatible. Also the
+generated C parser only validated C code, it did not create an abstract syntax
+tree which we could traverse. This meant that using Java and ANTLR would
+require us to modify these grammars to suite our needs, and ANTLR's lack of
+documentation became a huge risk for our project.
+
+These issues and feedback from our customer made us evaluate Python for
+developing our utility. We found several libraries for parsing C files, and
+even one for parsing C++ header files. These are described in
+\autoref{sec:pre:parsers}.
+
+We decided to use \hyperref[sec:pre:python]{Python} for this project because
+the parsing libraries for Python came in working condition with decent
+documentation, and because we were able to create a small working prototype
+in Python in just a few hours. We estimate that it would take at least a week
+to achieve the same result in Java.
+
+A challenge with our decision is the fact that not all team members have
+sufficient experience with Python. Most team members must therefore do some
+self study before we start the first sprint.
+
+\subsection{Parsers Libraries \& Tools Choice}
+%---------------------------------------------
+\label{sec:pre:parserchoice}
+We outlined three different approaches for parsing C header files. First is
+write a custom parser ourself, second is to use a C parsing library, and
+third is using a toolkit parser like \hyperref[sec:pre:gcc]{GCC} and
+\hyperref[sec:pre:clang]{Clang}.
+
+We felt that writing our own C parser with C preprocessor would possibly take
+up a lot, if not all, of the available project time. The third option would add
+a large dependency which our customer want to avoid, if possible. GCC and Clang
+can be challenging to install and use on Windows.
+
+Therefor using a C parser library would be the best solution, and as mentioned
+above, Java with ANTLR proved challenging. So we evaluated Python parser
+libraries.
+
+We decided to use \hyperref[sec:pre:pycparser]{pycparser}. We favored pycparser
+over PyCParser and cppheaderparser because it has better documentation, it
+seemed to be a more mature project, and it supports the most of the C99
+specification. pycparser depends on PLY, so our utility will also depend on it.
+
+For C preprocessor we have selected to use a tool for Windows which comes with
+pycparser, on Mac we will use the one which comes with XCode, and on other
+platforms we will either use GCC or tools which comes with the platform. If we
+need to modify a C preprocessor we might use PLY's incomplete C preprocessor.
+
+\subsection{Configuration Framework Choice}
+%------------------------------------------
+\label{sec:pre:configchoice}
+We have listed a summary of some of the advantages and drawbacks of the
+different configuration frameworks we looked at in \autoref{tab:pre:config}.
+\begin{table}[htbp] \footnotesize \center
+\caption{Configuration summary\label{tab:pre:config}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.1\textwidth}{X X X X X}
+	\toprule
+	& YAML & configparser & ConfigObj & ASN.1 \\
+	\midrule
+	Advantages &
+	+Simplicity\newline +Flexibility &
+	+Easy to use &
+	+Easy to use\newline +Flexibility\newline +Nesting\newline +Type \newline\hspace*{3mm}validation &
+	+Customer \hspace*{3mm}wants it \\
+	\addlinespace
+	Drawbacks &
+	-External library\newline -No type \newline\hspace*{2mm}validation &
+	-Lacks nesting\newline -Lacks lists\newline -No type \newline\hspace*{2mm}validation &
+	-External library\newline -Lacks lists &
+	-External library\newline -Too generic \\
+	\addlinespace
+	Latest version & 3.10 & 3.2 & 4.7.2 & 0.0.13 \\
+	Python branch & 2.7 and 3.3 & 2.7 and 3.3 & 2.7 & 2.7 \\
+	License & MIT & PSF L & BSD-new & BSD \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+We decided to use \hyperref[sec:pre:yaml]{YAML} for handling configuration
+files, as it covered most of our requirements. Because we decided to use the
+latest version of Python, version 3.2.2, the range of possible configuration
+frameworks was reduced. Therefore, although ASN.1 and ConfigObj are very
+suitable for our task, they were eliminated (those parsers are available
+only up to version 2.7), which left us 2 main possibilities: YAML and
+configparser. configparser turned out to be insufficient for us, mainly because
+it lacked lists. These we need for description of hierarchical structures of
+the C headers. YAML has only two minor disadvantages we should be aware of.
+First, there is no type validation mechanism, so we will have to create our
+validation manually. Second, it is an external library. We find this drawback
+minor for now but it can turn out to be a problem in the future. Except for
+these issues, YAML, more specifically pyYAML, seems to have a good potential
+for creating flexible configuration support for our utility.
+
+\subsection{Unit Testing Framework Choice}
+%-----------------------------------------
+\label{sec:pre:testchoice}
+The three frameworks we looked at  are very similar, being modern Python
+testing frameworks. They differ in maturity and what is often called magic in
+the Python community.
+
+py.test is the most mature but also the most magic, it uses a lot of
+introspection to discover tests and it has no API. nose is heavily influenced
+by py.test, but it tries to be more explicit, and provides an API. Attest is
+the youngest testing framework, and like nose, has less magic and focuses on
+providing a very pythonic API. Being the youngest also means it has the least
+documentation, functionality and plugins. Therefore Attest might be the easiest
+testing framework to learn. Therefor we decided to use
+\hyperref[sec:pre:attest]{Attest} for unit testing of our utility.
+
 \subsection{Our Framework}
 %-------------------------
 \label{sec:pre:framework}
-TODO: Even will descripe the framework we have decided to create?
+Our utility will need to take as input C header files, search through them to
+find struct definitions, and create Lua scripts which dissects the structs in
+\hyperref[sec:pre:wireshark]{Wireshark}.
 
-\subsection{Versions}
-%--------------------
-\label{sec:pre:versions}
+To find the structs we will use pycparser to parse the input files, create an
+abstract syntax tree, and to find the struct definitions. We will use pyYAML to
+read configuration from file, which together with the struct definitions will
+be placed in some suitable data structures for generating dissectors.
+
 The versions of the different tools and libraries we are using can be found in
 \autoref{tab:pre:versions}.
 \begin{table}[!h] \footnotesize \center
@@ -757,11 +782,11 @@ The versions of the different tools and libraries we are using can be found in
 	\toprule
 	Library/Tool & Version & Why \\
 	\midrule
-	Python & CPython 3.2.2 & Latest stable standard python implementation \\
-	PLY & 3.4 & Latest stable version \\
+	Python & CPython 3.2.2 & Latest stable standard Python implementation \\
 	pycparser & 2.05-dev & Development version, for \_Bool support \\
 	pyYAML & 3.10 & Latest stable version \\
-	Attest & 0.6-dev & Development version, for python 3.2 support \\
+	PLY & 3.4 & Latest stable version \\
+	Attest & 0.6-dev & Development version, for Python 3.2 support \\
 	Sphinx & 1.0.8 & Latest stable version \\
 	WireShark & 1.7.0-SVN & Latest nightly build, for Lua support \\
 	\bottomrule
@@ -782,7 +807,7 @@ is released under it.
 We needed to consider the licenses of the libraries and tools we depend upon
 when we decided which license to use. This is summarized by
 \autoref{tab:pre:licenses}.
-\begin{table}[!h] \small \center
+\begin{table}[!h] \footnotesize \center
 \vspace{-20pt}
 \caption{Licenses\label{tab:pre:licenses}}
 \begin{tabular}{l l}

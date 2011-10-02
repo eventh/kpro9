@@ -115,6 +115,7 @@ customer finds the need for.
 
 \subsection{Scrum}
 %-----------------
+\label{sec:pre:scrum}
 Scrum is an agile development methodology based on the philosophy that it is
 impossible to completely and accurately plan everything in a software project
 before you begin. It is therefore more or less based on iterations of the
@@ -241,6 +242,7 @@ interface with Wireshark through a simple API.
 
 \subsection{Java}
 %----------------
+\label{sec:pre:java}
 \begin{wrapfigure}{r}{1.3cm}
 	\vspace{-30pt}
 	\includegraphics[width=1.3cm]{./planning/img/java_logo}
@@ -258,6 +260,7 @@ for example ANTLR and JAVACC. A detailed description of ANTLR can be found in
 
 \subsection{Python}
 %------------------
+\label{sec:pre:python}
 \begin{wrapfigure}{r}{2cm}
 	\vspace{-20pt}
 	\includegraphics[width=2cm]{./planning/img/python_logo}
@@ -310,6 +313,7 @@ cppheaderparser depends on PLY. These are described later in this section.
 
 \subsection{pycparser}
 %---------------------
+\label{sec:pre:pycparser}
 There are two Python libraries for parsing C with the same name (but different
 capitalization), pycparser\footnote{\url{http://code.google.com/p/pycparser/}}
 and PyCParser\footnote{\url{https://github.com/albertz/PyCParser}}. While they
@@ -326,6 +330,7 @@ It also depends on PLY.
 
 \subsection{GCC}
 %---------------
+\label{sec:pre:gcc}
 \begin{wrapfigure}{r}{1.5cm}
 	\vspace{-20pt}
 	\includegraphics[width=1.5cm]{./planning/img/gcc_logo}
@@ -341,6 +346,7 @@ a custom parser or use something like GCC-XML and an XML parser.
 
 \subsection{Clang}
 %-----------------
+\label{sec:pre:clang}
 \begin{wrapfigure}{r}{2.5cm}
 	\vspace{-20pt}
 	\includegraphics[width=2.5cm]{./planning/img/llvm_logo}
@@ -389,6 +395,7 @@ for parsing of ASN.1
 
 \subsection{YAML}
 %----------------
+\label{sec:pre:yaml}
 \begin{wrapfigure}{r}{3cm}
 	\vspace{-30pt}
 	\includegraphics[width=3cm]{./planning/img/pyyaml_logo}
@@ -467,6 +474,7 @@ Python 2.x and 3.x branches.
 
 \subsection{Attest}
 %------------------
+\label{sec:pre:attest}
 \begin{wrapfigure}{r}{3.2cm}
 	\vspace{-20pt}
 	\includegraphics[width=3.2cm]{./planning/img/pocoo_logo}
@@ -607,19 +615,23 @@ to choose what IDE/text editor they want to use.
 \section{Evaluation and Conclusion}
 %----------------------------------
 \label{sec:pre:eval}
-TODO: add short description here
+In this section we provide a justification for the choices we have made in
+regards to process, programming language, and libraries we will use. Then
+in \autoref{sec:pre:framework} we give a brief description of the framework
+we will construct for our utility.
 
 \subsection{Development Process Choice}
 %--------------------------------------
 \label{sec:pre:devchoice}
-We have chosen scrum for our development strategy. We do not have a lot of
-experience with software development either individually or as a group, so we
-have little personal knowledge of how much we are able to produce, and the
-task may present challenges that we are not prepared for when the project
-starts. For these reasons we believe that we need to take an agile approach to
-this project. This way, we may both learn as we go, an adjust later iterations
-by the result of the previous. We may also have something to deliver even if we
-do not have time to implement all the desired features.
+We have chosen \hyperref[sec:pre:scrum]{scrum} for our development strategy.
+We do not have a lot of experience with software development either
+individually or as a group, so we have little personal knowledge of how much
+we are able to produce, and the task may present challenges that we are not
+prepared for when the project starts. For these reasons we believe that we
+need to take an agile approach to this project. This way, we may both learn as
+we go, an adjust later iterations by the result of the previous. We may also
+have something to deliver even if we do not have time to implement all the
+desired features.
 
 The scrum methodology fits these goals perfectly, and is therefore a natural
 choice. The risk factor here is that all team members are mostly unfamiliar
@@ -630,10 +642,10 @@ the benefit it will give us over waterfall.
 \subsection{Programming Language Choice}
 %---------------------------------------
 \label{sec:pre:langchoice}
-We originally selected Java as our programming language because it would run on
-all the platforms required, it offered automatic memory management so it would
-be easier to debug, and it was the only language everyone on the team had
-experience with.
+We originally selected \hyperref[sec:pre:java]{Java} as our programming
+language because it would run on all the platforms required, it offered
+automatic memory management so it would be easier to debug, and it was the only
+language everyone on the team had experience with.
 
 We looked at \hyperref[sec:pre:antlr]{ANTLR} for generating
 C lexer and parser in Java, which looked very promising. It also provided
@@ -650,11 +662,11 @@ developing our utility. We found several libraries for parsing C files, and
 even one for parsing C++ header files. These are described in
 \autoref{sec:pre:parsers}.
 
-We decided to use Python for this project because the parsing libraries for
-Python came in working condition with decent documentation, and because we
-were able to create a small working prototype in Python in just a few hours.
-We estimate that it would take at least a week to achieve the same result in
-Java.
+We decided to use \hyperref[sec:pre:python]{Python} for this project because
+the parsing libraries for Python came in working condition with decent
+documentation, and because we were able to create a small working prototype
+in Python in just a few hours. We estimate that it would take at least a week
+to achieve the same result in Java.
 
 A challenge with our decision is the fact that not all team members have
 sufficient experience with Python. Most team members must therefore do some
@@ -665,7 +677,8 @@ self study before we start the first sprint.
 \label{sec:pre:parserchoice}
 We outlined three different approaches for parsing C header files. First is
 write a custom parser ourself, second is to use a C parsing library, and
-third is using a toolkit parser like GCC and Clang.
+third is using a toolkit parser like \hyperref[sec:pre:gcc]{GCC} and
+\hyperref[sec:pre:clang]{Clang}.
 
 We felt that writing our own C parser with C preprocessor would possibly take
 up a lot, if not all, of the available project time. The third option would add
@@ -676,10 +689,10 @@ Therefor using a C parser library would be the best solution, and as mentioned
 above, Java with ANTLR proved challenging. So we evaluated Python parser
 libraries.
 
-We decided to use pycparser. We favored pycparser over PyCParser and
-cppheaderparser because it has better documentation, it seemed to be a more
-mature project, and it supports the most of the C99 specification. pycparser
-depends on PLY, so our utility will also depend on it.
+We decided to use \hyperref[sec:pre:pycparser]{pycparser}. We favored pycparser
+over PyCParser and cppheaderparser because it has better documentation, it
+seemed to be a more mature project, and it supports the most of the C99
+specification. pycparser depends on PLY, so our utility will also depend on it.
 
 For C preprocessor we have selected to use a tool for Windows which comes with
 pycparser, on Mac we will use the one which comes with XCode, and on other
@@ -717,20 +730,20 @@ different configuration frameworks we looked at in \autoref{tab:pre:config}.
 \end{tabularx}}
 \end{table}
 
-We decided to use YAML for handling configuration files, as it covered most of
-our requirements. Because we decided to use the latest version of Python,
-version 3.2.2, the range of possible configuration frameworks was reduced.
-Therefore, although ASN.1 and ConfigObj are very suitable for our task, they
-were eliminated (those parsers are available only up to version 2.7), which
-left us 2 main possibilities: YAML and configparser. configparser turned out to
-be insufficient for us, mainly because it lacked lists. These we need for
-description of hierarchical structures of the C headers. YAML has only two
-minor disadvantages we should be aware of. First, there is no type validation
-mechanism, so we will have to create our validation manually. Second, it is an
-external library. We find this drawback minor for now but it can turn out to be
-a problem in the future. Except for these issues, YAML, more specifically
-pyYAML, seems to have a good potential for creating flexible configuration
-support for our utility.
+We decided to use \hyperref[sec:pre:yaml]{YAML} for handling configuration
+files, as it covered most of our requirements. Because we decided to use the
+latest version of Python, version 3.2.2, the range of possible configuration
+frameworks was reduced. Therefore, although ASN.1 and ConfigObj are very
+suitable for our task, they were eliminated (those parsers are available
+only up to version 2.7), which left us 2 main possibilities: YAML and
+configparser. configparser turned out to be insufficient for us, mainly because
+it lacked lists. These we need for description of hierarchical structures of
+the C headers. YAML has only two minor disadvantages we should be aware of.
+First, there is no type validation mechanism, so we will have to create our
+validation manually. Second, it is an external library. We find this drawback
+minor for now but it can turn out to be a problem in the future. Except for
+these issues, YAML, more specifically pyYAML, seems to have a good potential
+for creating flexible configuration support for our utility.
 
 \subsection{Unit Testing Framework Choice}
 %-----------------------------------------
@@ -745,17 +758,21 @@ by py.test, but it tries to be more explicit, and provides an API. Attest is
 the youngest testing framework, and like nose, has less magic and focuses on
 providing a very pythonic API. Being the youngest also means it has the least
 documentation, functionality and plugins. Therefore Attest might be the easiest
-testing framework to learn. Therefor we decided to use Attest for unit testing
-of our utility.
+testing framework to learn. Therefor we decided to use
+\hyperref[sec:pre:attest]{Attest} for unit testing of our utility.
 
 \subsection{Our Framework}
 %-------------------------
 \label{sec:pre:framework}
-TODO: Even will descripe the framework we have decided to create?
+Our utility will need to take as input C header files, search through them to
+find struct definitions, and create Lua scripts which dissects the structs in
+\hyperref[sec:pre:wireshark]{Wireshark}.
 
-\subsection{Versions}
-%--------------------
-\label{sec:pre:versions}
+To find the structs we will use pycparser to parse the input files, create an
+abstract syntax tree, and to find the struct definitions. We will use pyYAML to
+read configuration from file, which together with the struct definitions will
+be placed in some suitable data structures for generating dissectors.
+
 The versions of the different tools and libraries we are using can be found in
 \autoref{tab:pre:versions}.
 \begin{table}[!h] \footnotesize \center
@@ -766,9 +783,9 @@ The versions of the different tools and libraries we are using can be found in
 	Library/Tool & Version & Why \\
 	\midrule
 	Python & CPython 3.2.2 & Latest stable standard Python implementation \\
-	PLY & 3.4 & Latest stable version \\
 	pycparser & 2.05-dev & Development version, for \_Bool support \\
 	pyYAML & 3.10 & Latest stable version \\
+	PLY & 3.4 & Latest stable version \\
 	Attest & 0.6-dev & Development version, for Python 3.2 support \\
 	Sphinx & 1.0.8 & Latest stable version \\
 	WireShark & 1.7.0-SVN & Latest nightly build, for Lua support \\

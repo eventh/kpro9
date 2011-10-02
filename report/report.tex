@@ -1,9 +1,9 @@
-%======================================================
+%######################################################
 % This file generates the whole report for the project
 % Run with "pdflatex report.tex" twice to create pdf
 %
 % Use *_standalone.tex to generate standalone parts
-%======================================================
+%######################################################
 \documentclass[a4paper, 11pt]{report}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -29,6 +29,10 @@
     colorlinks=true, % Don't wrap links in colored boxes
 }
 
+%############
+% Top matter
+%############
+
 \title{Wireshark:\\ Automated generation of protocol dissectors}
 \author{by\\ Erik Bergersen, Sondre Johan Mannsverk,\\ Terje Snarby,
 		Even Wiik Thomassen, Lars Solvoll Tønder,\\ Sigurd Wien
@@ -36,8 +40,15 @@
 \date{\today}
 
 \begin{document}
+
+%============
+% Title page
+%============
 \maketitle
 
+%==========
+% Abstract
+%==========
 \begin{abstract}
 This report documents the work done in a project in the course TDT4290 
 Customer Driven Project at NTNU. The project was executed on behalf of
@@ -56,12 +67,47 @@ management. The development process consisted of 4 two-week long
 sprints, with new functionality added in each sprint.
 
 The project duration was from the 30th August to the 24th of November.
-
 \end{abstract}
 
+%=========
+% Preface
+%=========
+\pagenumbering{roman}
+\chapter*{Preface}
+\addcontentsline{toc}{subsection}{Preface}
+TODO
+
+%===================
+% Table of Contents
+%===================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Contents}
 \tableofcontents
 
+%=================
+% List of Figures
+%=================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+
+%================
+% List of Tables
+%================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+
+%###########################
+% Planning and Requirements
+%###########################
+\clearpage
+\pagenumbering{arabic}
 \part{Planning \& Requirements}
+
 \include{./planning/project_directive}
 \include{./planning/plan}
 \include{./planning/prestudy}
@@ -70,10 +116,27 @@ The project duration was from the 30th August to the 24th of November.
 \include{./planning/test_plan}
 \include{./planning/architectural}
 \include{./planning/temp_design}
+
+
+%#############
 \part{Sprints}
+%#############
+
 \include{./sprints/sprint1}
 \include{./sprints/sprint2}
+\include{./sprints/sprint3}
+\include{./sprints/sprint4}
 
-\include{./sprints/sprint1_tests}
+\include{./sprints/sprint1_tests} % ????
+
+%##############################
+\part{Conclusion \& Evaluation}
+%##############################
+
+
+%################
+\part{Appendices}
+%################
+\appendix
 
 \end{document}

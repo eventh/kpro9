@@ -360,9 +360,11 @@ the LLVM toolkit.
 \section{Configuration Frameworks}
 %---------------------------------
 \label{sec:pre:config}
-This section looks at different configuration frameworks for python. Our
-utility needs a flexible configuration, because some of the information we need
-to display does not exist in the C header files. For example there exist no
+This section looks at different configuration frameworks for python. Which we
+selected and why is explained in \autoref{sec:pre:configchoice}.
+
+Our utility needs a flexible configuration, as some of the information we
+shall display does not exist in the files we parse. For example there are no
 clear relationship between enumerated values in messages and their names.
 These must be provided through a configuration. The configuration should also
 support the following:
@@ -433,39 +435,6 @@ Among others, it has these additional features:
 \noindent Currently, ConfigObj module exists only for python up to version
 2.7. It is under BSD license.
 
-\subsection{Summary}
-%-------------------
-We have listed a summary of some of the advantages and drawbacks of the
-different configuration frameworks we looked at in \autoref{tab:pre:config}.
-Which framework we selected and why is described in
-\autoref{sec:pre:configchoice}.
-
-\begin{table}[htbp] \footnotesize \center
-\caption{Configuration summary\label{tab:pre:config}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.1\textwidth}{X X X X X}
-	\toprule
-	& YAML & configparser & ConfigObj & ASN.1 \\
-	\midrule
-	Advantages &
-	+Simplicity\newline +Flexibility &
-	+Easy to use &
-	+Easy to use\newline +Flexibility\newline +Nesting\newline +Type \newline\hspace*{3mm}validation &
-	+Customer \hspace*{3mm}wants it \\
-	\addlinespace
-	Drawbacks &
-	-External library\newline -No type \newline\hspace*{2mm}validation &
-	-Lacks nesting\newline -Lacks lists\newline -No type \newline\hspace*{2mm}validation &
-	-External library\newline -Lacks lists &
-	-External library\newline -Too generic \\
-	\addlinespace
-	Latest version & 3.10 & 3.2 & 4.7.2 & 0.0.13 \\
-	Python branch & 2.7 and 3.3 & 2.7 and 3.3 & 2.7 & 2.7 \\
-	License & MIT & PSF L & BSD-new & BSD \\
-	\bottomrule
-\end{tabularx}}
-\end{table}
-
 
 %--------------------------------
 \section{Unit Testing Frameworks}
@@ -473,7 +442,7 @@ Which framework we selected and why is described in
 \label{sec:pre:testing}
 There are many different unit testing frameworks for python. We have evaluated
 three of them, to see which best suits our utility, which we describe in this
-section.
+section. In \autoref{sec:pre:testchoice} we describe which we selected and why.
 
 \subsection{py.test}
 %-------------------
@@ -517,18 +486,6 @@ for measuring code coverage of Python programs. It is typically used to measure
 the effectiveness of unit tests, by showing which parts of the code are
 exercised by tests. coverage.py support Python 2.3 to 3.2. It can output
 results in plain text, html and XML.
-
-\subsection{Summary}
-%-------------------
-They are all somewhat similar, being modern python testing frameworks, but they
-differ in maturity and what is often called magic in the python community.
-py.test is the most mature but also the most magic, it uses a lot of
-introspection to discover tests and it has no API. nose is heavily influenced
-by py.test, but it tries to be more explicit, and provides an API. Attest is
-the youngest testing framework, and like nose, has less magic and focuses on
-providing a very pythonic API. Being the youngest also means it has the least
-documentation, functionality and plugins. Therefore Attest might be the easiest
-testing framework to learn.
 
 
 %-------------------------------------
@@ -633,10 +590,6 @@ is also parts of its weakness, it is very difficult for new Vim users to learn
 how to use it effectively. Therefore we do not suggest any team member which is
 not already experienced with Vim to try it.
 
-\subsection{Summary}
-TODO: I plan to include a table with features of the different editors, if I
-find time for it.
-
 
 %----------------------------------
 \section{Evaluation and Conclusion}
@@ -708,9 +661,38 @@ A challenge with using python is the fact that not all team members have
 sufficient experience with it. Most team members must therefore do some self
 study of varying level before we start the first sprint.
 
-\subsection{Configuration Choice}
-%--------------------------------
+\subsection{Configuration Framework Choice}
+%------------------------------------------
 \label{sec:pre:configchoice}
+We have listed a summary of some of the advantages and drawbacks of the
+different configuration frameworks we looked at in \autoref{tab:pre:config}.
+\begin{table}[htbp] \footnotesize \center
+\caption{Configuration summary\label{tab:pre:config}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.1\textwidth}{X X X X X}
+	\toprule
+	& YAML & configparser & ConfigObj & ASN.1 \\
+	\midrule
+	Advantages &
+	+Simplicity\newline +Flexibility &
+	+Easy to use &
+	+Easy to use\newline +Flexibility\newline +Nesting\newline +Type \newline\hspace*{3mm}validation &
+	+Customer \hspace*{3mm}wants it \\
+	\addlinespace
+	Drawbacks &
+	-External library\newline -No type \newline\hspace*{2mm}validation &
+	-Lacks nesting\newline -Lacks lists\newline -No type \newline\hspace*{2mm}validation &
+	-External library\newline -Lacks lists &
+	-External library\newline -Too generic \\
+	\addlinespace
+	Latest version & 3.10 & 3.2 & 4.7.2 & 0.0.13 \\
+	Python branch & 2.7 and 3.3 & 2.7 and 3.3 & 2.7 & 2.7 \\
+	License & MIT & PSF L & BSD-new & BSD \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+
 According to the given requirements, we decided to use YAML for handling
 configuration files for our purposes. The choice was made dependently on used
 programming language decisions. Because the latest version of python
@@ -726,6 +708,19 @@ manually. Second, it is an external library. We find this drawback minor for
 now but it can turn up to be a problem in the future. Except for these issues,
 YAML (toghether with PyYAML) seems to have a good potential for creating
 flexible configuration support for our solution.
+
+\subsection{Unit Testing Framework Choice}
+%-----------------------------------------
+\label{sec:pre:testchoice}
+They are all somewhat similar, being modern python testing frameworks, but they
+differ in maturity and what is often called magic in the python community.
+py.test is the most mature but also the most magic, it uses a lot of
+introspection to discover tests and it has no API. nose is heavily influenced
+by py.test, but it tries to be more explicit, and provides an API. Attest is
+the youngest testing framework, and like nose, has less magic and focuses on
+providing a very pythonic API. Being the youngest also means it has the least
+documentation, functionality and plugins. Therefore Attest might be the easiest
+testing framework to learn.
 
 \subsection{Integrated Development Environment Choice}
 %-----------------------------------------------------

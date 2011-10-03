@@ -41,6 +41,8 @@ class Cli:
     verbose = False
     debug = False
     use_cpp = True
+    output_dir = None # Store all output in a directory
+    output_file = None # Store output in a single file
 
     @classmethod
     def parse_args(cls, args=None):
@@ -66,7 +68,7 @@ class Cli:
                 default=cls.debug, help='print debugging information')
 
         # No CPP flag
-        parser.add_argument('-nocpp', action='store_false', dest='cpp',
+        parser.add_argument('-nocpp', action='store_false', dest='nocpp',
                 default=cls.use_cpp, help='disable C preprocessor')
 
         # A list of C header files
@@ -79,7 +81,7 @@ class Cli:
 
         # Write output to destination file
         parser.add_argument('-output', metavar='output',
-                nargs='?', help='write output to file')
+                nargs='?', help='write output to directory/file')
 
         # Parse arguments
         if args is None:
@@ -89,7 +91,15 @@ class Cli:
 
         cls.verbose = namespace.verbose
         cls.debug = namespace.debug
-        cls.use_cpp = namespace.cpp
+        cls.use_cpp = namespace.nocpp
+
+        # Find out where to store output from the generator
+        if namespace.output:
+            path = os.path.join(os.path.dirname(sys.argv[0]), namespace.output)
+            if os.path.isdir(path):
+                cls.output_dir = path
+            else:
+                cls.output_file = path
 
         headers = namespace.input
         if namespace.header:
@@ -126,7 +136,15 @@ def create_dissector(filename):
     # Generate and write lua dissectors
     for proto in protocols:
         code = proto.create()
-        with open('%s.lua' % proto.name, 'w') as f:
+
+        if Cli.output_dir:
+            path = '%s/%s.lua' % (Cli.output_dir, proto.name)
+        elif Cli.output_file:
+            path = Cli.output_file
+        else:
+            path = '%s.lua' % proto.name
+
+        with open(path, 'w') as f:
             f.write(code)
 
     return len(protocols)

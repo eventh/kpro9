@@ -2,11 +2,11 @@
 #include "stdlib.h"
 #include "string.h"
 #include "time.h"
-#include "headers\agent.h"
-#include "headers\xtypes.h"
-#include "headers\sap.h"
-#include "headers\huge.h"
-#include "headers\xcon.h"
+#include "agent.h"
+#include "xtypes.h"
+#include "sap.h"
+#include "huge.h"
+#include "xcon.h"
 
 
 SAP init_sap(int i)

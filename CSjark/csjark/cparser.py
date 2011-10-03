@@ -5,8 +5,11 @@ A module for parsing C files, and searching AST for struct definitions.
 Requires PLY and pycparser.
 """
 import sys
+import os
+
 import pycparser
 from pycparser import c_ast, c_parser
+
 from config import DEFAULT_C_SIZE_MAP, DEFAULT_C_TYPE_MAP
 from config import StructConfig, RangeRule
 from dissector import Protocol, Field, RangeField
@@ -33,6 +36,7 @@ def parse_file(filename, use_cpp=True,
             cpp_args = []
         if fake_includes:
             cpp_args.append(r'-I../utils/fake_libc_include')
+        cpp_args.append(r'-I%s' % os.path.dirname(filename))
 
         # TODO: find a cleaner way to look for cpp on windows!
         if sys.platform == 'win32' and cpp_path == 'cpp':

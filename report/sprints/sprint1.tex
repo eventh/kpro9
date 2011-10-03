@@ -199,7 +199,7 @@ We have decided to use YAML as our configuration format. In this sprint we have 
 A user can specify the ranges of the members of a struct, from a minimum to a maximum.
 In figure \ref{fig:dissector_screenshot} below you can see how Wireshark displays a member that has an invalid range. 
 
-\begin{figure}[!ht]
+\begin{figure}[ht]
 \includegraphics[width=\textwidth]{./sprints/img/wireshark_outofrange.png}
 \caption{Wireshark dissector}
 \label{fig:dissector_screenshot}
@@ -207,7 +207,7 @@ In figure \ref{fig:dissector_screenshot} below you can see how Wireshark display
 
 The tool uses a command line interface. The user inputs a header-file and optionally a configuration file to the command line, and the program outputs a Lua-script.  Below you can see a figure \ref{fig:cmd_screenshot} that illustrates how the program is run.
 
-\begin{figure}[!ht]
+\begin{figure}[ht]
 \includegraphics[width=\textwidth]{./sprints/img/cmd_agetest_run.png}
 \caption{Command line}
 \label{fig:cmd_screenshot}
@@ -218,18 +218,18 @@ The tool uses a command line interface. The user inputs a header-file and option
 This section introduces the tests preformed during the sprint and their results
 
 \subsection{Tests}
-During the sprint the team executed a total of 7 tests with names as seen below\\
+During the sprint the team executed a total of 7 tests with names as seen below
 
 \noindent Tests executed:
 
 \begin{itemize}
-\item TID01 - Supporting parameters for c-header file\autoref{tab:TID1}
-\item TID02 - Supporting basic data types\autoref{tab:TID2}
-\item TID03 -  Displaying simple structs \autoref{tab:TID3}
-\item TID04 - Supporting c-header files with the \#include directive\autoref{tab:TID4}
-\item TID05 - Supporting \#define and \#if\autoref{tab:TID5}
-\item TID06 - Supporting configuration files\autoref{tab:TID6}
-\item TID07 - Recognizing invalid values\autoref{tab:TID7}
+\item TID01 - Supporting parameters for c-header file. \autoref{tab:TID01}
+\item TID02 - Supporting basic data types. \autoref{tab:TID02}
+\item TID03 -  Displaying simple structs. \autoref{tab:TID03}
+\item TID04 - Supporting c-header files with the \#include directive. \autoref{tab:TID04}
+\item TID05 - Supporting \#define and \#if. \autoref{tab:TID05}
+\item TID06 - Supporting configuration files. \autoref{tab:TID06}
+\item TID07 - Recognizing invalid values. \autoref{tab:TID07}
 \end{itemize}
 
 \subsection{Test Results}
@@ -345,6 +345,7 @@ Most of our tests failed because the developers had forgotten to implement usabi
 
 \subsection{Pre-sprint}
 The customer had no objections to the contents of the first sprint, but was not completely satisfied with the feature descriptions. They thought that we should have much more implementation details for each requirement, and that each requirement should be properly broken down, also in the sense that implementation and design should be two separate tasks if design is necessary. Corollary to this, our work items were too big. They also suggested a proper finish condition for each work item.
+
 \subsection{Post-sprint}
 We presented the result from the sprint 1 for the customer and they were very happy with the result. They had some ideas for how we could make our configuration files more compact, but said that this was not really an important thing. Their other comments were mostly around what they wanted us to do for sprint 2 and how those features might be implemented.
 
@@ -393,15 +394,21 @@ The burndown chart shows the progress during the first sprint. The team made an 
 	\item We did perhaps not understand scrum properly, which resulted in extra work
 \end{itemize}
 \subsection{Planned Actions}
-\textbf{Better sprint planning} \newline
-In order to avoid having to redo much of the work because of incorrect/poorly sprint planning, we have decided to do this properly next time. We have learned what we need to have in place and how to document it from this sprint. \newline
-\textbf{Design early in the sprint} \newline
-The design should be in place early in the sprint. This is related to better sprint planning, the planning should be so detailed/good that additional design is not necessary. This is important for understanding and being able to estimate hours and divide work. \newline
-\textbf{Documenting in parallel while implementing} \newline
+Below there is listed planned actions for the following sprints.
+
+\subsubsection{Better sprint planning}
+In order to avoid having to redo much of the work because of incorrect/poorly sprint planning, we have decided to do this properly next time. We have learned what we need to have in place and how to document it from this sprint.
+
+\subsubsection{Design early in the sprint} 
+The design should be in place early in the sprint. This is related to better sprint planning, the planning should be so detailed/good that additional design is not necessary. This is important for understanding and being able to estimate hours and divide work.
+
+\subsubsection{Documenting in parallel while implementing}
 We suffered from the problem code first, then document. This is not a good practise in team divided work. We will try to do the documentation as we code.
-The documents for the project report also experienced a standstill while the team worked on implementation. Writing parts of sprint documentation while having the sprint is a much better way to work, then most part of the documentation is already done before the sprint evaluation. \newline
-\textbf{Split coding and report writing between team members} \newline
-Not all the team members have to do coding. It is important to maintain a steady progress making the project report (which our grade evaluation is based on), while doing the implementation. Responsibilities for coding and report will be assigned next sprint. \newline
+The documents for the project report also experienced a standstill while the team worked on implementation. Writing parts of sprint documentation while having the sprint is a much better way to work, then most part of the documentation is already done before the sprint evaluation.
+
+\subsubsection{Split coding and report writing between team members} 
+Not all the team members have to do coding. It is important to maintain a steady progress making the project report (which our grade evaluation is based on), while doing the implementation. Responsibilities for coding and report will be assigned next sprint. 
+
 \subsection{Barriers}
 Some of the team members has experience some technical difficulties with their Git client, and others had problems setting up PyCharm. Problems rose as we realized that there would be hard setting up the programs on different platforms (Windows and Mac).
 

@@ -9,17 +9,17 @@ The purpose of this document is to describe our architecture in a structured way
 \section{Architectural Drivers}
 %------------------------------
 This section is dedicated to the discussion of the architectural drivers
+The team has chosen Modifiability and Testability as the quality attributes for this utility. 
 
-\subsection{Quality Attribute Requirements}
+The reason for using Modifiability is that the team are not going to update or maintain the utility after the project is finished. It will be important that the code is easy to understand, good documented and is easy to modify. This will make it easier for our customer to later modifiy or extend the utility
 
+Testability is important since the utility will be used for debugging by the customer.  Since it is not possible for the team to test the dissectors in a real enviorment, it will be more important to focus on testing, to ensure that the final product is working.
 
 \subsection{Testability Tactics}
 The goal of using testability tactics is making it easier to test the system after finishing an increment of the software development. 
 
 \subsubsection{Specialize access routes/interfaces}
 Using a specialized testing interface makes it possible to specify values for a component independently from its normal execution. This will in turn make it possible to test parts of an unfinished module as well as making it easier to get a clear overview over what data is flowing through individual parts of the system.
-
-
 
 \subsection{Modifiability Tactics}
 The goal of using modifiability tactics are to make it easier to extend and modify the software during the development and after having made a working product.
@@ -38,7 +38,6 @@ By restricting the number of modules that are able to collect data from a specif
 
 \subsubsection{Using Configuration Files}
 By using configuration files, it is possible to change the behaviour of the system without having to do any changes to its code.
-
 
 \subsection{Business Requirements}
 

@@ -197,7 +197,8 @@ In this sprint we have created a very naive implementation of the utility. It su
 
 We have decided to use YAML as our configuration format. In this sprint we have added support for range specification.
 A user can specify the ranges of the members of a struct, from a minimum to a maximum.
-In figure \ref{fig:dissector_screenshot} below you can see how Wireshark displays a member that has an invalid range. \newline
+In figure \ref{fig:dissector_screenshot} below you can see how Wireshark displays a member that has an invalid range. 
+
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{./sprints/img/wireshark_outofrange.png}
 \caption{Wireshark dissector}
@@ -205,6 +206,7 @@ In figure \ref{fig:dissector_screenshot} below you can see how Wireshark display
 \end{figure}	
 
 The tool uses a command line interface. The user inputs a header-file and optionally a configuration file to the command line, and the program outputs a Lua-script.  Below you can see a figure \ref{fig:cmd_screenshot} that illustrates how the program is run.
+
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{./sprints/img/cmd_agetest_run.png}
 \caption{Command line}

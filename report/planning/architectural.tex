@@ -47,13 +47,27 @@ By using configuration files, it is possible to change the behaviour of the syst
 This section presents the different architectural patterns used in the utility
 \subsection{Pipe and Filter}
 The pipe and filter architectural pattern consists of a stream of data which is in turn processed sequentially by several filters in such a fashion that the output of one filter becomes the input of the other. It is a very flexible yet robust way of processing data, with support for adding more filters if needed for future applications and processes.
-\begin{figure}
-\caption{Pipe and Filter Pattern}
+\begin{figure}[ht]
 \includegraphics[width = \textwidth]{./planning/img/PipeAndFilter}
+\caption{Pipe and Filter Pattern} 
+\label{fig:pipefilter}
 \end{figure}
 
-
 \section{Architectural Views}
+
+\subsection{Logical View}
+This view shown in \autoref{fig:logicalview}. Command line takes the arguments for header file and configuration file as a string. The arguments are parsed in the 
+
+\begin{figure}[ht]
+\includegraphics[width=\textwidth]{./planning/img/overall_design.png}
+\caption{Overall Architecture}
+\label{fig:logicalview}
+\end{figure}
+
+\section{Process View}
+
+
+\section{Deployment View}
 
 \section{Architectural Rationale}
 %--------------------------------

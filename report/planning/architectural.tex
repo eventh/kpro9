@@ -56,7 +56,7 @@ The pipe and filter architectural pattern consists of a stream of data which is 
 \section{Architectural Views}
 
 \subsection{Logical View}
-This view shown in \autoref{fig:logicalview}. Command line takes the arguments for header file and configuration file as a string. The arguments are parsed in the 
+This view shown in \autoref{fig:logicalview}. Command line takes the arguments for header file and configuration file as a string. The arguments are parsed in the command line parser. Header file is sent to ''C preprocessor \& C parser", the c header file is loaded and parsed by the c parser, and generate a parsing tree. Command line also call Configuration, which load the configuration file. The configuration will parse the configuration file and create configuation rules. The Lua script generator will generate a Lua script from the parseing tree and the config rules.
 
 \begin{figure}[ht]
 \includegraphics[width=\textwidth]{./planning/img/overall_design.png}

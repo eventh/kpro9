@@ -9,13 +9,13 @@
 #pragma ident "@(#) $Id$"
 #endif
 
-#include <time.h>
+#include "time.h"
 
 /* MAX_PATH */
 #ifdef LINUX
-#include <linux/limits.h>
+#include "linux/limits.h"
 #else
-#include <limits.h>
+#include "limits.h"
 #endif
 
 #ifdef _WIN32
@@ -27,10 +27,10 @@
    ** Windows does not define size_t in sys/types.h
    */
 #ifndef _KERNEL
-#include <windows.h>
-#include <windef.h>
-#include <stddef.h>
-#include <errno.h>
+#include "windows.h"
+#include "windef.h"
+#include "stddef.h"
+#include "errno.h"
 #endif
 
 #ifndef NDEBUG

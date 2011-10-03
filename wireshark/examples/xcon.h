@@ -9,7 +9,7 @@
 #pragma ident "@(#) $Id$"
 #endif
 
-#include <time.h>
+#include "time.h"
 
 /*
 ** Machine-dependent types
@@ -34,7 +34,7 @@ typedef  long           sint32;
 #define DIR_SUPP_INIT               17    /* DISP, supplier initiated   */
 #define HIGHEST_AC                  20 /* Note: Uses value as "unknown AC" */
 
-#define CTX_LIST_LEN  8      
+#define CTX_LIST_LEN  8
 
 
 #define NEGATIVE     FALSE
@@ -60,9 +60,9 @@ typedef int RESULT_SOURCE;
 
 
 /*
-** ABC parameters 
+** ABC parameters
 */
-struct abc_p {                                                               
+struct abc_p {
    uint8          foo;
    uint8          bar;
    uint8          baz;
@@ -97,7 +97,7 @@ struct rst_p {
 /*
 ** PL parameters
 */
-struct pl_p {                                                                
+struct pl_p {
    uint8          protver;              /* def 1                             */
    unsigned int   req;                  /* functional unit, def PL_KERNEL    */
 };
@@ -109,9 +109,9 @@ struct pl_p {
 
 
 /*
-** SL parameters 
+** SL parameters
 */
-struct sl_p {                                                                
+struct sl_p {
    uint8          protver;              /* def 1                             */
    BOOL           ext_concat;           /* def FALSE                         */
    BOOL           ext_cntrl;            /* def FALSE                         */
@@ -164,11 +164,11 @@ struct gnrl_aef {                    /* General AEF data                   */
    OCTET          aef[GNRL_AEF_LEN]; /* The AEF data                       */
 };
 
-                                   
-struct src_rt {                    
-   unsigned char  no_idi;          
+
+struct src_rt {
+   unsigned char  no_idi;
    IDI            sr_idi[SRC_RT_LEN]; /* Each IDI with length field set      */
-};   
+};
 
 
 /* aef_type defines, note that these are mutually exclusive */

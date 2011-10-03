@@ -12,6 +12,10 @@ from config import StructConfig, RangeRule
 from dissector import Protocol, Field, RangeField
 
 
+class ParseError(Exception):
+    pass
+
+
 def parse_file(filename, use_cpp=True,
         fake_includes=True, cpp_args=None, cpp_path=None):
     """Parse a C file, returns abstract syntax tree.
@@ -67,7 +71,6 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Create the protocol for the struct
         proto = Protocol(node.name)
-        self.structs.append(proto)
 
         # Find config rules
         conf = StructConfig.configs.get(node.name, None)
@@ -83,7 +86,11 @@ class StructVisitor(c_ast.NodeVisitor):
             elif isinstance(child, c_ast.PtrDecl):
                 self.handle_ptr_decl(child, proto, conf)
             else:
-                raise Exception("Unknown struct member type")
+                raise ParseError("Unknown struct member: %s" % repr(child))
+
+        # Don't add protocols with no fields? Sounds reasonably
+        if proto.fields:
+            self.structs.append(proto)
 
     def handle_type_decl(self, node, proto, conf):
         """Find member details in a type declaration."""
@@ -94,6 +101,10 @@ class StructVisitor(c_ast.NodeVisitor):
             ctype = "enum"
         elif isinstance(child, c_ast.Union):
             ctype = "union"
+        elif isinstance(child, c_ast.Struct):
+            ctype = "struct"
+        else:
+            raise ParseError("Unknown type declaration: %s" % repr(child))
         self._create_field(proto, conf, node.declname, ctype)
 
     def handle_array_decl(self, node, proto, conf):
@@ -106,9 +117,14 @@ class StructVisitor(c_ast.NodeVisitor):
             else:
                 ctype = ' '.join(reversed(child.names))
         else:
-            raise Exception('array of different types not supported yet.')
+            raise ParseError('array of different types not supported yet.')
 
-        size = int(constant.value) * self._size_of(ctype)
+        if hasattr(constant, 'value'):
+            size = int(constant.value) * self._size_of(ctype)
+        else:
+            # TODO
+            size = 99
+            print(constant)
         self._create_field(proto, conf, type_decl.declname, ctype, size=size)
 
     def handle_ptr_decl(self, node, proto, conf):

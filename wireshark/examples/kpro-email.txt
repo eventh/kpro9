@@ -1,0 +1,20 @@
+Here's a set of include files consisting of the special cases
+I and Stig were able to conjure over a couple of days. The list
+may not be exhaustive, but should cover most situations.
+
+The code has been written with spaghetti in mind, with various
+defines and include scenarios which should challenge your parser.
+
+We've made sure the header files compile on
+Linux, MacOS X, Win32 (vs2008) and Solaris, but we haven't much more
+testing than that -- so there might be errors.
+
+test.c - Initializes /part/ of the xcon struct.
+xcon.h - header file containing the main xcon struct.
+
+Special case to be noted:
+
+sap.h:
+SAP s_port: Should be displayed as a short, not as two chars.
+
+

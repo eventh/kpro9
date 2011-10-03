@@ -7,15 +7,12 @@
 In our first sprint we will implement basic and fundamental parts of the utility. Based on the pre-study, we have decided what preprocessor and parser to use, so the task is to make this work together and achieve the desired functionality.  
 
 \subsection{Duration}
-%-----------------
 Sprint 1 started September 14th, and lasted until September 27th. To ensure an understanding between our developers and the customer, we will have weekly meetings to show what we have accomplished and discuss further development. 
 
 \subsection{Sprint goal}
-%--------------------
 The overall goal of the sprint 1 is to create a preliminary design and implement the core of the application. It will be possible to run it and generate the Lua script and therefore it can be used by Wireshark users. The first version will contain only the basic dissector generating features, i.e. parsing simple data structures. Also, some of the preprocessing capabilities will be implemented, such as handling \#include directives. Basic support for configuration will be added.
 
 \subsection{Back log}
-%-----------------
 The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}-\ref{tab:sp1_req2d}  list each requirement with a time estimate.\\
 \autoref{tab:sprint1req} is the sprint backlog for the first phase. \\
 \autoref{tab:sprint1time} is the time table for the first phase. \\
@@ -181,7 +178,8 @@ The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}
 \end{tabularx}
 \end{table} 
 
-\section{Sprint Design}
+\section{System Design}
+%----------------------
 This section introduces the design of the system modules implemented in sprint 1
 
 \subsection{Utility}
@@ -194,7 +192,7 @@ Figure \ref{fig:sp1_class} illustrates the current class diagram for this sprint
 \end{figure}
 
 \section{Implementation}
-
+%-----------------------
 In this sprint we have created a very naive implementation of the utility. It supports the most basic types of C-structs. In addition the utility supports some basic configuration.
 
 We have decided to use YAML as our configuration format. In this sprint we have added support for range specification.
@@ -214,6 +212,7 @@ The tool uses a command line interface. The user inputs a header-file and option
 \end{figure}
 
 \section{Sprint Testing}
+%-----------------------
 This section introduces the tests preformed during the sprint and their results
 
 \subsection{Tests}
@@ -222,13 +221,13 @@ During the sprint the team executed a total of 7 tests with names as seen below\
 \noindent Tests executed:
 
 \begin{itemize}
-\item TID01 - Supporting parameters for c-header file 
-\item TID02 - Supporting basic data types
-\item TID03 -  Displaying simple structs 
-\item TID04 - Supporting c-header files with the \#include directive
-\item TID05 - Supporting \#define and \#if
-\item TID06 - Supporting configuration files
-\item TID07 - Recognizing invalid values
+\item TID01 - Supporting parameters for c-header file\autoref{tab:TID1}
+\item TID02 - Supporting basic data types\autoref{tab:TID2}
+\item TID03 -  Displaying simple structs \autoref{tab:TID3}
+\item TID04 - Supporting c-header files with the \#include directive\autoref{tab:TID4}
+\item TID05 - Supporting \#define and \#if\autoref{tab:TID5}
+\item TID06 - Supporting configuration files\autoref{tab:TID6}
+\item TID07 - Recognizing invalid values\autoref{tab:TID7}
 \end{itemize}
 
 \subsection{Test Results}
@@ -337,9 +336,10 @@ The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
 \end{table}
 
 \subsection{Test Evaluation}
-Most of our tests failed because the developers had forgotten to implement usability features presenting the user with any textual information. All of the other functionality covered in the tests worked correctly though, so the system didn't have to go through a major overhaul to get the tests to succeed properly
+Most of our tests failed because the developers had forgotten to implement usability features presenting the user with any textual information. Even so, with all the core functionality in place it didn't take the developers much time to fix these errors.
 
 \section{Customer Feedback}
+%--------------------------
 
 \subsection{Pre-sprint}
 The customer had no objections to the contents of the first sprint, but was not completely satisfied with the feature descriptions. They thought that we should have much more implementation details for each requirement, and that each requirement should be properly broken down, also in the sense that implementation and design should be two separate tasks if design is necessary. Corollary to this, our work items were too big. They also suggested a proper finish condition for each work item.
@@ -347,6 +347,7 @@ The customer had no objections to the contents of the first sprint, but was not 
 We presented the result from the sprint 1 for the customer and they were very happy with the result. They had some ideas for how we could make our configuration files more compact, but said that this was not really an important thing. Their other comments were mostly around what they wanted us to do for sprint 2 and how those features might be implemented.
 
 \section{Sprint Evaluation}
+%--------------------------
 This section contains the team evaulation of the first sprint.
 \subsection{Review}
 The first sprint is over and the team has implemented a working utility. During the sprint planning we decided which requirements from the product backlog that we were to fulfill during the first sprint. The product backlog contains a prioritized list of requirements. We decided to include the requirements that had the highest prioritization. These requirements were basic, but essential and therefore high prioritized.

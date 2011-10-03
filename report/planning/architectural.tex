@@ -8,16 +8,50 @@ The purpose of this document is to describe our architecture in a structured way
 
 \section{Architectural Drivers}
 %------------------------------
-This section is dedicated to the discussion of the architectural drivers, requirements 
+This section is dedicated to the discussion of the architectural drivers
 
 \subsection{Quality Attribute Requirements}
 
+
+\subsection{Testability Tactics}
+The goal of using testability tactics is making it easier to test the system after finishing an increment of the software development. 
+
+\subsubsection{Specialize access routes/interfaces}
+Using a specialized testing interface makes it possible to specify values for a component independently from its normal execution. This will in turn make it possible to test parts of an unfinished module as well as making it easier to get a clear overview over what data is flowing through individual parts of the system.
+
+
+
+\subsection{Modifiability Tactics}
+
+\subsubsection{Anticipate Expected Changes}
+By trying to anticipate expected changes one will be able to
+
+\subsubsection{Limit Possible Options}
+By limiting the range of possible modifications to the system it becomes easier to generalize the structure of different modules. This will in turn make it easier to constrict the wide ranging effect of new modifications to the system, giving the developers a clearer view over what a given change will actually do to the system.
+
+\subsubsection{Generalizing Modules}
+Generalizing the modules of a system makes it possible to reuse older modules when doing modifications to the system. The more general a module, the more likely it is that a needed change to the system can be implemented just by adjusting the input to the system rather than having to modify existing or creating new modules.
+
+\subsubsection{Restrict Communication Paths}
+By restricting the number of modules that are able to collect data from a specific module, the less dependent the entire system becomes of that specific module. This makes it easier to swap out existing modules with new ones without having to make many widespread changes to the entire system.
+
+\subsubsection{Using Configuration Files}
+By using configuration files, it is possible to change the behaviour of the system without having to do any changes to its code.
+
+
 \subsection{Business Requirements}
 
-\subsection{Stakeholders and concerns}
 
 \section{Architectural Patters}
 %------------------------------
+This section presents the different architectural patterns used in the utility
+\subsection{Pipe and Filter}
+The pipe and filter architectural pattern consists of a stream of data which is in turn processed sequentially by several filters in such a fashion that the output of one filter becomes the input of the other. It is a very flexible yet robust way of processing data, with support for adding more filters if needed for future applications and processes.
+\includegraphics{./planning/img/PipeAndFilter}
+
+
+
+\section{Architectural Views}
 
 \section{Architectural Rationale}
 %--------------------------------

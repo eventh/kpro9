@@ -1,21 +1,24 @@
 %=====================
 \chapter{Requirements}
 %=====================
-%\begin{comment}
-\label{chap:requirements}
+\label{chap:req:requirements}
 This chapter describes an utility that creates Wireshark dissectors from C
 header files. The dissectors must interpret binary representations of C
-structs. In \autoref{sec:reqsoverview} we give a high level overview of the
-utility and its requirements, \autoref{sec:usecases} provides use cases for the
-utility, \autoref{sec:reqspriority} explains how we prioritizes the
-requirements, \autoref{sec:reqscompl} explains how we estimate their
-complexity, \autoref{sec:reqslist} lists all the functional and non-function
-requirements, and \autoref{sec:prodbacklog} contains the complete product
+structs. In \autoref{sec:req:list} we give a high level overview of the
+utility and lists all the functional and non-function requirements.
+
+\hyperref[sec:req:stories]{Section \ref*{sec:req:stories}} gives user stories
+for the requirements, while \autoref{sec:req:usecases} provides use cases for
+the utility, and \autoref{sec:prodbacklog} contains the complete product
 backlog.
 
-\section{Overview}
+%-----------------------------
+\section{List of requirements}
+%-----------------------------
+\label{sec:req:list}
+
+\subsection{Overview}
 %-----------------
-\label{sec:reqsoverview}
 We are to create an utility that allows Wireshark to interpret the binary
 representations of C-language structs. While C structs seldom are exchanged
 across networks, they are sometimes used in inter-process communication. The
@@ -28,64 +31,15 @@ which contain struct definitions, and output Wireshark dissectors, implemented
 in Lua scripts. A configuration file or source code annotations in the header
 files may be used when additional configuration is required.
 
-\subsection{List of requirements}
-\autoref{tab:reqsoverview} is an overview of all the requirements. See
-\autoref{tab:funcreq} and \autoref{tab:nonfuncreq} for more detailed
-description of the requirements.
+\autoref{tab:req:func} lists the functional requirements, while
+\autoref{tab:req:nonfunc} lists the non-functional requirements. Each
+requirement have a priority (Pri) and a complexity (Cmp): High (H), 
+Medium (M) or Low (L) which is explained in \autoref{sec:req:priority} and
+\autoref{sec:req:compl}.
 
-\begin{table}[H] \small \center
-\caption{Requirements overview\label{tab:reqsoverview}}
-\begin{tabular}{l l}
-	\toprule ID & Description \\ \midrule
-	FR1 & Read basic C struct definitions \\
-	FR1-A & Support data types: int, float, char and boolean \\
-	FR1-B & Support members of type enums \\
-	FR1-C & Support members of type structs \\
-	FR1-D & Support members of type unions \\
-	FR1-E & Support member of type array \\
-	\addlinespace
-	FR2 & Generate Wireshark dissectors in Lua \\
-	FR2-A & Display simple structs \\
-	FR2-B & Support display of structs within structs \\
-	FR2-C & Support Wireshark filter and search on attributes \\
-	FR2-D & Recognize invalid values for a struct member \\
-	\addlinespace
-	FR3 & Support C preprocessor directives and macros \\
-	FR3-A & Support \#include \\
-	FR3-B & Support \#define and \#if \\
-	FR3-C & Support \verb+WIN32+, \verb+_WIN64+, \verb+__sparc+ etc \\
-	\addlinespace
-	FR4 & Support user configuration \\
-	FR4-A & Support valid ranges for struct members \\
-	FR4-B & Support enumerated named values or a bit strings \\
-	FR4-C & Custom handling of specific data types \\
-	\addlinespace
-	FR5 & Structs with headers and/or trailers \\
-	\addlinespace
-	FR6 & Handle input which size and endian depends on platform \\
-	FR6-A & Flags specified for each platform \\
-	FR6-B & Flags which signal the platform \\
-	\addlinespace
-	FR7 & Support parameters from command line \\
-	FR7-A & Support parameters for c-header file \\
-	FR7-B & Support for configuration file \\
-	FR7-C & Support batch mode of c-header and configuration \\
-	FR7-D & Don't regenerate dissectors \\
-	\addlinespace
-	NR1 & Run on latest Windows \& Solaris OS \\
-	NR2 & Dissector run on Windows \& Solaris, Intel \& Sparc \\
-	NR3 & User interface shall be command line \\
-	NR4 & Sufficient documentation for generating Lua-scripts \\
-	NR5 & Sufficient documentation for extending functionality \\
-	NR6 & Code should follow PEP8 and PEP20 \\
-	NR7 & Code should be documented by docstrings \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\section{Prioritization}
-%-----------------------
-\label{sec:reqspriority}
+\subsection{Prioritization}
+%--------------------------
+\label{sec:req:priority}
 The team has, in cooperation with the customer, prioritized the requirements
 in three categories:
 \begin{inparaenum}[\itshape a\upshape)]
@@ -100,9 +54,9 @@ in three categories:
 	\item[Low] Requirements that will not add much value to the utility.
 \end{description}
 
-\section{Complexity}
-%-------------------
-\label{sec:reqscompl}
+\subsection{Complexity}
+%----------------------
+\label{sec:req:compl}
 The team has estimated the complexity for each requirement. We use the same
 categories as for requirements priority:
 \begin{inparaenum}[\itshape a\upshape)]
@@ -116,18 +70,9 @@ categories as for requirements priority:
 	\item[Medium] Functionality that seems time consuming but straight forward.
 	\item[Low] Requirements that are trivial to implement.
 \end{description}
-%\end{comment}
 
-\section{List of requirements}
-%-----------------------------
-\label{sec:reqslist}
-\autoref{tab:funcreq} lists the functional requirements, while
-\autoref{tab:nonfuncreq} lists the non-functional requirements. Each
-requirement have a priority (Pri) and a complexity (Cmp): High (H), 
-Medium (M) or Low (L).
-
-\begin{table}[ht] \footnotesize \center
-\caption{Functional Requirements\label{tab:funcreq}}
+\begin{table}[htbp] \footnotesize \center
+\caption{Functional Requirements\label{tab:req:func}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X c c}
 	\toprule
@@ -171,8 +116,8 @@ Medium (M) or Low (L).
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Non-Functional Requirements\label{tab:nonfuncreq}}
+\begin{table}[htbp] \footnotesize \center
+\caption{Non-Functional Requirements\label{tab:req:nonfunc}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X c c}
 	\toprule
@@ -195,12 +140,18 @@ Medium (M) or Low (L).
 \end{tabularx}}
 \end{table}
 
+
+%---------------------
 \section{User Stories}
-This sections shows the user stories, these are display in table \ref{tab:user_stories1} and table \ref{tab:user_stories2}.
-The developer in this context is the developers at Thales Norway AS. \newline
-The administrator is this context is the users of the dissectors. \newline
-\begin{table}[ht] \footnotesize \center
-\caption{User stories part 1} \label{tab:user_stories1}
+%---------------------
+\label{sec:req:stories}
+This sections shows the user stories, these are display in
+\autoref{tab:req:stories1} and \autoref{tab:req:stories2}. The developer in
+this context is the developers at Thales Norway AS. The administrator is this
+context is the users of the dissectors.
+
+\begin{table}[htbp] \footnotesize \center
+\caption{User stories part 1\label{tab:req:stories1}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -236,8 +187,9 @@ The administrator is this context is the users of the dissectors. \newline
 	\bottomrule
 \end{tabularx}}
 \end{table}
-\begin{table}[ht] \footnotesize \center
-\caption{User stories part 2} \label{tab:user_stories2}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{User stories part 2\label{tab:req:stories2}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -270,11 +222,16 @@ The administrator is this context is the users of the dissectors. \newline
 \end{tabularx}}
 \end{table}
 
+
+%------------------
 \section{Use Cases}
 %------------------
-\label{sec:usecases}
+\label{sec:req:usecases}
+This sections contains use case diagrams for our two actors, and detailed
+textual use cases for these diagrams.
 
 \subsection{Actors}
+%------------------
 An actor specifies a role played by an external person or thing that interact
 with our utility. We have three types of actors to consider. First is the
 primary actor which in our case is the user of our utility. He who feeds it a
@@ -282,33 +239,31 @@ C file to generate dissectors. A secondary actor is someone who configures our
 utility to change the output of it. Finally we have an offstage actor which
 does not use our utility himself, but uses the output dissectors in Wireshark.
 
-We have defined two use case actors for our utility. The customer has
-specified that the user is the most important actor.
+We have defined two use case actors for our utility. The customer has specified
+that the offstage actor, called administrator, is the most important actor.
 \begin{description}
 	\item[Administrator] User of the generated Wireshark dissectors, offstage actor
 	\item[Developer] User and configurer of utility, primary and secondary actor
 \end{description}
 
-\subsection{Use Cases}
-This sections contains use case diagrams for the two actors, and detailed textual use cases for these diagrams.
-\subsubsection{Use Case Diagrams}
-Figure \ref{fig:uc_adm} shows the use case diagram for the administrator, and figure \ref{fig:uc_dev} is the use case diagram for the developer.
-\begin{figure}[here]
-\includegraphics[scale=1]{./planning/img/administrator.png}
-\caption{Use Case Diagram: Administrator}
-\label{fig:uc_adm}
+\subsection{Use Case Diagrams}
+%-----------------------------
+\hyperref[fig:req:ucadm]{Figure \ref*{fig:req:ucadm}} shows the use case
+diagram for the administrator, and \autoref{fig:req:ucdev} is the use case
+diagram for the developer.
+\begin{figure}[htbp]
+	\center
+	\includegraphics[width=\textwidth]{./planning/img/administrator.png}
+	\caption{Use Case Diagram: Administrator\label{fig:req:ucadm}}
 \end{figure}
 
-\begin{figure}[here]
-\includegraphics[scale=1]{./planning/img/developer.png}
-\caption{Use Case Diagram: Developer}
-\label{fig:uc_dev}
+\begin{figure}[htbp]
+	\center
+	\includegraphics[width=\textwidth]{./planning/img/developer.png}
+	\caption{Use Case Diagram: Developer\label{fig:req:ucdev}}
 \end{figure}
 
-\subsubsection{Textual Use Cases}
+\subsection{Textual Use Cases}
+%-----------------------------
 TODO!!!
-
-
-
-
 

@@ -22,9 +22,10 @@ Using a specialized testing interface makes it possible to specify values for a 
 
 
 \subsection{Modifiability Tactics}
+The goal of using modifiability tactics are to make it easier to extend and modify the software during the development and after having made a working product.
 
 \subsubsection{Anticipate Expected Changes}
-By trying to anticipate expected changes one will be able to
+By trying to anticipate expected changes it is possible to make it easier for modules to be extended with new functionality later. It also makes it easier for the developers to anticipate the different ranges of input the modules are about be able to process.
 
 \subsubsection{Limit Possible Options}
 By limiting the range of possible modifications to the system it becomes easier to generalize the structure of different modules. This will in turn make it easier to constrict the wide ranging effect of new modifications to the system, giving the developers a clearer view over what a given change will actually do to the system.
@@ -47,8 +48,10 @@ By using configuration files, it is possible to change the behaviour of the syst
 This section presents the different architectural patterns used in the utility
 \subsection{Pipe and Filter}
 The pipe and filter architectural pattern consists of a stream of data which is in turn processed sequentially by several filters in such a fashion that the output of one filter becomes the input of the other. It is a very flexible yet robust way of processing data, with support for adding more filters if needed for future applications and processes.
-\includegraphics{./planning/img/PipeAndFilter}
-
+\begin{figure}
+\caption{Pipe and Filter Pattern}
+\includegraphics[width = \textwidth]{./planning/img/PipeAndFilter}
+\end{figure}
 
 
 \section{Architectural Views}

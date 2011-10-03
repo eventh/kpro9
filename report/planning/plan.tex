@@ -342,8 +342,11 @@ The meetings should be summarized. The summary should include:
 The minutes should be written and sent before to the adviser for approval before 12:00 the day after the meeting. If the adviser should reject the minutes, they should be corrected and resent 12:00 the day following the rejection.
 
 \subsection{Document Templates and Standards}
+The team has specified procesures for templates and file organization.
 
 \subsubsection{Templates the group has created}
+All templates are stored under docs/ on GitHub, the team has templates for:
+
 \begin{itemize}
 	\item Meeting agenda
 	\item Status report
@@ -356,8 +359,8 @@ location of a file is dependent on what type the file is.
 
 \begin{itemize}
 	\item All source code is to be saved in the GitHub repository under
-		source/. This ensures that all the team members have the current
-		version of the code.
+		CSjark/. This ensures that all the team members have the current
+		version of the code. The structure for this folder:
 		\begin{verbatim}
 CSjark/
     csjark/  -- todays source/, for source code
@@ -371,7 +374,17 @@ CSjark/
 	\item All textual documents that are completed will be put in the
 		docs/ folder.
 	\item All LaTeX documents are stored in the Github repository
-		under report/.
+		under report/. The structure for this folder:
+		\begin{verbatim}
+report/
+    planning/  --   Planning & Requirements part
+        img/  --  Images for this part
+    sprints/  --  Sprints part
+        img/  --  Images for this part
+    evaluation/  --  Evaluation part
+    appendices/  --   Appendices part
+		\end{verbatim}
+	\item Examples of header-files and Lua-scripts, packet capture-files and information from customer is stored under wireshark/.
 \end{itemize}
 
 \subsubsection{File name standard}

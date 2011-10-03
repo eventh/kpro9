@@ -11,38 +11,38 @@
 	\cmidrule(r){3-4}
 	Req. & Description & Est. & Act. \\
 	\midrule
-	FR1 & Read basic C struct definitions & - & - \\
-	FR1-A & Support data types: int, float, char and boolean & 5 & - \\
+	FR1 & Read basic C struct definitions & & \\
+	FR1-A & Support data types: int, float, char and boolean & 24 & 20 \\
 	FR1-B & Support members of type enums & - & - \\
 	FR1-C & Support members of type structs & - & - \\
 	FR1-D & Support members of type unions & - & - \\
 	FR1-E & Support member of type array & - & - \\
 	\addlinespace
-	FR2 & Generate Wireshark dissectors in Lua & - & - \\
-	FR2-A & Display simple structs & 10 & - \\
+	FR2 & Generate Wireshark dissectors in Lua & & \\
+	FR2-A & Display simple structs & 28 & 25 \\
 	FR2-B & Support display of structs within structs & - & - \\
 	FR2-C & Support Wireshark filter and search on attributes & - & - \\
-	FR2-D & Recognize invalid values for a struct member & - & - \\
+	FR2-D & Recognize invalid values for a struct member & 22 & 12 \\
 	\addlinespace
-	FR3 & Support C preprocessor directives and macros & - & - \\
-	FR3-A & Support \#include & 1 & - \\
-	FR3-B & Support \#define and \#if & 1 & - \\
+	FR3 & Support C preprocessor directives and macros & & \\
+	FR3-A & Support \#include & 8 & 2 \\
+	FR3-B & Support \#define and \#if & 11 & 3 \\
 	FR3-C & Support \verb+WIN32+, \verb+_WIN64+, \verb+__sparc+ etc & - & - \\
 	\addlinespace
-	FR4 & Support user configuration & - & - \\
-	FR4-A & Support valid ranges for struct members & 20 & - \\
+	FR4 & Support user configuration & & \\
+	FR4-A & Support valid ranges for struct members & 30 & 15 \\
 	FR4-B & Support enumerated named values or a bit strings & - & - \\
 	FR4-C & Custom handling of specific data types & - & - \\
 	\addlinespace
 	FR5 & Structs with headers and/or trailers & - & - \\
 	\addlinespace
-	FR6 & Handle input which size and endian depends on platform & - & - \\
+	FR6 & Handle input which size and endian depends on platform & & \\
 	FR6-A & Flags specified for each platform & - & - \\
 	FR6-B & Flags which signal the platform & - & - \\
 	\addlinespace
-	FR7 & Support parameters from command line & - & - \\
-	FR7-A & Support parameters for c-header file & 2 & - \\
-	FR7-B & Support for configuration file & 5 & - \\
+	FR7 & Support parameters from command line & & \\
+	FR7-A & Support parameters for c-header file & 9 & 6 \\
+	FR7-B & Support for configuration file & 28 & 8 \\
 	FR7-C & Support batch mode of c-header and configuration & - & - \\
 	FR7-D & Don't regenerate dissectors & - & - \\
 	\addlinespace

@@ -8,7 +8,7 @@ The following chapter will briefly introduce the project.
 %--------------------------------
 The purpose of this project is to develop an utility that automatically create Lua-dissectors for Wireshark, from C-header files. This report presents the team’s process from the initial requirement specification to the finished product. 
 
-The title of the project is: Wireshark - Automated generation of protocol dissectors. The name of our utility is: CSjark.
+The title of the project is: Wireshark - Automated generation of protocol dissectors. The name of our utility is CSjark, from the Norwegian word for a small fishing boat, "sjark".
 
 \section{The Client}
 %----------------------------
@@ -16,11 +16,19 @@ The client for this project is Thales Norway AS. Thales is an international elec
 
 \section{Project Background}
 %----------------------------
-Thales want to extend the functionality of Wireshark, so that they could use it to monitor internal data between processes. The extended functionality will be automatic generation of Lua-dissectors from C-header files. The utility must be both configurable and extendable.
+Thales currently uses Wireshark to analyze traffic data between different network nodes, for example, IP packages sent between a client and a server.
+They want us to extend the functionality of Wireshark, so that they could use it to monitor internal data between processes. The extended functionality will be automatic generation of Lua-dissectors from C-header files.
+
+Before, when Thales wanted to debug with Wireshark, they had to write the dissectors manually. Their hope is therefore that our tool can save them valuable time.
+
 
 \section{Project Objective}
 %------------------------------
 The objective of the project is to design a utility that will be able to generate Lua code for dissecting the binary representation of C/C++ structs, allowing Wireshark to show, filter, and search through the data.
+The utility needs to support a flexible configuration, as this will make it useable for complex and specific header files. 
+
+The code and configuration should be well documented, making it easy for Thales to use and extend the tool as they see fit.
+
 
 \section{Duration}
 %--------------------------------

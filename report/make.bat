@@ -1,11 +1,13 @@
 @echo off
-echo "Building LaTeX files"
 if "%1" == "clean" goto clean
+echo "Building LaTeX files"
 mkdir tmp
 if "%1" == "" goto report
+if "%1" == "report" goto report
 if "%1" == "all" goto all
 if exist %1_standalone.tex goto standalone
 echo "Unknown command %1"
+goto :eof
 
 :clean
     echo "Removing LaTeX build files"

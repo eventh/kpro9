@@ -33,7 +33,6 @@ import argparse
 
 import cparser
 import config
-import dissector
 
 
 class Cli:

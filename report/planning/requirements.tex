@@ -100,12 +100,16 @@ categories as for requirements priority:
 	FR4-A & Configuration must support valid ranges for struct members & L & L \\
 	FR4-B & Configuration must support integer members which represent enumerated named value or a bit string & M & L \\
 	FR4-C & Configuration must support custom handling of specific data types. E.g. a 'time\_t' may be interpreted to contain a unixtime value, and be displayed as a date & L & M \\
+	FR4-D & Configuration must support specifying the ID of dissectors & - & - \\
+	FR4-E & Configuration must support custom Lua files for specific protocols & - & - \\
 	\midrule
 	FR5 & A struct may have a header and/or trailer (other registered protocol). The configuration must support the use of integer members to indicate the number of other structs that will follow in the trailer & L & H \\
 	\midrule
 	FR6 & The dissectors must be able to handle binary input which size and endian depends on originating platform & M & \\
-	FR6-A & Flags must be specified for each platform & M & M \\
+	FR6-A & Flags must be specified in configuration for each platform & M & M \\
 	FR6-B & Flags within message headers should signal the platform & M & H \\
+	FR6-C & Generate dissectors which support both little and big endian platforms & - & - \\
+	FR6-D & Generate dissectors which support different sizes depending on platforms & - & - \\
 	\midrule
 	FR7 & The utility shall support parameters from command line & H & \\
 	FR7-A & Command line shall support parameters for c-header file & H & L \\

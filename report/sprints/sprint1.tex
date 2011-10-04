@@ -199,24 +199,93 @@ estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
 %----------------------
 \section{System Design}
 %----------------------
-This section introduces the design of the system modules implemented in the
-first sprint.
+This section introduces the design goals we decided on, the preliminary overall
+design, and the final system design after the first sprint. In
+\autoref{sec:sp1:impl} we describe how our implementation works and are to be
+used.
+
+\subsection{Design goals}
+%------------------------
+To help guide the design and the implementation we tried to follow the
+following goals:
+\begin{itemize}
+	\item Its better with a smart data structure surrounded by dumb code than
+		a dumb data structure and smart code!
+	\item Clear and clean separation of the front-end and the back-end so in the
+		future other parsers can be used to generate dissectors.
+	\item Try to be pythonic, follow
+		PEP8\footnote{Style Guide for Python Code: \url{http://www.python.org/dev/peps/pep-0008/}} and
+		PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}.
+	\item Now is better than never. Don't be afraid to write stupid or ugly
+		code, we can always fix it later.
+	\item The first version is never perfect, so don't wait until its perfect
+		before you commit. Commit often!
+\end{itemize}
+
+\subsection{Preliminary Design}
+%------------------------------
+The following is a description of the preliminary design we reached for out
+utility. We split our program into the several parts, described in the
+following paragraphs, their relationship is explained in
+\autoref{fig:sp1:design}.
+
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/design}
+	\caption{Overall design\label{fig:sp1:design}}
+\end{figure}
+
+\paragraph{Command line interface}
+The part which the user runs, should accept arguments which specifies which
+files to parse and config files to use. It should ask the configuration to
+parse config files, then ask the front-end to parse C files, and finally ask
+the back-end to generate Wireshark dissectors. It should accept some additional
+arguments like verbose, debug, nocpp and output options. If its provided with
+invalid arguments, it should print a message explaining the correct usage.
+
+\paragraph{Configuration}
+Configuration should parse config files and feed information to the other
+parts, or they should request informations when they need it. Need to consider
+the scope of configuration, does it refer to a specific struct, a specific
+input file, all structs or all instances of a specific type?
+
+\paragraph{Front-end}
+Front-end C parser should parse C files and look for struct definitions,
+which they will fill into some data-structures that the back-end will use.
+
+Should se pycparser and PLY libraries for parsing of C files. For C
+preprocessor use native programs on different platforms, or cpp.exe from
+pycparser for Windows. Also use fake libc include files, which comes with
+pycparser, to avoid having to import system header files. Should accept C
+header/code files and create an abstract syntax tree, which it then traverses
+to finds struct definitions and their members.
+
+\paragraph{Data Structures}
+The data structures should store the information the back-end needs to generate
+Wireshark dissectors. Should be focused on what data is needed to create
+Wireshark dissectors. Should support configuration modifying it. Should be
+smart, but not magic.
+
+\paragraph{Back-end}
+The back end should use information in the data structures to generate
+Wireshark dissectors written in Lua. Will evolve quite heavily when we add
+more features to it to fulfil the different functional requirements.
 
 \subsection{Utility}
 %-------------------
-Figure \ref{fig:sp1_class} illustrates the current class diagram for this
-sprint 1. The csjark module contains the main method of the utility and is
-responsible for running the program. The utility will typically start off by
-using cparser to parse the C header file given to the utility as a command line
-argument. cparser will then use the config module to ensure that the parsing is
-done correctly after the configuration, and then generate protocols and fields
-to be used in the csjark module. The csjark module then generates a wireshark
-dissector in Lua code by going through the protocols and fields generated
-earlier by the cparser module.
+Figure \ref{fig:sp1_class} illustrates the current class diagram for our
+utility after the end of the first sprint. The csjark module contains the main
+method of the utility and is responsible for running the program. The utility
+will typically start off by using cparser to parse the C header file given to
+the utility as a command line argument. cparser will then use the config module
+to ensure that the parsing is done correctly after the configuration, and then
+generate protocols and fields to be used in the csjark module. The csjark
+module then generates a Wireshark dissector in Lua code by going through the
+protocols and fields generated earlier by the cparser module.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
 	\center
-	\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s1.png}
+	\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s1}
 	\caption{Class Diagram\label{fig:sp1_class}}
 \end{figure}
 
@@ -224,6 +293,7 @@ earlier by the cparser module.
 %-----------------------
 \section{Implementation}
 %-----------------------
+\label{sec:sp1:impl}
 In this sprint we have created a very naive implementation of the utility. It
 supports the most basic types of C structs. In addition the utility supports
 some very basic configuration.
@@ -234,9 +304,9 @@ members of a struct, from a minimum to a maximum. In
 \autoref{fig:sp1:rangerule} you can see how Wireshark displays a member that
 has an invalid range. 
 
-\begin{figure}[ht]
+\begin{figure}[htb]
 	\center
-	\includegraphics[width=\textwidth]{./sprints/img/wireshark_outofrange.png}
+	\includegraphics[width=\textwidth]{./sprints/img/wireshark_outofrange}
 	\caption{Wireshark dissector\label{fig:sp1:rangerule}}
 \end{figure}
 
@@ -246,7 +316,7 @@ Wireshark dissector written in Lua. Below you can see a \autoref{fig:sp1:cmd}
 that illustrates how the program is run.
 
 \begin{figure}[ht]
-	\includegraphics[width=\textwidth]{./sprints/img/cmd_agetest_run.png}
+	\includegraphics[width=\textwidth]{./sprints/img/cmd_agetest_run}
 	\caption{Command line\label{fig:sp1:cmd}}
 \end{figure}
 
@@ -260,17 +330,15 @@ results.
 \subsection{Tests}
 %-----------------
 During the sprint the team executed a total of 7 tests with names as seen
-below.
-
-\noindent Tests executed:
+below. Tests executed:
 \begin{itemize}
-\item TID01 - Supporting parameters for c-header file. \autoref{tab:TID01}
-\item TID02 - Supporting basic data types. \autoref{tab:TID02}
-\item TID03 - Displaying simple structs. \autoref{tab:TID03}
-\item TID04 - Supporting c-header files with the \#include directive. \autoref{tab:TID04}
-\item TID05 - Supporting \#define and \#if. \autoref{tab:TID05}
-\item TID06 - Supporting configuration files. \autoref{tab:TID06}
-\item TID07 - Recognizing invalid values. \autoref{tab:TID07}
+	\item TID01 - Supporting parameters for c-header file. \autoref{tab:TID01}
+	\item TID02 - Supporting basic data types. \autoref{tab:TID02}
+	\item TID03 - Displaying simple structs. \autoref{tab:TID03}
+	\item TID04 - Supporting c-header files with the \#include directive. \autoref{tab:TID04}
+	\item TID05 - Supporting \#define and \#if. \autoref{tab:TID05}
+	\item TID06 - Supporting configuration files. \autoref{tab:TID06}
+	\item TID07 - Recognizing invalid values. \autoref{tab:TID07}
 \end{itemize}
 
 \subsection{Test Results}
@@ -392,11 +460,21 @@ core functionality in place it only took three lines of code to fix this issue.
 
 \subsection{Pre-sprint}
 %----------------------
-The customer had no objections to the contents of the first sprint, but was not completely satisfied with the feature descriptions. They thought that we should have much more implementation details for each requirement, and that each requirement should be properly broken down, also in the sense that implementation and design should be two separate tasks if design is necessary. Corollary to this, our work items were too big. They also suggested a proper finish condition for each work item.
+The customer had no objections to the contents of the first sprint, but was not
+completely satisfied with the feature descriptions. They thought that we should
+have much more implementation details for each requirement, and that each
+requirement should be properly broken down, also in the sense that
+implementation and design should be two separate tasks if design is necessary.
+Corollary to this, our work items were too big. They also suggested a proper
+finish condition for each work item.
 
 \subsection{Post-sprint}
 %-----------------------
-We presented the result from the sprint 1 for the customer and they were very happy with the result. They had some ideas for how we could make our configuration files more compact, but said that this was not really an important thing. Their other comments were mostly around what they wanted us to do for sprint 2 and how those features might be implemented.
+We presented the result from the sprint 1 for the customer and they were very
+happy with the result. They had some ideas for how we could make our
+configuration files more compact, but said that it was not really important.
+Their other comments were mostly around what they wanted us to do for sprint 2
+and how those features might be implemented.
 
 
 %--------------------------
@@ -406,19 +484,41 @@ This section contains the team evaluation of the first sprint.
 
 \subsection{Review}
 %------------------
-The first sprint is over and the team has implemented a working utility. During the sprint planning we decided which requirements from the product backlog that we were to fulfill during the first sprint. The product backlog contains a prioritized list of requirements. We decided to include the requirements that had the highest prioritization. These requirements were basic, but essential and therefore high prioritized.
+The first sprint is over and the team has implemented a working utility. During
+the sprint planning we decided which requirements from the product backlog that
+we were to fulfill during the first sprint. The product backlog contains a
+prioritized list of requirements. We decided to include the requirements that
+had the highest prioritization. These requirements were basic, but essential
+and therefore high prioritized.
    
-The lack of prior knowledge to scrum made planning and execution of the sprint complicated for the team. We did not agree within the team of how to do it, and wasted some time on discussion going back and forth. In the end we understood that we gave a too high level description of the requirements, and had to redo previous work. This was time consuming, stealing person-hours from other parts of the sprint.
+The lack of prior knowledge to scrum made planning and execution of the sprint
+complicated for the team. We did not agree within the team of how to do it, and
+wasted some time on discussion going back and forth. In the end we understood
+that we gave a too high level description of the requirements, and had to redo
+previous work. This was time consuming, stealing person-hours from other parts
+of the sprint.
 
-Each requirement is divided in four parts: design, implementation, testing and documentation. We currently have most of these parts covered, except documentation for all files and unit test for the dissector file. This work is postponed till the second sprint.
+Each requirement is divided in four parts: design, implementation, testing and
+documentation. We currently have most of these parts covered, except
+documentation for all files and unit test for the dissector file. This work is
+postponed till the second sprint.
 
-The first sprint resulted in a solid core for our project. The customer was happy with the first demo they got, the utility even run on Mac (which was overwhelming for Stig). We feel that we have a good start and are confident that we will be able to give the customer the product that they want in the end.
+The first sprint resulted in a solid core for our project. The customer was
+happy with the first demo they got, the utility even run on Mac (which was
+overwhelming for Stig). We feel that we have a good start and are confident
+that we will be able to give the customer the product that they want in the
+end.
 
-The burndown chart shows the progress during the first sprint. The team made an effort in making a correct estimation. This is reflected in the chart, as the estimated and actual hours are  following each other closely. At the end actual hours stops at 11 hours, which means we have some undone tasks. These are put back in the product backlog, and will probably be part of the next sprint. 
+The burndown chart, \autoref{fig:sp1:burndown}, shows the progress during
+the first sprint. The team made an effort in making a correct estimation. This
+is reflected in the chart, as the estimated and actual hours are  following
+each other closely. At the end actual hours stops at 11 hours, which means we
+have some undone tasks. These are put back in the product backlog, and will
+probably be part of the next sprint. 
 
 \begin{figure}[!htb]
-	\includegraphics[width=\textwidth]{./sprints/img/burndown_chart_s1.png}
-	\caption{Burndown chart\label{fig:sp1_burndown}}
+	\includegraphics[width=\textwidth]{./sprints/img/burndown_chart_s1}
+	\caption{Burndown chart\label{fig:sp1:burndown}}
 \end{figure}
 
 \subsection{Positive Experiences}
@@ -454,23 +554,42 @@ The burndown chart shows the progress during the first sprint. The team made an 
 Below there is listed planned actions for the following sprints.
 
 \subsubsection{Better sprint planning}
-In order to avoid having to redo much of the work because of incorrect/poorly sprint planning, we have decided to do this properly next time. We have learned what we need to have in place and how to document it from this sprint.
+In order to avoid having to redo much of the work because of incorrect/poorly
+sprint planning, we have decided to do this properly next time. We have learned
+what we need to have in place and how to document it from this sprint.
 
 \subsubsection{Design early in the sprint} 
-The design should be in place early in the sprint. This is related to better sprint planning, the planning should be so detailed/good that additional design is not necessary. This is important for understanding and being able to estimate hours and divide work.
+The design should be in place early in the sprint. This is related to better
+sprint planning, the planning should be so detailed/good that additional design
+is not necessary. This is important for understanding and being able to
+estimate hours and divide work.
 
 \subsubsection{Documenting in parallel while implementing}
-We suffered from the problem code first, then document. This is not a good practise in team divided work. We will try to do the documentation as we code.
-The documents for the project report also experienced a standstill while the team worked on implementation. Writing parts of sprint documentation while having the sprint is a much better way to work, then most part of the documentation is already done before the sprint evaluation.
+We suffered from the problem, code first then document. This is not a good
+practise in team divided work. We will try to do the documentation as we code.
+The documents for the project report also experienced a standstill while the
+team worked on implementation. Writing parts of sprint documentation while
+having the sprint is a much better way to work, then most part of the
+documentation is already done before the sprint evaluation.
 
 \subsubsection{Split coding and report writing between team members} 
-Not all the team members have to do coding. It is important to maintain a steady progress making the project report (which our grade evaluation is based on), while doing the implementation. Responsibilities for coding and report will be assigned next sprint. 
+Not all the team members have to do coding. It is important to maintain a
+steady progress making the project report (which our grade evaluation is based
+on), while doing the implementation. Responsibilities for coding and report
+will be assigned next sprint. 
 
 \subsection{Barriers}
 %--------------------
-Some of the team members has experience some technical difficulties with their Git client, and others had problems setting up PyCharm. Problems rose as we realized that there would be hard setting up the programs on different platforms (Windows and Mac).
+Some of the team members has experience some technical difficulties with their
+Git client, and others had problems setting up PyCharm. Problems rose as we
+realized that there would be hard setting up the programs on different
+platforms (Windows and Mac).
 
-We had problems with c parser library(pycparser), which did not support \_Bool type, specified in the C99 standard. A patch for this was written by Even, and was later included in the pycparser library. There was also problems with the testing framework(attest), this framework did not have support for Windows command line prompt, a patch was written and was later added to their library.
+We had problems with C parser library, pycparser, which did not support \_Bool
+type, specified in the C99 standard. A patch for this was written by Even, and
+was later included in the pycparser library. There was also problems with the
+testing framework, attest, this framework did not have support for Windows
+command line prompt, a patch was written and was later added to their library.
 
 Some team members had conflicting deadlines for deliveries in different courses.
 

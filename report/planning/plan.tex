@@ -87,14 +87,14 @@ project we are going to use Google Docs to collaborate on document drafts,
 and to share documents within the team and with the teams adviser.
 
 \subsubsection{\LaTeX}
-\LaTeX is a document markup language and document preparation system used to
+\LaTeX \,is a document markup language and document preparation system used to
 create reports, articles and books. It was chosen by the group for its 
 high quality typesetting which produces professional looking documents, and 
-because it is suitable for larger scientific reports. \LaTeX also provides
+because it is suitable for larger scientific reports. \LaTeX \,also provides
 automatic numbering of chapter and sections, automatic generation of table of
-contents, cross-referencing and bibliography management. Since \LaTeX files
+contents, cross-referencing and bibliography management. Since \LaTeX \,files
 are plain text files they are suitable for versioning with a version control
-system like Git. We will use \LaTeX to write the final project report, and we
+system like Git. We will use \LaTeX \,to write the final project report, and we
 have created a few templates for test plans and minutes.
 
 \subsubsection{Mailing list}
@@ -106,6 +106,15 @@ Since all team members have google accounts, we have created a google calendar
 to help schedule and keep track of meetings. A single calendar which all
 members can include in their own, prevents misunderstandings and duplication
 of work.
+
+\subsubsection{text2pcap}
+In this project text2cap is used to genereate capture files from ASCII hexdumps. Since the customer cannot give us capture files, we have to create the capture file. The capture files are important for testing the generated Lua-scripts.  When installing wireshark, the text2pcap tool is included. The input to the tool is a ASCII hexdump as a text-file, and the output will be a pcap-file. When running text2pcap, it is necessary to specifiy the protocol type. In this project the team uses ''-l 147'' as an option to text2pcap, which is a user defined link-layer type.
+
+\subsubsection{Hex editor}
+The team are using a hex editor to create input for text2pcap. To make it easier to write ASCII hexdumps, it is necessary to write them in a hex editor. HxD is a recommended hex editor for this project, since it is free and has the necessary functionality. HxD is only for Windows.
+
+\subsubsection{UML Tool}
+Lars writes this
 
 \subsection{Based on the planned effort}
 Calculations done by the course staff suggests that each student should use 325 person-hours distributed over 13 weeks. Our group, consisting of seven students, will have a total of 2275 person-hours to spend on the project. 

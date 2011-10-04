@@ -2,22 +2,39 @@
 \chapter{Sprint I}
 %=================
 
+
+%------------------------
 \section{Sprint planning}
 %------------------------
-In our first sprint we will implement basic and fundamental parts of the utility. Based on the pre-study, we have decided what preprocessor and parser to use, so the task is to make this work together and achieve the desired functionality.  
+In our first sprint we will implement basic and fundamental parts of the
+utility. Based on our preliminary studies, we have decided what preprocessor
+and parser to use, so the task is to make this work together and achieve the
+desired functionality.  
 
 \subsection{Duration}
-Sprint 1 started September 14th, and lasted until September 27th. To ensure an understanding between our developers and the customer, we will have weekly meetings to show what we have accomplished and discuss further development. 
+%--------------------
+Sprint 1 started September 14th, and lasted until September 27th. To avoid
+misunderstandings between our developers and the customer, we will have weekly
+meetings to show what we have accomplished and discuss further development. 
 
 \subsection{Sprint goal}
-The overall goal of the sprint 1 is to create a preliminary design and implement the core of the application. It will be possible to run it and generate the Lua script and therefore it can be used by Wireshark users. The first version will contain only the basic dissector generating features, i.e. parsing simple data structures. Also, some of the preprocessing capabilities will be implemented, such as handling \#include directives. Basic support for configuration will be added.
+%-----------------------
+The overall goal of the first sprint is to create a preliminary design and
+implement the core of the application. It will be possible to run it to
+generate Lua dissectors which can be used by Wireshark users. The first
+version will contain only the basic dissector generating features, i.e.
+parsing C structs with basic data types as members. Also, some of the
+preprocessing capabilities will be implemented, such as handling \#include
+directives. Basic support for configuration will be added.
 
 \subsection{Back log}
-The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}-\ref{tab:sp1_req2d}  list each requirement with a time estimate.\\
-\autoref{tab:sprint1req} is the sprint backlog for the first phase. \\
-\autoref{tab:sprint1time} is the time table for the first phase. \\
+The first sprint we will implement eight requirements. Table
+\ref{tab:sp1_req7a}-\ref{tab:sp1_req2d}  list each requirement with a time
+estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
+\autoref{tab:sprint1time} is the time table for the first phase.
+
 \begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR7-A} \label{tab:sp1_req7a}
+\caption{Sprint 1 Requirement FR7-A\label{tab:sp1_req7a}}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -31,7 +48,7 @@ The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}
 \end{table}
 
 \begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR1-A} \label{tab:sp1_req1a}
+\caption{Sprint 1 Requirement FR1-A\label{tab:sp1_req1a}}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -45,7 +62,7 @@ The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}
 \end{table}
 
 \begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR2-A} \label{tab:sp1_req2a}
+\caption{Sprint 1 Requirement FR2-A\label{tab:sp1_req2a}}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -59,7 +76,7 @@ The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}
 \end{table}
 
 \begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR3-A} \label{tab:sp1_req3a}
+\caption{Sprint 1 Requirement FR3-A\label{tab:sp1_req3a}}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -73,7 +90,7 @@ The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}
 \end{table}
 
 \begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR3-B} \label{tab:sp1_req3b}
+\caption{Sprint 1 Requirement FR3-B\label{tab:sp1_req3b}}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -87,7 +104,7 @@ The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}
 \end{table}
 
 \begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR7-B} \label{tab:sp1_req7b}
+\caption{Sprint 1 Requirement FR7-B\label{tab:sp1_req7b}}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -101,7 +118,7 @@ The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}
 \end{table}
 
 \begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR4-A}\label{tab:sp1_req4a}
+\caption{Sprint 1 Requirement FR4-A\label{tab:sp1_req4a}}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -115,7 +132,7 @@ The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}
 \end{table}
 
 \begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR2-D} \label{tab:sp1_req2d}
+\caption{Sprint 1 Requirement FR2-D\label{tab:sp1_req2d}}
 \begin{tabular}{l l c}
 	\toprule
 	Requirement & Task & Hours \\
@@ -129,7 +146,7 @@ The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}
 \end{table}
 
 \begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirements \label{tab:sprint1req}}
+\caption{Sprint 1 Requirements\label{tab:sprint1req}}
 \begin{tabularx}{\textwidth}{l l X c c}
 	\toprule
 	& & & \multicolumn{2}{c}{Hours} \\
@@ -176,56 +193,80 @@ The first sprint we will implement eight requirements. Table \ref{tab:sp1_req7a}
 	Total: & 160 & 91\\
 	\bottomrule
 \end{tabularx}
-\end{table} 
+\end{table}
 
+
+%----------------------
 \section{System Design}
 %----------------------
-This section introduces the design of the system modules implemented in sprint 1
+This section introduces the design of the system modules implemented in the
+first sprint.
 
 \subsection{Utility}
-Figure \ref{fig:sp1_class} illustrates the current class diagram for this sprint 1. The CSjark module contains the main method of the utility and is responsible for running the program. The utility will typically start off by using cparser to parse the c-header file given to the utility as a command line argument. Cparser will then use the config module to ensure that the parsing is done correctly after the configuration, and then generate protocols and fields to be used in the CSjark module. The CSjark module then generates a wireshark dissector in LUA code by going through the protocols and fields generated earlier by the cparser module. 
+%-------------------
+Figure \ref{fig:sp1_class} illustrates the current class diagram for this
+sprint 1. The csjark module contains the main method of the utility and is
+responsible for running the program. The utility will typically start off by
+using cparser to parse the C header file given to the utility as a command line
+argument. cparser will then use the config module to ensure that the parsing is
+done correctly after the configuration, and then generate protocols and fields
+to be used in the csjark module. The csjark module then generates a wireshark
+dissector in Lua code by going through the protocols and fields generated
+earlier by the cparser module.
 
 \begin{figure}[!ht]
-\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s1.png}
-\caption{Class Diagram}
-\label{fig:sp1_class}
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s1.png}
+	\caption{Class Diagram\label{fig:sp1_class}}
 \end{figure}
 
+
+%-----------------------
 \section{Implementation}
 %-----------------------
-In this sprint we have created a very naive implementation of the utility. It supports the most basic types of C-structs. In addition the utility supports some basic configuration.
+In this sprint we have created a very naive implementation of the utility. It
+supports the most basic types of C structs. In addition the utility supports
+some very basic configuration.
 
-We have decided to use YAML as our configuration format. In this sprint we have added support for range specification.
-A user can specify the ranges of the members of a struct, from a minimum to a maximum.
-In figure \ref{fig:dissector_screenshot} below you can see how Wireshark displays a member that has an invalid range. 
-
-\begin{figure}[ht]
-\includegraphics[width=\textwidth]{./sprints/img/wireshark_outofrange.png}
-\caption{Wireshark dissector}
-\label{fig:dissector_screenshot}
-\end{figure}	
-
-The tool uses a command line interface. The user inputs a header-file and optionally a configuration file to the command line, and the program outputs a Lua-script.  Below you can see a figure \ref{fig:cmd_screenshot} that illustrates how the program is run.
+We have decided to use YAML as our configuration format. In this sprint we have
+added support for range specification. A user can specify the ranges of the
+members of a struct, from a minimum to a maximum. In
+\autoref{fig:sp1:rangerule} you can see how Wireshark displays a member that
+has an invalid range. 
 
 \begin{figure}[ht]
-\includegraphics[width=\textwidth]{./sprints/img/cmd_agetest_run.png}
-\caption{Command line}
-\label{fig:cmd_screenshot}
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/wireshark_outofrange.png}
+	\caption{Wireshark dissector\label{fig:sp1:rangerule}}
 \end{figure}
 
+The tool uses a command line interface. The user inputs a C header file and
+an optional configuration file to the command line, and the program outputs a
+Wireshark dissector written in Lua. Below you can see a \autoref{fig:sp1:cmd}
+that illustrates how the program is run.
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{./sprints/img/cmd_agetest_run.png}
+	\caption{Command line\label{fig:sp1:cmd}}
+\end{figure}
+
+
+%-----------------------
 \section{Sprint Testing}
 %-----------------------
-This section introduces the tests preformed during the sprint and their results
+This section introduces the tests preformed during the sprint and their
+results.
 
 \subsection{Tests}
-During the sprint the team executed a total of 7 tests with names as seen below
+%-----------------
+During the sprint the team executed a total of 7 tests with names as seen
+below.
 
 \noindent Tests executed:
-
 \begin{itemize}
 \item TID01 - Supporting parameters for c-header file. \autoref{tab:TID01}
 \item TID02 - Supporting basic data types. \autoref{tab:TID02}
-\item TID03 -  Displaying simple structs. \autoref{tab:TID03}
+\item TID03 - Displaying simple structs. \autoref{tab:TID03}
 \item TID04 - Supporting c-header files with the \#include directive. \autoref{tab:TID04}
 \item TID05 - Supporting \#define and \#if. \autoref{tab:TID05}
 \item TID06 - Supporting configuration files. \autoref{tab:TID06}
@@ -233,8 +274,9 @@ During the sprint the team executed a total of 7 tests with names as seen below
 \end{itemize}
 
 \subsection{Test Results}
+%------------------------
 The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
-\begin{table}[!ht] \footnotesize \center
+\begin{table}[!htb] \footnotesize \center
 \caption{Supporting parameters for c-header file \label{tab:sp1_tid01}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
@@ -249,7 +291,7 @@ The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
 \end{tabularx}}
 \end{table}
 
-\begin{table}[!ht] \footnotesize \center
+\begin{table}[!htb] \footnotesize \center
 \caption{Supporting basic data types \label{tab:sp1_tid02}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
@@ -264,7 +306,7 @@ The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
 \end{tabularx}}
 \end{table}
 
-\begin{table}[!ht] \footnotesize \center
+\begin{table}[!htb] \footnotesize \center
 \caption{Displaying simple structs  \label{tab:sp1_tid03}}
 \begin{tabular}{l l}
 	\toprule
@@ -278,7 +320,7 @@ The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
 \end{tabular}
 \end{table}
 
-\begin{table}[!ht] \footnotesize \center
+\begin{table}[!htb] \footnotesize \center
 \caption{Supporting c-header files with the \#include directive \label{tab:sp1_tid04}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
@@ -293,7 +335,7 @@ The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
 \end{tabularx}}
 \end{table}
 
-\begin{table}[!ht] \footnotesize \center
+\begin{table}[!htb] \footnotesize \center
 \caption{Supporting \#define and \#if \label{tab:sp1_tid05}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
@@ -308,7 +350,7 @@ The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
 \end{tabularx}}
 \end{table}
 
-\begin{table}[!ht] \footnotesize \center
+\begin{table}[!htb] \footnotesize \center
 \caption{Supporting configuration files \label{tab:sp1_tid06}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
@@ -323,7 +365,7 @@ The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
 \end{tabularx}}
 \end{table}
 
-\begin{table}[!ht] \footnotesize \center
+\begin{table}[!htb] \footnotesize \center
 \caption{Recognizing invalid values \label{tab:sp1_tid07}}
 \begin{tabular}{l l}
 	\toprule
@@ -338,21 +380,32 @@ The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
 \end{table}
 
 \subsection{Test Evaluation}
-Most of our tests failed because the developers had forgotten to implement usability features presenting the user with any textual information. Even so, with all the core functionality in place it didn't take the developers much time to fix these errors.
+%---------------------------
+Most of our tests failed because the developers had forgotten to implement
+usability features presenting the user with any textual information. With all
+core functionality in place it only took three lines of code to fix this issue.
 
+
+%--------------------------
 \section{Customer Feedback}
 %--------------------------
 
 \subsection{Pre-sprint}
+%----------------------
 The customer had no objections to the contents of the first sprint, but was not completely satisfied with the feature descriptions. They thought that we should have much more implementation details for each requirement, and that each requirement should be properly broken down, also in the sense that implementation and design should be two separate tasks if design is necessary. Corollary to this, our work items were too big. They also suggested a proper finish condition for each work item.
 
 \subsection{Post-sprint}
+%-----------------------
 We presented the result from the sprint 1 for the customer and they were very happy with the result. They had some ideas for how we could make our configuration files more compact, but said that this was not really an important thing. Their other comments were mostly around what they wanted us to do for sprint 2 and how those features might be implemented.
 
+
+%--------------------------
 \section{Sprint Evaluation}
 %--------------------------
-This section contains the team evaulation of the first sprint.
+This section contains the team evaluation of the first sprint.
+
 \subsection{Review}
+%------------------
 The first sprint is over and the team has implemented a working utility. During the sprint planning we decided which requirements from the product backlog that we were to fulfill during the first sprint. The product backlog contains a prioritized list of requirements. We decided to include the requirements that had the highest prioritization. These requirements were basic, but essential and therefore high prioritized.
    
 The lack of prior knowledge to scrum made planning and execution of the sprint complicated for the team. We did not agree within the team of how to do it, and wasted some time on discussion going back and forth. In the end we understood that we gave a too high level description of the requirements, and had to redo previous work. This was time consuming, stealing person-hours from other parts of the sprint.
@@ -363,13 +416,13 @@ The first sprint resulted in a solid core for our project. The customer was happ
 
 The burndown chart shows the progress during the first sprint. The team made an effort in making a correct estimation. This is reflected in the chart, as the estimated and actual hours are  following each other closely. At the end actual hours stops at 11 hours, which means we have some undone tasks. These are put back in the product backlog, and will probably be part of the next sprint. 
 
-\begin{figure}[!ht]
-\includegraphics[width=\textwidth]{./sprints/img/burndown_chart_s1.png}
-\caption{Burndown chart}
-\label{fig:sp1_burndown}
+\begin{figure}[!htb]
+	\includegraphics[width=\textwidth]{./sprints/img/burndown_chart_s1.png}
+	\caption{Burndown chart\label{fig:sp1_burndown}}
 \end{figure}
 
 \subsection{Positive Experiences}
+%--------------------------------
 \begin{itemize}
 	\item Good customer communication and relation from the beginning
 	\item Implementation was easy
@@ -381,7 +434,9 @@ The burndown chart shows the progress during the first sprint. The team made an 
 	\item Errors and bugs were detected and corrected swiftly and with relative ease
 	\item The team functioned well, with sufficient discussions and conflicts
 \end{itemize}
+
 \subsection{Negative Experiences}
+%--------------------------------
 \begin{itemize}
 	\item Hard for the team members to “give” 25 person-hours each week
 	\begin{itemize}
@@ -393,7 +448,9 @@ The burndown chart shows the progress during the first sprint. The team made an 
 	\item We did not document the process and work during the first sprint well enough, which was a burden at the end of the sprint
 	\item We did perhaps not understand scrum properly, which resulted in extra work
 \end{itemize}
+
 \subsection{Planned Actions}
+%---------------------------
 Below there is listed planned actions for the following sprints.
 
 \subsubsection{Better sprint planning}
@@ -410,8 +467,10 @@ The documents for the project report also experienced a standstill while the tea
 Not all the team members have to do coding. It is important to maintain a steady progress making the project report (which our grade evaluation is based on), while doing the implementation. Responsibilities for coding and report will be assigned next sprint. 
 
 \subsection{Barriers}
+%--------------------
 Some of the team members has experience some technical difficulties with their Git client, and others had problems setting up PyCharm. Problems rose as we realized that there would be hard setting up the programs on different platforms (Windows and Mac).
 
 We had problems with c parser library(pycparser), which did not support \_Bool type, specified in the C99 standard. A patch for this was written by Even, and was later included in the pycparser library. There was also problems with the testing framework(attest), this framework did not have support for Windows command line prompt, a patch was written and was later added to their library.
 
-Some team members had conflicting deadlines for deliveries in different courses.  
+Some team members had conflicting deadlines for deliveries in different courses.
+

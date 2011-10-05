@@ -166,27 +166,31 @@ context is the users of the dissectors.
 	User Story:		& As a developer I want to generate a Lua-script from command-line from a C header file with a struct using basic C data types, so I get a dissector for Wireshark \\
 	\midrule
 	ID:			& US02 \\
-	Requirements:	& FR1-A: The utility must support the following basic data types: int, float, char and boolean. \\
+	Requirements:	& FR1-A: The utility should support the following basic data types: int, float, char and boolean. \\
 	User Story:		& As an administrator,, I want to use the dissector for simple structs in Wireshark, so that I can display structs without binary representation. \\
 	\midrule
 	ID:			& US03 \\
-	Requirements:	& FR3-A: The utility shall support #include.\\
+	Requirements:	& FR3-A: The utility should support #include.\\
 	User Story:		& As a developer, I want to configure allowed ranges for struct members, so that I can display invalid values in the dissector. \\
 	\midrule
 	ID:			& US04 \\
-	Requirements:	& FR3-B: The utility shall support #define and #if. \\
+	Requirements:	& FR3-B: The utility should support #define and #if. \\
 	User Story:		& As an administrator, I want to see invalid struct values in wireshark, so that I easier can easier can recognize invalid values. \\
 	\midrule
 	ID:			& US05 \\
-	Requirements:	&  FR01C, FR03A \\
+	Requirements:	&  FR2-D: Recognize invalid values for a struct member. \\
 	User Story:		& As a developer, I want to support structs with structs, so that I can generate dissector for Wireshark \\
 	\midrule
 	ID:			& US06 \\
-	Requirements:	& FR02B \\
+	Requirements:	& FR4-A: Configuration must support valid ranges for struct members. \\
 	User Story:		&  As an administrator, I want to use the dissector for structs with other structs in Wireshark, so that I can display structs without binary representation. \\
 	\midrule
 	ID:			& US07 \\
-	Requirements:	&  FR02C \\
+	Requirements:	&  FR7-B: Command line shall have support for configuration file(s). \\
+	User Story:		&  As an administrator, I want to use Wireshark built-in filter and search, so that I easier can find attributes. \\
+	\midrule
+	ID:			& US08 \\
+	Requirements:	&  FR2-A: The utility shall be able to display simple structs. \\
 	User Story:		&  As an administrator, I want to use Wireshark built-in filter and search, so that I easier can find attributes. \\
 	\bottomrule
 \end{tabularx}}

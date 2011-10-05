@@ -61,6 +61,7 @@ The pipe and filter architectural pattern consists of a stream of data which is 
 \end{figure}
 
 \section{Architectural Views}
+This section describes three different views: Logival view, process view and deployment view.
 
 \subsection{Logical View}
 This view shown in \autoref{fig:logicalview}. Command line takes the arguments for header file and configuration file as a string. The arguments are parsed in the command line parser. Header file is sent to ''C preprocessor \& C parser", the c header file is loaded and parsed by the c parser, and generate a parsing tree. Command line also call Configuration, which load the configuration file. The configuration will parse the configuration file and create configuation rules. The Lua script generator will generate a Lua script from the parseing tree and the config rules.
@@ -78,6 +79,7 @@ This view shown in \autoref{fig:logicalview}. Command line takes the arguments f
 \includegraphics[width=\textwidth]{./planning/img/SequenceDiagram.png}
 \caption{Data flow during regular execution}
 \label{fig:processview}
+\end{figure}
 
 \section{Deployment View}
 \autoref{fig:deployment} shows the deployment diagram for this project. Csjark takes header- and config-files as input, and generates Lua-scripts. The Lua-scripts are used for dissectors in Wireshark.

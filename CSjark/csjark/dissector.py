@@ -48,7 +48,7 @@ class RangeField(Field):
         data.append(t.format(**args))
 
         # Test the value
-        def create_test(var, value, test, warn):
+        def create_test(value, test, warn):
             type_ = self.type
             if type_[-2:] in ('16', '32'):
                 type_ = type_[:-2]
@@ -60,9 +60,9 @@ class RangeField(Field):
             data.append('\tend')
 
         if self.min is not None:
-            create_test('%s_min' % self.name, self.min, '>', 'larger than')
+            create_test(self.min, '>', 'larger than')
         if self.max is not None:
-            create_test('%s_max' % self.name, self.max, '<', 'smaller than')
+            create_test(self.max, '<', 'smaller than')
 
         return '\n'.join(data)
 
@@ -70,7 +70,7 @@ class RangeField(Field):
 class Protocol:
     counter = 0
 
-    def __init__(self, name, id=None):
+    def __init__(self, name, id=None, description=None):
         self.name = name
 
         if id is None:
@@ -78,6 +78,11 @@ class Protocol:
             self.id = Protocol.counter
         else:
             self.id = id
+
+        if description is None:
+            self.description = 'struct %s' % self.name
+        else:
+            self.description = description
 
         self.fields = []
         self.data = []
@@ -91,10 +96,11 @@ class Protocol:
         self.fields.append(field)
 
     def _header_defintion(self):
-        proto = 'local {var} = Proto("{name}", "struct {name}")'
+        proto = 'local {var} = Proto("{name}", "{description}")'
         table = 'local luastructs_dt = DissectorTable.get("{dissector}")'
 
-        self.data.append(proto.format(var=self.var, name=self.name))
+        self.data.append(proto.format(var=self.var,
+                         name=self.name, description=self.description))
         self.data.append(table.format(dissector=self.dissector))
         self.data.append('')
 

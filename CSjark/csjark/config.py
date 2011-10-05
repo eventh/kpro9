@@ -19,6 +19,8 @@ class StructConfig:
         StructConfig.configs[name] = self
 
         self.name = name
+        self.id = None
+        self.description = None
         self.members = {}
         self.types = {}
 
@@ -43,6 +45,20 @@ class StructConfig:
             return cls(name)
         else:
             return cls.configs[name]
+
+
+class StructRule:
+    def __init__(self, obj):
+        self.name = obj['name']
+        conf = StructConfig.find(self.name)
+
+        # Structs ID
+        self.id = obj['id']
+        conf.id = self.id
+
+        # Structs optional description
+        self.description = obj['description']
+        conf.description = self.description
 
 
 class RangeRule:
@@ -78,8 +94,15 @@ def parse_file(filename, only_text=None):
     else:
         with open(filename, 'r') as f:
             obj = yaml.safe_load(f)
+    print(obj)
+
+    # Deal with struct rules
+    if 'Structs' in obj:
+        for rule in obj['Structs']:
+            StructRule(rule)
 
     # Deal with range rules
-    for rule in obj['RangeRules']:
-        RangeRule(rule)
+    if 'RangeRules' in obj:
+        for rule in obj['RangeRules']:
+            RangeRule(rule)
 

@@ -1,4 +1,4 @@
-local proto_age_test = Proto("age_test", "struct age_test")
+local proto_age_test = Proto("age_test", "a struct with an age in it!")
 local luastructs_dt = DissectorTable.get("luastructs.message")
 
 local f = proto_age_test.fields

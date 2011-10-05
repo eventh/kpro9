@@ -82,11 +82,14 @@ class StructVisitor(c_ast.NodeVisitor):
         if not node.name:
             return
 
-        # Create the protocol for the struct
-        proto = Protocol(node.name)
-
         # Find config rules
         conf = StructConfig.configs.get(node.name, None)
+
+        # Create the protocol for the struct
+        if conf:
+            proto = Protocol(node.name, conf.id, conf.description)
+        else:
+            proto = Protocol(node.name)
 
         # Find the member definitions
         for decl in node.children():

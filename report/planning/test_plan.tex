@@ -9,19 +9,26 @@ a list of specific component-behaviors.The tests will be based on functional as
 well as non-functional requirements, deterring architectural drift and
 enforcing our design plans for the system.
 
+
+%----------------------------
 \section{Methods for testing}
-%--------------------------------
+%----------------------------
 When it comes to software testing, we have 2 different types of tests available, namely Black box and white box tests. This section is dedicated to the discussion of these 2 testing methodologies.
 
+
+%--------------------------
 \section{White box testing}
-%----------------------------
+%--------------------------
 White box testing is a method of software testing where you test internal structures or modules of an application, as opposed to its functions. White box testing requires the tester to have an internal perspective of the system, as well as sufficent programming skills. As the utility was required to be able to function with a lot of different input, as well as being used as a debugging tool itself, we chose to have every developer on the team write unit tests for their own code, and then have someone else on the team do the testing of their code in order to ensure correctness.
 
+
+%--------------------------
 \section{Black box testing}
-%----------------------------
+%--------------------------
 Black box testing is a method of software testing where you test the functionality of a system, as opposed to its internal structures. Black box testing does in general not require the tester to have any intimate knowledge about the system or any of the programming logic that went into making it. Black box test cases are built around the specifications and requirements of a system, i.e its functional and in some cases non-functional requirements. The team decided to use black box testing for both the functional and non-functional requirements of the utility, as the customer had already expressed thoughts on extending and understanding the non-functional parts of the utility themselves. 
 
 
+%------------------------------
 \section{Templates for testing}
 %------------------------------
 \autoref{tab:testcase} and \autoref{tab:testreport} are templates we'll be
@@ -35,7 +42,7 @@ The following table shows the template for each test case. All of the tests writ
 \caption{Test case template \label{tab:testcase}}
 \begin{tabular}{l l}
 	\toprule
-	Portion & Description \\
+	Header & Description \\
 	\midrule
 	Description & Description of requirement \\
 	Tester & Team member responsible for the test \\
@@ -53,7 +60,7 @@ The following table shows the template for reporting the result of each test cas
 \caption{Test report template \label{tab:testreport}}
 \begin{tabular}{l l}
 	\toprule
-	Portion & Description \\
+	Header & Description \\
 	\midrule
 	Description & Description of requirement \\
 	Tester & Team member responsible for the test \\
@@ -63,12 +70,15 @@ The following table shows the template for reporting the result of each test cas
 \end{tabular}
 \end{table}
 
+
+%-----------------------
 \section{Test Criterias}
-%--------------------------------
+%-----------------------
 An item will be considered to have passed a test if the actual result from the test matches the expected result from the test. An item will be considered to have failed the test if the output varies from the expected result. If there are any specifics as to why the test passed/failed which needs to be discussed, they will be listed as a comment to the result
 
-\section{Testing Responsibilities}
-%--------------------------------
-Each group member are responsible for writing their own unit tests while the test leader is responsible for the quality of the test plan and the tests. The tests will mainly not be executed by the same developers who wrote the code that is to undergo testing, but by others in the testing group with as little ownership of the code as possible. 
 
+%---------------------------------
+\section{Testing Responsibilities}
+%---------------------------------
+Each group member are responsible for writing their own unit tests while the test leader is responsible for the quality of the test plan and the tests. The tests will mainly not be executed by the same developers who wrote the code that is to undergo testing, but by others in the testing group with as little ownership of the code as possible. 
 

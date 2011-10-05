@@ -1,0 +1,162 @@
+%==============
+\chapter{Test Cases}
+%==============
+
+
+%-----------------------
+\section{Sprint 1 Tests}
+%-----------------------
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID01}\label{tab:TID01}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting parameters for c-header file \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The program has to have been compiled on the system \\
+	Feature & Test that we are able to feed the solution with a c-header file and have it get dissected \\
+	\addlinespace
+	\multirow{3}{*}{Execution} & 1. Start the program \\
+	& 2. Write the name of the c-header file in the command line \\
+	& 3. Read the output given by the program \\
+	\addlinespace
+	\multirow{2}{*}{Expected result} & 1. The program should start up without any errors and present the user with a command line interface \\
+	& 3. The user should be presented with some text expressing the success of the LUA-file generation \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID02}\label{tab:TID02}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting basic data types \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The program has to have been started \\
+	Feature & Test that our utility will be able to make a dissectors for C-header files including the following basic data types: int, float, char and boolean \\
+	\addlinespace
+	\multirow{2}{*}{Execution} & 1. Write the name of a c-header file which includes the aforementioned basic data types \\
+	& 2. Read the output given by the program \\ 
+	\addlinespace
+	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID03}\label{tab:TID03}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Displaying simple structs \\
+	Tester & Team member responsible for the test \\
+	Prerequisites & The utility has already made a dissector \\
+	Feature & Test that our utility is able to generate dissectors that displays simple structs \\
+	\addlinespace
+	\multirow{3}{*}{Execution} & 1. Open wireshark and run the dissector \\
+	& 2. Run the dissector on some captured data of simple structs \\
+	& 3. Read the output \\
+	\addlinespace
+	\multirow{2}{*}{Expected result} & 1. Wireshark should be able to load the dissector without any errors \\
+	& 3. Wireshark should display the data inside the structs sent in the capture data \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID04}\label{tab:TID04}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting \#include \\
+	Tester & Team member responsible for the test \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that our utility supports c-header files with the \#include directive \\
+	\addlinespace
+	\multirow{2}{*}{Execution} & 1. Write the name of a C-header file with an \#include directive \\
+	& 2. Read the output \\
+	\addlinespace
+	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID05}\label{tab:TID05}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting \#define and \#if \\
+	Tester & Team member responsible for the test \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that our utility supports c-header files with \#define and \#if directives \\
+	\addlinespace
+	\multirow{2}{*}{Execution} & 1. Write the name of a C-header file with a \#define and \#if directives \\
+	& 2. Read the output \\
+	\addlinespace
+	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID06}\label{tab:TID06}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting configuration files \\
+	Tester & Team member responsible for the test \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that our utility supports reading data from a configuration file \\
+	\addlinespace
+	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a config file \\
+	\addlinespace
+	& 2. Read the output \\
+	\addlinespace
+	Expected result & 2. The program should provide the user with some text expressing either the success of reading the file, or the failure of reading the file due to any errors in the config-file itself\\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID07}\label{tab:TID07}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Recognizing invalid values \\
+	Tester & Team member responsible for the test \\
+	Prerequisites & The utility must have already loaded a configuration file and generated a dissector for a given header file\\
+	Feature & Test that our utility recognizes invalid values for struct members specified in the config file. \\
+	\addlinespace
+	\multirow{3}{*}{Execution} & 1. Feed the utility with the name of a header and a config-file, where the config file sets restrictions on the members of the header file. \\
+	\addlinespace
+	& 2. Use the resulting dissector on some capture data for wireshark that contains struct members with invalid values. \\
+	\addlinespace
+	& 3. Read the displayed data generated by wireshark \\
+	\addlinespace
+	Expected result & 3. Wireshark should display the struct members with invalid values as invalid \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+
+%-----------------------
+\section{Sprint 2 Tests}
+%-----------------------
+

@@ -6,6 +6,8 @@
 *.out
 *.class
 *.synctex.gz
+*.bbl
+*.blg
 *.pdf
 *.swp
 *.coverage

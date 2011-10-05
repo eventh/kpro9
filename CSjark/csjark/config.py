@@ -1,7 +1,8 @@
 """
 A module for configuration of our utility.
 
-Should parse config files and create which the parser can use.
+Should parse config files and create data structures which the parser can
+use when translating C struct definitions to Wireshark protocols and fields.
 """
 import yaml
 
@@ -48,6 +49,8 @@ class StructConfig:
 
 
 class StructRule:
+    """Rule for specifying attributes on structs."""
+
     def __init__(self, obj):
         self.name = obj['name']
         conf = StructConfig.find(self.name)
@@ -62,6 +65,8 @@ class StructRule:
 
 
 class RangeRule:
+    """Rule for specifying a valid range for a struct member or type."""
+
     def __init__(self, obj):
         self.struct = obj['struct']
         conf = StructConfig.find(self.struct)

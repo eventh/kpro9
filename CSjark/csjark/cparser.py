@@ -6,6 +6,7 @@ Requires PLY and pycparser.
 """
 import sys
 import os
+from collections import OrderedDict
 
 import pycparser
 from pycparser import c_ast, c_parser, plyparser
@@ -64,14 +65,14 @@ def find_structs(ast):
     """Walks the AST nodes to find structs."""
     visitor = StructVisitor()
     visitor.visit(ast)
-    return visitor.structs
+    return list(visitor.structs.values())
 
 
 class StructVisitor(c_ast.NodeVisitor):
     """A class which visit struct nodes in the AST."""
 
     def __init__(self):
-        self.structs = [] # All structs encountered in this AST
+        self.structs = OrderedDict() # All structs encountered in this AST
 
     def visit_Struct(self, node):
         """Visit a Struct node in the AST."""
@@ -81,6 +82,11 @@ class StructVisitor(c_ast.NodeVisitor):
         # No support for typedef structs yet!
         if not node.name:
             return
+
+        # Disallow structs with same name
+        if node.name in self.structs:
+            # TODO print the location of the struct, file and line no.
+            raise ParseError('Two structs with same name: %s' % node.name)
 
         # Find config rules
         conf = StructConfig.configs.get(node.name, None)
@@ -102,11 +108,11 @@ class StructVisitor(c_ast.NodeVisitor):
             elif isinstance(child, c_ast.PtrDecl):
                 self.handle_ptr_decl(child, proto, conf)
             else:
-                raise ParseError("Unknown struct member: %s" % repr(child))
+                raise ParseError('Unknown struct member: %s' % repr(child))
 
         # Don't add protocols with no fields? Sounds reasonably
         if proto.fields:
-            self.structs.append(proto)
+            self.structs[node.name] = proto
 
     def handle_type_decl(self, node, proto, conf):
         """Find member details in a type declaration."""
@@ -120,7 +126,7 @@ class StructVisitor(c_ast.NodeVisitor):
         elif isinstance(child, c_ast.Struct):
             ctype = "struct"
         else:
-            raise ParseError("Unknown type declaration: %s" % repr(child))
+            raise ParseError('Unknown type declaration: %s' % repr(child))
         create_field(proto, conf, node.declname, ctype)
 
     def handle_array_decl(self, node, proto, conf):

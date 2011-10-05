@@ -21,7 +21,7 @@ Testability is important since the utility will be used for debugging by the cus
 %-------------------------------
 The goal of using testability tactics is making it easier to test the system after finishing an increment of the software development. 
 
-\subsubsection{Specialize access routes/interfaces}
+\subsubsection{Specialize Access Routes/Interfaces}
 Using a specialized testing interface makes it possible to specify values for a component independently from its normal execution. This will in turn make it possible to test parts of an unfinished module as well as making it easier to get a clear overview over what data is flowing through individual parts of the system.
 
 \subsection{Modifiability Tactics}
@@ -84,7 +84,7 @@ This view shown in \autoref{fig:logicalview}. Command line takes the arguments f
 
 
 %---------------------
-\section{Process View}
+\subsection{Process View}
 %---------------------
 \autoref{fig:processview} shows the process view for our utility. Csjark takes header and config files as input and then uses the config and cparser to parse the files. CSjark then uses the cparser to find the structs in the header file and then creates dissectors for them. These dissectors are then written to a file and CSjark then reports to the user by sending a message to the command line.
 
@@ -95,7 +95,7 @@ This view shown in \autoref{fig:logicalview}. Command line takes the arguments f
 
 
 %------------------------
-\section{Deployment View}
+\subsection{Deployment View}
 %------------------------
 \autoref{fig:deployment} shows the deployment diagram for this project. Csjark takes header- and config-files as input, and generates Lua-scripts. The Lua-scripts are used for dissectors in Wireshark.
 

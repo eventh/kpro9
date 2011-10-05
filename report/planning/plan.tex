@@ -54,8 +54,13 @@ To support collaboration and project management the team has considered and
 selected the listed tools for use in this project.
 
 \subsubsection{Git \& Github}
-The team has selected Git as the version control system, hosted at
-Github.com.
+\begin{wrapfigure}{r}{3.5cm}
+	\vspace{-20pt}
+	\includegraphics[width=3.5cm]{./planning/img/git_logo}
+	\vspace{-20pt}
+\end{wrapfigure}
+The team has selected Git as the version control system, with git repository
+hosting provided by Github\footnote{\url{http://github.com/}}.
 
 We had experience with CVS, SVN, Git and Mercurial, and although everyone 
 knew SVN and only two knew Git, we selected Git for this project. We 
@@ -67,6 +72,11 @@ sourceforge.net because their focus is divided between software users and
 developers, while the other two sites are fully focused on developers. The 
 two remaining sites provides almost identical features, where one focuses on 
 Git and the other on Mercurial.
+\begin{wrapfigure}{r}{3cm}
+	\vspace{-20pt}
+	\includegraphics[width=3cm]{./planning/img/github_logo}
+	\vspace{-20pt}
+\end{wrapfigure}
 
 Github with Git version control system was selected because more team members
 knew Git than Mercurial. By selecting a newer version control system like Git,
@@ -87,14 +97,14 @@ project we are going to use Google Docs to collaborate on document drafts,
 and to share documents within the team and with the teams adviser.
 
 \subsubsection{\LaTeX}
-\LaTeX is a document markup language and document preparation system used to
+\LaTeX \,is a document markup language and document preparation system used to
 create reports, articles and books. It was chosen by the group for its 
 high quality typesetting which produces professional looking documents, and 
-because it is suitable for larger scientific reports. \LaTeX also provides
+because it is suitable for larger scientific reports. \LaTeX \,also provides
 automatic numbering of chapter and sections, automatic generation of table of
-contents, cross-referencing and bibliography management. Since \LaTeX files
+contents, cross-referencing and bibliography management. Since \LaTeX \,files
 are plain text files they are suitable for versioning with a version control
-system like Git. We will use \LaTeX to write the final project report, and we
+system like Git. We will use \LaTeX \,to write the final project report, and we
 have created a few templates for test plans and minutes.
 
 \subsubsection{Mailing list}
@@ -106,6 +116,15 @@ Since all team members have google accounts, we have created a google calendar
 to help schedule and keep track of meetings. A single calendar which all
 members can include in their own, prevents misunderstandings and duplication
 of work.
+
+\subsubsection{text2pcap}
+In this project text2cap is used to genereate capture files from ASCII hexdumps. Since the customer cannot give us capture files, we have to create the capture file. The capture files are important for testing the generated Lua-scripts.  When installing wireshark, the text2pcap tool is included. The input to the tool is a ASCII hexdump as a text-file, and the output will be a pcap-file. When running text2pcap, it is necessary to specifiy the protocol type. In this project the team uses ''-l 147'' as an option to text2pcap, which is a user defined link-layer type.
+
+\subsubsection{Hex editor}
+The team are using a hex editor to create input for text2pcap. To make it easier to write ASCII hexdumps, it is necessary to write them in a hex editor. HxD is a recommended hex editor for this project, since it is free and has the necessary functionality. HxD is only for Windows.
+
+\subsubsection{Violet}
+Violet is a cross platform, lightweight, free and easy to use modeling software for making UML-diagrams, authored by Cay S. Horstmann and Alexandre de Pellegrin. The architectural and design team will be using violet to create diagrams to ilustrate the workings of the utility. As very advanced diagrams were not needed for this for this project, violet seemed like a good option.  
 
 \subsection{Based on the planned effort}
 Calculations done by the course staff suggests that each student should use 325 person-hours distributed over 13 weeks. Our group, consisting of seven students, will have a total of 2275 person-hours to spend on the project. 
@@ -142,20 +161,20 @@ Table \ref{tab:wbs} shows the work breakdown structure, and the project timeline
 	\cmidrule(r){4-5}
 	Task & From date & To date & Estimated & Actual  \\
 	\midrule
-	Misc & 30.08.2011 & 24.11.2011 & 875 & 442 \\
+	Misc & 30.08.2011 & 24.11.2011 & 875 & 494  \\
 	\midrule
-	Project Management & 30.08.2011 & 24.11.2011 & 275 &132 \\
+	Project Management & 30.08.2011 & 24.11.2011 & 275 &161 \\
 	Lectures & 02.09.2011 & 18.10.2011 & 100 & 60 \\
-	Self Study & 30.08.2011 & 04.10.2011 & 150 & 42 \\
-	Planning & 05.09.2011 & 12.09.2011 & 150 & 124 \\
-	Pre-study & 05.09.2011 & 12.09.2011 & 100 & 32 \\
-	Requirement Specification & 05.09.2011 & 12.09.2011 & 100 & 52 \\
+	Self Study & 30.08.2011 & 04.10.2011 & 150 & 44 \\
+	Planning & 05.09.2011 & 12.09.2011 & 150 & 122 \\
+	Pre-study & 05.09.2011 & 12.09.2011 & 100 & 49 \\
+	Requirement Specification & 05.09.2011 & 12.09.2011 & 100 & 58 \\
 	\midrule
-	Sprint I & 14.09.2011 & 27.09.2011 & 200 & 112 \\
+	Sprint I & 14.09.2011 & 27.09.2011 & 200 & 157 \\
 	\midrule
-	Sprint I Planning & 14.09.2011 & 14.09.2011 & 30 & 27 \\
-	Sprint I Work & 15.09.2011 & 26.09.2011 & 150 & 86 \\
-	Sprint I Review & 27.09.2011 & 27.09.2011 & 20 & 0 \\
+	Sprint I Planning & 14.09.2011 & 14.09.2011 & 30 & 29 \\
+	Sprint I Work & 15.09.2011 & 26.09.2011 & 150 & 98 \\
+	Sprint I Review & 27.09.2011 & 27.09.2011 & 20 & 30 \\
 	\midrule
 	Sprint II & 05.10.2011 & 18.10.2011 & 250 & 0 \\
 	\midrule
@@ -175,12 +194,12 @@ Table \ref{tab:wbs} shows the work breakdown structure, and the project timeline
 	Sprint IV Work & 03.11.2011 & 14.11.2011 & 200 & 0 \\
 	Sprint IV Review & 15.11.2011 & 15.11.2011 & 20 & 0 \\
 	\midrule
-	Report \& Presentation & 30.08.2011 & 24.11.2011 & 450 & 0 \\
+	Report \& Presentation & 30.08.2011 & 24.11.2011 & 450 & 59 \\
 	\midrule
 	Write Report & 20.08.2011 & 24.11.2011 & 375 & 0 \\
 	Presentation & 22.11.2011 & 24.11.2011 & 75 & 0 \\
 	\midrule
-	Total & 30.08.2011 & 24.11.2011 & 2275 & 553 \\
+	Total & 30.08.2011 & 24.11.2011 & 2275 & 710 \\
 	\bottomrule
 \end{tabular}
 \end{table}

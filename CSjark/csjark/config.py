@@ -3,79 +3,7 @@ A module for configuration of our utility.
 
 Should parse config files and create which the parser can use.
 """
-import sys
 import yaml
-
-
-# Mapping of c type and their wireshark field type.
-DEFAULT_C_TYPE_MAP = {
-        'bool': 'bool',
-        'char': 'string',
-        'signed char': 'string',
-        'unsigned char': 'string',
-        'short': "int16",
-        'signed short': "int16",
-        'unsigned short': "uint16",
-        'short int': "int16",
-        'signed short int': "int16",
-        'unsigned short int': "uint16",
-        "int": "int32",
-        'signed int': "int32",
-        'unsigned int': "uint32",
-        'long': "int64",
-        'signed long': "int64",
-        'unsigned long': "uint64",
-        'long int': "int64",
-        'signed long int': "int64",
-        'unsigned long int': "uint64",
-        'long long': "int64",
-        'signed long long': "int64",
-        'unsigned long long': "uint64",
-        'long long int': "int64",
-        'signed long long int': "int64",
-        'unsigned long long int': "uint64",
-        'float': 'float',
-        'double': 'double',
-        'long double': 'todo',
-        'pointer': 'int32',
-}
-
-
-# Mapping of c type and their default size in bytes.
-DEFAULT_C_SIZE_MAP = {
-        'bool': 1,
-        'char': 1,
-        'signed char': 1,
-        'unsigned char': 1,
-        'short': 2,
-        'signed short': 2,
-        'unsigned short': 2,
-        'short int': 2,
-        'signed short int': 2,
-        'unsigned short int': 2,
-        'int': 4,
-        'signed int': 4,
-        'unsigned int': 4,
-        'long': 8,
-        'signed long': 8,
-        'unsigned long': 8,
-        'long int': 8,
-        'signed long int': 8,
-        'unsigned long int': 8,
-        'long long': 8,
-        'signed long long': 8,
-        'unsigned long long': 8,
-        'long long int': 8,
-        'signed long long int': 8,
-        'unsigned long long int': 8,
-        'float': 4,
-        'double': 8,
-        'long double': 16,
-        'pointer': 4,
-}
-
-# List of valid C types
-VALID_C_TYPES = DEFAULT_C_SIZE_MAP.keys()
 
 
 class ConfigError(Exception):
@@ -154,12 +82,4 @@ def parse_file(filename, only_text=None):
     # Deal with range rules
     for rule in obj['RangeRules']:
         RangeRule(rule)
-
-
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        parse_file(sys.argv[1])
-        print(StructConfig.configs)
-    else:
-        print("Please provide a YAML config file to parse")
 

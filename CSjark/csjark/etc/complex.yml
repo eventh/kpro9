@@ -1,0 +1,17 @@
+Options:
+    verbose: True
+    debug: True
+    output: tmp
+
+Flags:
+    0: big
+    1: little
+    2: big
+
+Structs:
+  - name: abc_p
+    id: 3
+    description: something something
+
+  - name: ctx
+    id: 4

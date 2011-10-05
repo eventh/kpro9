@@ -8,14 +8,15 @@ import sys
 import os
 
 import pycparser
-from pycparser import c_ast, c_parser
+from pycparser import c_ast, c_parser, plyparser
 
-from config import DEFAULT_C_SIZE_MAP, DEFAULT_C_TYPE_MAP
-from config import StructConfig, RangeRule
-from dissector import Protocol, Field, RangeField
+from config import StructConfig
+from dissector import Protocol
+from wireshark import create_field, size_of
 
 
-class ParseError(Exception):
+class ParseError(plyparser.ParseError):
+    """Exception raised by invalid input to the parser."""
     pass
 
 
@@ -57,6 +58,13 @@ def parse(text, filename=''):
     """Parse C code and return an AST."""
     parser = c_parser.CParser()
     return parser.parse(text, filename)
+
+
+def find_structs(ast):
+    """Walks the AST nodes to find structs."""
+    visitor = StructVisitor()
+    visitor.visit(ast)
+    return visitor.structs
 
 
 class StructVisitor(c_ast.NodeVisitor):
@@ -110,7 +118,7 @@ class StructVisitor(c_ast.NodeVisitor):
             ctype = "struct"
         else:
             raise ParseError("Unknown type declaration: %s" % repr(child))
-        self._create_field(proto, conf, node.declname, ctype)
+        create_field(proto, conf, node.declname, ctype)
 
     def handle_array_decl(self, node, proto, conf):
         """Find member details in an array declaration."""
@@ -125,62 +133,16 @@ class StructVisitor(c_ast.NodeVisitor):
             raise ParseError('array of different types not supported yet.')
 
         if hasattr(constant, 'value'):
-            size = int(constant.value) * self._size_of(ctype)
+            size = int(constant.value) * size_of(ctype)
         else:
             # TODO
             size = 99
             print(constant)
-        self._create_field(proto, conf, type_decl.declname, ctype, size=size)
+        create_field(proto, conf, type_decl.declname, ctype, size=size)
 
     def handle_ptr_decl(self, node, proto, conf):
         """Find member details in a pointer declaration."""
         type_decl = node.children()[0]
         ctype = 'pointer' # Shortcut as pointers not a requirement
-        self._create_field(proto, conf, type_decl.declname, ctype)
-
-    def _create_field(self, proto, conf, name, ctype, size=None):
-        """Create a dissector field representing the struct member."""
-        # Find all rules relevant for this field
-        range_rules = None
-
-        if conf is not None:
-            rules = conf.get_rules(name, ctype)
-            range_rules = [i for i in rules if isinstance(i, RangeRule)]
-
-        # Map from C to wireshark values
-        type_ = self._map_type(ctype)
-        if size is None:
-            size = self._size_of(ctype)
-
-        if range_rules:
-            proto.add_field(RangeField(range_rules[0].min,
-                                range_rules[0].max, name, type_, size))
-        else:
-            proto.add_field(Field(name, type_, size))
-
-    def _map_type(self, ctype):
-        """Find the wireshark type for a ctype."""
-        return DEFAULT_C_TYPE_MAP.get(ctype, ctype)
-
-    def _size_of(self, ctype):
-        """Find the size of a c type in bytes."""
-        if ctype in DEFAULT_C_SIZE_MAP.keys():
-            return DEFAULT_C_SIZE_MAP[ctype]
-        else:
-            return 1
-
-
-def find_structs(ast):
-    """Walks the AST nodes to find structs."""
-    visitor = StructVisitor()
-    visitor.visit(ast)
-    return visitor.structs
-
-
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        ast = parse_file(sys.argv[1])
-        ast.show()
-    else:
-        print("Please provide a C file to parse")
+        create_field(proto, conf, type_decl.declname, ctype)
 

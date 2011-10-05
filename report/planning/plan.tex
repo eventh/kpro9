@@ -10,11 +10,11 @@ The project plan includes the specified plan on which tool we are using in this 
 
 \subsection{Measurement of Project Effects}
 %------------------------------------------
-Automatic generation of Lua scripts from c-header files would bring considerable resource savings in the customers usual work process. Time (and therefore financial resources) will be  be saved by delivery of the solution every time they need to know the contents of investigated IPC messages that include C struct(s).
+Automatic generation of Lua scripts from c-header files would bring considerable resource savings in the customers usual work process. Time and therefore financial resources, will be  be saved by delivery of the solution every time they need to know the contents of investigated IPC messages that include C structs.
 
 The most of the savings will be caused by enabling filtering of the messages by the specific attribute in the C struct in Wireshark. Once this will be possible, a lot of unnecessary searching can be omitted.
 
-Before the project start, C structs were investigated in two ways. The first, manual method, which means counting individual bytes of the binary file that includes data in C structs. This is possible only for small-sized messages. For bigger messages, this method is inapplicable, since the message can consist of several thousands bytes. The second method consists of writing the dissector (as Lua script) manually for the specific C header. Also, this method cannot be used for more complex C structs, i.e. those using nested structs. So far, there has been written about 10 Lua scripts manually.
+Before the project start, C structs were investigated in two ways. The first, manual method, which means counting individual bytes of the binary file that includes data in C structs. This is possible only for small-sized messages. For bigger messages, this method is inapplicable, since the message can consist of several thousands bytes. The second method consists of writing the dissector in Lua manually for the specific C header. Also, this method cannot be used for more complex C structs, i.e. those using nested structs. So far, there has been written about 10 Lua scripts manually.
 
 According to the customer, there are approximately 3000 messages that include C structs and those need to be dissected by the solution. Time spent to write a dissector for a message manually depends on the struct’s complexity. For trivial messages, it takes 15 minutes to create a dissector manually. It took about 1 hour for the most complicated dissectors that were developed by the customer so far.
 
@@ -387,14 +387,15 @@ All customer meetings should be summarised in a document (minute). This document
 	\item The above should be in sequence according to time
 \end{itemize}
 
-This summary should be done and sent to the customer by 12:00 the day after the meeting. If the customer does not approve the minutes, the minutes should again be corrected by and sent 12:00 the following day.
-
-The customer contact is responsible for the above tasks.
+This summary should be done and sent to the customer by 12:00 the day after the meeting. If the customer does not approve the minutes, the minutes should again be corrected by and sent 12:00 the following day. The customer contact is responsible for the above tasks.
 
 The customer has committed to respond to our interactions within 2 working days.
 
 \subsection{Procedure for advisor meeting}
 %-----------------------------------------
+The weekly adviser meeting will be at 10:30 every Friday unless otherwise stated.
+
+\subsubsection{Agenda for meeting}
 A meeting with the adviser should be called before 14:00 the day before the meeting, and this calling should include:
 \begin{itemize}
 	\item Time
@@ -406,9 +407,8 @@ A meeting with the adviser should be called before 14:00 the day before the meet
 	\item Other relevant documents
 \end{itemize}
 
-The weekly adviser meeting will be at 10:30 every Friday unless otherwise stated.
-
-The meetings should be summarized. The summary should include:
+\subsubsection{Minutes from meeting}
+The minutes should be written and sent before to the adviser for approval before 12:00 the day after the meeting. If the adviser should reject the minutes, they should be corrected and resent 12:00 the day following the rejection. The minutes should include:
 \begin{itemize}
 	\item Time of meeting
 	\item Place
@@ -419,7 +419,6 @@ The meetings should be summarized. The summary should include:
 	\item Clarifications
 	\item A rough timeline of the above
 \end{itemize}
-The minutes should be written and sent before to the adviser for approval before 12:00 the day after the meeting. If the adviser should reject the minutes, they should be corrected and resent 12:00 the day following the rejection.
 
 \subsection{Document Templates and Standards}
 %--------------------------------------------
@@ -502,8 +501,7 @@ These reports should follow the templates specified in Templates and Standards (
 %------------------------
 \section{Risk Management}
 %------------------------
-The following section list the possible risks the team has in the project, and how to handle them.
-
+The following section list the possible risks the team has in the project, and how to handle them. \autoref{tab:risk} shows how to handle the possible risks in the team. Each risk has a consequence and a probability:  High (H), Medium (M) or Low (L). \newline
 \textbf{R1. Choosing an incompatible technical solution} - The team decides to use a technical solution that is not suited for the given problem, or decides on an implementation that is too time consuming. \newline
 \textbf{R2. Too much focus on report} -  We spend too much time working on the report and neglect the implementation. \newline
 \textbf{R3. Too much focus on implementation} - We spend too much time working on the implementation and neglect writing all the needed documentation for the report. \newline
@@ -591,6 +589,6 @@ Have frequent meetings with the customers.  \\
 \textbf{Deadline} & Continuous \\
 \textbf{Responsible} & Scrum Master \\
 \hline
-\label{tab:Risk}
+\label{tab:risk}
 \end{longtable}
 

@@ -83,11 +83,6 @@ class StructVisitor(c_ast.NodeVisitor):
         if not node.name:
             return
 
-        # Disallow structs with same name
-        if node.name in self.structs:
-            # TODO print the location of the struct, file and line no.
-            raise ParseError('Two structs with same name: %s' % node.name)
-
         # Find config rules
         conf = StructConfig.configs.get(node.name, None)
 
@@ -111,6 +106,11 @@ class StructVisitor(c_ast.NodeVisitor):
                 self.handle_ptr_decl(child, proto, conf)
             else:
                 raise ParseError('Unknown struct member: %s' % repr(child))
+
+        # Disallow structs with same name
+        if node.name in self.structs:
+            # TODO print the location of the struct, file and line no.
+            raise ParseError('Two structs with same name: %s' % node.name)
 
         # Don't add protocols with no fields? Sounds reasonably
         if proto.fields:

@@ -51,23 +51,14 @@
 % Abstract
 %==========
 \begin{abstract}
-This report documents the work done in a project in the course TDT4290 
-Customer Driven Project at NTNU. The project was executed on behalf of
-Thales Norway AS.
+Wireshark is a program used to analyze packet data sent between network nodes.
+The purpose of this project was to allow the use of Wireshark to also
+decode inter-process communication, which is important, but was difficult to accomplish before.
+The project resulted in a stand-alone utility, written in Python, which act as a supporting tool for Wireshark. 
+The utility automates the process of generating dissectors for Wireshark from C header files. 
+This functionality makes debugging and testing some programs a lot easier.
 
-The project consisted of seven students from the Norwegian University 
-of Technology and Science.
 
-The task was to develop a tool for Wireshark that could automatically
-dissect C-structs. The utility creates Lua scripts which act as package
-dissectors in Wireshark. The tool itself was written in Python. In addition 
-to this the tool supports configuration-files written in YAML.
-
-During the development process we used the Scrum methodology for
-management. The development process consisted of 4 two-week long
-sprints, with new functionality added in each sprint.
-
-The project duration was from the 30th August to the 24th of November.
 \end{abstract}
 
 %=========
@@ -76,7 +67,25 @@ The project duration was from the 30th August to the 24th of November.
 \pagenumbering{roman}
 \chapter*{Preface}
 \addcontentsline{toc}{chapter}{Preface}
-TODO
+This report was written for a project in the course TDT4290 
+Customer Driven Project at NTNU, on behalf of Thales Norway AS. The project
+was executed on behalf of Thales Norway AS between the 30th of August and
+the 24th of November.
+
+The project team consisted of seven students from the Norwegian University 
+of Technology and Science. Our task was to develop a tool for Wireshark
+that could automatically dissect C structs. The utility creates Lua scripts 
+which act as package dissectors in Wireshark. 
+
+The team would like to thank our main supervisor Daniela Soares Cruzes
+and her assistant Maria Carolina Passos for their continuous input and
+guidance throughout the project.
+
+We would also like to thank our customer contacts from Thales, Christian
+Tellefsen and Stig Bjørlykke, for invaluable help and feedback during the
+development process and also for making the initial requirement 
+specification clear and understandable.
+
 
 %===================
 % Table of Contents

@@ -11,7 +11,7 @@ goto :eof
 
 :clean
     echo "Removing LaTeX build files"
-    del /S *.aux *.toc *.log *.out *.lof *.lot
+    del /S *.aux *.toc *.log *.out *.lof *.lot *.bbl *.blg
     rmdir /S /Q tmp
     goto :eof
 
@@ -34,6 +34,8 @@ goto :eof
     goto :eof
 
 :report
+    pdflatex -output-directory tmp report.tex
+    bibtex -output-directory tmp tmp\report.aux
     pdflatex -output-directory tmp report.tex
     pdflatex -output-directory tmp report.tex
     move /Y tmp\report.pdf report.pdf

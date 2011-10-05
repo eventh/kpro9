@@ -30,6 +30,12 @@ class Field:
         return t.format(**args)
 
 
+class EnumField(Field):
+    def __init__(self, values, *args, **vargs):
+        super().__init__(*args, **vargs)
+        self.values = values
+
+
 class RangeField(Field):
     def __init__(self, min, max, *args, **vargs):
         super().__init__(*args, **vargs)

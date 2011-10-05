@@ -103,6 +103,8 @@ class StructVisitor(c_ast.NodeVisitor):
 
             if isinstance(child, c_ast.TypeDecl):
                 self.handle_type_decl(child, proto, conf)
+            elif isinstance(child, c_ast.Enum):
+                self.handle_enum_decl(child, proto, conf)
             elif isinstance(child, c_ast.ArrayDecl):
                 self.handle_array_decl(child, proto, conf)
             elif isinstance(child, c_ast.PtrDecl):
@@ -128,6 +130,13 @@ class StructVisitor(c_ast.NodeVisitor):
         else:
             raise ParseError('Unknown type declaration: %s' % repr(child))
         create_field(proto, conf, node.declname, ctype)
+
+    def handle_enum_decl(self, node, proto, conf):
+        """Find member details in an enum declaration."""
+        raise ParseError('not implemented yet') # TODO
+        type_decl = node.children()[0]
+        ctype = 'pointer' # Shortcut as pointers not a requirement
+        create_field(proto, conf, type_decl.declname, ctype)
 
     def handle_array_decl(self, node, proto, conf):
         """Find member details in an array declaration."""

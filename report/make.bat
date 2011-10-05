@@ -35,7 +35,10 @@ goto :eof
 
 :report
     pdflatex -output-directory tmp report.tex
-    bibtex -output-directory tmp tmp\report.aux
+    copy /y references.bib tmp\references.bib
+    cd tmp
+    bibtex report.aux
+    cd ..
     pdflatex -output-directory tmp report.tex
     pdflatex -output-directory tmp report.tex
     move /Y tmp\report.pdf report.pdf

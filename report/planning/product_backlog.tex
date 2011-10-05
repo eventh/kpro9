@@ -13,10 +13,11 @@
 	\midrule
 	FR1 & Read basic C struct definitions & & \\
 	FR1-A & Support data types: int, float, char and boolean & 24 & 21 \\
-	FR1-B & Support members of type enums & 6 & - \\
-	FR1-C & Support members of type structs & 7 & - \\
-	FR1-D & Support members of type unions & - & - \\
-	FR1-E & Support member of type array & 7 & - \\
+	FR1-B & Support members of type enum & 6 & - \\
+	FR1-C & Support members of type struct & 7 & - \\
+	FR1-D & Support members of type union & - & - \\
+	FR1-E & Support members of type array & 7 & - \\
+	FR1-F & Detect structs with same name & 3 & - \\
 	\addlinespace
 	FR2 & Generate Wireshark dissectors in Lua & & \\
 	FR2-A & Display simple structs & 28 & 25 \\
@@ -31,32 +32,32 @@
 	\addlinespace
 	FR4 & Support user configuration & & \\
 	FR4-A & Support valid ranges for struct members & 30 & 15 \\
-	FR4-B & Support enumerated named values or a bit strings & 12 & - \\
-	FR4-C & Custom handling of specific data types & - & - \\
+	FR4-B & Support custom Lua files for specific protocols & 18 & - \\
+	FR4-C & Support custom handling of specific data types & - & - \\
 	FR4-D & Support specifying the ID of dissectors & 4 & - \\
-	FR4-E & Support custom Lua files for specific protocols & 18 & - \\
+	FR4-E & Support various trailers (other registered protocols) & - & - \\
+	FR4-F & Support enumerated named values  & 5 & - \\
+	FR4-G & Support bit strings & 10 & - \\
 	\addlinespace
-	FR5 & Structs with headers and/or trailers & 18 & - \\
+	FR5 & Handle input which size and endian depends on platform & & \\
+	FR5-A & Flags specified for each platform & - & - \\
+	FR5-B & Flags which signal the platform & - & - \\
+	FR5-C & Dissectors support both little and big endian & 15 & - \\
+	FR5-D & Dissectors support different sizes from flags & - & - \\	
 	\addlinespace
-	FR6 & Handle input which size and endian depends on platform & & \\
-	FR6-A & Flags specified for each platform & - & - \\
-	FR6-B & Flags which signal the platform & - & - \\
-	FR6-C & Dissectors support both little and big endian & 15 & - \\
-	FR6-D & Dissectors support different sizes from flags & - & - \\	
+	FR6 & Support parameters from command line & & \\
+	FR6-A & Support parameters for C header file & 9 & 9 \\
+	FR6-B & Support for configuration file & 28 & 8 \\
+	FR6-C & Support batch mode of C header and configuration & 7 & - \\
+	FR6-D & Don't regenerate dissectors & - & - \\
 	\addlinespace
-	FR7 & Support parameters from command line & & \\
-	FR7-A & Support parameters for c-header file & 9 & 9 \\
-	FR7-B & Support for configuration file & 28 & 8 \\
-	FR7-C & Support batch mode of c-header and configuration & - & - \\
-	FR7-D & Don't regenerate dissectors & - & - \\
-	\addlinespace
-	NR1 & Run on latest Windows \& Solaris OS & - & - \\
-	NR2 & Dissector run on Windows \& Solaris, Intel \& Sparc & - & - \\
-	NR3 & User interface shall be command line & - & - \\
-	NR4 & Sufficient documentation for generating Lua-scripts & - & - \\
-	NR5 & Sufficient documentation for extending functionality & - & - \\
-	NR6 & Code should follow PEP8 and PEP20 & - & - \\
-	NR7 & Code should be documented by docstrings & - & - \\
+	NR1 & Run on latest Windows \& Solaris OS & & \\
+	NR2 & Dissector run on Windows \& Solaris, Intel \& Sparc & & \\
+	NR3 & User interface shall be command line & & \\
+	NR4 & Sufficient documentation for generating Lua dissectors & & \\
+	NR5 & Sufficient documentation for extending functionality & & \\
+	NR6 & Code should follow PEP8 and PEP20 & & \\
+	NR7 & Code should be documented by docstrings & & \\
 	\bottomrule
 \end{tabularx}
 \end{table}

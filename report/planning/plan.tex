@@ -3,16 +3,18 @@
 %=================
 The following chapter explains the administrative part of the project.
 
+%---------------------
 \section{Project Plan}
 %---------------------
 The project plan includes the specified plan on which tool we are using in this project, measurement of project effects, limitations and the concrete project work plan.
 
 \subsection{Measurement of Project Effects}
-Automatic generation of Lua scripts from c-header files would bring considerable resource savings in the customers usual work process. Time (and therefore financial resources) will be  be saved by delivery of the solution every time they need to know the contents of investigated IPC messages that include C struct(s).
+%------------------------------------------
+Automatic generation of Lua scripts from c-header files would bring considerable resource savings in the customers usual work process. Time and therefore financial resources, will be  be saved by delivery of the solution every time they need to know the contents of investigated IPC messages that include C structs.
 
 The most of the savings will be caused by enabling filtering of the messages by the specific attribute in the C struct in Wireshark. Once this will be possible, a lot of unnecessary searching can be omitted.
 
-Before the project start, C structs were investigated in two ways. The first, manual method, which means counting individual bytes of the binary file that includes data in C structs. This is possible only for small-sized messages. For bigger messages, this method is inapplicable, since the message can consist of several thousands bytes. The second method consists of writing the dissector (as Lua script) manually for the specific C header. Also, this method cannot be used for more complex C structs, i.e. those using nested structs. So far, there has been written about 10 Lua scripts manually.
+Before the project start, C structs were investigated in two ways. The first, manual method, which means counting individual bytes of the binary file that includes data in C structs. This is possible only for small-sized messages. For bigger messages, this method is inapplicable, since the message can consist of several thousands bytes. The second method consists of writing the dissector in Lua manually for the specific C header. Also, this method cannot be used for more complex C structs, i.e. those using nested structs. So far, there has been written about 10 Lua scripts manually.
 
 According to the customer, there are approximately 3000 messages that include C structs and those need to be dissected by the solution. Time spent to write a dissector for a message manually depends on the struct’s complexity. For trivial messages, it takes 15 minutes to create a dissector manually. It took about 1 hour for the most complicated dissectors that were developed by the customer so far.
 
@@ -23,6 +25,7 @@ None of the workaround methods mentioned above is capable of processing messages
 Also, sometimes a representative of Thales Norway AS has to physically move to the their customer’s site to solve a problem. With the delivered solution, in some cases, this will be no longer necessary and the problem will be solved remotely by sending capture files to Thales and solving it in-house. Savings in this case are not only time-based but it will also directly cut the transportation costs and it will increase the satisfaction for the client.
 
 \subsection{Limitations}
+%-----------------------
 As in all other projects, the project members have to deal with various limitations and constraints given either by the customer or simply by the fact that they are students.
 
 \subsubsection{Technical Limitations}
@@ -50,6 +53,7 @@ As in all other projects, the project members have to deal with various limitati
 \end{description}
 
 \subsection{Tool Selection}
+%--------------------------
 To support collaboration and project management the team has considered and
 selected the listed tools for use in this project.
 
@@ -62,21 +66,22 @@ selected the listed tools for use in this project.
 The team has selected Git as the version control system, with git repository
 hosting provided by Github\footnote{\url{http://github.com/}}.
 
-We had experience with CVS, SVN, Git and Mercurial, and although everyone 
-knew SVN and only two knew Git, we selected Git for this project. We 
-evaluated free hosting sites of version control systems, which could also 
-provide us with other collaborative features that we wanted. github.com, 
-bitbucket.com and sourceforge.net all provided wiki and issue tracker in 
-addition to free version control system hosting. We eliminated 
-sourceforge.net because their focus is divided between software users and 
-developers, while the other two sites are fully focused on developers. The 
-two remaining sites provides almost identical features, where one focuses on 
-Git and the other on Mercurial.
 \begin{wrapfigure}{r}{3cm}
 	\vspace{-20pt}
 	\includegraphics[width=3cm]{./planning/img/github_logo}
 	\vspace{-20pt}
 \end{wrapfigure}
+We had experience with CVS, SVN, Git and Mercurial, and although everyone 
+knew SVN and only two knew Git, we selected Git for this project. We 
+evaluated free hosting sites of version control systems, which could also 
+provide us with other collaborative features that we wanted. Github, 
+Bitbucket\footnote{\url{http://bitbucket.org/}} and
+SourceForge\footnote{\url{http://sourceforge.net/}} all provided wiki and
+issue tracker in addition to free version control system hosting. We eliminated 
+SourceForge because their focus is divided between software users and 
+developers, while the other two sites are fully focused on developers. The 
+two remaining sites provides almost identical features, where one focuses on 
+Git and the other on Mercurial.
 
 Github with Git version control system was selected because more team members
 knew Git than Mercurial. By selecting a newer version control system like Git,
@@ -85,16 +90,27 @@ Since we use different platforms, we will also use different git clients, but
 for Windows most of the group has selected tortoisegit.
 
 \subsubsection{Skype}
-Skype is an application which allows the user to make video and voice chats
-over the Internet, including conference calls and chatting. The team will use
-Skype to communicate and collaborate when we are not physically at the same
-location at the same time.
+\begin{wrapfigure}{r}{3cm}
+	\vspace{-20pt}
+	\includegraphics[width=3cm]{./planning/img/skype_logo}
+	\vspace{-20pt}
+\end{wrapfigure}
+Skype\footnote{\url{http://www.skype.com}} is an application which allows the
+user to make video and voice chats over the Internet, including conference
+calls and chatting. The team will use Skype to communicate and collaborate when
+we are not physically at the same location at the same time.
 
 \subsubsection{Google Docs}
-Google Docs is web-based office suite, which include documents, spreadsheets
-and presentations. It makes it possible to collaborate in real-time. For this
-project we are going to use Google Docs to collaborate on document drafts,
-and to share documents within the team and with the teams adviser.
+\begin{wrapfigure}{r}{2cm}
+	\vspace{-20pt}
+	\includegraphics[width=2cm]{./planning/img/google_docs_logo}
+	\vspace{-20pt}
+\end{wrapfigure}
+Google Docs\footnote{\url{http://docs.google.com/}} is web-based office suite,
+which include documents, spreadsheets and presentations. It makes it possible
+to collaborate in real-time. For this project we are going to use Google Docs
+to collaborate on document drafts, and to share documents within the team and
+with the teams adviser.
 
 \subsubsection{\LaTeX}
 \LaTeX \,is a document markup language and document preparation system used to
@@ -108,28 +124,62 @@ system like Git. We will use \LaTeX \,to write the final project report, and we
 have created a few templates for test plans and minutes.
 
 \subsubsection{Mailing list}
+\begin{wrapfigure}{r}{4cm}
+	\vspace{-20pt}
+	\includegraphics[width=4cm]{./planning/img/ntnu_logo}
+	\vspace{-20pt}
+\end{wrapfigure}
 For asynchronous communication the team uses an electronic mailing list
 provided by IDI, NTNU.
 
 \subsubsection{Google Calendar}
-Since all team members have google accounts, we have created a google calendar
+\begin{wrapfigure}{r}{3cm}
+	\vspace{-20pt}
+	\includegraphics[width=3cm]{./planning/img/google_calendar_logo}
+	\vspace{-20pt}
+\end{wrapfigure}
+Since all team members have google accounts, we have created a group calendar
+in Google Calendar\footnote{\url{http://calendar.google.com/}}
 to help schedule and keep track of meetings. A single calendar which all
 members can include in their own, prevents misunderstandings and duplication
 of work.
 
 \subsubsection{text2pcap}
-In this project text2cap is used to genereate capture files from ASCII hexdumps. Since the customer cannot give us capture files, we have to create the capture file. The capture files are important for testing the generated Lua-scripts.  When installing wireshark, the text2pcap tool is included. The input to the tool is a ASCII hexdump as a text-file, and the output will be a pcap-file. When running text2pcap, it is necessary to specifiy the protocol type. In this project the team uses ''-l 147'' as an option to text2pcap, which is a user defined link-layer type.
+In this project text2cap is used to genereate capture files from ASCII
+hexdumps. Since the customer cannot give us capture files, we have to create
+them. The capture files are important for testing the generated Lua-scripts.
+The text2pcap tool is included with Wireshark. The input to the tool is a ASCII
+hexdump as a text-file, and the output will be a pcap-file. When running
+text2pcap, it is necessary to specifiy the protocol type. In this project the
+team uses ''-l 147'' as an option to text2pcap, which is a user defined
+link-layer type.
 
 \subsubsection{Hex editor}
-The team are using a hex editor to create input for text2pcap. To make it easier to write ASCII hexdumps, it is necessary to write them in a hex editor. HxD is a recommended hex editor for this project, since it is free and has the necessary functionality. HxD is only for Windows.
+The team are using a hex editor to create input for text2pcap. To make it
+easier to write ASCII hexdumps, it is necessary to write them in a hex editor.
+HxD\footnote{\url{http://mh-nexus.de/en/hxd/}} is the recommended hex editor
+for this project, since it is free and has the necessary functionality. HxD is
+only for Windows.
 
 \subsubsection{Violet}
-Violet is a cross platform, lightweight, free and easy to use modeling software for making UML-diagrams, authored by Cay S. Horstmann and Alexandre de Pellegrin. The architectural and design team will be using violet to create diagrams to ilustrate the workings of the utility. As very advanced diagrams were not needed for this for this project, violet seemed like a good option.  
+\begin{wrapfigure}{r}{3cm}
+	\vspace{-20pt}
+	\includegraphics[width=3cm]{./planning/img/violet_logo}
+	\vspace{-20pt}
+\end{wrapfigure}
+Violet\footnote{\url{http://violet.sourceforge.net/}} is a cross platform,
+lightweight, free and easy to use modeling software for making UML-diagrams,
+authored by Cay S. Horstmann and Alexandre de Pellegrin. The architectural and
+design team will be using violet to create diagrams to ilustrate the workings
+of the utility. As very advanced diagrams were not needed for this for this
+project, violet seemed like a fitting tool.
 
 \subsection{Based on the planned effort}
+%---------------------------------------
 Calculations done by the course staff suggests that each student should use 325 person-hours distributed over 13 weeks. Our group, consisting of seven students, will have a total of 2275 person-hours to spend on the project. 
 
 \subsection{Schedule of Results}
+%-------------------------------
 This project will have two deliveries, pre-delivery and final delivery.  The milestones and sprints are listed below. \newline
 \textbf{Milestones} \newline
 \begin{tabular}{l  l}
@@ -148,6 +198,7 @@ This project will have two deliveries, pre-delivery and final delivery.  The mil
 \end{tabular}
 
 \subsection{Concrete Project Work Plan}
+%--------------------------------------
 The two first weeks on the project will be used on planning and pre study.
 The project will be divided into 3 sprints, that will last for three weeks. Each sprint will have a total of 525 person-hours.
 The last 1.5 week will be used to finish the final report and prepare for the presentation. 
@@ -206,20 +257,23 @@ Table \ref{tab:wbs} shows the work breakdown structure, and the project timeline
 
 \begin{figure}[!ht]
 	\noindent\makebox[\textwidth]{%
-	\includegraphics[scale=0.48]{./planning/img/gantt.png}}
+	\includegraphics[scale=0.48]{./planning/img/gantt}}
 	\caption{Gantt diagram\label{fig:gantt}}
 \end{figure}
 
+
+%-----------------------------
 \section{Project Organization}
 %-----------------------------
 This section describes how the team is organized, which roles the developers are divided into and the partners of the projet.
 
 \subsection{Project Organization}
+%--------------------------------
 Our project organization has a flat structure and the organization char can be seen in figure \ref{fig:orgchart}, the roles listed in the organization chart are described in table \ref{tab:roles}.
 
 \begin{figure}[here]
 	\noindent\makebox[\textwidth]{%
-	\includegraphics[scale=0.45]{./planning/img/organization.png}}
+	\includegraphics[scale=0.45]{./planning/img/organization}}
 	\caption{Project Organization\label{fig:orgchart}}
 \end{figure}
 
@@ -247,6 +301,7 @@ Our project organization has a flat structure and the organization char can be s
 \end{table}
 
 \subsection{Partners}
+%--------------------
 This section lists the partners of this project. The customer of this project is Thales Norway AS, which are located at Lerkendal Stadium, Strindv 1, 7030 Trondheim.
 The customer contacts are listed in table \ref{tab:part_cust}. The developers consists of seven student from NTNU, and are listed in table \ref{tab:part_dev}.  The project group has two advisers from  the Department of Computer and Information Science at NTNU, and are listed in table \ref{tab:part_adv}. 
 
@@ -291,11 +346,14 @@ The customer contacts are listed in table \ref{tab:part_cust}. The developers co
 \end{tabular}
 \end{table}
 
+
+%--------------------------
 \section{Quality Assurance}
 %--------------------------
 The following section contains internal processes and routines the team will use in project. This includes procesures for meetings, document templates and standards and internal reports.
 
 \subsection{Routines for ensuring quality internally}
+%----------------------------------------------------
 We will organize in pairs when producing items, where the pair reviews each others work. This is to try to find more errors and to get some extra perspective on style and solutions.
 
 We also has assigned quality assurance responsibilities for three subjects: documents, code and tests. The respective team members will try to have a birds eye overview in their area to catch further errors.
@@ -308,11 +366,13 @@ We have agreed to have three weekly meetings to accommodate these routines.
 \end{itemize}
 
 \subsection{Phase result approval}
+%---------------------------------
 To ensure the quality of deliverable results, we have have, the group members responsible for quality assurance for a given subject will either read through, or delegate that that task to another free group member.
 
 We will also present the results for the customer. They will then have an opportunity to point out problems and misunderstandings, and suggest solutions. We will then try to correct the problems and the reiterate the quality assurance.
 
 \subsection{Procedures for customer meetings}
+%--------------------------------------------
 All customer meetings should be called with time, place, agenda specified. All background documents relevant to the meetings should also be supplied. This is to ensure efficient and effective meetings.
 
 All customer meetings should be summarised in a document (minute). This document should include:
@@ -327,13 +387,15 @@ All customer meetings should be summarised in a document (minute). This document
 	\item The above should be in sequence according to time
 \end{itemize}
 
-This summary should be done and sent to the customer by 12:00 the day after the meeting. If the customer does not approve the minutes, the minutes should again be corrected by and sent 12:00 the following day.
-
-The customer contact is responsible for the above tasks.
+This summary should be done and sent to the customer by 12:00 the day after the meeting. If the customer does not approve the minutes, the minutes should again be corrected by and sent 12:00 the following day. The customer contact is responsible for the above tasks.
 
 The customer has committed to respond to our interactions within 2 working days.
 
 \subsection{Procedure for advisor meeting}
+%-----------------------------------------
+The weekly adviser meeting will be at 10:30 every Friday unless otherwise stated.
+
+\subsubsection{Agenda for meeting}
 A meeting with the adviser should be called before 14:00 the day before the meeting, and this calling should include:
 \begin{itemize}
 	\item Time
@@ -345,9 +407,8 @@ A meeting with the adviser should be called before 14:00 the day before the meet
 	\item Other relevant documents
 \end{itemize}
 
-The weekly adviser meeting will be at 10:30 every Friday unless otherwise stated.
-
-The meetings should be summarized. The summary should include:
+\subsubsection{Minutes from meeting}
+The minutes should be written and sent before to the adviser for approval before 12:00 the day after the meeting. If the adviser should reject the minutes, they should be corrected and resent 12:00 the day following the rejection. The minutes should include:
 \begin{itemize}
 	\item Time of meeting
 	\item Place
@@ -358,9 +419,9 @@ The meetings should be summarized. The summary should include:
 	\item Clarifications
 	\item A rough timeline of the above
 \end{itemize}
-The minutes should be written and sent before to the adviser for approval before 12:00 the day after the meeting. If the adviser should reject the minutes, they should be corrected and resent 12:00 the day following the rejection.
 
 \subsection{Document Templates and Standards}
+%--------------------------------------------
 The team has specified procesures for templates and file organization.
 
 \subsubsection{Templates the group has created}
@@ -413,11 +474,13 @@ agenda, phasedoc, e.g.) and the date, if applicable.
 \subsubsection{Coding style standard}
 The programming language used to implement the utility specified by the
 customer requirements are Python. The coding style the team has agreed upon is
-the Python Standard Styling Guide as defined by PEP8(LINK) (Python Enhancement
-Proposals \#8). In addition the design should attempt to be pythonic, as
-detailed by PEP20(LINK).
+the Python Standard Styling Guide as defined by
+PEP8\footnote{Style Guide for Python Code: \url{http://www.python.org/dev/peps/pep-0008/}}.
+In addition the design should attempt to be pythonic, as detailed by
+PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}.
 
 \subsection{Version Control Procedures}
+%--------------------------------------
 Every relevant digital item should be pushed to our repository at github, and checked out by other participants. Those who works on a given item should commit and push their changes often, so that others can be as up to date as possible. All digital items should be labeled with a version number, starting at version 1. If an item goes under review and is deemed insufficient by the customer or  , the version number should also be incremented by one for each revision of the document
 
 Relevant digital items includes source code, documents, picture files, binary blobs, etc.
@@ -425,6 +488,7 @@ Relevant digital items includes source code, documents, picture files, binary bl
 NB: Google docs is not to be used for version control, so every document written there should also be pushed to git hub.
 
 \subsection{Internal Reports}
+%----------------------------
 Some of the groups internal activities should be documented. This includes:
 \begin{itemize}
 	\item Activities, what is done, and what remains
@@ -434,19 +498,22 @@ Some of the groups internal activities should be documented. This includes:
 \end{itemize}
 These reports should follow the templates specified in Templates and Standards (A4) if applicable.
 
+
+%------------------------
 \section{Risk Management}
 %------------------------
-The following section list the possible risks the team has in the project, and how to handle them.
-
-\textbf{R1. Choosing an incompatible technical solution} - The team decides to use a technical solution that is not suited for the given problem, or decides on an implementation that is too time consuming. \newline
-\textbf{R2. Too much focus on report} -  We spend too much time working on the report and neglect the implementation. \newline
-\textbf{R3. Too much focus on implementation} - We spend too much time working on the implementation and neglect writing all the needed documentation for the report. \newline
-\textbf{R4. Illness/Absence} - Members of the team become ill or are otherwise unavailable. \newline
-\textbf{R5. Conflicts within group} - Internal conflicts which are destructive to the groups ability to work together. \newline
-\textbf{R6. Lack of technical competence} - The team lack the needed technical ability to solve the given problem. \newline
-\textbf{R7. Miscommunication within team} - Team members don’t know what to do, or misunderstands the task given to them. \newline
-\textbf{R8. Miscommunication with customer} - The team misunderstands the requirements given by the customer. \newline
-\textbf{R9. Lack of experience with Scrum} - The team does not have any experience in doing Scrum projects. \newline
+The following section list the possible risks the team has in the project, and how to handle them. \autoref{tab:risk} shows how to handle the possible risks in the team. Each risk has a consequence and a probability:  High (H), Medium (M) or Low (L).
+\begin{description}
+\item[R1. Choosing an incompatible technical solution]  The team decides to use a technical solution that is not suited for the given problem, or decides on an implementation that is too time consuming.
+\item[R2. Too much focus on report]   We spend too much time working on the report and neglect the implementation. 
+\item[R3. Too much focus on implementation]  We spend too much time working on the implementation and neglect writing all the needed documentation for the report.
+\item[R4. Illness/Absence]  Members of the team become ill or are otherwise unavailable. 
+\item[R5. Conflicts within group]   Internal conflicts which are destructive to the groups ability to work together. 
+\item[R6. Lack of technical competence]  The team lack the needed technical ability to solve the given problem. 
+\item[R7. Miscommunication within team]  Team members don’t know what to do, or misunderstands the task given to them. 
+\item[R8. Miscommunication with customer]  The team misunderstands the requirements given by the customer. 
+\item[R9. Lack of experience with Scrum]  The team does not have any experience in doing Scrum projects.
+\end{description}
 
 \begin{longtable}{l p{9cm}}
 \caption{Handling Risks} \\
@@ -525,7 +592,6 @@ Have frequent meetings with the customers.  \\
 \textbf{Deadline} & Continuous \\
 \textbf{Responsible} & Scrum Master \\
 \hline
-\label{tab:Risk}
+\label{tab:risk}
 \end{longtable}
-
 

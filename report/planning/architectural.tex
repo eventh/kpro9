@@ -72,7 +72,12 @@ This view shown in \autoref{fig:logicalview}. Command line takes the arguments f
 \end{figure}
 
 \section{Process View}
+\autoref{fig:processview} shows the process view for our utility. Csjark takes header and config files as input and then uses the config and cparser to parse the files. CSjark then uses the cparser to find the structs in the header file and then creates dissectors for them. These dissectors are then written to a file and CSjark then reports to the user by sending a message to the command line.
 
+\begin{figure}[ht]
+\includegraphics[width=\textwidth]{./planning/img/SequenceDiagram.png}
+\caption{Data flow during regular execution}
+\label{fig:processview}
 
 \section{Deployment View}
 \autoref{fig:deployment} shows the deployment diagram for this project. Csjark takes header- and config-files as input, and generates Lua-scripts. The Lua-scripts are used for dissectors in Wireshark.

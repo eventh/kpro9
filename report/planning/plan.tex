@@ -11,9 +11,9 @@ The project plan includes the specified plan on which tool we are using in this 
 
 \subsection{Measurement of Project Effects}
 %------------------------------------------
-Automatic generation of Lua scripts from C header files would bring considerable resource savings in the customer's usual work process. Time and therefore financial resources, will be saved by delivery of the solution every time they need to know the contents of inter-process commun messages that include C structs.
+Automatic generation of Lua scripts from C header files would bring considerable resource savings in the customer's usual work process. Time and therefore financial resources, will be saved by delivery of the solution every time they need to know the contents of inter-process communication messages that include C structs.
 
-The biggest impact on savings will be caused by enabling filtering of the messages by the specific attribute in the C struct in Wireshark. Once this will be possible, a lot of unnecessary searching can be omitted.
+The biggest impact on savings will be caused by enabling filtering of the messages by the specific attribute in the C struct in Wireshark. Once this is made possible, a lot of unnecessary searching can be omitted.
 
 Before the project start, C structs were investigated in two ways. The first, manual method, which means counting individual bytes of the binary file that includes data in C structs. This is possible only for small-sized messages. For bigger messages, this method is inapplicable, since the message can consist of several thousands bytes. The second method consists of writing the dissector in Lua manually for the specific C header. Also, this method cannot be used for more complex C structs, i.e. those using nested structs. So far, there has been written about 10 Lua scripts manually.
 
@@ -494,7 +494,7 @@ PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}
 
 \subsection{Version Control Procedures}
 %--------------------------------------
-Every relevant digital item should be pushed to our repository at github, and be reviewed by other participants. Those who work on a given item should commit and push their changes often, so that others can be as up to date as possible. All digital items should be labeled with a version number, starting at version 1. If an item goes under review and is deemed insufficient by the customer, the version number should also be incremented by one for each revision of the document
+Every relevant digital item should be pushed to our repository at github, and be checked out by other participants. Those who work on a given item should commit and push their changes often, so that others can be as up to date as possible. All digital items should be labeled with a version number, starting at version 1. If an item goes under review and is deemed insufficient by the customer, the version number should also be incremented by one for each revision of the document
 
 Relevant digital items includes source code, documents, picture files, binary blobs, etc.
 
@@ -506,16 +506,16 @@ Some of the groups' internal activities should be documented. This includes:
 \begin{itemize}
 	\item Activities, what is done, and what remains
 	\item Minutes for internal meetings
-	\item Milestones, done/not done.
-	\item Effort registration shall be done dailiy by each team member.
+	\item Milestones, complete/incomplete
+	\item Effort registration shall be done daily by each team member.
 \end{itemize}
-These reports should follow the templates specified in Templates and Standards (A4) if applicable.
+These documents should follow the templates specified in Templates and Standards (A4) if applicable.
 
 
 %------------------------
 \section{Risk Management}
 %------------------------
-The following section list the possible risks the team has in the project, and how to handle them. \autoref{tab:risk} shows how to handle the possible risks in the team. Each risk has a consequence and a probability:  High (H), Medium (M) or Low (L).
+The following section lists the possible risk scenarios that can occur in the project, and how they should be handled. \autoref{tab:risk} shows how to handle the possible risks in the team. Each risk has a consequence and a probability:  High (H), Medium (M) or Low (L).
 Strategy and actions describes what we should do to reduce the consequences of the risk, or prevent the risk from happening altogether. Deadline states when we need to handle the risk.
 \begin{description}
 \item[R1. Choosing an incompatible technical solution]  The team decides to use a technical solution that is not suited for the given problem, or decides on an implementation that is too time consuming.

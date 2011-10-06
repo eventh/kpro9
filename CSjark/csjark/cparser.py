@@ -128,11 +128,13 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Find id:name of members
         members = {}
-        for i, child in enumerate(node.children()[0].children()):
+        i = 0
+        for child in node.children()[0].children():
             if child.children():
-                members[int(child.children()[0].value)] = child.name
+                i = int(child.children()[0].value)
             else:
-                members[i] = child.name
+                i += 1
+            members[i] = child.name
 
         self.enums[node.name] = members
 

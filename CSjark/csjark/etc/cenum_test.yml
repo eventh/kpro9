@@ -1,0 +1,4 @@
+Structs:
+  - name: cenum_test
+    id: 11
+    description: a struct with an enum in it!

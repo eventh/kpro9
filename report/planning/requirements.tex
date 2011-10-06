@@ -166,8 +166,8 @@ categories as for requirements priority:
 %---------------------
 \label{sec:req:stories}
 This sections shows the user stories, these are display in
-\autoref{tab:req:stories1} and \autoref{tab:req:stories2}. The developer in
-this context is the developers at Thales Norway AS. The administrator is this
+\autoref{tab:req:stories1} and \autoref{tab:req:stories2}. The administrator in
+this context is the administrator at Thales Norway AS. The developer is this
 context is the users of the dissectors.
 
 \begin{table}[htbp] \footnotesize \center
@@ -179,7 +179,7 @@ context is the users of the dissectors.
 	\midrule
 	ID & US01 \\
 	Requirements & FR1-A: The utility should support the following basic data types: int, float, char and boolean. \\
-	Who & Developer\\
+	Who & Administrator \\
 	What & The user wants the utility to support structs with members of basic data types in input files. 
 		These are the basic data types in C which we support: int, float, char and boolean.\\
 	How & The C parser library, pycparser, provides this support for us. In the cparser module we feed the
@@ -188,7 +188,7 @@ context is the users of the dissectors.
 	\midrule
 	ID & US02 \\
 	Requirements & FR2-A: The utility shall be able to display simple structs. \\
-	Who & Administrator\\
+	Who & Developer \\
 	What & The user wants Wireshark to display simple structs. \\
 	How & The dissector module shall generate Lua dissectors for Protocols created by the cparser module. 
 		The Lua dissectors shall use Wireshark's API to display structs with basic members. \\
@@ -196,7 +196,7 @@ context is the users of the dissectors.
 	\midrule
 	ID & US03 \\
 	Requirements & FR2-D: Recognize invalid values for a struct member. \\
-	Who & Administrator\\
+	Who & Developer \\
 	What & The user wants Wireshark to give a warning if a struct contains invalid values. \\
 	How & The generated dissectors contain valid ranges for certain fields, and lua code which adds warning flags 
 		in Wireshark if a specific fields value is outside the range. Wireshark color the display tree yellow to alert the 
@@ -205,7 +205,7 @@ context is the users of the dissectors.
 	\midrule
 	ID & US04 \\
 	Requirements & FR3-A: The utility should support \#include.\\
-	Who & Developer \\
+	Who & Administrator \\
 	What & The user wants the utility to support the \#include-statement inside a header file.\\
 	How & The cparser module feeds the input into an external tool, the C preprocessor, which supports 
 		\#include-statements. It returns a C code file with all the included code from the external files. pycparser
@@ -214,7 +214,7 @@ context is the users of the dissectors.
 	\midrule
 	ID & US05 \\
 	Requirements & FR3-B: The utility should support \#define and \#if. \\
-	Who & Developer\\
+	Who & Administrator \\
 	What & The user wants the utility to support \#define- and \#if-statement inside a header file.\\
 	How & The cparser module feeds the input into an external tool, the C preprocessor, which supports 
 		\#define- and \#if-statements. It returns a copy of the file with the statements removed, and their actions performed. \\
@@ -232,7 +232,7 @@ context is the users of the dissectors.
 	\midrule
 	ID & US06 \\
 	Requirements & FR4-A: Configuration must support valid ranges for struct members. \\
-	Who & Developer \\
+	Who & Administrator \\
 	What & The user wants to be able to specify valid ranges for struct members in a configuration file. \\
 	How & The config module should read config files provided to the command line interface, and find any rules 
 		regarding valid ranges. The rules are used by the cparser when it translates struct definitions to Protocol 
@@ -241,7 +241,7 @@ context is the users of the dissectors.
 	\midrule
 	ID & US07 \\
 	Requirements & FR6-A: Command line shall support parameter for C-header file. \\
-	Who & Developer\\
+	Who & Administrator \\
 	What & The user wants the utility to generate a dissector from a C-header file that he specifies.\\
 	How & The command line user interface will accept a number of arguments from the user, one of which
 		includes the path to an existing C header file and sends this to the parser module. It will parse these 
@@ -250,7 +250,7 @@ context is the users of the dissectors.
 	\midrule
 	ID & US08 \\
 	Requirements & FR6-B: Command line shall support parameter for configuration file. \\
-	Who & Developer \\
+	Who & Administrator \\
 	What & The user wants to provide the utility with one ore more configuration files. \\
 	How & The command line interface should accept arguments which specifies the path of existing configuration
 		files, and feed these to the config module, which should read the files and store them in configuration data 
@@ -281,24 +281,24 @@ does not use our utility himself, but uses the output dissectors in Wireshark.
 We have defined two use case actors for our utility. The customer has specified
 that the offstage actor, called administrator, is the most important actor.
 \begin{description}
-	\item[Administrator] User of the generated Wireshark dissectors, offstage actor
-	\item[Developer] User and configurer of utility, primary and secondary actor
+	\item[Developer] User of the generated Wireshark dissectors, offstage actor
+	\item[Administrator] User and configurer of utility, primary and secondary actor
 \end{description}
 
 \subsection{Use Case Diagrams}
 %-----------------------------
 \hyperref[fig:req:ucadm]{Figure \ref*{fig:req:ucadm}} shows the use case
 diagram for the administrator, and \autoref{fig:req:ucdev} is the use case
-diagram for the developer.x
+diagram for the developer.
 \begin{figure}[htbp]
 	\center
-	\includegraphics[width=0.8\textwidth]{./planning/img/administrator.png}
+	\includegraphics[width=0.8\textwidth]{./planning/img/administrator}
 	\caption{Use Case Diagram: Administrator\label{fig:req:ucadm}}
 \end{figure}
 
 \begin{figure}[htbp]
 	\center
-	\includegraphics[width=0.8\textwidth]{./planning/img/developer.png}
+	\includegraphics[width=0.8\textwidth]{./planning/img/developer}
 	\caption{Use Case Diagram: Developer\label{fig:req:ucdev}}
 \end{figure}
 

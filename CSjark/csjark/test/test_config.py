@@ -44,7 +44,36 @@ def range_rule_type(conf):
     assert rule.max == 15.5 and rule.min is None
 
 
+# Test that configuration support struct id and description.
+struct_rule = Tests()
+
+@struct_rule.context
+def create_structs():
+    text = '''
+    Structs:
+      - name: one
+        id: 9
+        description: a struct
+      - name: two
+        id: 11
+    '''
+    config.parse_file('test', only_text=text)
+    yield config.StructConfig.find('one'), config.StructConfig.find('two')
+    del config.StructConfig.configs['one']
+    del config.StructConfig.configs['two']
+
+@struct_rule.test
+def struct_rule_id(one, two):
+    assert one and two
+    assert one.id == 9 and two.id == 11
+
+@struct_rule.test
+def struct_rule_description(one, two):
+    assert one and two
+    assert one.description == 'a struct' and two.description is None
+
+
 if __name__ == '__main__':
-    all_tests = Tests([range_rule])
+    all_tests = Tests([range_rule, struct_rule])
     all_tests.run()
 

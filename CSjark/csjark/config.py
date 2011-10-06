@@ -60,8 +60,11 @@ class StructRule:
         conf.id = self.id
 
         # Structs optional description
-        self.description = obj['description']
-        conf.description = self.description
+        if 'description' in obj:
+            self.description = obj['description']
+            conf.description = self.description
+        else:
+            self.description = None
 
 
 class RangeRule:

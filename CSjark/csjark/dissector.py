@@ -8,6 +8,11 @@ OTHER_TYPES = ["float", "double", "string", "stringz", "bytes",
 VALID_PROTOTYPES = INT_TYPES + OTHER_TYPES
 
 
+def _dict_to_table(pydict):
+    """Convert a python dictionary to lua table."""
+    return '{%s}' % ', '.join('[%i]="%s"' % (i, j) for i, j in pydict.items())
+
+
 class Field:
     def __init__(self, name, type, size):
         self.name = name
@@ -34,6 +39,16 @@ class EnumField(Field):
     def __init__(self, values, *args, **vargs):
         super().__init__(*args, **vargs)
         self.values = values
+
+    def get_definition(self):
+        """Get the ProtoField definition for this Field."""
+        t = '{var}.{name} = ProtoField.{type}("{protocol}.{name}", "{name}"' \
+                ', nil, {values})'
+        args = {'var': self.protocol.field_var, 'name': self.name,
+                'protocol': self.protocol.name, 'type': self.type,
+                'values': _dict_to_table(self.values)}
+        return t.format(**args)
+
 
 
 class RangeField(Field):

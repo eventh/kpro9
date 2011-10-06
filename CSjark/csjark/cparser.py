@@ -13,7 +13,7 @@ from pycparser import c_ast, c_parser, plyparser
 
 from config import StructConfig
 from dissector import Protocol
-from wireshark import create_field, size_of
+from wireshark import size_of, create_field, create_enum
 
 
 class ParseError(plyparser.ParseError):
@@ -73,6 +73,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def __init__(self):
         self.structs = OrderedDict() # All structs encountered in this AST
+        self.enums = OrderedDict() # All enums encountered in this AST
 
     def visit_Struct(self, node):
         """Visit a Struct node in the AST."""
@@ -116,20 +117,41 @@ class StructVisitor(c_ast.NodeVisitor):
         if proto.fields:
             self.structs[node.name] = proto
 
+    def visit_Enum(self, node):
+        """Visit a Enum node in the AST."""
+        # Visit children
+        c_ast.NodeVisitor.generic_visit(self, node)
+
+        # Empty Enum definition or using Enum
+        if not node.children():
+            return
+
+        # Find id:name of members
+        members = {}
+        for i, child in enumerate(node.children()[0].children()):
+            if child.children():
+                members[int(child.children()[0].value)] = child.name
+            else:
+                members[i] = child.name
+
+        self.enums[node.name] = members
+
     def handle_type_decl(self, node, proto, conf):
         """Find member details in a type declaration."""
         child = node.children()[0]
         if isinstance(child, c_ast.IdentifierType):
             ctype = ' '.join(reversed(child.names))
+            create_field(proto, conf, node.declname, ctype)
         elif isinstance(child, c_ast.Enum):
-            ctype = "enum"
+            if child.name not in self.enums.keys():
+                raise ParseError('Unknown enum: %s' % child.name)
+            create_enum(proto, conf, node.declname, self.enums[child.name])
         elif isinstance(child, c_ast.Union):
-            ctype = "union"
+            create_field(proto, conf, node.declname, 'union')
         elif isinstance(child, c_ast.Struct):
-            ctype = "struct"
+            create_field(proto, conf, node.declname, 'struct')
         else:
             raise ParseError('Unknown type declaration: %s' % repr(child))
-        create_field(proto, conf, node.declname, ctype)
 
     def handle_enum_decl(self, node, proto, conf):
         """Find member details in an enum declaration."""

@@ -2,7 +2,7 @@
 A module for Wireshark specific data structures and functions.
 """
 from config import RangeRule
-from dissector import Field, RangeField
+from dissector import Field, EnumField, RangeField
 
 
 # Mapping of c type and their wireshark field type.
@@ -71,6 +71,11 @@ DEFAULT_C_SIZE_MAP = {
         'long double': 16,
         'pointer': 4,
 }
+
+
+def create_enum(proto, conf, name, values):
+    """Create a dissector field representing an enum."""
+    proto.add_field(EnumField(values, name, 'uint32', 4))
 
 
 def create_field(proto, conf, name, ctype, size=None):

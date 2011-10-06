@@ -10,13 +10,13 @@ The project plan includes the specified plan on which tool we are using in this 
 
 \subsection{Measurement of Project Effects}
 %------------------------------------------
-Automatic generation of Lua scripts from c-header files would bring considerable resource savings in the customers usual work process. Time and therefore financial resources, will be  be saved by delivery of the solution every time they need to know the contents of investigated IPC messages that include C structs.
+Automatic generation of Lua scripts from C header files would bring considerable resource savings in the customer's usual work process. Time and therefore financial resources, will be saved by delivery of the solution every time they need to know the contents of inter-process commun messages that include C structs.
 
-The most of the savings will be caused by enabling filtering of the messages by the specific attribute in the C struct in Wireshark. Once this will be possible, a lot of unnecessary searching can be omitted.
+The biggest impact on savings will be caused by enabling filtering of the messages by the specific attribute in the C struct in Wireshark. Once this will be possible, a lot of unnecessary searching can be omitted.
 
 Before the project start, C structs were investigated in two ways. The first, manual method, which means counting individual bytes of the binary file that includes data in C structs. This is possible only for small-sized messages. For bigger messages, this method is inapplicable, since the message can consist of several thousands bytes. The second method consists of writing the dissector in Lua manually for the specific C header. Also, this method cannot be used for more complex C structs, i.e. those using nested structs. So far, there has been written about 10 Lua scripts manually.
 
-According to the customer, there are approximately 3000 messages that include C structs and those need to be dissected by the solution. Time spent to write a dissector for a message manually depends on the struct’s complexity. For trivial messages, it takes 15 minutes to create a dissector manually. It took about 1 hour for the most complicated dissectors that were developed by the customer so far.
+According to the customer, there are approximately 3000 messages that include C structs and those need to be dissected by the solution. Time spent to write a dissector for a message manually depends on the struct’s complexity. For simple structs, this takes 15 minutes. It took about 1 hour for the most complicated dissectors that the customer had developed so far.
 
 If 1 hour is the average time for creating a dissector for 1 message, our solution will save about 3000 hours of work. Due to everyday workload of the customer’s development team, this amount of time could never be used to accomplish such a task.
 
@@ -83,10 +83,10 @@ developers, while the other two sites are fully focused on developers. The
 two remaining sites provides almost identical features, where one focuses on 
 Git and the other on Mercurial.
 
-Github with Git version control system was selected because more team members
-knew Git than Mercurial. By selecting a newer version control system like Git,
-we get advantageous features like branches and distributed repository model.
-Since we use different platforms, we will also use different git clients, but
+Github with Git version control system was selected because more team members 
+had experience with Git than Mercurial. By selecting a newer version control system 
+like Git, we get advantageous features like branches and distributed repository 
+model. Since we use different platforms, we will also use different git clients, but
 for Windows most of the group has selected tortoisegit.
 
 \subsubsection{Skype}
@@ -147,7 +147,7 @@ of work.
 \subsubsection{text2pcap}
 In this project text2cap is used to genereate capture files from ASCII
 hexdumps. Since the customer cannot give us capture files, we have to create
-them. The capture files are important for testing the generated Lua-scripts.
+them ourselves. The capture files are important for testing the generated Lua-scripts.
 The text2pcap tool is included with Wireshark. The input to the tool is a ASCII
 hexdump as a text-file, and the output will be a pcap-file. When running
 text2pcap, it is necessary to specifiy the protocol type. In this project the
@@ -171,7 +171,7 @@ Violet\footnote{\url{http://violet.sourceforge.net/}} is a cross platform,
 lightweight, free and easy to use modeling software for making UML-diagrams,
 authored by Cay S. Horstmann and Alexandre de Pellegrin. The architectural and
 design team will be using violet to create diagrams to ilustrate the workings
-of the utility. As very advanced diagrams were not needed for this for this
+of the utility. As very advanced diagrams were not needed for this
 project, violet seemed like a fitting tool.
 
 \subsection{Based on the Planned Effort}
@@ -199,9 +199,9 @@ This project will have two deliveries, pre-delivery and final delivery.  The mil
 
 \subsection{Concrete Project Work Plan}
 %--------------------------------------
-The two first weeks on the project will be used on planning and pre study.
-The project will be divided into 3 sprints, that will last for three weeks. Each sprint will have a total of 525 person-hours.
-The last 1.5 week will be used to finish the final report and prepare for the presentation. 
+The two first weeks of the project will be used on planning and pre study.
+The project will be divided into 4 sprints, that will each last for two weeks. The first sprint will have an estimated 200 person-hours,
+while the last 3 sprints will have 250 person-hours. The last 1.5 weeks will be used to finish the final report and prepare for the presentation. 
 Table \ref{tab:wbs} shows the work breakdown structure, and the project timeline is in figure \ref{fig:gantt}.
 
 \begin{table}[!ht] \footnotesize \center
@@ -350,11 +350,12 @@ The customer contacts are listed in table \ref{tab:part_cust}. The developers co
 %--------------------------
 \section{Quality Assurance}
 %--------------------------
-The following section contains internal processes and routines the team will use in project. This includes procesures for meetings, document templates and standards and internal reports.
+The following section contains internal processes and routines the team will use in the project. This includes procesures for meetings, document templates and standards and internal reports.
 
 \subsection{Routines for Ensuring Quality Internally}
 %----------------------------------------------------
-We will organize in pairs when producing items, where the pair reviews each others work. This is to try to find more errors and to get some extra perspective on style and solutions.
+We will organize in pairs when producing items, where the pair reviews each others work. This is done in an effort to enhance the quality of the project, as we will be able to find more errors, and 
+also get a broader perspective on style and solutions.
 
 We also has assigned quality assurance responsibilities for three subjects: documents, code and tests. The respective team members will try to have a birds eye overview in their area to catch further errors.
 
@@ -367,9 +368,9 @@ We have agreed to have three weekly meetings to accommodate these routines.
 
 \subsection{Phase Result Approval}
 %---------------------------------
-To ensure the quality of deliverable results, we have have, the group members responsible for quality assurance for a given subject will either read through, or delegate that that task to another free group member.
+To ensure the quality of the sprint deliverables, the group members responsible for quality assurance for a given subject will either read through, or delegate that task to another free group member.
 
-We will also present the results for the customer. They will then have an opportunity to point out problems and misunderstandings, and suggest solutions. We will then try to correct the problems and the reiterate the quality assurance.
+We will also present the results for the customer. They will then have an opportunity to point out problems and misunderstandings, and suggest solutions. We will try to correct the problems and then reiterate the quality assurance.
 
 \subsection{Procedures for Customer Meetings}
 %--------------------------------------------
@@ -473,7 +474,7 @@ agenda, phasedoc, e.g.) and the date, if applicable.
 
 \subsubsection{Coding Style Standard}
 The programming language used to implement the utility specified by the
-customer requirements are Python. The coding style the team has agreed upon is
+customer requirements is Python. The coding style the team has agreed upon is
 the Python Standard Styling Guide as defined by
 PEP8\footnote{Style Guide for Python Code: \url{http://www.python.org/dev/peps/pep-0008/}}.
 In addition the design should attempt to be pythonic, as detailed by
@@ -481,7 +482,7 @@ PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}
 
 \subsection{Version Control Procedures}
 %--------------------------------------
-Every relevant digital item should be pushed to our repository at github, and checked out by other participants. Those who works on a given item should commit and push their changes often, so that others can be as up to date as possible. All digital items should be labeled with a version number, starting at version 1. If an item goes under review and is deemed insufficient by the customer or  , the version number should also be incremented by one for each revision of the document
+Every relevant digital item should be pushed to our repository at github, and be reviewed by other participants. Those who work on a given item should commit and push their changes often, so that others can be as up to date as possible. All digital items should be labeled with a version number, starting at version 1. If an item goes under review and is deemed insufficient by the customer, the version number should also be incremented by one for each revision of the document
 
 Relevant digital items includes source code, documents, picture files, binary blobs, etc.
 
@@ -489,7 +490,7 @@ NB: Google docs is not to be used for version control, so every document written
 
 \subsection{Internal Reports}
 %----------------------------
-Some of the groups internal activities should be documented. This includes:
+Some of the groups' internal activities should be documented. This includes:
 \begin{itemize}
 	\item Activities, what is done, and what remains
 	\item Minutes for internal meetings
@@ -503,6 +504,7 @@ These reports should follow the templates specified in Templates and Standards (
 \section{Risk Management}
 %------------------------
 The following section list the possible risks the team has in the project, and how to handle them. \autoref{tab:risk} shows how to handle the possible risks in the team. Each risk has a consequence and a probability:  High (H), Medium (M) or Low (L).
+Strategy and actions describes what we should do to reduce the consequences of the risk, or prevent the risk from happening altogether. Deadline states when we need to handle the risk.
 \begin{description}
 \item[R1. Choosing an incompatible technical solution]  The team decides to use a technical solution that is not suited for the given problem, or decides on an implementation that is too time consuming.
 \item[R2. Too much focus on report]   We spend too much time working on the report and neglect the implementation. 
@@ -514,6 +516,8 @@ The following section list the possible risks the team has in the project, and h
 \item[R8. Miscommunication with customer]  The team misunderstands the requirements given by the customer. 
 \item[R9. Lack of experience with Scrum]  The team does not have any experience in doing Scrum projects.
 \end{description}
+
+
 
 \begin{longtable}{l p{9cm}}
 \caption{Handling Risks} \\

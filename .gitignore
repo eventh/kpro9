@@ -19,6 +19,7 @@
 */yacctab.py
 .project
 /misc
+/report/tmp
 /CSjark/docs/_build
 /CSjark/docs/_static
 /CSjark/docs/_template

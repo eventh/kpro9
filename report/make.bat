@@ -21,10 +21,7 @@ goto :eof
         pdflatex -output-directory tmp %%v_standalone.tex
         move /Y tmp\%%v_standalone.pdf %%v.pdf
     )
-    pdflatex -output-directory tmp report.tex
-    pdflatex -output-directory tmp report.tex
-    move /Y tmp\report.pdf report.pdf
-    goto :eof
+    goto report
 
 :standalone
     pdflatex -output-directory tmp %1_standalone.tex

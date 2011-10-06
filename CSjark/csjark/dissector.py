@@ -106,9 +106,9 @@ class RangeField(Field):
             data.append('\tend')
 
         if self.min is not None:
-            create_test(self.min, '>', 'larger than')
+            create_test(self.min, '<', 'larger than')
         if self.max is not None:
-            create_test(self.max, '<', 'smaller than')
+            create_test(self.max, '>', 'smaller than')
 
         return '\n'.join(data)
 

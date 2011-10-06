@@ -21,7 +21,7 @@ class Field:
         self.protocol = None
 
     def get_definition(self):
-        """Get the ProtoField definition for this Field."""
+        """Get the ProtoField definition for this field."""
         t = '{var}.{name} = ProtoField.{type}("{protocol}.{name}", "{name}")'
         args = {'var': self.protocol.field_var, 'name': self.name,
                 'protocol': self.protocol.name, 'type': self.type}
@@ -40,22 +40,19 @@ class EnumField(Field):
         super().__init__(*args, **vargs)
         self.values = values
 
+        # The func to call to get the value from the buffer
+        self.func_type = self.type
+        if self.func_type[-2:] in ('16', '32'):
+            self.func_type = self.func_type[:-2]
+
     def get_definition(self):
-        """Get the ProtoField definition for this Field."""
+        """Get the ProtoField definition for this field."""
         t = '{var}.{name} = ProtoField.{type}("{protocol}.{name}", "{name}"' \
                 ', nil, {values})'
         args = {'var': self.protocol.field_var, 'name': self.name,
                 'protocol': self.protocol.name, 'type': self.type,
                 'values': _dict_to_table(self.values)}
         return t.format(**args)
-
-
-
-class RangeField(Field):
-    def __init__(self, min, max, *args, **vargs):
-        super().__init__(*args, **vargs)
-        self.min = min
-        self.max = max
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
@@ -65,17 +62,45 @@ class RangeField(Field):
         t = '\tlocal {name} = subtree:add({var}.{name}, buffer({offset}, {size}))'
         args = {'var': self.protocol.field_var, 'name': self.name,
                 'offset': offset, 'size': self.size}
+        data.append(t.format(**args))
 
+        # Test that the enum value is valid
+        data.append('\tlocal test = %s' % _dict_to_table(self.values))
+        data.append('\tif (test[buffer(%i, %i):%s()] == nil) then' % (
+                offset, self.size, self.func_type))
+        warn = 'Invalid value, not in (%s)' % ', '.join(
+                str(i) for i in sorted(self.values.keys()))
+        data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, "%s")' % (
+                self.name, warn))
+        data.append('\tend')
+
+        return '\n'.join(data)
+
+class RangeField(Field):
+    def __init__(self, min, max, *args, **vargs):
+        super().__init__(*args, **vargs)
+        self.min = min
+        self.max = max
+
+        # The func to call to get the value from the buffer
+        self.func_type = self.type
+        if self.func_type[-2:] in ('16', '32'):
+            self.func_type = self.func_type[:-2]
+
+    def get_code(self, offset):
+        """Get the code for dissecting this field."""
+        data = []
+
+        # Local var definitions
+        t = '\tlocal {name} = subtree:add({var}.{name}, buffer({offset}, {size}))'
+        args = {'var': self.protocol.field_var, 'name': self.name,
+                'offset': offset, 'size': self.size}
         data.append(t.format(**args))
 
         # Test the value
         def create_test(value, test, warn):
-            type_ = self.type
-            if type_[-2:] in ('16', '32'):
-                type_ = type_[:-2]
-            data.append('\tlocal %s_val = buffer(%i, %i):%s()' % (
-                            self.name, offset, self.size, type_))
-            data.append('\tif (%s %s %s_val) then' % (value, test, self.name))
+            data.append('\tif (buffer(%i, %i):%s() %s %s) then' %
+                    (offset, self.size, self.func_type, test, value))
             data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, '
                             '"Should be %s %s")' % (self.name, warn, value))
             data.append('\tend')

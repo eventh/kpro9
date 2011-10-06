@@ -102,7 +102,6 @@ def parse_file(filename, only_text=None):
     else:
         with open(filename, 'r') as f:
             obj = yaml.safe_load(f)
-    print(obj)
 
     # Deal with struct rules
     if 'Structs' in obj:

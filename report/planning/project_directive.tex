@@ -6,13 +6,23 @@ The following chapter will briefly introduce the project.
 
 \section{Project Mandate}
 %--------------------------------
-The purpose of this project is to develop an utility that automatically create Lua-dissectors for Wireshark, from C-header files. This report presents the team’s process from the initial requirement specification to the finished product. 
+The purpose of this project is to develop an utility that automatically creates Lua-dissectors for Wireshark, from C-header files. This report presents the team’s process from the initial requirement specification to the finished product. 
 
-The title of the project is: Wireshark - Automated generation of protocol dissectors. The name chosen for the utility is "CSjark". Sjark is the Norwegian name for an iconic type of fishing boat, most commonly used in Northern Norway. The reason why the team picked this name was because of the way the utility "fishes" for C-structs in header files. The utility then creates dissectors for these structs so that wireshark can display the stuct information properly. This reminded the team of what fisherman do to prepare the fish for the market. The workd Sjark is also pronounced in a similar way to "shark", which makes our utility-name a play on words when comparing it to "Wireshark", the program our utility is supposed to work with.
+The title of the project is "Wireshark - Automated generation of protocol dissectors", it was given to us by the customer and describes exactly what we are planning
+to accomplish.The name chosen for the utility is "CSjark". Sjark is the Norwegian name for an iconic type of fishing boat, most commonly used in Northern Norway. The reason why the team picked this name was because of the way the utility "fishes" for C-structs in header files. The utility then creates dissectors for these structs so that wireshark can display the stuct information properly. This reminded the team of what fisherman do to prepare the fish for the market. The workd Sjark is also pronounced in a similar way to "shark", which makes our utility-name a play on words when comparing it to "Wireshark", the program our utility is supposed to work with.
 
 \section{The Client}
 %----------------------------
 The client for this project is Thales Norway AS. Thales is an international electronics and systems group, which focuses on defence, aerospace and security markets worldwide. The Norwegian branch primarily supplies military communication systems, used by the Norwegian Armed Forces and other NATO countries. Thales Norway AS consists of 170 highly skilled employees, which offers a wide range of technical competence.
+
+\section{Involved parties}
+%--------------------------------
+The following parties are involved in this project.
+
+The client, described in the section above, is represented by Christian Tellefsen and Stig Bjørlykke. See \ref{tab:part_cust} for contact information.
+The project team consists of seven computer engineering students from NTNU, as described in \ref{tab:part_dev}.
+For feedback and help during the project period our team has been assigned a main supervisor Daniela Soares Cruzes.
+She will be assisted by Maria Carolina Passos. Their contact information can be found in \ref{tab:part_adv}.
 
 \section{Project Background}
 %----------------------------
@@ -21,14 +31,15 @@ They want us to extend the functionality of Wireshark, so that they could use it
 
 Before, when Thales wanted to debug with Wireshark, they had to write the dissectors manually. Their hope is therefore that our tool can save them valuable time.
 
-
 \section{Project Objective}
 %------------------------------
-The objective of the project is to design a utility that will be able to generate Lua code for dissecting the binary representation of C/C++ structs, allowing Wireshark to show, filter, and search through the data.
-The utility needs to support a flexible configuration, as this will make it useable for complex and specific header files. 
-
+The objective from the customer is to design a utility that will be able to generate Lua code for dissecting the binary representation of C/C++ structs, allowing Wireshark to show, filter, and search through the data. The utility needs to support a flexible configuration, as this will make it useable for complex and specific header files. 
 The code and configuration should be well documented, making it easy for Thales to use and extend the tool as they see fit.
 
+The objective from NTNU's point of view is that we acquire practical experience in executing all phases of a bigger IT-project.
+
+Our team has three goals for this project, to get a good grade, to attain experience in working in a real development project and to create a solution that the customer
+is satisfied with.
 
 \section{Duration}
 %--------------------------------

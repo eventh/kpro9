@@ -1,41 +1,53 @@
-%==================
+%==========================
 \chapter{Project Directive}
-%==================
+%==========================
+This chapter will briefly introduce the project, its background and purpose.
 
-The following chapter will briefly introduce the project.     
 
+%------------------------
 \section{Project Mandate}
-%--------------------------------
+%------------------------
 The purpose of this project is to develop an utility that automatically create Lua-dissectors for Wireshark, from C-header files. This report presents the team’s process from the initial requirement specification to the finished product. 
 
 The title of the project is: Wireshark - Automated generation of protocol dissectors. The name chosen for the utility is "CSjark". Sjark is the Norwegian name for an iconic type of fishing boat, most commonly used in Northern Norway. The reason why the team picked this name was because of the way the utility "fishes" for C-structs in header files. The utility then creates dissectors for these structs so that wireshark can display the stuct information properly. This reminded the team of what fisherman do to prepare the fish for the market. The workd Sjark is also pronounced in a similar way to "shark", which makes our utility-name a play on words when comparing it to "Wireshark", the program our utility is supposed to work with.
 
-\section{The Client}
-%----------------------------
-The client for this project is Thales Norway AS. Thales is an international electronics and systems group, which focuses on defence, aerospace and security markets worldwide. The Norwegian branch primarily supplies military communication systems, used by the Norwegian Armed Forces and other NATO countries. Thales Norway AS consists of 170 highly skilled employees, which offers a wide range of technical competence.
 
+%-------------------
+\section{The Client}
+%-------------------
+The client for this project is
+Thales Norway AS\footnote{\url{http://www.thales.no/}}. Thales is an
+international electronics and systems group, which focuses on defence,
+aerospace and security markets worldwide. The Norwegian branch primarily
+supplies military communication systems, used by the Norwegian Armed Forces
+and other NATO countries. Thales Norway AS consists of 170 highly skilled
+employees, which offers a wide range of technical competence.
+
+
+%---------------------------
 \section{Project Background}
-%----------------------------
+%---------------------------
 Thales currently uses Wireshark to analyze traffic data between different network nodes, for example, IP packages sent between a client and a server.
 They want us to extend the functionality of Wireshark, so that they could use it to monitor internal data between processes. The extended functionality will be automatic generation of Lua-dissectors from C-header files.
 
 Before, when Thales wanted to debug with Wireshark, they had to write the dissectors manually. Their hope is therefore that our tool can save them valuable time.
 
 
+%--------------------------
 \section{Project Objective}
-%------------------------------
+%--------------------------
 The objective of the project is to design a utility that will be able to generate Lua code for dissecting the binary representation of C/C++ structs, allowing Wireshark to show, filter, and search through the data.
 The utility needs to support a flexible configuration, as this will make it useable for complex and specific header files. 
 
 The code and configuration should be well documented, making it easy for Thales to use and extend the tool as they see fit.
 
 
+%-----------------
 \section{Duration}
-%--------------------------------
+%-----------------
 Calculations done by the course staff suggests that each student should conduct 325 person-hours distributed over 13 weeks for the project. Our group, consisting of seven students, will have a total of 2275 person-hours to spend.\\
 \begin {itemize}
 	\item Project start: August 30th
 	\item Project end (Presentation): November 24th
 \end{itemize}
-
 

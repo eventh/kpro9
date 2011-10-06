@@ -4,9 +4,9 @@
 This chapter presents the preliminary studies for this project.
 In \autoref{sec:pre:similar} we have examined existing solutions, and in
 \autoref{sec:pre:method} we provide a description of two popular software
-development methodology.
+development methodologies.
 
-Wireshark, which out utility should create dissectors for, are described in
+Wireshark, which our utility should create dissectors for, are described in
 \autoref{sec:pre:wireshark}.
 \hyperref[sec:pre:langs]{Section \ref*{sec:pre:langs}} contains the different
 programming languages we might use, while \autoref{sec:pre:parsers}
@@ -70,7 +70,7 @@ why.
 Waterfall is a software development methodology based on sequential phases.
 It consist of the following phases: requirement specification, design,
 implementation, integration, testing, deployment, and maintenance. In its pure
-form, these phases are non overlapping and one way only, which means that each
+form, these phases are non-overlapping and one way only, which means that each
 phase must be fully completed before the next can begin.
 
 \subsubsection{Requirement Specification}
@@ -138,7 +138,7 @@ to the customer, even if this requires some redundant work.
 		stated authorities.
 	\item[Team Members] responsible for making and delivering the product.
 		Should consist of a self organizing team of five to nine persons with
-		cross functional skill set.
+		a cross functional skill set.
 \end{description}
 
 \subsubsection{Scrum Artifacts}
@@ -159,7 +159,7 @@ to the customer, even if this requires some redundant work.
 A sprint begins with the sprint planning meeting, which consists of two
 stages. In the first, the team and the product owner prioritizes the product
 backlog. In the second, the team discusses what features they can commit to
-(based on priority) and brake these down into work items, which are added to
+(based on priority) and break these down into work items, which are added to
 the sprint backlog. This should include giving each item an estimated
 completion time.
 
@@ -168,14 +168,14 @@ items, updating the burn down chart, and daily scrum meetings. In these daily
 meetings each team member provides a short update of what they did the day
 before, what they plan to do today and what problems might be in their way.
 These problems should not be discussed in this meeting, but rather dealt with
-separately after the meeting (this is the scrum masters responsibility).
+separately after the meeting (this is the scrum master's responsibility).
 
 At the end of the sprint cycle, the team should hold a scrum review meeting.
-This meeting is about discussing what was completed and what was not, and to
-demonstrate the completed features for the customer.
+In this meeting the team should discuss what was completed and what was not, and
+demonstrate the completed features for the customer.	
 
 After the review meeting, a separate retrospect meeting should be held with all
-the team members where all members shares their reflections of how the sprint
+the team members, where all members shares their reflections of how the sprint
 went and how to improve the next sprint. This is important for improving the
 process.
 
@@ -399,7 +399,7 @@ of  ASN.1, but neither support the 3.x branch of Python, which we require.
 	\vspace{-30pt}
 \end{wrapfigure}
 YAML\footnote{\url{http://yaml.org/}} (YAML Ain't Markup Language) is a data
-serialization format. It's designed to be easy to read and write for humans.
+serialization format. It is designed to be easy to read and write for humans.
 YAML syntax was designed to be easily mapped to data types common to most
 high-level languages. While most programming languages can use YAML for data
 serialization, YAML excels in working with those languages that are
@@ -408,7 +408,7 @@ wave of agile languages such as Perl, Python, PHP, Ruby, and Javascript.
 
 PyYAML\footnote{\url{http://pyyaml.org/}} is a YAML parser for the Python
 programming language, and it is available for both the 2.x and 3.x branch of
-Python. It is licensed under MIT license.
+Python. It is licensed under the MIT license.
 
 \subsection{configparser}
 %------------------------
@@ -464,7 +464,7 @@ easier to write and faster, but harder to learn and understand.
 nose\footnote{\url{http://readthedocs.org/docs/nose/en/latest/}} testing
 framework extends Python's unittest library to make testing easier.
 It provides an alternative test discovery and running process for unittest,
-which is intended to mimic the behavior of py.test as much as is reasonably
+which is intended to mimic the behavior of py.test as much as reasonably
 possible without resorting to too much magic. nose support easy-to-write
 plugins, and it comes bundled with the most popular ones. It supports both
 Python 2.x and 3.x branches.
@@ -524,7 +524,7 @@ generate output in several different formats, including html and latex/pdf.
 	\includegraphics[width=1.2cm]{./planning/img/readthedocs_logo}
 	\vspace{-20pt}
 \end{wrapfigure}
-Read the Docs\footnote{\url{http://readthedocs.org/docs/read-the-docs/}} is
+Read the Docs\footnote{\url{http://readthedocs.org/docs/read-the-docs/}} is a
 free hosting of documentation for the open source community. It supports Sphinx
 docs written with reStructuredText, and it can automatically pull from Git,
 Subversion, Bazaar, and Mercurial repositories. We can configure it so it
@@ -567,12 +567,12 @@ PyScripter\footnote{\url{http://code.google.com/p/pyscripter/}}
 is a Windows only, open source IDE for Python. It has support for
 basic text editing functions relevant to programming like syntax highlighting,
 auto indentation, code completion, debugger and file management. It also has
-some support for navigation the code, for example by offering to find the next
+some support for navigating the code, for example by offering to find the next
 point in the code that references a certain variable or function. The mentioned
 function mostly has keyboard shortcuts.
 
 It does not have support for automatic error checking in the program, so it
-will no alert the user of spelling and syntax errors. It also lacks integration
+will not alert the user of spelling and syntax errors. It also lacks integration
 with any version control systems like git or svn. The code completion and
 code navigation is a little lacking. It will for example not suggest importing
 files if you reference a class from another module and it cannot give a
@@ -626,14 +626,14 @@ individually or as a group, so we have little personal knowledge of how much
 we are able to produce, and the task may present challenges that we are not
 prepared for when the project starts. For these reasons we believe that we
 need to take an agile approach to this project. This way, we may both learn as
-we go, an adjust later iterations by the result of the previous. We may also
+we go, and adjust later iterations by the result of the previous. We may also
 have something to deliver even if we do not have time to implement all the
 desired features.
 
 The scrum methodology fits these goals perfectly, and is therefore a natural
 choice. The risk factor here is that all team members are mostly unfamiliar
-with scrum, while we have at least a little knowledge about waterfall. We do,
-however, think that the time and risk of learning will not be much compared to
+with scrum, while we have at least a little knowledge of waterfall. We do,
+however, think that the time and risk of learning will not outweigh
 the benefit it will give us over waterfall.
 
 \subsection{Programming Language Choice}
@@ -672,17 +672,17 @@ self study before we start the first sprint.
 \subsection{Parsers Libraries \& Tools Choice}
 %---------------------------------------------
 \label{sec:pre:parserchoice}
-We outlined three different approaches for parsing C header files. First is
+We outlined three different approaches for parsing C header files. First is to
 write a custom parser ourself, second is to use a C parsing library, and
 third is using a toolkit parser like \hyperref[sec:pre:gcc]{GCC} and
 \hyperref[sec:pre:clang]{Clang}.
 
 We felt that writing our own C parser with C preprocessor would possibly take
 up a lot, if not all, of the available project time. The third option would add
-a large dependency which our customer want to avoid, if possible. GCC and Clang
+a large dependency which our customer want to avoid if possible. GCC and Clang
 can be challenging to install and use on Windows.
 
-Therefor using a C parser library would be the best solution, and as mentioned
+Therefore using a C parser library would be the best solution, and as mentioned
 above, Java with ANTLR proved challenging. So we evaluated Python parser
 libraries.
 

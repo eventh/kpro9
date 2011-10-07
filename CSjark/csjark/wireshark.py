@@ -36,6 +36,7 @@ DEFAULT_C_TYPE_MAP = {
         'double': 'double',
         'long double': 'todo',
         'pointer': 'int32',
+        'enum': 'uint32',
 }
 
 
@@ -70,33 +71,8 @@ DEFAULT_C_SIZE_MAP = {
         'double': 8,
         'long double': 16,
         'pointer': 4,
+        'enum': 4,
 }
-
-
-def create_enum(proto, conf, name, values):
-    """Create a dissector field representing an enum."""
-    proto.add_field(EnumField(values, name, 'uint32', 4))
-
-
-def create_field(proto, conf, name, ctype, size=None):
-    """Create a dissector field representing the struct member."""
-    # Find all rules relevant for this field
-    range_rules = None
-
-    if conf is not None:
-        rules = conf.get_rules(name, ctype)
-        range_rules = [i for i in rules if isinstance(i, RangeRule)]
-
-    # Map from C to wireshark values
-    type_ = map_type(ctype)
-    if size is None:
-        size = size_of(ctype)
-
-    if range_rules:
-        proto.add_field(RangeField(range_rules[0].min,
-                            range_rules[0].max, name, type_, size))
-    else:
-        proto.add_field(Field(name, type_, size))
 
 
 def map_type(ctype):
@@ -110,4 +86,30 @@ def size_of(ctype):
         return DEFAULT_C_SIZE_MAP[ctype]
     else:
         return 1
+
+
+def create_enum(proto, conf, name, values):
+    """Create a dissector field representing an enum."""
+    type, size = map_type('enum'), size_of('enum')
+    proto.add_field(EnumField(name, type, size, values))
+
+
+def create_field(proto, conf, name, ctype, size=None):
+    """Create a dissector field representing the struct member."""
+    # Find all rules relevant for this field
+    range_rules = None
+
+    if conf is not None:
+        rules = conf.get_rules(name, ctype)
+        range_rules = [i for i in rules if isinstance(i, RangeRule)]
+
+    type_ = map_type(ctype)
+    if size is None:
+        size = size_of(ctype)
+
+    args = [name, type_, size]
+    if range_rules:
+        args.extend([range_rules[0].min, range_rules[0].max])
+
+    proto.add_field(Field(*args))
 

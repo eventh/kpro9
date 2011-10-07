@@ -103,8 +103,6 @@ class StructVisitor(c_ast.NodeVisitor):
 
             if isinstance(child, c_ast.TypeDecl):
                 self.handle_type_decl(child, proto, conf)
-            elif isinstance(child, c_ast.Enum):
-                self.handle_enum_decl(child, proto, conf)
             elif isinstance(child, c_ast.ArrayDecl):
                 self.handle_array_decl(child, proto, conf)
             elif isinstance(child, c_ast.PtrDecl):
@@ -159,32 +157,32 @@ class StructVisitor(c_ast.NodeVisitor):
         else:
             raise ParseError('Unknown type declaration: %s' % repr(child))
 
-    def handle_enum_decl(self, node, proto, conf):
-        """Find member details in an enum declaration."""
-        raise ParseError('not implemented yet') # TODO
-        type_decl = node.children()[0]
-        ctype = 'pointer' # Shortcut as pointers not a requirement
-        create_field(proto, conf, type_decl.declname, ctype)
-
     def handle_array_decl(self, node, proto, conf):
         """Find member details in an array declaration."""
         type_decl, constant = node.children()
         child = type_decl.children()[0]
-        if isinstance(child, c_ast.IdentifierType):
-            if child.names[0] == 'char':
-                ctype = 'string'
-            else:
-                ctype = ' '.join(reversed(child.names))
+        if child.names[0] == 'char':
+            type = 'string'
+            base = size_of('char')
         else:
+            ctype = ' '.join(reversed(child.names))
+            base = size_of(ctype)
+            type = 'bytes'
+
+        # TODO: support multidimentional arrays.
+
+        # Calculate size of the array
+        if isinstance(constant, c_ast.Constant):
+            size = int(constant.value) * base
+        elif isinstance(constant, c_ast.BinaryOp):
+            size = 0 # TODO: evaluate BinaryOp expression
+        elif isinstance(constant, c_ast.ID):
+            size = 0 # TODO? PATH_MAX WTF?
+        else:
+            print(constant)
             raise ParseError('array of different types not supported yet.')
 
-        if hasattr(constant, 'value'):
-            size = int(constant.value) * size_of(ctype)
-        else:
-            # TODO
-            size = 99
-            print(constant)
-        create_field(proto, conf, type_decl.declname, ctype, size=size)
+        create_field(proto, conf, type_decl.declname, type, size)
 
     def handle_ptr_decl(self, node, proto, conf):
         """Find member details in a pointer declaration."""

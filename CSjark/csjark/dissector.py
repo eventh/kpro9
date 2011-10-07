@@ -2,10 +2,10 @@
 A module for generating LUA dissectors for Wireshark.
 """
 
-INT_TYPES = ["uint8", "uint16", "uint24", "uint32", "uint64", "framenum"]
-OTHER_TYPES = ["float", "double", "string", "stringz", "bytes",
-                "bool", "ipv4", "ipv6", "ether", "oid", "guid"]
-VALID_PROTOTYPES = INT_TYPES + OTHER_TYPES
+#INT_TYPES = ["uint8", "uint16", "uint24", "uint32", "uint64", "framenum"]
+#OTHER_TYPES = ["float", "double", "string", "stringz", "bytes",
+#                "bool", "ipv4", "ipv6", "ether", "oid", "guid"]
+#VALID_PROTOTYPES = INT_TYPES + OTHER_TYPES
 
 
 def _dict_to_table(pydict):
@@ -36,9 +36,10 @@ class Field:
 
 
 class EnumField(Field):
-    def __init__(self, values, *args, **vargs):
-        super().__init__(*args, **vargs)
+    def __init__(self, name, type, size, values, strict=True):
+        super().__init__(name, type, size)
         self.values = values
+        self.strict = strict
 
         # The func to call to get the value from the buffer
         self.func_type = self.type
@@ -65,20 +66,21 @@ class EnumField(Field):
         data.append(t.format(**args))
 
         # Test that the enum value is valid
-        data.append('\tlocal test = %s' % _dict_to_table(self.values))
-        data.append('\tif (test[buffer(%i, %i):%s()] == nil) then' % (
-                offset, self.size, self.func_type))
-        warn = 'Invalid value, not in (%s)' % ', '.join(
-                str(i) for i in sorted(self.values.keys()))
-        data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, "%s")' % (
-                self.name, warn))
-        data.append('\tend')
+        if self.strict:
+            data.append('\tlocal test = %s' % _dict_to_table(self.values))
+            data.append('\tif (test[buffer(%i, %i):%s()] == nil) then' % (
+                    offset, self.size, self.func_type))
+            warn = 'Invalid value, not in (%s)' % ', '.join(
+                    str(i) for i in sorted(self.values.keys()))
+            data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, "%s")'
+                    % (self.name, warn))
+            data.append('\tend')
 
         return '\n'.join(data)
 
 class RangeField(Field):
-    def __init__(self, min, max, *args, **vargs):
-        super().__init__(*args, **vargs)
+    def __init__(self, name, type, size, min, max):
+        super().__init__(name, type, size)
         self.min = min
         self.max = max
 

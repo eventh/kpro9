@@ -2,7 +2,7 @@
 Module for white-box testing the specific customer requirements.
 """
 import sys, os
-from attest import Tests, assert_hook
+from attest import Tests, assert_hook, contexts
 from pycparser import c_ast
 
 try:
@@ -87,7 +87,11 @@ def req_1e():
 @parse_structs.test
 def req_1f():
     """Test requirement FR1-F: Detect same name structs."""
-    pass #TODO
+    code = 'struct a {int c;}; struct b { int d; struct a {int d;}; };'
+    ast = cparser.parse(code, 'test')
+    with contexts.raises(cparser.ParseError) as error:
+        cparser.find_structs(ast)
+    assert str(error).startswith('Two structs with same name: a')
 
 
 # Tests for the second requirement, generate dissectors in lua

@@ -128,7 +128,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Find id:name of members
         members = {}
-        i = 0
+        i = -1
         for child in node.children()[0].children():
             if child.children():
                 i = int(child.children()[0].value)

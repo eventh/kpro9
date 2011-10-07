@@ -38,7 +38,6 @@ def req_1a():
     struct basic { int a; float b; char c; _Bool d; };
     ''')
     a, b, c, d = _child(ast, 2).children()
-
     assert _child(a, 2).names[0] == 'int'
     assert _child(b, 2).names[0] == 'float'
     assert _child(c, 2).names[0] == 'char'
@@ -48,9 +47,13 @@ def req_1a():
 @parse_structs.test
 def req_1b():
     """Test requirement FR1-B: Support enums."""
-    ast = cparser.parse('struct req { enum type { right, wrong }; };')
-    assert isinstance(_child(ast, 4), c_ast.Enum)
-    assert _child(ast, 4).name == 'type'
+    ast = cparser.parse('enum c {a, b=3}; struct req { enum c test; };')
+    assert isinstance(_child(ast.children()[1], 4), c_ast.Enum)
+    enum = cparser.find_structs(ast)[0].fields[0]
+    assert enum
+    assert enum.name == 'test'
+    assert enum.values == {0:'a', 3:'b'}
+    assert enum.type == 'uint32' and enum.size == 4
 
 # FR1-C: The utility must support members of type struct
 @parse_structs.test

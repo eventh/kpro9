@@ -33,7 +33,6 @@ def parse_basic_types():
     ast = cparser.parse('struct simple { int a; float b; char c;};')
     struct = _child(ast, 2)
     a, b, c = struct.children()
-
     assert struct.name == 'simple'
     assert a.name == 'a' and b.name == 'b' and c.name == 'c'
     assert _child(a, 2).names[0] == 'int'
@@ -41,14 +40,27 @@ def parse_basic_types():
     assert _child(c, 2).names[0] == 'char'
 
 @parse.test
+def parse_enum_type():
+    """Test enums as struct members."""
+    ast = cparser.parse('''
+    enum color { RED=1, BLUE, GREEN=5 };
+    struct arr { enum color which; int tmp; };
+    ''')
+    struct = ast.children()[1].children()[0]
+    a, b = struct.children()
+    assert struct.name == 'arr'
+    assert isinstance(_child(a, 2), c_ast.Enum)
+    assert _child(a, 1).declname == 'which'
+    assert _child(a, 2).name == 'color'
+
+@parse.test
 def parse_array_type():
     """Test arrays as struct members."""
     ast = cparser.parse('struct arr { int a[10]; char b[20]; };')
-    struct = ast.children()[0].children()[0]
+    struct = _child(ast, 2)
     a, b = struct.children()
-
     assert struct.name == 'arr'
-    assert isinstance(a.children()[0], c_ast.ArrayDecl)
+    assert isinstance(_child(a, 1), c_ast.ArrayDecl)
     assert _child(b, 2).declname == 'b'
     assert _child(b, 3).names[0] == 'char'
 
@@ -60,8 +72,10 @@ find_structs = Tests()
 def create_structs():
     """Creates an AST and finds all structs within it."""
     code = '''
+    enum color { RED, GREEN=3, YELLOW, RED=10 };
     struct find {
         int a; float b; char c;
+        enum color enumtest;
         char str[30]; float d[3];
     };
     '''
@@ -77,9 +91,17 @@ def find_basic_types(structs):
     assert a.size == 4 and b.size == 4 and c.size == 1
 
 @find_structs.test
+def find_enum_types(structs):
+    """Test that we find structs which has enums as members."""
+    enum = structs[3]
+    assert enum.name == 'enumtest'
+    assert enum.values == {0:'RED', 3:'GREEN', 4:'YELLOW', 10:'RED'}
+    assert enum.type == 'uint32' and enum.size == 4
+
+@find_structs.test
 def find_array_types(structs):
     """Test that we find structs which has arrays as members."""
-    a, b = structs[3:5]
+    a, b = structs[4:6]
     assert a.name == 'str' and b.name == 'd'
     assert a.type == 'string' and b.type == 'float'
 

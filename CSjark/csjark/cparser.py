@@ -114,8 +114,8 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Disallow structs with same name
         if node.name in self.structs:
-            # TODO print the location of the struct, file and line no.
-            raise ParseError('Two structs with same name: %s' % node.name)
+            raise ParseError("Two structs with same name: %s in %s line %i" %
+                    (node.name, node.coord.file, node.coord.line))
 
         # Don't add protocols with no fields? Sounds reasonably
         if proto.fields:

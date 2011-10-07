@@ -92,7 +92,6 @@ class StructVisitor(c_ast.NodeVisitor):
         # Typedef structs
         if not node.name:
             node.name = self.type_decl[-1]
-        print(node.name)
 
         # Find config rules
         conf = StructConfig.configs.get(node.name, None)
@@ -201,7 +200,6 @@ class StructVisitor(c_ast.NodeVisitor):
         elif isinstance(constant, c_ast.ID):
             arr_size = 0 # TODO? PATH_MAX WTF?
         else:
-            print(constant)
             raise ParseError('array of different types not supported yet.')
 
         # Create suiteable field for the array

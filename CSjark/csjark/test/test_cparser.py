@@ -4,7 +4,7 @@ Module for testing the cparser module.
 Tests the C parser, the C preprocessor, and finding structs.
 """
 import sys, os
-from attest import Tests, assert_hook
+from attest import Tests, assert_hook, contexts
 from pycparser import c_ast
 
 try:
@@ -104,6 +104,15 @@ def find_array_types(structs):
     a, b = structs[4:6]
     assert a.name == 'str' and b.name == 'd'
     assert a.type == 'string' and b.type == 'float'
+
+@find_structs.test
+def parse_error():
+    """Test that two structs with the same name raises an error."""
+    code = 'struct a {int c;}; struct b { int d; struct a {int d;}; };'
+    ast = cparser.parse(code, 'test')
+    with contexts.raises(cparser.ParseError) as error:
+        cparser.find_structs(ast)
+    assert str(error).startswith('Two structs with same name: a')
 
 
 # Tests for the C preprocessor

@@ -17,6 +17,8 @@
 *.idea
 */lextab.py
 */yacctab.py
+lextab.py
+yacctab.py
 .project
 /misc
 /report/tmp

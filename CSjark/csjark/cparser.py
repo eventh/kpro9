@@ -84,6 +84,10 @@ class StructVisitor(c_ast.NodeVisitor):
         if not node.name:
             return
 
+        # No children, its a member and not a declaration
+        if not node.children():
+            return
+
         # Find config rules
         conf = StructConfig.configs.get(node.name, None)
 

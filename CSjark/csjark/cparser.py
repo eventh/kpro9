@@ -161,28 +161,30 @@ class StructVisitor(c_ast.NodeVisitor):
         """Find member details in an array declaration."""
         type_decl, constant = node.children()
         child = type_decl.children()[0]
-        if child.names[0] == 'char':
-            type = 'string'
-            base = size_of('char')
-        else:
-            ctype = ' '.join(reversed(child.names))
-            base = size_of(ctype)
-            type = 'bytes'
 
         # TODO: support multidimentional arrays.
+        if isinstance(type_decl, c_ast.ArrayDecl):
+            return
 
         # Calculate size of the array
         if isinstance(constant, c_ast.Constant):
-            size = int(constant.value) * base
+            arr_size = int(constant.value)
         elif isinstance(constant, c_ast.BinaryOp):
-            size = 0 # TODO: evaluate BinaryOp expression
+            arr_size = 0 # TODO: evaluate BinaryOp expression
         elif isinstance(constant, c_ast.ID):
-            size = 0 # TODO? PATH_MAX WTF?
+            arr_size = 0 # TODO? PATH_MAX WTF?
         else:
             print(constant)
             raise ParseError('array of different types not supported yet.')
 
-        create_field(proto, conf, type_decl.declname, type, size)
+        # Create suiteable field for the array
+        if child.names[0] == 'char':
+            size = arr_size * size_of('char')
+            create_field(proto, conf, type_decl.declname, 'string', size)
+        else:
+            type = ' '.join(reversed(child.names))
+            size = arr_size * size_of(type)
+            create_field(proto, conf, type_decl.declname, 'todo', size)
 
     def handle_ptr_decl(self, node, proto, conf):
         """Find member details in a pointer declaration."""

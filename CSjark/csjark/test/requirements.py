@@ -78,10 +78,14 @@ def req_1d():
 @parse_structs.test
 def req_1e():
     """Test requirement FR1-E: Support arrays."""
-    ast = cparser.parse('struct req { int a[10]; char b[30]; };')
-    assert isinstance(_child(ast, 4), c_ast.ArrayDecl)
-    assert _child(ast, 5).declname == 'a'
-    assert _child(ast, 6).names[0] == 'int'
+    ast = cparser.parse('struct req {int a[9][8]; char b[30]; float c[10];};')
+    a, b, c = [_child(i, 1) for i in _child(ast, 2).children()]
+    assert isinstance(b, c_ast.ArrayDecl) and isinstance(c, c_ast.ArrayDecl)
+    assert isinstance(_child(a, 1), c_ast.ArrayDecl)
+    assert _child(a, 2).declname == 'a'
+    assert _child(a, 3).names[0] == 'int'
+    fields = cparser.find_structs(ast)[0].fields
+    # TODO: test that fields are correct
 
 # FR1-F: The utility should detect structs with the same name
 @parse_structs.test

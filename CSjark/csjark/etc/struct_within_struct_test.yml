@@ -1,0 +1,4 @@
+Structs:
+  - name: struct_within_struct_test
+    id: 12
+    description: a struct with another struct

@@ -6,7 +6,6 @@ Requires PLY and pycparser.
 """
 import sys
 import os
-from collections import OrderedDict
 
 import pycparser
 from pycparser import c_ast, c_parser, plyparser
@@ -72,21 +71,28 @@ class StructVisitor(c_ast.NodeVisitor):
     """A class which visit struct nodes in the AST."""
 
     def __init__(self):
-        self.structs = OrderedDict() # All structs encountered in this AST
-        self.enums = OrderedDict() # All enums encountered in this AST
+        self.structs = {} # All structs encountered in this AST
+        self.enums = {} # All enums encountered in this AST
+        self.aliases = {} # Typedefs and their base type
+        self.type_decl = [] # Queue of current type declaration
+
+    def _get_type(self, node):
+        """Get the C type from a node."""
+        return ' '.join(reversed(node.names))
 
     def visit_Struct(self, node):
         """Visit a Struct node in the AST."""
         # Visit children
         c_ast.NodeVisitor.generic_visit(self, node)
 
-        # No support for typedef structs yet!
-        if not node.name:
-            return
-
         # No children, its a member and not a declaration
         if not node.children():
             return
+
+        # Typedef structs
+        if not node.name:
+            node.name = self.type_decl[-1]
+        print(node.name)
 
         # Find config rules
         conf = StructConfig.configs.get(node.name, None)
@@ -96,6 +102,7 @@ class StructVisitor(c_ast.NodeVisitor):
             proto = Protocol(node.name, conf.id, conf.description)
         else:
             proto = Protocol(node.name)
+        proto._coord = node.coord
 
         # Find the member definitions
         for decl in node.children():
@@ -112,8 +119,10 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Disallow structs with same name
         if node.name in self.structs:
-            raise ParseError("Two structs with same name: %s in %s line %i" %
-                    (node.name, node.coord.file, node.coord.line))
+            other = self.structs[node.name]
+            raise ParseError('Two structs with same name: %s in %s:%i & %s:%i'
+                    % (node.name, other._coord.file,
+                        other._coord.line, node.coord.file, node.coord.line))
 
         # Don't add protocols with no fields? Sounds reasonably
         if proto.fields:
@@ -140,11 +149,29 @@ class StructVisitor(c_ast.NodeVisitor):
 
         self.enums[node.name] = members
 
+    def visit_Typedef(self, node):
+        """Visit Typedef declarations nodes in the AST."""
+        # Visit children
+        c_ast.NodeVisitor.generic_visit(self, node)
+
+        # Find the type
+        child = node.children()[0].children()[0]
+        if isinstance(child, c_ast.IdentifierType):
+            type = self._get_type(child)
+            type = self.aliases.get(type, type)
+            self.aliases[node.name] = type
+
+    def visit_TypeDecl(self, node):
+        """Keep track of Type Declaration nodes."""
+        self.type_decl.append(node.declname)
+        c_ast.NodeVisitor.generic_visit(self, node)
+        self.type_decl.pop()
+
     def handle_type_decl(self, node, proto, conf):
         """Find member details in a type declaration."""
         child = node.children()[0]
         if isinstance(child, c_ast.IdentifierType):
-            ctype = ' '.join(reversed(child.names))
+            ctype = self._get_type(child)
             create_field(proto, conf, node.declname, ctype)
         elif isinstance(child, c_ast.Enum):
             if child.name not in self.enums.keys():
@@ -182,7 +209,7 @@ class StructVisitor(c_ast.NodeVisitor):
             size = arr_size * size_of('char')
             create_field(proto, conf, type_decl.declname, 'string', size)
         else:
-            type = ' '.join(reversed(child.names))
+            type = self._get_type(child)
             size = arr_size * size_of(type)
             create_field(proto, conf, type_decl.declname, 'todo', size)
 

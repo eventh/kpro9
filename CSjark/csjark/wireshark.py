@@ -107,9 +107,9 @@ def create_field(proto, conf, name, ctype, size=None):
     if size is None:
         size = size_of(ctype)
 
-    args = [name, type_, size]
     if range_rules:
-        args.extend([range_rules[0].min, range_rules[0].max])
-
-    proto.add_field(Field(*args))
+        proto.add_field(RangeField(name, type_, size,
+                range_rules[0].min, range_rules[0].max))
+    else:
+        proto.add_field(Field(name, type_, size))
 

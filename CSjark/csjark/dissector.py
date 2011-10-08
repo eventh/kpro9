@@ -84,6 +84,7 @@ class ArrayField(Field):
 
 
 class BitField(Field):
+    #'local bit = require("bit")'
     pass
 
 

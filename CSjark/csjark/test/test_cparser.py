@@ -103,7 +103,7 @@ def find_array_types(structs):
     """Test that we find structs which has arrays as members."""
     a, b = structs[4:6]
     assert a.name == 'str' and b.name == 'd'
-    assert a.type == 'string' and b.type == 'todo'
+    assert a.type == 'string' and b.type == 'float'
     assert a.size == 30 and b.size == 12
 
 @find_structs.test

@@ -12,7 +12,7 @@ from pycparser import c_ast, c_parser, plyparser
 
 from config import StructConfig
 from dissector import Protocol
-from wireshark import size_of, create_field, create_enum
+from wireshark import size_of, create_field, create_enum, create_array
 
 
 class ParseError(plyparser.ParseError):
@@ -93,26 +93,20 @@ class StructVisitor(c_ast.NodeVisitor):
         if not node.name:
             node.name = self.type_decl[-1]
 
-        # Find config rules
-        conf = StructConfig.configs.get(node.name, None)
-
         # Create the protocol for the struct
-        if conf:
-            proto = Protocol(node.name, conf.id, conf.description)
-        else:
-            proto = Protocol(node.name)
-        proto._coord = node.coord
+        conf = StructConfig.configs.get(node.name, None)
+        proto = Protocol(node.name, node.coord, conf)
 
         # Find the member definitions
         for decl in node.children():
             child = decl.children()[0]
 
             if isinstance(child, c_ast.TypeDecl):
-                self.handle_type_decl(child, proto, conf)
+                self.handle_type_decl(child, proto)
             elif isinstance(child, c_ast.ArrayDecl):
-                self.handle_array_decl(child, proto, conf)
+                self.handle_array_decl(child, proto)
             elif isinstance(child, c_ast.PtrDecl):
-                self.handle_ptr_decl(child, proto, conf)
+                self.handle_ptr_decl(child, proto)
             else:
                 raise ParseError('Unknown struct member: %s' % repr(child))
 
@@ -120,8 +114,8 @@ class StructVisitor(c_ast.NodeVisitor):
         if node.name in self.structs:
             other = self.structs[node.name]
             raise ParseError('Two structs with same name: %s in %s:%i & %s:%i'
-                    % (node.name, other._coord.file,
-                        other._coord.line, node.coord.file, node.coord.line))
+                    % (node.name, other.coord.file,
+                        other.coord.line, node.coord.file, node.coord.line))
 
         # Don't add protocols with no fields? Sounds reasonably
         if proto.fields:
@@ -166,54 +160,67 @@ class StructVisitor(c_ast.NodeVisitor):
         c_ast.NodeVisitor.generic_visit(self, node)
         self.type_decl.pop()
 
-    def handle_type_decl(self, node, proto, conf):
+    def handle_type_decl(self, node, proto):
         """Find member details in a type declaration."""
         child = node.children()[0]
         if isinstance(child, c_ast.IdentifierType):
             ctype = self._get_type(child)
-            create_field(proto, conf, node.declname, ctype)
+            create_field(proto, node.declname, ctype)
         elif isinstance(child, c_ast.Enum):
             if child.name not in self.enums.keys():
                 raise ParseError('Unknown enum: %s' % child.name)
-            create_enum(proto, conf, node.declname, self.enums[child.name])
+            create_enum(proto, node.declname, self.enums[child.name])
         elif isinstance(child, c_ast.Union):
-            create_field(proto, conf, node.declname, 'union')
+            create_field(proto, node.declname, 'union')
         elif isinstance(child, c_ast.Struct):
-            create_field(proto, conf, node.declname, 'struct')
+            create_field(proto, node.declname, 'struct')
         else:
             raise ParseError('Unknown type declaration: %s' % repr(child))
 
-    def handle_array_decl(self, node, proto, conf):
+    def _get_array_size(self, node):
+        """Calculate the size of the array."""
+        child = node.children()[1]
+
+        if isinstance(child, c_ast.Constant):
+            size = int(child.value)
+        elif isinstance(child, c_ast.BinaryOp):
+            size = 0 # TODO: evaluate BinaryOp expression
+        elif isinstance(child, c_ast.ID):
+            size = 0 # TODO: PATH_MAX WTF?
+        else:
+            raise ParseError('This type of array not supported: %s' % node)
+
+        return size
+
+    def handle_array_decl(self, node, proto, depth=None):
         """Find member details in an array declaration."""
-        type_decl, constant = node.children()
-        child = type_decl.children()[0]
+        if depth is None:
+            depth = []
+        child = node.children()[0]
 
-        # TODO: support multidimentional arrays.
-        if isinstance(type_decl, c_ast.ArrayDecl):
-            return
+        # Multidimensional array or string array
+        if isinstance(child, c_ast.ArrayDecl):
+            # String array
+            if (isinstance(child.children()[0], c_ast.TypeDecl) and
+                    child.children()[0].children()[0].names[0] == 'char'):
+                size = self._get_array_size(child) * size_of('char')
+                if depth:
+                    create_array(proto, child.declname, 'string', size, depth)
+                else:
+                    create_field(proto, child.declname, 'string', size)
 
-        # Calculate size of the array
-        if isinstance(constant, c_ast.Constant):
-            arr_size = int(constant.value)
-        elif isinstance(constant, c_ast.BinaryOp):
-            arr_size = 0 # TODO: evaluate BinaryOp expression
-        elif isinstance(constant, c_ast.ID):
-            arr_size = 0 # TODO? PATH_MAX WTF?
+            # Multidimensional, handle recursively
+            else:
+                depth.append(self._get_array_size(node))
+                self.handle_array_decl(child, proto, depth)
+
+        # Single dimensional normal array
         else:
-            raise ParseError('array of different types not supported yet.')
+            type = self._get_type(child.children()[0])
+            size = self._get_array_size(node) * size_of(type)
+            create_array(proto, child.declname, type, size, depth)
 
-        # Create suiteable field for the array
-        if child.names[0] == 'char':
-            size = arr_size * size_of('char')
-            create_field(proto, conf, type_decl.declname, 'string', size)
-        else:
-            type = self._get_type(child)
-            size = arr_size * size_of(type)
-            create_field(proto, conf, type_decl.declname, 'todo', size)
-
-    def handle_ptr_decl(self, node, proto, conf):
+    def handle_ptr_decl(self, node, proto):
         """Find member details in a pointer declaration."""
-        type_decl = node.children()[0]
-        ctype = 'pointer' # Shortcut as pointers not a requirement
-        create_field(proto, conf, type_decl.declname, ctype)
+        create_field(proto, node.children()[0].declname, 'pointer')
 

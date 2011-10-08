@@ -78,6 +78,15 @@ class EnumField(Field):
 
         return '\n'.join(data)
 
+
+class ArrayField(Field):
+    pass
+
+
+class BitField(Field):
+    pass
+
+
 class RangeField(Field):
     def __init__(self, name, type, size, min, max):
         super().__init__(name, type, size)
@@ -118,19 +127,21 @@ class RangeField(Field):
 class Protocol:
     counter = 0
 
-    def __init__(self, name, id=None, description=None):
+    def __init__(self, name, coord, conf=None):
         self.name = name
+        self.coord = coord
+        self.conf = conf
 
-        if id is None:
+        if self.conf and self.conf.id is not None:
+            self.id = self.conf.id
+        else:
             Protocol.counter += 1
             self.id = Protocol.counter
-        else:
-            self.id = id
 
-        if description is None:
-            self.description = 'struct %s' % self.name
+        if self.conf and self.conf.description is not None:
+            self.description = self.conf.description
         else:
-            self.description = description
+            self.description = 'struct %s' % self.name
 
         self.fields = []
         self.data = []

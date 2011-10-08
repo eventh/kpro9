@@ -85,6 +85,20 @@ class RangeRule(BaseFieldRule):
             raise ConfigError('RangeRule needs atleast a min or max value.')
 
 
+class Enum(BaseFieldRule):
+    """Rule for emulating enum with int-like types in structs."""
+    def __init__(self, conf, obj):
+        super().__init__(conf, obj)
+        self.strict = obj.get('strict', True)
+
+        # Values is a dict which map values to enum names
+        self.values = obj.get('values', None)
+        if not self.values:
+            raise ConfigError('Enum needs a non-empty dict or list')
+        if isinstance(self.values, (list, tuple)):
+            self.values = dict(enumerate(self.values))
+
+
 class Bitstring(BaseFieldRule):
     """Rule for representing bit strings in structs."""
 
@@ -128,6 +142,11 @@ def handle_struct(obj):
     if 'bitstrings' in obj:
         for rule in obj['bitstrings']:
             Bitstring(conf, rule)
+
+    # Handle enums
+    if 'enums' in obj:
+        for rule in obj['enums']:
+            Enum(conf, rule)
 
     # Handle ranges
     if 'ranges' in obj:

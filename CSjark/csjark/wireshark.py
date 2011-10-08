@@ -1,7 +1,7 @@
 """
 A module for Wireshark specific data structures and functions.
 """
-from config import RangeRule
+from config import RangeRule, Enum, Bitstring
 from dissector import Field, EnumField, RangeField, ArrayField, BitField
 
 
@@ -102,20 +102,37 @@ def create_array(proto, name, ctype, size, depth):
 
 def create_field(proto, name, ctype, size=None):
     """Create a dissector field representing the struct member."""
-    # Find all rules relevant for this field
-    range_rules = None
-
-    if proto.conf is not None:
-        rules = proto.conf.get_rules(name, ctype)
-        range_rules = [i for i in rules if isinstance(i, RangeRule)]
+    field = None
 
     type_ = map_type(ctype)
     if size is None:
         size = size_of(ctype)
 
-    if range_rules:
-        proto.add_field(RangeField(name, type_, size,
-                range_rules[0].min, range_rules[0].max))
-    else:
-        proto.add_field(Field(name, type_, size))
+    # Find all rules relevant for this field
+    if proto.conf is not None:
+        rules = proto.conf.get_rules(name, ctype)
+
+        # Bit string rules
+        bitstrings = [i for i in rules if isinstance(i, Bitstring)]
+        if bitstrings and field is None:
+            #field = BitField(name, type_, size, enums[0].values)
+            pass
+
+        # Enum rules
+        enums = [i for i in rules if isinstance(i, Enum)]
+        if enums and field is None:
+            rule = enums[0]
+            field = EnumField(name, type_, size, rule.values, rule.strict)
+
+        # Range rules
+        ranges = [i for i in rules if isinstance(i, RangeRule)]
+        if ranges and field is None:
+            rule = ranges[0]
+            field = RangeField(name, type_, size, rule.min, rule.max)
+
+    if field is None:
+        field = Field(name, type_, size)
+
+    proto.add_field(field)
+
 

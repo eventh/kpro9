@@ -1,0 +1,14 @@
+Structs:
+  - name: range_test
+    id: 9
+    description: Range rules test
+    ranges:
+      - member: age
+        min: 0
+        max: 100
+
+RangeRules:
+  - struct: range_test
+    member: age
+    min: 0
+    max: 100

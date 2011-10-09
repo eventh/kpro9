@@ -1,0 +1,9 @@
+Structs:
+  - name: bitstring_test
+    id: 13
+    description: bitstring
+    bitstrings:
+      - type: flags
+        0: In use
+        1: [Big endian, Little endian]
+        2-3: [Win, Linux, Mac, Solaris]

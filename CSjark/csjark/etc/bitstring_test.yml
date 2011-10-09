@@ -1,7 +1,7 @@
 Structs:
   - name: bitstring_test
     id: 13
-    description: bitstring
+    description: Bit string test
     bitstrings:
       - type: flags
         0: In use

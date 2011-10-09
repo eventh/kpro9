@@ -1,7 +1,7 @@
 Structs:
   - name: age_test
     id: 9
-    description: a struct with an age in it!
+    description: Range rules test
 
 RangeRules:
   - struct: age_test

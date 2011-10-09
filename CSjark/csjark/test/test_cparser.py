@@ -95,7 +95,7 @@ def find_enum_types(structs):
     """Test that we find structs which has enums as members."""
     enum = structs[3]
     assert enum.name == 'enumtest'
-    assert enum.values == {0:'RED', 3:'GREEN', 4:'YELLOW', 10:'RED'}
+    assert enum.values == '{[0]="RED", [10]="RED", [3]="GREEN", [4]="YELLOW"}'
     assert enum.type == 'uint32' and enum.size == 4
 
 @find_structs.test

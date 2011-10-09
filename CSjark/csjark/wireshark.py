@@ -113,10 +113,9 @@ def create_field(proto, name, ctype, size=None):
         rules = proto.conf.get_rules(name, ctype)
 
         # Bit string rules
-        bitstrings = [i for i in rules if isinstance(i, Bitstring)]
-        if bitstrings and field is None:
-            #field = BitField(name, type_, size, enums[0].values)
-            pass
+        bits = [i for i in rules if isinstance(i, Bitstring)]
+        if bits and field is None:
+            field = BitField(name, type_, size, bits[0].values)
 
         # Enum rules
         enums = [i for i in rules if isinstance(i, Enum)]

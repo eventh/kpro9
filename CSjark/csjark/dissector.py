@@ -12,20 +12,46 @@ def _dict_to_table(pydict):
     """Convert a python dictionary to lua table."""
     return '{%s}' % ', '.join('[%i]="%s"' % (i, j) for i, j in pydict.items())
 
+def _get_func_type(type):
+    """Get the lua function to read values from buffers."""
+    if type[-2:] in ('8', '16', '32'):
+        return type[:-2]
+    return type
+
 
 class Field:
     def __init__(self, name, type, size):
         self.name = name
         self.type = type
         self.size = size
-        self.protocol = None
+
+        self.base = None # One of 'base.DEC', 'base.HEX' or 'base.OCT'
+        self.values = None # Dict with the text that corresponds to the values
+        self.mask = None # Integer mask of this field
+        self.desc = None # Description of the field
+
+        self.protocol = None # The protocol which owns the field
 
     def get_definition(self):
         """Get the ProtoField definition for this field."""
-        t = '{var}.{name} = ProtoField.{type}("{protocol}.{name}", "{name}")'
-        args = {'var': self.protocol.field_var, 'name': self.name,
-                'protocol': self.protocol.name, 'type': self.type}
-        return t.format(**args)
+        var = self.protocol.field_var
+        abbr = '%s.%s' % (self.protocol.name, self.name)
+
+        # Create definition string
+        t = '{var}.{name} = ProtoField.{type}("{abbr}", "{name}"'.format(
+                var=var, name=self.name, abbr=abbr, type=self.type)
+
+        # Add other parameters if applicable
+        rest = []
+        for var in reversed([self.base, self.values, self.mask, self.desc]):
+            if rest or var is not None:
+                if var is None:
+                    var = 'nil'
+                rest.append(var)
+        if rest:
+            rest.append('')
+
+        return '%s%s)' % (t, ', '.join(reversed(rest)))
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
@@ -38,22 +64,11 @@ class Field:
 class EnumField(Field):
     def __init__(self, name, type, size, values, strict=True):
         super().__init__(name, type, size)
-        self.values = values
+        self.values = _dict_to_table(values)
         self.strict = strict
 
-        # The func to call to get the value from the buffer
-        self.func_type = self.type
-        if self.func_type[-2:] in ('16', '32'):
-            self.func_type = self.func_type[:-2]
-
-    def get_definition(self):
-        """Get the ProtoField definition for this field."""
-        t = '{var}.{name} = ProtoField.{type}("{protocol}.{name}", "{name}"' \
-                ', nil, {values})'
-        args = {'var': self.protocol.field_var, 'name': self.name,
-                'protocol': self.protocol.name, 'type': self.type,
-                'values': _dict_to_table(self.values)}
-        return t.format(**args)
+        self.keys = ', '.join(str(i) for i in sorted(values.keys()))
+        self.func_type = _get_func_type(type)
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
@@ -67,13 +82,11 @@ class EnumField(Field):
 
         # Test that the enum value is valid
         if self.strict:
-            data.append('\tlocal test = %s' % _dict_to_table(self.values))
+            data.append('\tlocal test = %s' % self.values)
             data.append('\tif (test[buffer(%i, %i):%s()] == nil) then' % (
                     offset, self.size, self.func_type))
-            warn = 'Invalid value, not in (%s)' % ', '.join(
-                    str(i) for i in sorted(self.values.keys()))
             data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, "%s")'
-                    % (self.name, warn))
+                    % (self.name, 'Invalid value, not in (%s)' % self.keys))
             data.append('\tend')
 
         return '\n'.join(data)
@@ -84,8 +97,10 @@ class ArrayField(Field):
 
 
 class BitField(Field):
-    #'local bit = require("bit")'
-    pass
+    def __init__(self, name, type, size, values):
+        super().__init__(name, type, size)
+        self._values = values
+        #'local bit = require("bit")'
 
 
 class RangeField(Field):
@@ -93,11 +108,7 @@ class RangeField(Field):
         super().__init__(name, type, size)
         self.min = min
         self.max = max
-
-        # The func to call to get the value from the buffer
-        self.func_type = self.type
-        if self.func_type[-2:] in ('16', '32'):
-            self.func_type = self.func_type[:-2]
+        self.func_type = _get_func_type(type)
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""

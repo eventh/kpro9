@@ -52,7 +52,7 @@ def req_1b():
     enum = cparser.find_structs(ast)[0].fields[0]
     assert enum
     assert enum.name == 'test'
-    assert enum.values == {0:'a', 3:'b'}
+    assert enum.values == '{[0]="a", [3]="b"}'
     assert enum.type == 'uint32' and enum.size == 4
 
 # FR1-C: The utility must support members of type struct

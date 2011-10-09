@@ -57,7 +57,7 @@
 	Header & Description \\
 	\midrule
 	Description & Displaying simple structs \\
-	Tester & Team member responsible for the test \\
+	Tester & Lars Solvoll Tønder \\
 	Prerequisites & The utility has already made a dissector \\
 	Feature & Test that our utility is able to generate dissectors that displays simple structs \\
 	\addlinespace
@@ -79,7 +79,7 @@
 	Header & Description \\
 	\midrule
 	Description & Supporting \#include \\
-	Tester & Team member responsible for the test \\
+	Tester & Lars Solvoll Tønder \\
 	Prerequisites & The utility has to be up and running \\
 	Feature & Test that our utility supports c-header files with the \#include directive \\
 	\addlinespace
@@ -99,7 +99,7 @@
 	Header & Description \\
 	\midrule
 	Description & Supporting \#define and \#if \\
-	Tester & Team member responsible for the test \\
+	Tester & Lars Solvoll Tønder \\
 	Prerequisites & The utility has to be up and running \\
 	Feature & Test that our utility supports c-header files with \#define and \#if directives \\
 	\addlinespace
@@ -119,7 +119,7 @@
 	Header & Description \\
 	\midrule
 	Description & Supporting configuration files \\
-	Tester & Team member responsible for the test \\
+	Tester & Lars Solvoll Tønder \\
 	Prerequisites & The utility has to be up and running \\
 	Feature & Test that our utility supports reading data from a configuration file \\
 	\addlinespace
@@ -140,7 +140,7 @@
 	Header & Description \\
 	\midrule
 	Description & Recognizing invalid values \\
-	Tester & Team member responsible for the test \\
+	Tester & Lars Solvoll Tønder \\
 	Prerequisites & The utility must have already loaded a configuration file and generated a dissector for a given header file\\
 	Feature & Test that our utility recognizes invalid values for struct members specified in the config file. \\
 	\addlinespace
@@ -159,4 +159,48 @@
 %-----------------------
 \section{Sprint 2 Tests}
 %-----------------------
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID08}\label{tab:TID08}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting members of type enum \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that the utility iis able to support c-header files with enums \\
+	\addlinespace
+	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct using enums \\
+	\addlinespace
+	& 2. Read the output \\
+	\addlinespace
+	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID09}\label{tab:TID09}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting members of type array \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that the utility iis able to support c-header files with arrays \\
+	\addlinespace
+	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct using arrays \\
+	\addlinespace
+	& 2. Read the output \\
+	\addlinespace
+	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+
 

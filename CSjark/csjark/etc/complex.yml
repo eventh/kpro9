@@ -9,9 +9,25 @@ Flags:
     2: big
 
 Structs:
-  - name: abc_p
-    id: 3
-    description: something something
+  - name: cenum_test
+    id: 11
+    bitstrings:
+      - member: flags
+        0: In use
+        1: [Big endian, Little endian]
+        2-3: [Win, Linux, Mac, Solaris]
+      - type: color_t
+        0: RED
+        1: Blue
+        2: Green
+    enums:
+      - member: test
+        values: {1: Jan, 2: Feb, 3: Mar}
+      - type: int
+        values: [Zero, One, Two, Three]
+        strict: False
+    ranges:
+      - member: platforms
+        min: 0
+        max: 4
 
-  - name: ctx
-    id: 4

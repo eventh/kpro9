@@ -1,7 +1,7 @@
 """
 A module for Wireshark specific data structures and functions.
 """
-from config import RangeRule, Enum, Bitstring
+from config import Range, Enum, Bitstring
 from dissector import Field, EnumField, RangeField, ArrayField, BitField
 
 
@@ -124,7 +124,7 @@ def create_field(proto, name, ctype, size=None):
             field = EnumField(name, type_, size, rule.values, rule.strict)
 
         # Range rules
-        ranges = [i for i in rules if isinstance(i, RangeRule)]
+        ranges = [i for i in rules if isinstance(i, Range)]
         if ranges and field is None:
             rule = ranges[0]
             field = RangeField(name, type_, size, rule.min, rule.max)

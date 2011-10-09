@@ -16,16 +16,16 @@ except ImportError:
 range_rule = Tests()
 
 @range_rule.context
-def create_rules():
+def create_ranges():
     text = '''
-    RangeRules:
-      - struct: test
-        member: percent
-        min: 10
-        max: 30
-      - struct: test
-        type: int
-        max: 15.5
+    Structs:
+      - name: test
+        ranges:
+          - member: percent
+            min: 10
+            max: 30
+          - type: int
+            max: 15.5
     '''
     config.parse_file('test', only_text=text)
     yield config.StructConfig.configs['test']

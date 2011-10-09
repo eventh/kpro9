@@ -7,8 +7,3 @@ Structs:
         min: 0
         max: 100
 
-RangeRules:
-  - struct: range_test
-    member: age
-    min: 0
-    max: 100

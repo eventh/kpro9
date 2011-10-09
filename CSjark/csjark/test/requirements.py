@@ -170,17 +170,15 @@ def create_rules():
       - name: one
         id: 9
         description: a struct
+        ranges:
+          - member: percent
+            min: 10
+            max: 30
       - name: two
         id: 11
-
-    RangeRules:
-      - struct: one
-        member: percent
-        min: 10
-        max: 30
-      - struct: two
-        type: int
-        max: 15.5
+        ranges:
+          - type: int
+            max: 15.5
     '''
     config.parse_file('test', only_text=text)
     yield config.StructConfig.find('one'), config.StructConfig.find('two')

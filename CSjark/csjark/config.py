@@ -67,12 +67,10 @@ class BaseFieldRule:
             raise ConfigError('Missing either type or member declaration')
 
 
-class RangeRule(BaseFieldRule):
+class Range(BaseFieldRule):
     """Rule for specifying a valid range for a struct member or type."""
 
-    def __init__(self, obj):
-        self.struct = obj['struct']
-        conf = StructConfig.find(self.struct)
+    def __init__(self, conf, obj):
         super().__init__(conf, obj)
 
         # Min and max represents the endpoints of the valid range
@@ -150,7 +148,8 @@ def handle_struct(obj):
 
     # Handle ranges
     if 'ranges' in obj:
-        pass # Move RangeRules handling to here
+        for rule in obj['ranges']:
+            Range(conf, rule)
 
 
 def parse_file(filename, only_text=None):
@@ -165,9 +164,4 @@ def parse_file(filename, only_text=None):
     if 'Structs' in obj:
         for struct in obj['Structs']:
             handle_struct(struct)
-
-    # Deal with range rules
-    if 'RangeRules' in obj:
-        for rule in obj['RangeRules']:
-            RangeRule(rule)
 

@@ -165,6 +165,7 @@ configuration = Tests()
 
 @configuration.context
 def create_rules():
+    """Create configuration for different rules."""
     text = '''
     Structs:
       - name: one
@@ -196,6 +197,7 @@ def create_rules():
 # FR4-A: Configuration must support valid ranges for struct members
 @configuration.test
 def req4_a(one, two):
+    """Test requirement FR4-A: Configuration of valid ranges."""
     assert one and two
     rule, = one.get_rules('percent', None)
     assert rule.max == 30 and rule.min == 10
@@ -208,6 +210,7 @@ def req4_a(one, two):
 # FR4-D: Configuration must support specifying the ID of dissectors
 @configuration.test
 def req4_d(one, two):
+    """Test requirement FR4-D: Configuration of dissector ID."""
     assert one and two
     assert one.id == 9 and two.id == 11
     assert one.description == 'a struct' and two.description is None
@@ -217,6 +220,7 @@ def req4_d(one, two):
 # FR4-G: Configuration must support members which are bit string
 @configuration.test
 def req4_g(one, two):
+    """Test requirement FR4-G: Configuration of bit strings."""
     one, = one.get_rules('flags', 'int')
     two, = two.get_rules(None, 'short')
     assert one and two

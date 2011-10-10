@@ -224,10 +224,10 @@ def req4_g(one, two):
     one, = one.get_rules('flags', 'int')
     two, = two.get_rules(None, 'short')
     assert one and two
-    assert len(one.values[0]) == 3
-    assert one.values[1][2] == ['Flag A', 'Flag B']
-    assert len(two.values[0][2]) == 8
-    assert two.values[1][2] == ['Nih: No', 'Nih: Yes']
+    assert len(one.bits[0]) == 3
+    assert one.bits[1][2] == ['Flag A', 'Flag B']
+    assert len(two.bits[0][2]) == 8
+    assert two.bits[1][2] == ['Nih: No', 'Nih: Yes']
 
 
 # Tests for the fifth requirement, support endian etc

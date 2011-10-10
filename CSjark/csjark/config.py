@@ -4,9 +4,30 @@ A module for configuration of our utility.
 Should parse config files and create data structures which the parser can
 use when translating C struct definitions to Wireshark protocols and fields.
 """
-import yaml
+import string
 from operator import itemgetter
+
+import yaml
+
 from csjark import Cli
+
+
+def _create_lua_var(var, length=None):
+    """Return a valid lua variable name."""
+    valid = string.ascii_letters + string.digits + '_'
+    if length is None:
+        length = len(var)
+    var.replace(' ', '_')
+
+    i = 0
+    while i < len(var) and i < length:
+        if var[i] not in valid:
+            var = var[:i] + var[i+1:]
+        elif i == 0 and var[i] in string.digits:
+            var = var[:i] + var[i+1:]
+        else:
+            i += 1
+    return var
 
 
 class ConfigError(Exception):
@@ -105,7 +126,7 @@ class Bitstring(BaseRule):
         super().__init__(conf, obj)
 
         # Find all bitstring defintions
-        self.values = []
+        self.bits = []
         for key, value in obj.items():
             try:
                 int(key)
@@ -118,10 +139,11 @@ class Bitstring(BaseRule):
                 start, offset = key, 1
             if isinstance(value, str):
                 value = ['%s: No' % value, '%s: Yes' % value]
-            self.values.append([start, offset, value])
+            name = _create_lua_var(str(value), 10)
+            self.bits.append((start, offset, name, dict(enumerate(value))))
 
-        self.values.sort(key=itemgetter(0))
-        if not self.values:
+        self.bits.sort(key=itemgetter(0))
+        if not self.bits:
             raise ConfigError('Invalid bitstring rule for %s' % conf.name)
 
 

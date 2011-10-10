@@ -121,7 +121,7 @@ def create_field(proto, name, ctype, size=None):
         # Bit string rules
         bits = [i for i in rules if isinstance(i, Bitstring)]
         if bits and field is None:
-            field = BitField(name, type_, size, bits[0].values)
+            field = BitField(name, type_, size, bits[0].bits)
 
         # Enum rules
         enums = [i for i in rules if isinstance(i, Enum)]

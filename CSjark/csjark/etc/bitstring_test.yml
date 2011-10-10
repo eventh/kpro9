@@ -3,7 +3,7 @@ Structs:
     id: 13
     description: Bit string test
     bitstrings:
-      - type: flags
+      - member: flags
         0: In use
         1: [Big endian, Little endian]
         2-3: [Win, Linux, Mac, Solaris]

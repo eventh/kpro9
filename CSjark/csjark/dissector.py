@@ -19,16 +19,16 @@ class Field:
         self.mask = None # Integer mask of this field
         self.desc = None # Description of the field
 
-        self.protocol = None # The protocol which owns the field
+    def set_protocol(self, proto):
+        self.proto = proto
+        self.var = self.proto.field_var
+        self.abbr = '%s.%s' % (self.proto.name, self.name)
 
     def get_definition(self):
         """Get the ProtoField definition for this field."""
-        var = self.protocol.field_var
-        abbr = '%s.%s' % (self.protocol.name, self.name)
-
         # Create definition string
         t = '{var}.{name} = ProtoField.{type}("{abbr}", "{name}"'.format(
-                var=var, name=self.name, abbr=abbr, type=self.type)
+                var=self.var, name=self.name, abbr=self.abbr, type=self.type)
 
         # Add other parameters if applicable
         rest = []
@@ -45,9 +45,8 @@ class Field:
     def get_code(self, offset):
         """Get the code for dissecting this field."""
         t = '\tsubtree:add({var}.{name}, buffer({offset}, {size}))'
-        args = {'var': self.protocol.field_var, 'name': self.name,
-                'offset': offset, 'size': self.size,}
-        return t.format(**args)
+        return t.format(var=self.var, name=self.name,
+                        offset=offset, size=self.size)
 
     def _get_func_type(self, type):
         """Get the lua function to read values from buffers."""
@@ -66,7 +65,6 @@ class EnumField(Field):
         super().__init__(name, type, size)
         self.values = self._dict_to_table(values)
         self.strict = strict
-
         self.keys = ', '.join(str(i) for i in sorted(values.keys()))
         self.func_type = self._get_func_type(type)
 
@@ -75,12 +73,11 @@ class EnumField(Field):
         data = []
 
         # Local var definitions
-        t = '\tlocal {name} = subtree:add({var}.{name}, buffer({offset}, {size}))'
-        args = {'var': self.protocol.field_var, 'name': self.name,
-                'offset': offset, 'size': self.size}
-        data.append(t.format(**args))
+        t = '\tlocal {name} = subtree:add({var}.{name}, buffer({off}, {size}))'
+        data.append(t.format(var=self.var, name=self.name,
+                             off=offset, size=self.size))
 
-        # Test that the enum value is valid
+        # Add a test which validates the enum value
         if self.strict:
             data.append('\tlocal test = %s' % self.values)
             data.append('\tif (test[buffer(%i, %i):%s()] == nil) then' % (
@@ -112,10 +109,30 @@ class DissectorField(Field):
 
 
 class BitField(Field):
-    def __init__(self, name, type, size, values):
+    def __init__(self, name, type, size, bits):
         super().__init__(name, type, size)
-        self._values = values
-        #'local bit = require("bit")'
+        self.bits = bits
+
+    def get_definition(self):
+        data = []
+        for i, j, name, values in self.bits:
+            t = '{var}.{name} = ProtoField.{type}("{abbr}", nil, nil, {values})'
+            data.append(t.format(var=self.var, name=name, abbr=self.abbr,
+                        type=self.type, values=self._dict_to_table(values)))
+        return '\n'.join(data)
+
+    def get_code(self, offset):
+        data = []
+
+        tree = '\tlocal bittree = subtree:add("{name} (bitstring)")'
+        buffer = '\tlocal range = buffer({offset}, {size})'
+        data.append(tree.format(name=self.name))
+        data.append(buffer.format(offset=offset, size=self.size))
+
+        for i, j, name, values in self.bits:
+            pass
+
+        return '\n'.join(data)
 
 
 class RangeField(Field):
@@ -130,10 +147,9 @@ class RangeField(Field):
         data = []
 
         # Local var definitions
-        t = '\tlocal {name} = subtree:add({var}.{name}, buffer({offset}, {size}))'
-        args = {'var': self.protocol.field_var, 'name': self.name,
-                'offset': offset, 'size': self.size}
-        data.append(t.format(**args))
+        t = '\tlocal {name} = subtree:add({var}.{name}, buffer({off}, {size}))'
+        data.append(t.format(var=self.var, name=self.name,
+                             off=offset, size=self.size))
 
         # Test the value
         def create_test(value, test, warn):
@@ -178,19 +194,24 @@ class Protocol:
 
     def add_field(self, field):
         """Add a field to the dissector, updates the fields protocol."""
-        field.protocol = self
+        field.set_protocol(self)
         self.fields.append(field)
 
     def _header_defintion(self):
+        comment = '-- Dissector for struct: %s' % self.name
+        if self.description:
+            comment = '%s: %s' % (comment, self.description)
+        self.data.append(comment)
+
         proto = 'local {var} = Proto("{name}", "{description}")'
         table = 'local luastructs_dt = DissectorTable.get("{dissector}")'
-
         self.data.append(proto.format(var=self.var,
                          name=self.name, description=self.description))
         self.data.append(table.format(dissector=self.dissector))
         self.data.append('')
 
     def _fields_definition(self):
+        self.data.append('-- ProtoField defintions for struct: %s' % self.name)
         decl = 'local {field_var} = {var}.fields'
         self.data.append(decl.format(field_var=self.field_var, var=self.var))
         for field in self.fields:
@@ -200,6 +221,7 @@ class Protocol:
         self.data.append('')
 
     def _dissector_func(self):
+        self.data.append('-- Dissector function for struct: %s' % self.name)
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
         sub_tree = '\tlocal subtree = tree:add({var}, buffer())'
         desc = '\tpinfo.cols.info:append(" (" .. {var}.description .. ")")'

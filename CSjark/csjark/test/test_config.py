@@ -97,10 +97,10 @@ def create_bitstring():
 def bitstring_rule(conf):
     member, type = conf.get_rules('flags', 'short')
     assert member and type
-    assert len(member.values[0]) == 3
-    assert member.values[1][2] == ['Flag A', 'Flag B']
-    assert len(type.values[0][2]) == 8
-    assert type.values[1][2] == ['Nih: No', 'Nih: Yes']
+    assert len(member.bits[0]) == 3
+    assert member.bits[1][2] == ['Flag A', 'Flag B']
+    assert len(type.bits[0][2]) == 8
+    assert type.bits[1][2] == ['Nih: No', 'Nih: Yes']
 
 
 if __name__ == '__main__':

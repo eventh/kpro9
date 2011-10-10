@@ -6,6 +6,7 @@ use when translating C struct definitions to Wireshark protocols and fields.
 """
 import yaml
 from operator import itemgetter
+from csjark import Cli
 
 
 class ConfigError(Exception):
@@ -170,6 +171,16 @@ def handle_struct(obj):
             Dissector(conf, rule)
 
 
+def handle_options(obj):
+    return
+    if 'verbose' in obj:
+        Cli.verbose = bool(obj['verbose'])
+    if 'debug' in obj:
+        Cli.debug = bool(obj['debug'])
+    if 'output' in obj:
+        pass
+
+
 def parse_file(filename, only_text=None):
     """Parse a configuration file."""
     if only_text is not None:
@@ -177,6 +188,10 @@ def parse_file(filename, only_text=None):
     else:
         with open(filename, 'r') as f:
             obj = yaml.safe_load(f)
+
+    # Deal with options
+    if 'Options' in obj:
+        handle_options(obj['Options'])
 
     # Deal with struct rules
     if 'Structs' in obj:

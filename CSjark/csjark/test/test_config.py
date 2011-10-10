@@ -73,7 +73,37 @@ def struct_rule_description(one, two):
     assert one.description == 'a struct' and two.description is None
 
 
+# Test that configuration support bit strings
+bitstring = Tests()
+
+@bitstring.context
+def create_bitstring():
+    text = '''
+    Structs:
+      - name: bitstring
+        bitstrings:
+          - member: flags
+            0: Test
+            1: [Flag A, Flag B]
+          - type: short
+            0-2: [A, B, C, D, E, F, G, H]
+            3: Nih
+    '''
+    config.parse_file('test', only_text=text)
+    yield config.StructConfig.find('bitstring')
+    del config.StructConfig.configs['bitstring']
+
+@bitstring.test
+def bitstring_rule(conf):
+    member, type = conf.get_rules('flags', 'short')
+    assert member and type
+    assert len(member.values[0]) == 3
+    assert member.values[1][2] == ['Flag A', 'Flag B']
+    assert len(type.values[0][2]) == 8
+    assert type.values[1][2] == ['Nih: No', 'Nih: Yes']
+
+
 if __name__ == '__main__':
-    all_tests = Tests([range_rule, struct_rule])
+    all_tests = Tests([range_rule, struct_rule, bitstring])
     all_tests.run()
 

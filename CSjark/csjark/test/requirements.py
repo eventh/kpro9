@@ -174,11 +174,19 @@ def create_rules():
           - member: percent
             min: 10
             max: 30
+        bitstrings:
+          - member: flags
+            0: Test
+            1: [Flag A, Flag B]
       - name: two
         id: 11
         ranges:
           - type: int
             max: 15.5
+        bitstrings:
+          - type: short
+            0-2: [A, B, C, D, E, F, G, H]
+            3: Nih
     '''
     config.parse_file('test', only_text=text)
     yield config.StructConfig.find('one'), config.StructConfig.find('two')
@@ -207,6 +215,15 @@ def req4_d(one, two):
 # FR4-E: Configuration must support various trailers
 # FR4-F: Configuration must support integers which represent enums
 # FR4-G: Configuration must support members which are bit string
+@configuration.test
+def req4_g(one, two):
+    one, = one.get_rules('flags', 'int')
+    two, = two.get_rules(None, 'short')
+    assert one and two
+    assert len(one.values[0]) == 3
+    assert one.values[1][2] == ['Flag A', 'Flag B']
+    assert len(two.values[0][2]) == 8
+    assert two.values[1][2] == ['Nih: No', 'Nih: Yes']
 
 
 # Tests for the fifth requirement, support endian etc

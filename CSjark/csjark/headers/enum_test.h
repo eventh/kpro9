@@ -9,7 +9,7 @@
 #define SUNDAY 7
 
 struct enum_test {
-	int id;
-	char name[STRING_LEN];
-	int weekday;
+    int id;
+    char name[STRING_LEN];
+    int weekday;
 };

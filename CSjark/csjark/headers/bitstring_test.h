@@ -1,4 +1,4 @@
 struct bitstring_test {
-	int id;
-	int flags;
-	};
+    int id;
+    int flags;
+};

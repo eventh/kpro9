@@ -8,17 +8,6 @@ A module for generating LUA dissectors for Wireshark.
 #VALID_PROTOTYPES = INT_TYPES + OTHER_TYPES
 
 
-def _dict_to_table(pydict):
-    """Convert a python dictionary to lua table."""
-    return '{%s}' % ', '.join('[%i]="%s"' % (i, j) for i, j in pydict.items())
-
-def _get_func_type(type):
-    """Get the lua function to read values from buffers."""
-    if type[-2:] in ('8', '16', '32'):
-        return type[:-2]
-    return type
-
-
 class Field:
     def __init__(self, name, type, size):
         self.name = name
@@ -60,15 +49,26 @@ class Field:
                 'offset': offset, 'size': self.size,}
         return t.format(**args)
 
+    def _get_func_type(self, type):
+        """Get the lua function to read values from buffers."""
+        if type[-2:] in ('8', '16', '32'):
+            return type[:-2]
+        return type
+
+    def _dict_to_table(self, pydict):
+        """Convert a python dictionary to lua table."""
+        return '{%s}' % ', '.join('[%i]="%s"' %
+                    (i, j) for i, j in pydict.items())
+
 
 class EnumField(Field):
     def __init__(self, name, type, size, values, strict=True):
         super().__init__(name, type, size)
-        self.values = _dict_to_table(values)
+        self.values = self._dict_to_table(values)
         self.strict = strict
 
         self.keys = ', '.join(str(i) for i in sorted(values.keys()))
-        self.func_type = _get_func_type(type)
+        self.func_type = self._get_func_type(type)
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
@@ -96,6 +96,21 @@ class ArrayField(Field):
     pass
 
 
+class DissectorField(Field):
+    def __init__(self, name, size=None):
+        super().__init__(name, 'trailer', size)
+
+    def get_definition(self):
+        pass
+
+    def get_code(self, offset):
+        if self.size is not None:
+            offset = '%s, %s' % (offset, self.size)
+        t = '\tlocal subdissector = Dissector.get("{name}")\n' \
+            '\tdissector:call(buffer({offset}):tvb(), pinfo, tree)'
+        return t.format(offset=offset, name=self.name)
+
+
 class BitField(Field):
     def __init__(self, name, type, size, values):
         super().__init__(name, type, size)
@@ -108,7 +123,7 @@ class RangeField(Field):
         super().__init__(name, type, size)
         self.min = min
         self.max = max
-        self.func_type = _get_func_type(type)
+        self.func_type = self._get_func_type(type)
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
@@ -178,7 +193,10 @@ class Protocol:
     def _fields_definition(self):
         decl = 'local {field_var} = {var}.fields'
         self.data.append(decl.format(field_var=self.field_var, var=self.var))
-        self.data.extend([f.get_definition() for f in self.fields])
+        for field in self.fields:
+            code = field.get_definition()
+            if code is not None:
+                self.data.append(code)
         self.data.append('')
 
     def _dissector_func(self):
@@ -193,8 +211,11 @@ class Protocol:
 
         offset = 0
         for field in self.fields:
-            self.data.append(field.get_code(offset))
-            offset += field.size
+            code = field.get_code(offset)
+            if code is not None:
+                self.data.append(code)
+            if field.size is not None:
+                offset += field.size
 
         self.data.append('end')
         self.data.append('')

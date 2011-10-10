@@ -1,8 +1,9 @@
 """
 A module for Wireshark specific data structures and functions.
 """
-from config import Range, Enum, Bitstring
-from dissector import Field, EnumField, RangeField, ArrayField, BitField
+from config import Range, Enum, Bitstring, Dissector
+from dissector import (Field, EnumField, RangeField,
+                        ArrayField, BitField, DissectorField)
 
 
 # Mapping of c type and their wireshark field type.
@@ -111,6 +112,11 @@ def create_field(proto, name, ctype, size=None):
     # Find all rules relevant for this field
     if proto.conf is not None:
         rules = proto.conf.get_rules(name, ctype)
+
+        # Dissector rules
+        diss = [i for i in rules if isinstance(i, Dissector)]
+        if diss and field is None:
+            field = DissectorField(diss[0].name, diss[0].size)
 
         # Bit string rules
         bits = [i for i in rules if isinstance(i, Bitstring)]

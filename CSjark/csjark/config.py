@@ -49,7 +49,7 @@ class StructConfig:
             return cls.configs[name]
 
 
-class BaseFieldRule:
+class BaseRule:
     """A base class for rules refering to protocol fields."""
 
     def __init__(self, conf, obj):
@@ -67,7 +67,7 @@ class BaseFieldRule:
             raise ConfigError('Missing either type or member declaration')
 
 
-class Range(BaseFieldRule):
+class Range(BaseRule):
     """Rule for specifying a valid range for a struct member or type."""
 
     def __init__(self, conf, obj):
@@ -83,7 +83,7 @@ class Range(BaseFieldRule):
             raise ConfigError('RangeRule needs atleast a min or max value.')
 
 
-class Enum(BaseFieldRule):
+class Enum(BaseRule):
     """Rule for emulating enum with int-like types in structs."""
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
@@ -97,7 +97,7 @@ class Enum(BaseFieldRule):
             self.values = dict(enumerate(self.values))
 
 
-class Bitstring(BaseFieldRule):
+class Bitstring(BaseRule):
     """Rule for representing bit strings in structs."""
 
     def __init__(self, conf, obj):
@@ -122,6 +122,19 @@ class Bitstring(BaseFieldRule):
         self.values.sort(key=itemgetter(0))
         if not self.values:
             raise ConfigError('Invalid bitstring rule for %s' % conf.name)
+
+
+class Dissector(BaseRule):
+    """Rule for specifying a trailer?."""
+
+    def __init__(self, conf, obj):
+        super().__init__(conf, obj)
+        self.name = str(obj['name'])
+        self.size = None
+        if 'size' in obj:
+            self.size = int(obj['size'])
+        if not self.name:
+            raise ConfigError('Invalid dissector rule for %s' % conf.name)
 
 
 def handle_struct(obj):
@@ -150,6 +163,11 @@ def handle_struct(obj):
     if 'ranges' in obj:
         for rule in obj['ranges']:
             Range(conf, rule)
+
+    # Handle specific dissectors
+    if 'dissectors' in obj:
+        for rule in obj['dissectors']:
+            Dissector(conf, rule)
 
 
 def parse_file(filename, only_text=None):

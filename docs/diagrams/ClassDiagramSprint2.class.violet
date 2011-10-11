@@ -613,15 +613,6 @@ _get_func_type()
     </void> 
    </object> 
   </void> 
-  <void method="addNode"> 
-   <object class="com.horstmann.violet.PackageNode"/> 
-   <object class="java.awt.geom.Point2D$Double"> 
-    <void method="setLocation"> 
-     <double>1659.0</double> 
-     <double>673.0</double> 
-    </void> 
-   </object> 
-  </void> 
   <void method="connect"> 
    <object class="com.horstmann.violet.ClassRelationshipEdge"> 
     <void property="endArrowHead"> 

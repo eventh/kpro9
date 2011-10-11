@@ -5,5 +5,6 @@ Structs:
     bitstrings:
       - member: flags
         0: In use
-        1: [Big endian, Little endian]
-        2-3: [Win, Linux, Mac, Solaris]
+        1: [Endian, Big, Little]
+        2-3: [Platform, Win, Linux, Mac, Solaris]
+        4: [Test]

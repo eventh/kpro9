@@ -19,8 +19,8 @@ Structs:
     bitstrings:
       - member: flags
         0: In use
-        1: [Big endian, Little endian]
-        2-3: [Win, Linux, Mac, Solaris]
+        1: [Endian, Big, Little]
+        2-3: [Platform, Win, Linux, Mac, Solaris]
       - type: color_t
         0: RED
         1: Blue
@@ -40,7 +40,7 @@ Structs:
         min: 0
         max: 4
 
-    # TODO: FR4-E Support various trailers (other registered protocol)
+    # Delegate to other registered protocols
     dissectors:
       - member: ans1
         name: ber

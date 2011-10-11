@@ -178,7 +178,7 @@ def create_rules():
         bitstrings:
           - member: flags
             0: Test
-            1: [Flag A, Flag B]
+            1: [Flag, A, B]
       - name: two
         id: 11
         ranges:
@@ -186,8 +186,8 @@ def create_rules():
             max: 15.5
         bitstrings:
           - type: short
-            0-2: [A, B, C, D, E, F, G, H]
-            3: Nih
+            0-2: [Short, A, B, C, D, E, F, G, H]
+            3: [Nih]
     '''
     config.parse_file('test', only_text=text)
     yield config.StructConfig.find('one'), config.StructConfig.find('two')
@@ -224,10 +224,12 @@ def req4_g(one, two):
     one, = one.get_rules('flags', 'int')
     two, = two.get_rules(None, 'short')
     assert one and two
-    assert len(one.bits[0]) == 3
-    assert one.bits[1][2] == ['Flag A', 'Flag B']
-    assert len(two.bits[0][2]) == 8
-    assert two.bits[1][2] == ['Nih: No', 'Nih: Yes']
+    assert len(one.bits[0]) == 4
+    assert one.bits[1][2] == 'Flag'
+    assert one.bits[1][3] == {0: 'A', 1: 'B'}
+    assert len(two.bits[0][3]) == 8
+    assert two.bits[1][2] == 'Nih'
+    assert two.bits[1][3] == {0: 'No', 1: 'Yes'}
 
 
 # Tests for the fifth requirement, support endian etc

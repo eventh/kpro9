@@ -1,11 +1,30 @@
 """
 A module for generating LUA dissectors for Wireshark.
 """
+import string
 
-#INT_TYPES = ["uint8", "uint16", "uint24", "uint32", "uint64", "framenum"]
-#OTHER_TYPES = ["float", "double", "string", "stringz", "bytes",
-#                "bool", "ipv4", "ipv6", "ether", "oid", "guid"]
-#VALID_PROTOTYPES = INT_TYPES + OTHER_TYPES
+INT_TYPES = ["uint8", "uint16", "uint24", "uint32", "uint64", "framenum"]
+OTHER_TYPES = ["float", "double", "string", "stringz", "bytes",
+                "bool", "ipv4", "ipv6", "ether", "oid", "guid"]
+VALID_PROTOFIELD_TYPES = INT_TYPES + OTHER_TYPES
+
+
+def create_lua_var(var, length=None):
+    """Return a valid lua variable name."""
+    valid = string.ascii_letters + string.digits + '_'
+    if length is None:
+        length = len(var)
+    var.replace(' ', '_')
+
+    i = 0
+    while i < len(var) and i < length:
+        if var[i] not in valid:
+            var = var[:i] + var[i+1:]
+        elif i == 0 and var[i] in string.digits:
+            var = var[:i] + var[i+1:]
+        else:
+            i += 1
+    return var
 
 
 class Field:
@@ -113,12 +132,21 @@ class BitField(Field):
         super().__init__(name, type, size)
         self.bits = bits
 
+    def _bit_var(self, name):
+        return '%s.%s' % (self.var, create_lua_var(name))
+
+    def _bit_abbr(self, name):
+        return '%s.%s' % (self.abbr, name.replace(' ', '_'))
+
     def get_definition(self):
         data = []
+
         for i, j, name, values in self.bits:
-            t = '{var}.{name} = ProtoField.{type}("{abbr}", nil, nil, {values})'
-            data.append(t.format(var=self.var, name=name, abbr=self.abbr,
-                        type=self.type, values=self._dict_to_table(values)))
+            t = '{var} = ProtoField.{type}("{abbr}", "{name}", nil, {values})'
+            data.append(t.format(var=self._bit_var(name), type=self.type,
+                                 abbr=self._bit_abbr(name), name=name,
+                                 values=self._dict_to_table(values)))
+
         return '\n'.join(data)
 
     def get_code(self, offset):
@@ -130,8 +158,10 @@ class BitField(Field):
         data.append(buffer.format(offset=offset, size=self.size))
 
         for i, j, name, values in self.bits:
-            pass
+            t = '\tbittree:add({var}, range:bitfield({i}, {j}))'
+            data.append(t.format(var=self._bit_var(name), i=i, j=j))
 
+        data.append('')
         return '\n'.join(data)
 
 

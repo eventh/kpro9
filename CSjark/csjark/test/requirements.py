@@ -5,14 +5,8 @@ import sys, os
 from attest import Tests, assert_hook, contexts
 from pycparser import c_ast
 
-try:
-    import cparser
-    import config
-except ImportError:
-    # If cparser is not installed, look in parent folder
-    sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../'))
-    import cparser
-    import config
+import cparser
+import config
 
 
 def _child(node, depth=1):
@@ -59,9 +53,7 @@ def req_1b():
 @parse_structs.test
 def req_1c():
     """Test requirement FR1-C: Support member of type struct."""
-    a = cparser.parse('''
-    struct outside { struct inside { int a; char b; }; };
-    ''')
+    a = cparser.parse('struct outside { struct inside { int a; char b; }; };')
     assert isinstance(_child(a, 4), c_ast.Struct)
     assert _child(a, 2).name == 'outside' and _child(a, 4).name == 'inside'
     assert _child(a, 7).names[0] == 'int'
@@ -118,18 +110,10 @@ cpp = Tests()
 def create_ast():
     """Parse a C headerfile with C preprocessor, and create an AST."""
     # Find the header files and cpp if we are run from a different folder
-    if __name__ == '__main__':
-        path = os.path.dirname(sys.argv[0])
-    else:
-        path = os.path.dirname(__file__)
-
-    cpp_h = os.path.join(path, 'cpp.h')
-    inc_h = os.path.join(path, 'include.h')
-    cpp_path = os.path.join(path, '../../utils/cpp.exe') # Tmp hack
-
+    cpp_h = os.path.join(os.path.dirname(__file__), 'cpp.h')
+    inc_h = os.path.join(os.path.dirname(__file__), 'include.h')
     assert os.path.isfile(cpp_h) and os.path.isfile(inc_h)
-    ast = cparser.parse_file(cpp_h, cpp_path=cpp_path)
-    yield ast
+    yield cparser.parse_file(cpp_h)
 
 # FR3-A: The utility shall support #include
 @cpp.test
@@ -246,9 +230,4 @@ def req4_g(one, two):
 # FR6-B: Command line shall support parameter for configuration file
 # FR6-C: Command line shall support batch mode of C header and config files
 # FR6-D: In batch mode, don't regenerate dissectors which aren't modified
-
-
-if __name__ == '__main__':
-    all_tests = Tests([parse_structs, cpp, configuration])
-    all_tests.run()
 

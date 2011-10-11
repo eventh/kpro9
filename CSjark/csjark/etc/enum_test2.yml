@@ -1,0 +1,9 @@
+Structs:
+  - name: enum_test2
+    id: 15
+    enums:
+      - member: color
+        values: {1: Red, 2: Green, 3: Blue, 4: Yellow}
+      - type: int
+        values: [Zero, One, Two, Three, Four, Five]
+        strict: True # Disable warning if not a valid value

@@ -109,7 +109,17 @@ class EnumField(Field):
 
 
 class ArrayField(Field):
-    pass
+    def __init__(self, name, type, size, depth):
+        super().__init__(name, 'array', 0)
+        self.base_size = size
+        self.depth = depth
+        print(name, type, size, depth)
+
+    def get_definition(self):
+        pass
+
+    def get_code(self, offset):
+        pass
 
 
 class DissectorField(Field):

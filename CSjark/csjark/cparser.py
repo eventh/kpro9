@@ -198,27 +198,25 @@ class StructVisitor(c_ast.NodeVisitor):
             depth = []
         child = node.children()[0]
 
-        # Multidimensional array or string array
-        if isinstance(child, c_ast.ArrayDecl):
-            # String array
-            if (isinstance(child.children()[0], c_ast.TypeDecl) and
-                    child.children()[0].children()[0].names[0] == 'char'):
-                size = self._get_array_size(child) * size_of('char')
-                if depth:
-                    create_array(proto, child.declname, 'string', size, depth)
-                else:
-                    create_field(proto, child.declname, 'string', size)
-
-            # Multidimensional, handle recursively
+        # String array
+        if (isinstance(child, c_ast.TypeDecl) and
+                child.children()[0].names[0] == 'char'):
+            size = self._get_array_size(node) * size_of('char')
+            if depth:
+                create_array(proto, child.declname, 'string', size, depth)
             else:
-                depth.append(self._get_array_size(node))
-                self.handle_array_decl(child, proto, depth)
+                create_field(proto, child.declname, 'string', size)
+
+        # Multidimensional, handle recursively
+        elif isinstance(child, c_ast.ArrayDecl):
+            depth.append(self._get_array_size(node))
+            self.handle_array_decl(child, proto, depth)
 
         # Single dimensional normal array
         else:
+            depth.append(self._get_array_size(node))
             type = self._get_type(child.children()[0])
-            size = self._get_array_size(node) * size_of(type)
-            create_array(proto, child.declname, type, size, depth)
+            create_array(proto, child.declname, type, size_of(type), depth)
 
     def handle_ptr_decl(self, node, proto):
         """Find member details in a pointer declaration."""

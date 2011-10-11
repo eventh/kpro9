@@ -97,8 +97,7 @@ def create_enum(proto, name, values):
 
 def create_array(proto, name, ctype, size, depth):
     """Create a dissector field representing an array."""
-    # TODO
-    proto.add_field(ArrayField(name, map_type(ctype), size))
+    proto.add_field(ArrayField(name, map_type(ctype), size, depth))
 
 
 def create_field(proto, name, ctype, size=None):
@@ -110,6 +109,8 @@ def create_field(proto, name, ctype, size=None):
         size = size_of(ctype)
 
     # Find all rules relevant for this field
+    # Todo: what if several rules cover one member?
+    #       now we simply discard all but one rule, try to merge them?
     if proto.conf is not None:
         rules = proto.conf.get_rules(name, ctype)
 

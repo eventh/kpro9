@@ -7,12 +7,7 @@ import sys, os
 from attest import Tests, assert_hook, contexts
 from pycparser import c_ast
 
-try:
-    import cparser
-except ImportError:
-    # If cparser is not installed, look in parent folder
-    sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../'))
-    import cparser
+import cparser
 
 
 def _child(node, depth=1):
@@ -122,19 +117,10 @@ cpp = Tests()
 @cpp.context
 def create_ast():
     """Parse a C headerfile with C preprocessor, and create an AST."""
-    # Find the header files and cpp if we are run from a different folder
-    if __name__ == '__main__':
-        path = os.path.dirname(sys.argv[0])
-    else:
-        path = os.path.dirname(__file__)
-
-    cpp_h = os.path.join(path, 'cpp.h')
-    inc_h = os.path.join(path, 'include.h')
-    cpp_path = os.path.join(path, '../../utils/cpp.exe') # Tmp hack
-
+    cpp_h = os.path.join(os.path.dirname(__file__), 'cpp.h')
+    inc_h = os.path.join(os.path.dirname(__file__), 'include.h')
     assert os.path.isfile(cpp_h) and os.path.isfile(inc_h)
-    ast = cparser.parse_file(cpp_h, cpp_path=cpp_path)
-    yield ast
+    yield cparser.parse_file(cpp_h)
 
 @cpp.test
 def cpp_define(ast):
@@ -154,9 +140,4 @@ def cpp_include(ast):
     a, b, c = ast.children()
     assert _child(c, 5).names[0] == 'bool'
     assert int(_child(c, 3).children()[1].value) == 5
-
-
-if __name__ == '__main__':
-    all_tests = Tests([parse, find_structs, cpp])
-    all_tests.run()
 

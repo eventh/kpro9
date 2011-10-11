@@ -4,12 +4,7 @@ Module for testing the config module.
 import sys, os
 from attest import Tests, assert_hook
 
-try:
-    import config
-except ImportError:
-    # If cparser is not installed, look in parent folder
-    sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../'))
-    import config
+import config
 
 
 # Test that configuration support range rules.
@@ -17,6 +12,7 @@ range_rule = Tests()
 
 @range_rule.context
 def create_ranges():
+    """Create range rules for testing."""
     text = '''
     Structs:
       - name: test
@@ -33,12 +29,14 @@ def create_ranges():
 
 @range_rule.test
 def range_rule_member(conf):
+    """Test that range rule work for member."""
     assert conf
     rule, = conf.get_rules('percent', None)
     assert rule.max == 30 and rule.min == 10
 
 @range_rule.test
 def range_rule_type(conf):
+    """Test that range rule work for type."""
     assert conf
     rule, = conf.get_rules('holy hand grenade', 'int')
     assert rule.max == 15.5 and rule.min is None
@@ -49,6 +47,7 @@ struct_rule = Tests()
 
 @struct_rule.context
 def create_structs():
+    """Create structs with id and description."""
     text = '''
     Structs:
       - name: one
@@ -64,11 +63,13 @@ def create_structs():
 
 @struct_rule.test
 def struct_rule_id(one, two):
+    """Test config support struct id."""
     assert one and two
     assert one.id == 9 and two.id == 11
 
 @struct_rule.test
 def struct_rule_description(one, two):
+    """Test config support struct description."""
     assert one and two
     assert one.description == 'a struct' and two.description is None
 
@@ -78,6 +79,7 @@ bitstring = Tests()
 
 @bitstring.context
 def create_bitstring():
+    """Create struct config with bitstring rules."""
     text = '''
     Structs:
       - name: bitstring
@@ -95,6 +97,7 @@ def create_bitstring():
 
 @bitstring.test
 def bitstring_rule(conf):
+    """Test that config support rules for bitstrings."""
     member, type = conf.get_rules('flags', 'short')
     assert member and type
     assert len(member.bits[0]) == 4
@@ -103,9 +106,4 @@ def bitstring_rule(conf):
     assert len(type.bits[0][3]) == 8
     assert type.bits[1][2] == 'Nih'
     assert type.bits[1][3] == {0: 'No', 1: 'Yes'}
-
-
-if __name__ == '__main__':
-    all_tests = Tests([range_rule, struct_rule, bitstring])
-    all_tests.run()
 

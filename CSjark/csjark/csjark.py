@@ -122,7 +122,6 @@ class Cli:
 
         return headers, configs
 
-
 def create_dissector(filename):
     """Create a Wireshark dissector from 'filename'."""
     ast = cparser.parse_file(filename, use_cpp=Cli.use_cpp)

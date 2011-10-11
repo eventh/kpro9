@@ -344,8 +344,7 @@ class Protocol:
         size = 0
         for field in self.fields:
             if field.size == None:
-                print("Error, could not determine size of struct: %s" % self.name)
-                exit()
+                raise BufferError("Unable to determine the size of the struct.")
             size += field.size
 
         return size

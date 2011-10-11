@@ -182,7 +182,7 @@ class SubDissectorField(Field):
 
     def get_code(self, offset):
         t = '\tlocal subsubtree = subtree:add("{name}:")\n' \
-            '\tluastructs_dt.try({id}, buffer({offset}, {size}):tvb(), pinfo, subsubtree)'
+            '\tluastructs_dt:try({id}, buffer({offset}, {size}):tvb(), pinfo, subsubtree)'
         return t.format(name = self.name, id = self.id, offset = offset, size = self.size)
 
 class BitField(Field):

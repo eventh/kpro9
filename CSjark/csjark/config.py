@@ -156,6 +156,9 @@ def handle_struct(obj):
     # Structs optional id
     if 'id' in obj:
         conf.id = int(obj['id'])
+        if conf.id < 0 or conf.id > 65535:
+            raise ConfigError('Invalid dissector ID %s: %i (0 - 65535)' % (
+                    conf.name, conf.id))
 
     # Structs optional description
     if 'description' in obj:

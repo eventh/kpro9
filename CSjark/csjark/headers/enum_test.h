@@ -12,4 +12,5 @@ struct enum_test {
     int id;
     char name[STRING_LEN];
     int weekday;
+    int number;
 };

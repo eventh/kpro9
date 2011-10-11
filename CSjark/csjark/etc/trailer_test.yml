@@ -1,0 +1,10 @@
+Structs:
+  - name: trailer_test
+    id: 66
+    dissectors:
+      - member: asn1
+        name: ber
+      - type: long long
+        name: ber
+        size: 8
+

@@ -4,30 +4,8 @@ A module for configuration of our utility.
 Should parse config files and create data structures which the parser can
 use when translating C struct definitions to Wireshark protocols and fields.
 """
-import string
 from operator import itemgetter
-
 import yaml
-
-from csjark import Cli
-
-
-def _create_lua_var(var, length=None):
-    """Return a valid lua variable name."""
-    valid = string.ascii_letters + string.digits + '_'
-    if length is None:
-        length = len(var)
-    var.replace(' ', '_')
-
-    i = 0
-    while i < len(var) and i < length:
-        if var[i] not in valid:
-            var = var[:i] + var[i+1:]
-        elif i == 0 and var[i] in string.digits:
-            var = var[:i] + var[i+1:]
-        else:
-            i += 1
-    return var
 
 
 class ConfigError(Exception):
@@ -125,9 +103,10 @@ class Bitstring(BaseRule):
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
 
-        # Find all bitstring defintions
+        # Find all bitstring definitions
         self.bits = []
         for key, value in obj.items():
+            # Find the bits referred to by the key
             try:
                 int(key)
             except ValueError:
@@ -137,10 +116,20 @@ class Bitstring(BaseRule):
                 offset = end - start + 1
             else:
                 start, offset = key, 1
-            if isinstance(value, str):
-                value = ['%s: No' % value, '%s: Yes' % value]
-            name = _create_lua_var(str(value), 10)
-            self.bits.append((start, offset, name, dict(enumerate(value))))
+
+            # Find the bit name and values mapping
+            name = value
+            values = {}
+            if not isinstance(value, str):
+                name = value[0]
+                if len(value) > 1:
+                    values = dict(enumerate(value[1:]))
+                elif offset == 1:
+                    values = {0: 'No', 1: 'Yes'}
+            elif offset == 1:
+                values = {0: 'No', 1: 'Yes'}
+
+            self.bits.append((start, offset, name, values))
 
         self.bits.sort(key=itemgetter(0))
         if not self.bits:
@@ -167,6 +156,9 @@ def handle_struct(obj):
     # Structs optional id
     if 'id' in obj:
         conf.id = int(obj['id'])
+        if conf.id < 0 or conf.id > 65535:
+            raise ConfigError('Invalid dissector ID %s: %i (0 - 65535)' % (
+                    conf.name, conf.id))
 
     # Structs optional description
     if 'description' in obj:
@@ -195,12 +187,6 @@ def handle_struct(obj):
 
 def handle_options(obj):
     return
-    if 'verbose' in obj:
-        Cli.verbose = bool(obj['verbose'])
-    if 'debug' in obj:
-        Cli.debug = bool(obj['debug'])
-    if 'output' in obj:
-        pass
 
 
 def parse_file(filename, only_text=None):

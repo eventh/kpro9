@@ -4,6 +4,11 @@ Structs:
     description: Bit string test
     bitstrings:
       - member: flags
-        0: In use
-        1: [Big endian, Little endian]
-        2-3: [Win, Linux, Mac, Solaris]
+        31: In use
+        30: [Endian, Big, Little]
+        28-29: [Platform, Win, Linux, Mac, Solaris]
+        27: [Test]
+      - type: short
+        0: RED
+        1: Blue
+        2: Green

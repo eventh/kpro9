@@ -84,10 +84,10 @@ def create_bitstring():
         bitstrings:
           - member: flags
             0: Test
-            1: [Flag A, Flag B]
+            1: [Flag, A, B]
           - type: short
-            0-2: [A, B, C, D, E, F, G, H]
-            3: Nih
+            0-2: [Short, A, B, C, D, E, F, G, H]
+            3: [Nih]
     '''
     config.parse_file('test', only_text=text)
     yield config.StructConfig.find('bitstring')
@@ -97,10 +97,12 @@ def create_bitstring():
 def bitstring_rule(conf):
     member, type = conf.get_rules('flags', 'short')
     assert member and type
-    assert len(member.bits[0]) == 3
-    assert member.bits[1][2] == ['Flag A', 'Flag B']
-    assert len(type.bits[0][2]) == 8
-    assert type.bits[1][2] == ['Nih: No', 'Nih: Yes']
+    assert len(member.bits[0]) == 4
+    assert member.bits[1][2] == 'Flag'
+    assert member.bits[1][3] == {0: 'A', 1: 'B'}
+    assert len(type.bits[0][3]) == 8
+    assert type.bits[1][2] == 'Nih'
+    assert type.bits[1][3] == {0: 'No', 1: 'Yes'}
 
 
 if __name__ == '__main__':

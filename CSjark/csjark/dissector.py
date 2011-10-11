@@ -117,6 +117,7 @@ class ArrayField(Field):
             self.total_size *= size
 
         super().__init__(name, type, self.total_size)
+        self.func_type = self._get_func_type(type)
 
     def get_definition(self):
         pass
@@ -124,32 +125,34 @@ class ArrayField(Field):
     def get_code(self, offset):
         data = ['\t-- Array handling for %s' % self.name]
 
-        def subarray(var, name=''):
-            tree = '\tlocal {var} = subtree:add("Array: {name}")'
-            data.append(tree.format(var=var, name=name))
+        def subdefinition(var, old, name=''):
+            tree = '\tlocal {var} = {old}:add("Array: {name}")'
+            data.append(tree.format(var=var, old=old, name=name))
 
-        def addfield(var, type, i, j):
-            t = '\t{var}:add(ProtoField.{type}(tmp, buffer({i}, {j})))'
-            data.append(t.format(var=var, type=type, i=i, j=j))
+        def addfield(var, type, offset):
+            t = '\t{var}:add(ProtoField.{type}("{name}"), ' \
+                    'buffer({offset}, {size}):{func}())'
+            data.append(t.format(var=var, type=type, offset=offset,
+                    size=self.base_size, name=self.name, func=self.func_type))
 
+        def array(depth, var, old):
+            nonlocal offset
+            if len(depth) == 1:
+                for i in range(depth[0]):
+                    addfield(var, self.type, offset)
+                    offset += self.base_size
+            else:
+                size = depth.pop(0)
+                old = var
+                var = 'sub%s' % var
+                for j in range(size):
+                    subdefinition(var, old)
+                    array(depth, var, old)
+
+        old = 'subtree'
         var = 'arraytree'
-        subarray(var, self.name)
-
-        for size in self.depth:
-            if size == 1:
-                continue
-
-            var = 'sub%s' % var
-            subarray(var)
-
-            for i in range(size):
-                addfield(var, self.type, i, i)
-
-        #for i, j, name, values in self.bits:
-        #    t = '{var} = ProtoField.{type}("{abbr}", "{name}", nil, {values})'
-        #    data.append(t.format(var=self._bit_var(name), type=self.type,
-        #                         abbr=self._bit_abbr(name), name=name,
-        #                         values=self._dict_to_table(values)))
+        subdefinition(var, old, self.name)
+        array(self.depth, var, old)
 
         data.append('')
         return '\n'.join(data)

@@ -3,7 +3,7 @@ A module for Wireshark specific data structures and functions.
 """
 from config import Range, Enum, Bitstring, Dissector
 from dissector import (Field, EnumField, RangeField,
-                        ArrayField, BitField, DissectorField)
+                        ArrayField, BitField, DissectorField, SubDissectorField)
 
 
 # Mapping of c type and their wireshark field type.
@@ -99,6 +99,13 @@ def create_array(proto, name, ctype, size, depth):
     """Create a dissector field representing an array."""
     # TODO
     proto.add_field(ArrayField(name, map_type(ctype), size))
+
+def create_struct(proto, type_name, name, structs):
+    struct = structs[type_name]
+    size = struct.get_size()
+    id = struct.id
+    proto.add_field(SubDissectorField(name, id, size, 'struct'))
+
 
 
 def create_field(proto, name, ctype, size=None):

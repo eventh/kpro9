@@ -12,7 +12,7 @@ from pycparser import c_ast, c_parser, plyparser
 
 from config import StructConfig
 from dissector import Protocol
-from wireshark import size_of, create_field, create_enum, create_array
+from wireshark import size_of, create_field, create_enum, create_array, create_struct
 
 
 class ParseError(plyparser.ParseError):
@@ -173,7 +173,7 @@ class StructVisitor(c_ast.NodeVisitor):
         elif isinstance(child, c_ast.Union):
             create_field(proto, node.declname, 'union')
         elif isinstance(child, c_ast.Struct):
-            create_field(proto, node.declname, 'struct')
+            create_struct(proto, child.name, node.declname, self.structs)
         else:
             raise ParseError('Unknown type declaration: %s' % repr(child))
 

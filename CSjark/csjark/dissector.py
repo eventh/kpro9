@@ -107,6 +107,18 @@ class DissectorField(Field):
             '\tdissector:call(buffer({offset}):tvb(), pinfo, tree)'
         return t.format(offset=offset, name=self.name)
 
+class SubDissectorField(Field):
+    def __init__(self, name, id, size, type_name):
+        super().__init__(name, type_name, size)
+        self.id = id
+
+    def get_definition(self):
+        pass
+
+    def get_code(self, offset):
+        t = '\tlocal subsubtree = subtree:add("{name}:")\n' \
+            '\tluastructs_dt.try({id}, buffer({offset}, {size}):tvb(), pinfo, subsubtree)'
+        return t.format(name = self.name, id = self.id, offset = offset, size = self.size)
 
 class BitField(Field):
     def __init__(self, name, type, size, bits):
@@ -251,4 +263,14 @@ class Protocol:
         self.data.append(end.format(id=self.id, var=self.var))
 
         return '\n'.join(self.data)
+
+    def get_size(self):
+        size = 0
+        for field in self.fields:
+            if field.size == None:
+                print("Error, could not determine size of struct: %s" % self.name)
+                exit()
+            size += field.size
+
+        return size
 

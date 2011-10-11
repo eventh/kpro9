@@ -109,17 +109,50 @@ class EnumField(Field):
 
 
 class ArrayField(Field):
-    def __init__(self, name, type, size, depth):
-        super().__init__(name, 'array', 0)
-        self.base_size = size
+    def __init__(self, name, type, base_size, depth):
+        self.base_size = base_size
         self.depth = depth
-        print(name, type, size, depth)
+        self.total_size = base_size
+        for size in depth:
+            self.total_size *= size
+
+        super().__init__(name, type, self.total_size)
 
     def get_definition(self):
         pass
 
     def get_code(self, offset):
-        pass
+        data = ['\t-- Array handling for %s' % self.name]
+
+        def subarray(var, name=''):
+            tree = '\tlocal {var} = subtree:add("Array: {name}")'
+            data.append(tree.format(var=var, name=name))
+
+        def addfield(var, type, i, j):
+            t = '\t{var}:add(ProtoField.{type}(tmp, buffer({i}, {j})))'
+            data.append(t.format(var=var, type=type, i=i, j=j))
+
+        var = 'arraytree'
+        subarray(var, self.name)
+
+        for size in self.depth:
+            if size == 1:
+                continue
+
+            var = 'sub%s' % var
+            subarray(var)
+
+            for i in range(size):
+                addfield(var, self.type, i, i)
+
+        #for i, j, name, values in self.bits:
+        #    t = '{var} = ProtoField.{type}("{abbr}", "{name}", nil, {values})'
+        #    data.append(t.format(var=self._bit_var(name), type=self.type,
+        #                         abbr=self._bit_abbr(name), name=name,
+        #                         values=self._dict_to_table(values)))
+
+        data.append('')
+        return '\n'.join(data)
 
 
 class DissectorField(Field):
@@ -160,7 +193,7 @@ class BitField(Field):
         return '\n'.join(data)
 
     def get_code(self, offset):
-        data = []
+        data = ['\t-- Bitstring handling for %s' % self.name]
 
         tree = '\tlocal bittree = subtree:add("{name} (bitstring)")'
         buffer = '\tlocal range = buffer({offset}, {size})'

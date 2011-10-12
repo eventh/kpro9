@@ -83,3 +83,27 @@ def cli_file_dont_existing(cli):
     assert str(error) == '2'
     assert out[0].startswith('Unknown file(s): 404.h')
 
+@cli.test
+def cli_no_args(cli):
+    """Test that providing no arguments prints usage message."""
+    with contexts.capture_output() as (out, err):
+        with contexts.raises(SystemExit) as error:
+            headers, configs = cli.parse_args()
+    assert str(error) == '2'
+    assert out[0].startswith('usage:')
+
+@cli.test
+def cli_no_file(cli):
+    """Test that providing no header or config prints usage message."""
+    with contexts.capture_output() as (out, err):
+        with contexts.raises(SystemExit) as error:
+            headers, configs = cli.parse_args(['-verbose', '-debug'])
+    assert str(error) == '2'
+    assert out[0].startswith('usage:')
+
+@cli.test
+def cli_flag_output(cli):
+    """Test that one can provide an output argument."""
+    # TODO: terje!
+    pass
+

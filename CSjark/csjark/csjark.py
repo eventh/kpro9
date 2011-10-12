@@ -92,14 +92,6 @@ class Cli:
         cls.debug = namespace.debug
         cls.use_cpp = namespace.nocpp
 
-        # Find out where to store output from the generator
-        if namespace.output:
-            path = os.path.join(os.path.dirname(sys.argv[0]), namespace.output)
-            if os.path.isdir(path):
-                cls.output_dir = path
-            else:
-                cls.output_file = path
-
         headers = namespace.input
         if namespace.header:
             headers.append(namespace.header)
@@ -107,6 +99,14 @@ class Cli:
         configs = namespace.configs
         if namespace.config:
             configs.append(namespace.config)
+
+        # Find out where to store output from the generator
+        if namespace.output:
+            path = os.path.join(os.path.dirname(sys.argv[0]), namespace.output)
+            if os.path.isdir(path):
+                cls.output_dir = path
+            else:
+                cls.output_file = path
 
         # Need to provide either a header file or a config file
         if not headers and not configs:

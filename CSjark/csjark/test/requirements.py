@@ -202,6 +202,8 @@ def req4_a(one, two):
     assert rule.max == 15.5 and rule.min is None
 
 # FR4-B: Configuration must support custom Lua files for specific protocols
+
+
 # FR4-C: Configuration must support custom handling of specific data types
 @configuration.test
 def req4_c(one, two):
@@ -213,7 +215,6 @@ def req4_c(one, two):
     assert rule.field == 'bool' and rule.size == 4
     assert rule.abbr == 'bool' and rule.name == 'A BOOL'
 
-
 # FR4-D: Configuration must support specifying the ID of dissectors
 @configuration.test
 def req4_d(one, two):
@@ -223,7 +224,11 @@ def req4_d(one, two):
     assert one.description == 'a struct' and two.description is None
 
 # FR4-E: Configuration must support various trailers
+
+
 # FR4-F: Configuration must support integers which represent enums
+
+
 # FR4-G: Configuration must support members which are bit string
 @configuration.test
 def req4_g(one, two):

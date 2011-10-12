@@ -76,6 +76,7 @@ def create_structs():
     '''
     ast = cparser.parse(code, 'test')
     yield cparser.find_structs(ast)[0].fields
+    del cparser.StructVisitor.all_struct_names['find']
 
 @find_structs.test
 def find_basic_types(structs):

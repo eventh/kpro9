@@ -12,7 +12,8 @@ from pycparser import c_ast, c_parser, plyparser
 
 from config import StructConfig
 from dissector import Protocol
-from wireshark import size_of, create_field, create_enum, create_array, create_struct
+from wireshark import (size_of, create_field,
+                       create_enum, create_array, create_struct)
 
 
 class ParseError(plyparser.ParseError):
@@ -70,6 +71,8 @@ def find_structs(ast):
 class StructVisitor(c_ast.NodeVisitor):
     """A class which visit struct nodes in the AST."""
 
+    all_struct_names = {} # Map struct names and their coords
+
     def __init__(self):
         self.structs = {} # All structs encountered in this AST
         self.enums = {} # All enums encountered in this AST
@@ -111,11 +114,13 @@ class StructVisitor(c_ast.NodeVisitor):
                 raise ParseError('Unknown struct member: %s' % repr(child))
 
         # Disallow structs with same name
-        if node.name in self.structs:
-            other = self.structs[node.name]
+        if node.name in StructVisitor.all_struct_names:
+            other = StructVisitor.all_struct_names[node.name]
             raise ParseError('Two structs with same name: %s in %s:%i & %s:%i'
-                    % (node.name, other.coord.file,
-                        other.coord.line, node.coord.file, node.coord.line))
+                    % (node.name, other.file,
+                        other.line, node.coord.file, node.coord.line))
+        else:
+            StructVisitor.all_struct_names[node.name] = node.coord
 
         # Don't add protocols with no fields? Sounds reasonably
         if proto.fields:

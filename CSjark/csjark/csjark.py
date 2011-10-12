@@ -114,8 +114,11 @@ class Cli:
             sys.exit(2)
 
         # Check if the input header path is a directory
-        if os.path.isdir(headers):
-            headers.extend(os.listdir(headers))
+        for header in headers:
+            if os.path.isdir(header):
+               for file in os.listdir(header):
+                    if os.path.splitext(file)[1] in ('h', 'c') or os.path.isdir(file):
+                        headers.append(file)
 
         # Make sure the files provided actually exists
         missing = [i for i in headers + configs if

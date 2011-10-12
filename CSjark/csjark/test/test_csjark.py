@@ -50,3 +50,8 @@ def cli_flag_nocpp():
     csjark.Cli.parse_args(['-nocpp', 'cpp.h'])
     assert csjark.Cli.use_cpp == False
 
+@cli.test
+def cli_file_dont_existing():
+    """Test if a file is missing"""
+    headers, configs = csjark.Cli.parse_args(['filedontexsist.h', 'test.yml'])
+    assert ''

@@ -1,0 +1,4 @@
+Structs:
+  - name: struct_test
+    id: 17
+    description: Testing struct members of structs

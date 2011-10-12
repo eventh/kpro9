@@ -166,8 +166,30 @@ end
 ''')
 
 
-# Test DissectoField
-# TODO
+# Test DissectorField
+diss = Tests()
+
+@diss.context
+def create_dissector_field():
+    """Create a Protocol instance with some fields."""
+    proto = dissector.Protocol('test', None, None)
+    proto.add_field(dissector.DissectorField('ber', 12))
+    yield proto.fields[0]
+
+@diss.test
+def dissector_def(field):
+    """Test that DissectorField generates valid defintion code."""
+    assert field
+    assert field.get_definition() is None
+
+@diss.test
+def dissector_code(field):
+    """Test that DissectorField generates correct code."""
+    assert isinstance(field, dissector.DissectorField)
+    assert compare_lua(field.get_code(0), '''
+local subdissector = Dissector.get("ber")
+dissector:call(buffer(0, 12):tvb(), pinfo, tree)
+''')
 
 
 # Test SubDissectorField

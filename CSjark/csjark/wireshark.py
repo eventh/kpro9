@@ -1,9 +1,8 @@
 """
 A module for Wireshark specific data structures and functions.
 """
-from config import Range, Enum, Bitstring, Dissector
 from dissector import (Field, EnumField, RangeField,
-                        ArrayField, BitField, DissectorField, SubDissectorField)
+        ArrayField, BitField, DissectorField, SubDissectorField)
 
 
 # Mapping of c type and their wireshark field type.
@@ -119,26 +118,27 @@ def create_field(proto, name, ctype, size=None):
     # Todo: what if several rules cover one member?
     #       now we simply discard all but one rule, try to merge them?
     if proto.conf is not None:
-        rules = proto.conf.get_rules(name, ctype)
+        rules = proto.conf.get_rules(name, ctype, sorted=True)
+        diss, bits, enums, ranges, customs = rules
+
+        # Custom Field rules
+        if customs and field is None:
+            field = customs[0].create(Field, name, size) # Hack, refactor pls!
 
         # Dissector rules
-        diss = [i for i in rules if isinstance(i, Dissector)]
         if diss and field is None:
             field = DissectorField(diss[0].name, diss[0].size)
 
         # Bit string rules
-        bits = [i for i in rules if isinstance(i, Bitstring)]
         if bits and field is None:
             field = BitField(name, type_, size, bits[0].bits)
 
         # Enum rules
-        enums = [i for i in rules if isinstance(i, Enum)]
         if enums and field is None:
             rule = enums[0]
             field = EnumField(name, type_, size, rule.values, rule.strict)
 
         # Range rules
-        ranges = [i for i in rules if isinstance(i, Range)]
         if ranges and field is None:
             rule = ranges[0]
             field = RangeField(name, type_, size, rule.min, rule.max)

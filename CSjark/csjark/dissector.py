@@ -33,6 +33,7 @@ class Field:
         self.type = type
         self.size = size
 
+        self.abbr = None
         self.base = None # One of 'base.DEC', 'base.HEX' or 'base.OCT'
         self.values = None # Dict with the text that corresponds to the values
         self.mask = None # Integer mask of this field
@@ -41,7 +42,8 @@ class Field:
     def set_protocol(self, proto):
         self.proto = proto
         self.var = self.proto.field_var
-        self.abbr = '%s.%s' % (self.proto.name, self.name)
+        if self.abbr is None:
+            self.abbr = '%s.%s' % (self.proto.name, self.name)
 
     def get_definition(self):
         """Get the ProtoField definition for this field."""
@@ -50,6 +52,8 @@ class Field:
                 var=self.var, name=self.name, abbr=self.abbr, type=self.type)
 
         # Add other parameters if applicable
+        if self.desc is not None:
+            self.desc = '"%s"' % self.desc
         rest = []
         for var in reversed([self.base, self.values, self.mask, self.desc]):
             if rest or var is not None:

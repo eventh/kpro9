@@ -26,10 +26,21 @@ class StructConfig:
         self.members = {}
         self.types = {}
 
-    def get_rules(self, member, type):
+    def get_rules(self, member, type, sorted=False):
         rules = self.members.get(member, [])
         rules.extend(self.types.get(type, []))
-        return rules
+
+        if not sorted:
+            return rules
+
+        # Sort the rules
+        types = (Dissector, Bitstring, Enum, Range, Field)
+        values = ([], [], [], [], [])
+        for rule in rules:
+            for i, type_ in enumerate(types):
+                if isinstance(rule, type_):
+                    values[i].append(rule)
+        return values
 
     def add_member_rule(self, member, rule):
         if member not in self.members.keys():
@@ -80,7 +91,7 @@ class Range(BaseRule):
         if 'max' in obj:
             self.max = float(obj['max'])
         if self.min is None and self.max is None:
-            raise ConfigError('RangeRule needs atleast a min or max value.')
+            raise ConfigError('Range rule needs a min or max value.')
 
 
 class Enum(BaseRule):
@@ -149,6 +160,35 @@ class Dissector(BaseRule):
             raise ConfigError('Invalid dissector rule for %s' % conf.name)
 
 
+class Field(BaseRule):
+    """Rule for specifying a custom field handling."""
+
+    def __init__(self, conf, obj):
+        super().__init__(conf, obj)
+        self.field = str(obj['field'])
+        self.size = obj.get('size', None)
+        self.abbr = obj.get('abbr', None)
+        self.name = obj.get('name', None)
+        self.base = obj.get('base', None)
+        self.values = obj.get('values', None)
+        self.mask = obj.get('mask', None)
+        self.desc = obj.get('desc', None)
+        if not self.field:
+            raise ConfigError('No field for Field rule for %s' % conf.name)
+
+    def create(self, cls, name, size):
+        if self.size is not None:
+            size = self.size
+        field = cls(name, self.field, size)
+        field.abbr = self.abbr
+        field.base = self.base
+        if self.values:
+            field.values = field._dict_to_table(self.values)
+        field.mask = self.mask
+        field.desc = self.desc
+        return field
+
+
 def handle_struct(obj):
     """Handle rules and configuration for a struct."""
     conf = StructConfig.find(obj['name'])
@@ -164,29 +204,17 @@ def handle_struct(obj):
     if 'description' in obj:
         conf.description = obj['description']
 
-    # Handle bitstrings
-    if 'bitstrings' in obj:
-        for rule in obj['bitstrings']:
-            Bitstring(conf, rule)
-
-    # Handle enums
-    if 'enums' in obj:
-        for rule in obj['enums']:
-            Enum(conf, rule)
-
-    # Handle ranges
-    if 'ranges' in obj:
-        for rule in obj['ranges']:
-            Range(conf, rule)
-
-    # Handle specific dissectors
-    if 'dissectors' in obj:
-        for rule in obj['dissectors']:
-            Dissector(conf, rule)
+    # Handle rules
+    types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,
+             'dissectors': Dissector, 'fields': Field}
+    for name, type_ in types.items():
+        if name in obj:
+            for rule in obj[name]:
+                type_(conf, rule)
 
 
 def handle_options(obj):
-    return
+    pass
 
 
 def parse_file(filename, only_text=None):

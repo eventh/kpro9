@@ -48,8 +48,8 @@ Structs:
         name: ber
         size: 12
 
-    # TODO: FR4-C Mapping is a custom translating from C struct member to Field
-    mappings:
+    # Translation from C struct member to custom Field
+    fields:
       - type: time_t
         field: relative_time
       - member: something

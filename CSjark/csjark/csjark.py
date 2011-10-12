@@ -100,6 +100,10 @@ class Cli:
         if namespace.config:
             configs.append(namespace.config)
 
+        # If only a .yml file is given, move it to configs
+        if len(headers) == 1 and not configs and headers[0][-4:] == '.yml':
+            configs.append(headers.pop())
+
         # Find out where to store output from the generator
         if namespace.output:
             path = os.path.join(os.path.dirname(sys.argv[0]), namespace.output)

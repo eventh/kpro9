@@ -76,5 +76,10 @@ def cli_flag_nocpp(cli):
 @cli.test
 def cli_file_dont_existing(cli):
     """Test if a file is missing"""
-    with contexts.raises(SystemExit) as error:
-        headers, configs = cli.parse_args(['filedontexsist.h', 'test.yml'])
+    config = os.path.join(os.path.dirname(__file__), 'test.yml')
+    with contexts.capture_output() as (out, err):
+        with contexts.raises(SystemExit) as error:
+            headers, configs = cli.parse_args(['404.h', config])
+    assert str(error) == '2'
+    assert out[0].startswith('Unknown file(s): 404.h')
+

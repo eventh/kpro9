@@ -15,7 +15,7 @@ struct name {
     char last_name[NAME_LENGTH];
 };
 
-struct user_and_name{
+struct user_and_name {
     struct user u1;
     struct name n1;
 };

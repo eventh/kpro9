@@ -7,6 +7,7 @@ from pycparser import c_ast
 
 import cparser
 import config
+import dissector
 
 
 def _child(node, depth=1):
@@ -76,8 +77,11 @@ def req_1e():
     assert isinstance(_child(a, 1), c_ast.ArrayDecl)
     assert _child(a, 2).declname == 'a'
     assert _child(a, 3).names[0] == 'int'
-    fields = cparser.find_structs(ast)[0].fields
-    # TODO: test that fields are correct
+    a, b, c = cparser.find_structs(ast)[0].fields
+    assert isinstance(b, dissector.Field)
+    assert a.type == 'int32' and b.type == 'string' and c.type == 'float'
+    assert a.base_size == 4 and b.size == 30 and c.base_size == 4
+    assert a.total_size == 4*9*8 and c.total_size == 4*10
 
 # FR1-F: The utility should detect structs with the same name
 @parse_structs.test
@@ -163,6 +167,9 @@ def create_rules():
           - member: flags
             0: Test
             1: [Flag, A, B]
+        fields:
+          - member: abs
+            field: absolute_time
       - name: two
         id: 11
         ranges:
@@ -172,6 +179,12 @@ def create_rules():
           - type: short
             0-2: [Short, A, B, C, D, E, F, G, H]
             3: [Nih]
+        fields:
+          - type: BOOL
+            field: bool
+            size: 4
+            abbr: bool
+            name: A BOOL
     '''
     config.parse_file('test', only_text=text)
     yield config.StructConfig.find('one'), config.StructConfig.find('two')
@@ -190,6 +203,16 @@ def req4_a(one, two):
 
 # FR4-B: Configuration must support custom Lua files for specific protocols
 # FR4-C: Configuration must support custom handling of specific data types
+@configuration.test
+def req4_c(one, two):
+    """Test requirement FR4-C: Custom handling of specific data types."""
+    rule, = one.get_rules('abs', 'short')
+    assert rule.field == 'absolute_time'
+    assert rule.size is None and rule.abbr is None
+    rule, = two.get_rules(None, 'BOOL')
+    assert rule.field == 'bool' and rule.size == 4
+    assert rule.abbr == 'bool' and rule.name == 'A BOOL'
+
 
 # FR4-D: Configuration must support specifying the ID of dissectors
 @configuration.test

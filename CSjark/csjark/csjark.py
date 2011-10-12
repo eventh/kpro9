@@ -113,19 +113,26 @@ class Cli:
             parser.print_help()
             sys.exit(2)
 
-        # Check if the input header path is a directory
-        for header in headers:
-            if os.path.isdir(header):
-               for file in os.listdir(header):
-                    if os.path.splitext(file)[1] in ('h', 'c') or os.path.isdir(file):
-                        headers.append(file)
-
         # Make sure the files provided actually exists
-        missing = [i for i in headers + configs if
-                    os.path.exists(os.path.join(sys.argv[0], i))]
+        missing = [i for i in headers + configs if not os.path.exists(i)]
         if missing:
             print('Unknown file(s): %s' % ', '.join(missing))
             sys.exit(2)
+
+        # Add files if headers or configs contain folders
+        def files_in_folder(var, file_extensions):
+            i = 0
+            while i < len(var):
+                if os.path.isdir(var[i]):
+                    folder = var.pop(i)
+                    var.extend(os.path.join(folder, path) for path in
+                            os.listdir(folder) if os.path.isdir(path)
+                            or os.path.splitext(path)[1] in file_extensions)
+                else:
+                    i += 1
+
+        files_in_folder(headers, ('.h', '.c'))
+        files_in_folder(configs, ('.yml', ))
 
         return headers, configs
 

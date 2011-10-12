@@ -116,47 +116,63 @@ class ArrayField(Field):
     def __init__(self, name, type, base_size, depth):
         self.base_size = base_size
         self.depth = depth
-        self.total_size = base_size
-        for size in depth:
-            self.total_size *= size
+        self.elements = 1 # Number of total elements in the array
+        for size in self.depth:
+            self.elements *= size
 
-        super().__init__(name, type, self.total_size)
+        super().__init__(name, type, self.elements * self.base_size)
         self.func_type = self._get_func_type(type)
 
+    def _arr_var(self, i):
+        return '%s.%s_%i' % (self.var, self.name, i)
+
     def get_definition(self):
-        pass
+        data = ['-- Array definition for %s' % self.name]
+        for i in range(self.elements):
+            t = '{var} = ProtoField.{type}("{abbr}.{i}", "[{i}]")'
+            data.append(t.format(var=self._arr_var(i),
+                                 type=self.type, abbr=self.abbr, i=i))
+        return '\n'.join(data)
 
     def get_code(self, offset):
         data = ['\t-- Array handling for %s' % self.name]
 
-        def subdefinition(var, old, name=''):
-            tree = '\tlocal {var} = {old}:add("Array: {name}")'
-            data.append(tree.format(var=var, old=old, name=name))
+        def subdefinition(var, old, elem, name=''):
+            """Create a subtree."""
+            tree = '\tlocal {var} = {old}:add("Array: {name} ({X} x {type})")'
+            data.append(tree.format(var=var, old=old,
+                                    name=name, type=self.type, X=elem))
 
-        def addfield(var, type, offset):
-            t = '\t{var}:add(ProtoField.{type}("{name}"), ' \
-                    'buffer({offset}, {size}):{func}())'
-            data.append(t.format(var=var, type=type, offset=offset,
-                    size=self.base_size, name=self.name, func=self.func_type))
+        element = 0
+        def addfield(var):
+            """Add value from buffer to the elements field."""
+            nonlocal element, offset
+            t = '\t{var}:add({arrvar}, buffer({offset}, {size}))'
+            data.append(t.format(var=var, offset=offset,
+                    size=self.base_size, arrvar=self._arr_var(element)))
+            element += 1
+            offset += self.base_size
 
         def array(depth, var, old):
-            nonlocal offset
+            """Recursively add elements to array tree."""
             if len(depth) == 1:
                 for i in range(depth[0]):
-                    addfield(var, self.type, offset)
-                    offset += self.base_size
+                    addfield(var)
             else:
                 size = depth.pop(0)
+                elements = 1
+                for k in depth:
+                    elements *= k
                 old = var
                 var = 'sub%s' % var
-                for j in range(size):
-                    subdefinition(var, old)
+                for i in range(size):
+                    subdefinition(var, old, elements)
                     array(depth, var, old)
 
         old = 'subtree'
         var = 'arraytree'
-        subdefinition(var, old, self.name)
-        array(self.depth, var, old)
+        subdefinition(var, old, self.elements, self.name)
+        array(self.depth[:], var, old)
 
         data.append('')
         return '\n'.join(data)

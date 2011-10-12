@@ -66,7 +66,20 @@ def create_array_field():
 def arrays_def(one, two):
     """Test that ArrayField generates valid defintion code."""
     assert one and two
-    assert one.get_definition() is None
+    assert compare_lua(one.get_definition(), '''
+-- Array definition for arr
+f.arr_0 = ProtoField.float("test.arr.0", "[0]")
+f.arr_1 = ProtoField.float("test.arr.1", "[1]")
+f.arr_2 = ProtoField.float("test.arr.2", "[2]")
+f.arr_3 = ProtoField.float("test.arr.3", "[3]")
+f.arr_4 = ProtoField.float("test.arr.4", "[4]")
+f.arr_5 = ProtoField.float("test.arr.5", "[5]")
+''')
+    assert compare_lua(two.get_definition(), '''
+-- Array definition for str
+f.str_0 = ProtoField.string("test.str.0", "[0]")
+f.str_1 = ProtoField.string("test.str.1", "[1]")
+''')
 
 @arrays.test
 def arrays_code(one, two):
@@ -74,16 +87,16 @@ def arrays_code(one, two):
     assert isinstance(one, dissector.ArrayField)
     assert compare_lua(one.get_code(0), '''
 -- Array handling for arr
-local arraytree = subtree:add("Array: arr")
-local subarraytree = arraytree:add("Array: ")
-local subsubarraytree = subarraytree:add("Array: ")
-subsubarraytree:add(ProtoField.float("arr"), buffer(0, 4):float())
-subsubarraytree:add(ProtoField.float("arr"), buffer(4, 4):float())
-subsubarraytree:add(ProtoField.float("arr"), buffer(8, 4):float())
-local subsubarraytree = subarraytree:add("Array: ")
-subsubarraytree:add(ProtoField.float("arr"), buffer(12, 4):float())
-subsubarraytree:add(ProtoField.float("arr"), buffer(16, 4):float())
-subsubarraytree:add(ProtoField.float("arr"), buffer(20, 4):float())
+local arraytree = subtree:add("Array: arr (6 x float)")
+local subarraytree = arraytree:add("Array:  (6 x float)")
+local subsubarraytree = subarraytree:add("Array:  (3 x float)")
+subsubarraytree:add(f.arr_0, buffer(0, 4))
+subsubarraytree:add(f.arr_1, buffer(4, 4))
+subsubarraytree:add(f.arr_2, buffer(8, 4))
+local subsubarraytree = subarraytree:add("Array:  (3 x float)")
+subsubarraytree:add(f.arr_3, buffer(12, 4))
+subsubarraytree:add(f.arr_4, buffer(16, 4))
+subsubarraytree:add(f.arr_5, buffer(20, 4))
 ''')
 
 @arrays.test
@@ -92,9 +105,9 @@ def arrays_str(one, two):
     assert isinstance(two, dissector.ArrayField)
     assert compare_lua(two.get_code(0), '''
 -- Array handling for str
-local arraytree = subtree:add("Array: str")
-arraytree:add(ProtoField.string("str"), buffer(0, 30):string())
-arraytree:add(ProtoField.string("str"), buffer(30, 30):string())
+local arraytree = subtree:add("Array: str (2 x string)")
+arraytree:add(f.str_0, buffer(0, 30))
+arraytree:add(f.str_1, buffer(30, 30))
 ''')
 
 
@@ -260,6 +273,16 @@ local luastructs_dt = DissectorTable.get("luastructs.message")
 local f = proto_tester.fields
 f.one = ProtoField.float("tester.one", "one")
 f.range = ProtoField.float("tester.range", "range")
+-- Array definition for array
+f.array_0 = ProtoField.float("tester.array.0", "[0]")
+f.array_1 = ProtoField.float("tester.array.1", "[1]")
+f.array_2 = ProtoField.float("tester.array.2", "[2]")
+f.array_3 = ProtoField.float("tester.array.3", "[3]")
+f.array_4 = ProtoField.float("tester.array.4", "[4]")
+f.array_5 = ProtoField.float("tester.array.5", "[5]")
+-- Array definition for str
+f.str_0 = ProtoField.string("tester.str.0", "[0]")
+f.str_1 = ProtoField.string("tester.str.1", "[1]")
 -- Dissector function for struct: tester
 function proto_tester.dissector(buffer, pinfo, tree)
 local subtree = tree:add(proto_tester, buffer())
@@ -273,20 +296,20 @@ if (buffer(4, 4):float() > 10) then
 range:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 10")
 end
 -- Array handling for array
-local arraytree = subtree:add("Array: array")
-local subarraytree = arraytree:add("Array: ")
-local subsubarraytree = subarraytree:add("Array: ")
-subsubarraytree:add(ProtoField.float("array"), buffer(8, 4):float())
-subsubarraytree:add(ProtoField.float("array"), buffer(12, 4):float())
-subsubarraytree:add(ProtoField.float("array"), buffer(16, 4):float())
-local subsubarraytree = subarraytree:add("Array: ")
-subsubarraytree:add(ProtoField.float("array"), buffer(20, 4):float())
-subsubarraytree:add(ProtoField.float("array"), buffer(24, 4):float())
-subsubarraytree:add(ProtoField.float("array"), buffer(28, 4):float())
+local arraytree = subtree:add("Array: array (6 x float)")
+local subarraytree = arraytree:add("Array:  (6 x float)")
+local subsubarraytree = subarraytree:add("Array:  (3 x float)")
+subsubarraytree:add(f.array_0, buffer(8, 4))
+subsubarraytree:add(f.array_1, buffer(12, 4))
+subsubarraytree:add(f.array_2, buffer(16, 4))
+local subsubarraytree = subarraytree:add("Array:  (3 x float)")
+subsubarraytree:add(f.array_3, buffer(20, 4))
+subsubarraytree:add(f.array_4, buffer(24, 4))
+subsubarraytree:add(f.array_5, buffer(28, 4))
 -- Array handling for str
-local arraytree = subtree:add("Array: str")
-arraytree:add(ProtoField.string("str"), buffer(32, 30):string())
-arraytree:add(ProtoField.string("str"), buffer(62, 30):string())
+local arraytree = subtree:add("Array: str (2 x string)")
+arraytree:add(f.str_0, buffer(32, 30))
+arraytree:add(f.str_1, buffer(62, 30))
 end
 luastructs_dt:add(25, proto_tester)
 ''')

@@ -81,7 +81,7 @@ def req_1e():
     assert isinstance(b, dissector.Field)
     assert a.type == 'int32' and b.type == 'string' and c.type == 'float'
     assert a.base_size == 4 and b.size == 9 and c.base_size == 4
-    assert a.total_size == 224 and c.total_size == 20
+    assert a.elements == 56 and c.elements == 5
 
 # FR1-F: The utility should detect structs with the same name
 @parse_structs.test

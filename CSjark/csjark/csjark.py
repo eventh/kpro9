@@ -113,6 +113,10 @@ class Cli:
             parser.print_help()
             sys.exit(2)
 
+        # Check if the input header path is a directory
+        if os.path.isdir(headers):
+            headers.extend(os.listdir(headers))
+
         # Make sure the files provided actually exists
         missing = [i for i in headers + configs if
                     os.path.exists(os.path.join(sys.argv[0], i))]

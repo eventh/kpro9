@@ -87,11 +87,11 @@ def req_1e():
 @parse_structs.test
 def req_1f():
     """Test requirement FR1-F: Detect same name structs."""
-    code = 'struct a {int c;}; struct b { int d; struct a {int d;}; };'
+    code = 'struct a {int c;};\nstruct b { int d;\nstruct a {int d;}; };'
     ast = cparser.parse(code, 'test')
     with contexts.raises(cparser.ParseError) as error:
         cparser.find_structs(ast)
-    assert str(error).startswith('Two structs with same name: a')
+    assert str(error).startswith('Two structs with same name a')
 
 
 # Tests for the second requirement, generate dissectors in lua

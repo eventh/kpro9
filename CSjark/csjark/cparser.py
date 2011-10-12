@@ -115,10 +115,11 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Disallow structs with same name
         if node.name in StructVisitor.all_struct_names:
-            other = StructVisitor.all_struct_names[node.name]
-            raise ParseError('Two structs with same name: %s in %s:%i & %s:%i'
-                    % (node.name, other.file,
-                        other.line, node.coord.file, node.coord.line))
+            o = StructVisitor.all_struct_names[node.name]
+            if (os.path.normpath(o.file) != os.path.normpath(node.coord.file)
+                    or o.line != node.coord.line):
+                raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
+                       node.name, o.file, o.line, node.coord.file, node.coord.line))
         else:
             StructVisitor.all_struct_names[node.name] = node.coord
 

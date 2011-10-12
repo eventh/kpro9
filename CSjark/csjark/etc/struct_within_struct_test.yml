@@ -2,3 +2,6 @@ Structs:
   - name: struct_within_struct_test
     id: 12
     description: Struct in struct test
+  - name: cenum_test
+    id: 11
+    description: C Enum test

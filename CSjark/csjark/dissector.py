@@ -134,29 +134,55 @@ class ArrayField(Field):
 
     def get_definition(self):
         data = ['-- Array definition for %s' % self.name]
+
+        # Create fields for subtrees in the array
+        i = 0
+        type_ = self.type
+        if type_ not in ('string', 'stringz'):
+            type_ = 'bytes'
+        for k, size in enumerate(self.depth):
+            if len(self.depth) > 1 and k == len(self.depth) - 1:
+                continue # Multi-dim array, no subtree last depth level
+            for j in range(size):
+                data.append(self.create_field('%s_%i' % (self.var, i),
+                        type_, self.abbr, self.name))
+                i += 1
+
+        # Create fields for each element in the array
         for i in range(self.elements):
-            var = '%s_%i' % (self.var, i)
-            abbr = '%s.%i' % (self.abbr, i)
-            name = '[%i]' % i
-            data.append(self.create_field(var, self.type, abbr, name))
+            data.append(self.create_field('%s__%i' % (self.var, i),
+                    self.type, '%s.%i' % (self.abbr, i), '[%i]' % i))
+
         return '\n'.join(data)
 
     def get_code(self, offset):
         data = ['\t-- Array handling for %s' % self.name]
+        element = 0 # Count of which array element we have created
+        subtree = 0 # Count of which subtree we have created
 
         def subdefinition(tree, parent, elem, name=''):
-            """Create a subtree."""
+            """Create a subtree of arrays."""
+            nonlocal element, offset, subtree
+
+            # Create the subtree
+            size = elem * self.base_size
+            t = '\tlocal {tree} = {old}:add({var}_{i}, buffer({off}, {size}))'
+            data.append(t.format(tree=tree,
+                    old=parent, var=self.var, i=subtree, off=offset, size=size))
+
+            # Set a more usefull text to the subtree
             if name:
                 name += ' '
-            t = '\tlocal {tree} = {old}:add("{name}(array: {X} x {type})")'
-            data.append(t.format(tree=tree, old=parent,
-                                 name=name, type=self.type, X=elem))
+            t = '\t{tree}:set_text("{name}(array: {size} x {type})")'
+            data.append(t.format(tree=tree,
+                    name=name, size=elem, type=self.type))
 
-        element = 0
+            subtree += 1
+
         def addfield(tree):
             """Add value from buffer to the elements field."""
             nonlocal element, offset
-            t = '\t{tree}:add({var}_{i}, buffer({offset}, {size}))'
+            t = '\t{tree}:add({var}__{i}, buffer({offset}, {size}))'
             data.append(t.format(tree=tree, offset=offset,
                     size=self.base_size, var=self.var, i=element))
             element += 1

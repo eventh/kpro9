@@ -127,6 +127,8 @@ class Bitstring(BaseRule):
                 offset = end - start + 1
             else:
                 start, offset = key, 1
+            if not key:
+                raise ConfigError('Invalid bitstring key must be %i > 0' % key)
 
             # Find the bit name and values mapping
             name = value

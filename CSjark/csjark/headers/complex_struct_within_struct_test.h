@@ -6,5 +6,5 @@ struct complex_struct_within_struct_test {
 	struct cenum_test astruct;
 	int number;
 	struct basic astruct2;
-	int end;
+	int nend;
 };

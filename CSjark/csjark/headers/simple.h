@@ -15,7 +15,7 @@ struct basic {
     long long int red;
     unsigned long long pink;
     long blue;
-    signed tester;
+    signed int tester;
 
     // Single and double precision
     float value;

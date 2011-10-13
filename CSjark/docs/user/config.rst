@@ -4,7 +4,7 @@ Configuration
 Configuration format
 --------------------
 
-The configuration files are written in YAML which is a data serialization format designed to be easy to read and write. The format of the files are described below. The configuration should be put in a ``filename.yml`` file and specified when running CSjark with the -config commandline argument.
+The configuration files are written in YAML which is a data serialization format designed to be easy to read and write. The format of the files are described below. The configuration should be put in a ``filename.yml`` file and specified when running CSjark with the ``-config`` commandline argument.
 
 
 Configuration definitions

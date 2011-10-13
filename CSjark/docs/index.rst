@@ -34,6 +34,7 @@ Other Information
    :maxdepth: 2
    
    other/whatsnew
+   other/limits
    other/license
    other/copyright
    other/about

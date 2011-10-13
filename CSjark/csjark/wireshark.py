@@ -56,6 +56,7 @@ DEFAULT_C_SIZE_MAP = {
         'int': 4,
         'signed int': 4,
         'unsigned int': 4,
+        'signed': 4,
         'long': 8,
         'signed long': 8,
         'unsigned long': 8,

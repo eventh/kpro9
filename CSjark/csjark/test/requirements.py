@@ -165,8 +165,8 @@ def create_rules():
             max: 30
         bitstrings:
           - member: flags
-            0: Test
-            1: [Flag, A, B]
+            1: Test
+            2: [Flag, A, B]
         fields:
           - member: abs
             field: absolute_time
@@ -177,8 +177,8 @@ def create_rules():
             max: 15.5
         bitstrings:
           - type: short
-            0-2: [Short, A, B, C, D, E, F, G, H]
-            3: [Nih]
+            1-3: [Short, A, B, C, D, E, F, G, H]
+            4: [Nih]
         fields:
           - type: BOOL
             field: bool
@@ -239,9 +239,11 @@ def req4_g(one, two):
     assert len(one.bits[0]) == 4
     assert one.bits[1][2] == 'Flag'
     assert one.bits[1][3] == {0: 'A', 1: 'B'}
+    assert one.bits[0][0] == 1 and one.bits[0][1] == 1
     assert len(two.bits[0][3]) == 8
     assert two.bits[1][2] == 'Nih'
     assert two.bits[1][3] == {0: 'No', 1: 'Yes'}
+    assert two.bits[0][0] == 1 and two.bits[0][1] == 3
 
 
 # Tests for the fifth requirement, support endian etc

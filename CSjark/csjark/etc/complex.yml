@@ -18,13 +18,13 @@ Structs:
     # Rules which tells which bit in a bitstring represent which value
     bitstrings:
       - member: flags
-        0: In use
-        1: [Endian, Big, Little]
-        2-3: [Platform, Win, Linux, Mac, Solaris]
+        1: In use
+        2: [Endian, Big, Little]
+        3-4: [Platform, Win, Linux, Mac, Solaris]
       - type: color_t
-        0: RED
-        1: Blue
-        2: Green
+        1: RED
+        2: Blue
+        3: Green
 
     # Enums marks non-enum C types as EnumField
     enums:

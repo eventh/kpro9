@@ -156,7 +156,7 @@ def create_dissector(filename):
         if Cli.output_dir:
             path = '%s/%s.lua' % (Cli.output_dir, proto.name)
         elif Cli.output_file:
-            path = Cli.output_file
+            path = Cli.output_file # TODO: 'a' flag when writing
         else:
             path = '%s.lua' % proto.name
 

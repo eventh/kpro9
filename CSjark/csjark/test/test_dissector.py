@@ -10,8 +10,11 @@ import dissector
 from config import StructConfig
 
 
-def compare_lua(code, template):
+def compare_lua(code, template, write_to_file=''):
     """Test that generated lua code equals what is expected."""
+    if write_to_file:
+        with open(write_to_file, 'a') as f:
+            f.write(code.replace('\t',''))
     def simplify(text):
         return ''.join(text.strip().split())
     return simplify(code) == simplify(template)
@@ -87,13 +90,13 @@ def arrays_code(one, two):
     assert isinstance(one, dissector.ArrayField)
     assert compare_lua(one.get_code(0), '''
 -- Array handling for arr
-local arraytree = subtree:add("Array: arr (6 x float)")
-local subarraytree = arraytree:add("Array:  (6 x float)")
-local subsubarraytree = subarraytree:add("Array:  (3 x float)")
+local arraytree = subtree:add("arr (array: 6 x float)")
+local subarraytree = arraytree:add("(array: 6 x float)")
+local subsubarraytree = subarraytree:add("(array: 3 x float)")
 subsubarraytree:add(f.arr_0, buffer(0, 4))
 subsubarraytree:add(f.arr_1, buffer(4, 4))
 subsubarraytree:add(f.arr_2, buffer(8, 4))
-local subsubarraytree = subarraytree:add("Array:  (3 x float)")
+local subsubarraytree = subarraytree:add("(array: 3 x float)")
 subsubarraytree:add(f.arr_3, buffer(12, 4))
 subsubarraytree:add(f.arr_4, buffer(16, 4))
 subsubarraytree:add(f.arr_5, buffer(20, 4))
@@ -105,7 +108,7 @@ def arrays_str(one, two):
     assert isinstance(two, dissector.ArrayField)
     assert compare_lua(two.get_code(0), '''
 -- Array handling for str
-local arraytree = subtree:add("Array: str (2 x string)")
+local arraytree = subtree:add("str (array: 2 x string)")
 arraytree:add(f.str_0, buffer(0, 30))
 arraytree:add(f.str_1, buffer(30, 30))
 ''')
@@ -296,18 +299,18 @@ if (buffer(4, 4):float() > 10) then
 range:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 10")
 end
 -- Array handling for array
-local arraytree = subtree:add("Array: array (6 x float)")
-local subarraytree = arraytree:add("Array:  (6 x float)")
-local subsubarraytree = subarraytree:add("Array:  (3 x float)")
+local arraytree = subtree:add("array (array: 6 x float)")
+local subarraytree = arraytree:add("(array: 6 x float)")
+local subsubarraytree = subarraytree:add("(array: 3 x float)")
 subsubarraytree:add(f.array_0, buffer(8, 4))
 subsubarraytree:add(f.array_1, buffer(12, 4))
 subsubarraytree:add(f.array_2, buffer(16, 4))
-local subsubarraytree = subarraytree:add("Array:  (3 x float)")
+local subsubarraytree = subarraytree:add("(array: 3 x float)")
 subsubarraytree:add(f.array_3, buffer(20, 4))
 subsubarraytree:add(f.array_4, buffer(24, 4))
 subsubarraytree:add(f.array_5, buffer(28, 4))
 -- Array handling for str
-local arraytree = subtree:add("Array: str (2 x string)")
+local arraytree = subtree:add("str (array: 2 x string)")
 arraytree:add(f.str_0, buffer(32, 30))
 arraytree:add(f.str_1, buffer(62, 30))
 end

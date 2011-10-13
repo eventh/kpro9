@@ -7,6 +7,7 @@ from pycparser import c_ast
 
 import cparser
 import config
+import dissector
 
 
 def _child(node, depth=1):
@@ -70,24 +71,27 @@ def req_1d():
 @parse_structs.test
 def req_1e():
     """Test requirement FR1-E: Support arrays."""
-    ast = cparser.parse('struct req {int a[9][8]; char b[30]; float c[10];};')
+    ast = cparser.parse('struct req1e {int a[8][7]; char b[9]; float c[5];};')
     a, b, c = [_child(i, 1) for i in _child(ast, 2).children()]
     assert isinstance(b, c_ast.ArrayDecl) and isinstance(c, c_ast.ArrayDecl)
     assert isinstance(_child(a, 1), c_ast.ArrayDecl)
     assert _child(a, 2).declname == 'a'
     assert _child(a, 3).names[0] == 'int'
-    fields = cparser.find_structs(ast)[0].fields
-    # TODO: test that fields are correct
+    a, b, c = cparser.find_structs(ast)[0].fields
+    assert isinstance(b, dissector.Field)
+    assert a.type == 'int32' and b.type == 'string' and c.type == 'float'
+    assert a.base_size == 4 and b.size == 9 and c.base_size == 4
+    assert a.elements == 56 and c.elements == 5
 
 # FR1-F: The utility should detect structs with the same name
 @parse_structs.test
 def req_1f():
     """Test requirement FR1-F: Detect same name structs."""
-    code = 'struct a {int c;}; struct b { int d; struct a {int d;}; };'
+    code = 'struct a {int c;};\nstruct b { int d;\nstruct a {int d;}; };'
     ast = cparser.parse(code, 'test')
     with contexts.raises(cparser.ParseError) as error:
         cparser.find_structs(ast)
-    assert str(error).startswith('Two structs with same name: a')
+    assert str(error).startswith('Two structs with same name a')
 
 
 # Tests for the second requirement, generate dissectors in lua
@@ -161,8 +165,11 @@ def create_rules():
             max: 30
         bitstrings:
           - member: flags
-            0: Test
-            1: [Flag, A, B]
+            1: Test
+            2: [Flag, A, B]
+        fields:
+          - member: abs
+            field: absolute_time
       - name: two
         id: 11
         ranges:
@@ -170,8 +177,14 @@ def create_rules():
             max: 15.5
         bitstrings:
           - type: short
-            0-2: [Short, A, B, C, D, E, F, G, H]
-            3: [Nih]
+            1-3: [Short, A, B, C, D, E, F, G, H]
+            4: [Nih]
+        fields:
+          - type: BOOL
+            field: bool
+            size: 4
+            abbr: bool
+            name: A BOOL
     '''
     config.parse_file('test', only_text=text)
     yield config.StructConfig.find('one'), config.StructConfig.find('two')
@@ -189,7 +202,18 @@ def req4_a(one, two):
     assert rule.max == 15.5 and rule.min is None
 
 # FR4-B: Configuration must support custom Lua files for specific protocols
+
+
 # FR4-C: Configuration must support custom handling of specific data types
+@configuration.test
+def req4_c(one, two):
+    """Test requirement FR4-C: Custom handling of specific data types."""
+    rule, = one.get_rules('abs', 'short')
+    assert rule.field == 'absolute_time'
+    assert rule.size is None and rule.abbr is None
+    rule, = two.get_rules(None, 'BOOL')
+    assert rule.field == 'bool' and rule.size == 4
+    assert rule.abbr == 'bool' and rule.name == 'A BOOL'
 
 # FR4-D: Configuration must support specifying the ID of dissectors
 @configuration.test
@@ -200,7 +224,11 @@ def req4_d(one, two):
     assert one.description == 'a struct' and two.description is None
 
 # FR4-E: Configuration must support various trailers
+
+
 # FR4-F: Configuration must support integers which represent enums
+
+
 # FR4-G: Configuration must support members which are bit string
 @configuration.test
 def req4_g(one, two):
@@ -211,9 +239,11 @@ def req4_g(one, two):
     assert len(one.bits[0]) == 4
     assert one.bits[1][2] == 'Flag'
     assert one.bits[1][3] == {0: 'A', 1: 'B'}
+    assert one.bits[0][0] == 1 and one.bits[0][1] == 1
     assert len(two.bits[0][3]) == 8
     assert two.bits[1][2] == 'Nih'
     assert two.bits[1][3] == {0: 'No', 1: 'Yes'}
+    assert two.bits[0][0] == 1 and two.bits[0][1] == 3
 
 
 # Tests for the fifth requirement, support endian etc

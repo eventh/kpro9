@@ -1,9 +1,8 @@
 """
 A module for Wireshark specific data structures and functions.
 """
-from config import Range, Enum, Bitstring, Dissector
 from dissector import (Field, EnumField, RangeField,
-                        ArrayField, BitField, DissectorField, SubDissectorField)
+        ArrayField, BitField, DissectorField, SubDissectorField)
 
 
 # Mapping of c type and their wireshark field type.
@@ -21,6 +20,7 @@ DEFAULT_C_TYPE_MAP = {
         "int": "int32",
         'signed int': "int32",
         'unsigned int': "uint32",
+        'signed': "int32",
         'long': "int64",
         'signed long': "int64",
         'unsigned long': "uint64",
@@ -56,6 +56,7 @@ DEFAULT_C_SIZE_MAP = {
         'int': 4,
         'signed int': 4,
         'unsigned int': 4,
+        'signed': 4,
         'long': 8,
         'signed long': 8,
         'unsigned long': 8,
@@ -119,26 +120,27 @@ def create_field(proto, name, ctype, size=None):
     # Todo: what if several rules cover one member?
     #       now we simply discard all but one rule, try to merge them?
     if proto.conf is not None:
-        rules = proto.conf.get_rules(name, ctype)
+        rules = proto.conf.get_rules(name, ctype, sorted=True)
+        diss, bits, enums, ranges, customs = rules
+
+        # Custom Field rules
+        if customs and field is None:
+            field = customs[0].create(Field, name, size) # Hack, refactor pls!
 
         # Dissector rules
-        diss = [i for i in rules if isinstance(i, Dissector)]
         if diss and field is None:
             field = DissectorField(diss[0].name, diss[0].size)
 
         # Bit string rules
-        bits = [i for i in rules if isinstance(i, Bitstring)]
         if bits and field is None:
             field = BitField(name, type_, size, bits[0].bits)
 
         # Enum rules
-        enums = [i for i in rules if isinstance(i, Enum)]
         if enums and field is None:
             rule = enums[0]
             field = EnumField(name, type_, size, rule.values, rule.strict)
 
         # Range rules
-        ranges = [i for i in rules if isinstance(i, Range)]
         if ranges and field is None:
             rule = ranges[0]
             field = RangeField(name, type_, size, rule.min, rule.max)

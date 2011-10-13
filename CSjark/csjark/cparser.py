@@ -12,7 +12,8 @@ from pycparser import c_ast, c_parser, plyparser
 
 from config import StructConfig
 from dissector import Protocol
-from wireshark import size_of, create_field, create_enum, create_array, create_struct
+from wireshark import (size_of, create_field,
+                       create_enum, create_array, create_struct)
 
 
 class ParseError(plyparser.ParseError):
@@ -70,6 +71,8 @@ def find_structs(ast):
 class StructVisitor(c_ast.NodeVisitor):
     """A class which visit struct nodes in the AST."""
 
+    all_struct_names = {} # Map struct names and their coords
+
     def __init__(self):
         self.structs = {} # All structs encountered in this AST
         self.enums = {} # All enums encountered in this AST
@@ -111,11 +114,14 @@ class StructVisitor(c_ast.NodeVisitor):
                 raise ParseError('Unknown struct member: %s' % repr(child))
 
         # Disallow structs with same name
-        if node.name in self.structs:
-            other = self.structs[node.name]
-            raise ParseError('Two structs with same name: %s in %s:%i & %s:%i'
-                    % (node.name, other.coord.file,
-                        other.coord.line, node.coord.file, node.coord.line))
+        if node.name in StructVisitor.all_struct_names:
+            o = StructVisitor.all_struct_names[node.name]
+            if (os.path.normpath(o.file) != os.path.normpath(node.coord.file)
+                    or o.line != node.coord.line):
+                raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
+                       node.name, o.file, o.line, node.coord.file, node.coord.line))
+        else:
+            StructVisitor.all_struct_names[node.name] = node.coord
 
         # Don't add protocols with no fields? Sounds reasonably
         if proto.fields:
@@ -197,24 +203,27 @@ class StructVisitor(c_ast.NodeVisitor):
         if depth is None:
             depth = []
         child = node.children()[0]
+        size = self._get_array_size(node)
 
         # String array
         if (isinstance(child, c_ast.TypeDecl) and
                 child.children()[0].names[0] == 'char'):
-            size = self._get_array_size(node) * size_of('char')
+            size *= size_of('char')
             if depth:
                 create_array(proto, child.declname, 'string', size, depth)
             else:
                 create_field(proto, child.declname, 'string', size)
+            return
 
         # Multidimensional, handle recursively
-        elif isinstance(child, c_ast.ArrayDecl):
-            depth.append(self._get_array_size(node))
+        if isinstance(child, c_ast.ArrayDecl):
+            if size > 1:
+                depth.append(size)
             self.handle_array_decl(child, proto, depth)
 
         # Single dimensional normal array
         else:
-            depth.append(self._get_array_size(node))
+            depth.append(size)
             type = self._get_type(child.children()[0])
             create_array(proto, child.declname, type, size_of(type), depth)
 

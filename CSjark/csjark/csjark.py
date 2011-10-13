@@ -92,14 +92,6 @@ class Cli:
         cls.debug = namespace.debug
         cls.use_cpp = namespace.nocpp
 
-        # Find out where to store output from the generator
-        if namespace.output:
-            path = os.path.join(os.path.dirname(sys.argv[0]), namespace.output)
-            if os.path.isdir(path):
-                cls.output_dir = path
-            else:
-                cls.output_file = path
-
         headers = namespace.input
         if namespace.header:
             headers.append(namespace.header)
@@ -108,17 +100,43 @@ class Cli:
         if namespace.config:
             configs.append(namespace.config)
 
+        # If only a .yml file is given, move it to configs
+        if len(headers) == 1 and not configs and headers[0][-4:] == '.yml':
+            configs.append(headers.pop())
+
+        # Find out where to store output from the generator
+        if namespace.output:
+            path = os.path.join(os.path.dirname(sys.argv[0]), namespace.output)
+            if os.path.isdir(path):
+                cls.output_dir = path
+            else:
+                cls.output_file = path
+
         # Need to provide either a header file or a config file
         if not headers and not configs:
             parser.print_help()
             sys.exit(2)
 
         # Make sure the files provided actually exists
-        missing = [i for i in headers + configs if
-                    os.path.exists(os.path.join(sys.argv[0], i))]
+        missing = [i for i in headers + configs if not os.path.exists(i)]
         if missing:
             print('Unknown file(s): %s' % ', '.join(missing))
             sys.exit(2)
+
+        # Add files if headers or configs contain folders
+        def files_in_folder(var, file_extensions):
+            i = 0
+            while i < len(var):
+                if os.path.isdir(var[i]):
+                    folder = var.pop(i)
+                    var.extend(os.path.join(folder, path) for path in
+                            os.listdir(folder) if os.path.isdir(path)
+                            or os.path.splitext(path)[1] in file_extensions)
+                else:
+                    i += 1
+
+        files_in_folder(headers, ('.h', '.c'))
+        files_in_folder(configs, ('.yml', ))
 
         return headers, configs
 
@@ -138,7 +156,7 @@ def create_dissector(filename):
         if Cli.output_dir:
             path = '%s/%s.lua' % (Cli.output_dir, proto.name)
         elif Cli.output_file:
-            path = Cli.output_file
+            path = Cli.output_file # TODO: 'a' flag when writing
         else:
             path = '%s.lua' % proto.name
 

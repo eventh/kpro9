@@ -33,6 +33,7 @@ class Field:
         self.type = type
         self.size = size
 
+        self.abbr = None
         self.base = None # One of 'base.DEC', 'base.HEX' or 'base.OCT'
         self.values = None # Dict with the text that corresponds to the values
         self.mask = None # Integer mask of this field
@@ -40,32 +41,44 @@ class Field:
 
     def set_protocol(self, proto):
         self.proto = proto
-        self.var = self.proto.field_var
-        self.abbr = '%s.%s' % (self.proto.name, self.name)
+        self.var = '%s.%s' % (self.proto.field_var, self.name)
+        if self.abbr is None:
+            self.abbr = '%s.%s' % (self.proto.name, self.name)
+
+    def create_field(self, var, type_, abbr, name,
+            base=None, values=None, mask=None, desc=None):
+        """Create a ProtoField definition."""
+        template = '{var} = ProtoField.{type}("{abbr}", "{name}"{rest})'
+        args = {'var': var, 'type': type_, 'abbr': abbr, 'name': name}
+
+        # Add other parameters if applicable
+        if desc is not None:
+            desc = '"%s"' % desc
+
+        other = []
+        for var in reversed([base, values, mask, desc]):
+            if other or var is not None:
+                if var is None:
+                    var = 'nil'
+                other.append(var)
+
+        if other:
+            other.append('')
+            args['rest'] = ', '.join(reversed(other))
+        else:
+            args['rest'] = ''
+
+        return template.format(**args)
 
     def get_definition(self):
         """Get the ProtoField definition for this field."""
-        # Create definition string
-        t = '{var}.{name} = ProtoField.{type}("{abbr}", "{name}"'.format(
-                var=self.var, name=self.name, abbr=self.abbr, type=self.type)
-
-        # Add other parameters if applicable
-        rest = []
-        for var in reversed([self.base, self.values, self.mask, self.desc]):
-            if rest or var is not None:
-                if var is None:
-                    var = 'nil'
-                rest.append(var)
-        if rest:
-            rest.append('')
-
-        return '%s%s)' % (t, ', '.join(reversed(rest)))
+        return self.create_field(self.var, self.type, self.abbr,
+                self.name, self.base, self.values, self.mask, self.desc)
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
-        t = '\tsubtree:add({var}.{name}, buffer({offset}, {size}))'
-        return t.format(var=self.var, name=self.name,
-                        offset=offset, size=self.size)
+        t = '\tsubtree:add({var}, buffer({offset}, {size}))'
+        return t.format(var=self.var, offset=offset, size=self.size)
 
     def _get_func_type(self, type):
         """Get the lua function to read values from buffers."""
@@ -92,9 +105,9 @@ class EnumField(Field):
         data = []
 
         # Local var definitions
-        t = '\tlocal {name} = subtree:add({var}.{name}, buffer({off}, {size}))'
-        data.append(t.format(var=self.var, name=self.name,
-                             off=offset, size=self.size))
+        t = '\tlocal {name} = subtree:add({var}, buffer({offset}, {size}))'
+        data.append(t.format(name=self.name, var=self.var,
+                             offset=offset, size=self.size))
 
         # Add a test which validates the enum value
         if self.strict:
@@ -112,47 +125,89 @@ class ArrayField(Field):
     def __init__(self, name, type, base_size, depth):
         self.base_size = base_size
         self.depth = depth
-        self.total_size = base_size
-        for size in depth:
-            self.total_size *= size
+        self.elements = 1 # Number of total elements in the array
+        for size in self.depth:
+            self.elements *= size
 
-        super().__init__(name, type, self.total_size)
+        super().__init__(name, type, self.elements * self.base_size)
         self.func_type = self._get_func_type(type)
 
     def get_definition(self):
-        pass
+        data = ['-- Array definition for %s' % self.name]
+
+        # Create fields for subtrees in the array
+        i = 0
+        type_ = self.type
+        if type_ not in ('string', 'stringz'):
+            type_ = 'bytes'
+        for k, size in enumerate(self.depth):
+            if len(self.depth) > 1 and k == len(self.depth) - 1:
+                continue # Multi-dim array, no subtree last depth level
+            for j in range(size):
+                data.append(self.create_field('%s_%i' % (self.var, i),
+                        type_, self.abbr, self.name))
+                i += 1
+
+        # Create fields for each element in the array
+        for i in range(self.elements):
+            data.append(self.create_field('%s__%i' % (self.var, i),
+                    self.type, '%s.%i' % (self.abbr, i), '[%i]' % i))
+
+        return '\n'.join(data)
 
     def get_code(self, offset):
         data = ['\t-- Array handling for %s' % self.name]
+        element = 0 # Count of which array element we have created
+        subtree = 0 # Count of which subtree we have created
 
-        def subdefinition(var, old, name=''):
-            tree = '\tlocal {var} = {old}:add("Array: {name}")'
-            data.append(tree.format(var=var, old=old, name=name))
+        def subdefinition(tree, parent, elem, name=''):
+            """Create a subtree of arrays."""
+            nonlocal element, offset, subtree
 
-        def addfield(var, type, offset):
-            t = '\t{var}:add(ProtoField.{type}("{name}"), ' \
-                    'buffer({offset}, {size}):{func}())'
-            data.append(t.format(var=var, type=type, offset=offset,
-                    size=self.base_size, name=self.name, func=self.func_type))
+            # Create the subtree
+            size = elem * self.base_size
+            t = '\tlocal {tree} = {old}:add({var}_{i}, buffer({off}, {size}))'
+            data.append(t.format(tree=tree,
+                    old=parent, var=self.var, i=subtree, off=offset, size=size))
 
-        def array(depth, var, old):
-            nonlocal offset
+            # Set a more usefull text to the subtree
+            if name:
+                name += ' '
+            t = '\t{tree}:set_text("{name}(array: {size} x {type})")'
+            data.append(t.format(tree=tree,
+                    name=name, size=elem, type=self.type))
+
+            subtree += 1
+
+        def addfield(tree):
+            """Add value from buffer to the elements field."""
+            nonlocal element, offset
+            t = '\t{tree}:add({var}__{i}, buffer({offset}, {size}))'
+            data.append(t.format(tree=tree, offset=offset,
+                    size=self.base_size, var=self.var, i=element))
+            element += 1
+            offset += self.base_size
+
+        def array(depth, tree, parent):
+            """Recursively add elements to array tree."""
             if len(depth) == 1:
                 for i in range(depth[0]):
-                    addfield(var, self.type, offset)
-                    offset += self.base_size
+                    addfield(tree)
             else:
                 size = depth.pop(0)
-                old = var
-                var = 'sub%s' % var
-                for j in range(size):
-                    subdefinition(var, old)
-                    array(depth, var, old)
+                elements = 1
+                for k in depth:
+                    elements *= k
+                parent = tree
+                tree = 'sub%s' % tree
+                for i in range(size):
+                    subdefinition(tree, parent, elements)
+                    array(depth, tree, parent)
 
-        old = 'subtree'
-        var = 'arraytree'
-        subdefinition(var, old, self.name)
-        array(self.depth, var, old)
+        parent = 'subtree'
+        tree = 'arraytree'
+        subdefinition(tree, parent, self.elements, self.name)
+        array(self.depth[:], tree, parent)
 
         data.append('')
         return '\n'.join(data)
@@ -172,6 +227,7 @@ class DissectorField(Field):
             '\tdissector:call(buffer({offset}):tvb(), pinfo, tree)'
         return t.format(offset=offset, name=self.name)
 
+
 class SubDissectorField(Field):
     def __init__(self, name, id, size, type_name):
         super().__init__(name, type_name, size)
@@ -185,39 +241,56 @@ class SubDissectorField(Field):
             '\tluastructs_dt:try({id}, buffer({offset}, {size}):tvb(), pinfo, subsubtree)'
         return t.format(name = self.name, id = self.id, offset = offset, size = self.size)
 
+
 class BitField(Field):
     def __init__(self, name, type, size, bits):
         super().__init__(name, type, size)
         self.bits = bits
 
     def _bit_var(self, name):
-        return '%s.%s' % (self.var, create_lua_var(name))
+        return '%s_%s' % (self.var, create_lua_var(name))
 
     def _bit_abbr(self, name):
         return '%s.%s' % (self.abbr, name.replace(' ', '_'))
 
     def get_definition(self):
-        data = []
+        data = ['-- Bitstring definitions for %s' % self.name]
 
+        # Bitstrings need to be unsigned for HEX?? Research needed!
+        if 'int' in self.type and not self.type.startswith('u'):
+            type_ = 'u%s' % self.type
+        else:
+            type_ = self.type
+
+        # Create bitstring tree definition
+        data.append(self.create_field(self.var, type_,
+                self.abbr, '%s (bitstring)' % self.name, base='base.HEX'))
+
+        # Create definitions for all bits
         for i, j, name, values in self.bits:
-            t = '{var} = ProtoField.{type}("{abbr}", "{name}", nil, {values})'
-            data.append(t.format(var=self._bit_var(name), type=self.type,
-                                 abbr=self._bit_abbr(name), name=name,
-                                 values=self._dict_to_table(values)))
+
+            # Create a mask for the bits
+            tmp = [0] * self.size * 8
+            for k in range(j):
+                tmp[-(i+k)] = 1
+            mask = '0x%x' % int(''.join(str(i) for i in tmp), 2)
+
+            values = self._dict_to_table(values)
+            data.append(self.create_field(self._bit_var(name), type_,
+                    self._bit_abbr(name), name, values=values, mask=mask))
 
         return '\n'.join(data)
 
     def get_code(self, offset):
         data = ['\t-- Bitstring handling for %s' % self.name]
 
-        tree = '\tlocal bittree = subtree:add("{name} (bitstring)")'
-        buffer = '\tlocal range = buffer({offset}, {size})'
-        data.append(tree.format(name=self.name))
-        data.append(buffer.format(offset=offset, size=self.size))
+        buff = 'buffer({off}, {size})'.format(off=offset, size=self.size)
+        t = '\tlocal bittree = subtree:add({var}, {buff})'
+        data.append(t.format(var=self.var, buff=buff))
 
         for i, j, name, values in self.bits:
-            t = '\tbittree:add({var}, range:bitfield({i}, {j}))'
-            data.append(t.format(var=self._bit_var(name), i=i, j=j))
+            data.append('\tbittree:add({var}, {buff})'.format(
+                                var=self._bit_var(name), buff=buff))
 
         data.append('')
         return '\n'.join(data)
@@ -235,7 +308,7 @@ class RangeField(Field):
         data = []
 
         # Local var definitions
-        t = '\tlocal {name} = subtree:add({var}.{name}, buffer({off}, {size}))'
+        t = '\tlocal {name} = subtree:add({var}, buffer({off}, {size}))'
         data.append(t.format(var=self.var, name=self.name,
                              off=offset, size=self.size))
 

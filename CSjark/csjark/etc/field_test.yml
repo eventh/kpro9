@@ -1,0 +1,22 @@
+Structs:
+  - name: field_test
+    id: 67
+    fields:
+      - type: time_t
+        field: relative_time
+      - member: abs
+        field: absolute_time
+      - type: BOOL
+        field: bool
+        size: 4
+        abbr: bool
+        name: A BOOL
+      - member: all
+        field: uint32
+        abbr: all.all
+        name: Something
+        base: base.HEX
+        values: {0: Monday, 1: Tuesday}
+        mask: nil
+        desc: This is something dark side!
+

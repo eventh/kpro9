@@ -76,6 +76,7 @@ def create_structs():
     '''
     ast = cparser.parse(code, 'test')
     yield cparser.find_structs(ast)[0].fields
+    del cparser.StructVisitor.all_struct_names['find']
 
 @find_structs.test
 def find_basic_types(structs):
@@ -104,11 +105,11 @@ def find_array_types(structs):
 @find_structs.test
 def parse_error():
     """Test that two structs with the same name raises an error."""
-    code = 'struct a {int c;}; struct b { int d; struct a {int d;}; };'
+    code = 'struct a {int c;}; \nstruct b { int d; \nstruct a {int d;}; };'
     ast = cparser.parse(code, 'test')
     with contexts.raises(cparser.ParseError) as error:
         cparser.find_structs(ast)
-    assert str(error).startswith('Two structs with same name: a')
+    assert str(error).startswith('Two structs with same name a')
 
 
 # Tests for the C preprocessor

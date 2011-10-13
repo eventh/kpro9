@@ -85,11 +85,11 @@ def create_bitstring():
       - name: bitstring
         bitstrings:
           - member: flags
-            0: Test
-            1: [Flag, A, B]
+            1: Test
+            2: [Flag, A, B]
           - type: short
-            0-2: [Short, A, B, C, D, E, F, G, H]
-            3: [Nih]
+            1-3: [Short, A, B, C, D, E, F, G, H]
+            4: [Nih]
     '''
     config.parse_file('test', only_text=text)
     yield config.StructConfig.find('bitstring')
@@ -103,7 +103,47 @@ def bitstring_rule(conf):
     assert len(member.bits[0]) == 4
     assert member.bits[1][2] == 'Flag'
     assert member.bits[1][3] == {0: 'A', 1: 'B'}
+    assert member.bits[0][0] == 1 and member.bits[0][1] == 1
     assert len(type.bits[0][3]) == 8
     assert type.bits[1][2] == 'Nih'
     assert type.bits[1][3] == {0: 'No', 1: 'Yes'}
+    assert type.bits[0][0] == 1 and type.bits[0][1] == 3
+
+
+# Test that configuration support custom fields mapping
+fields = Tests()
+
+@fields.context
+def create_fields():
+    """Create struct config with fields rules."""
+    text = '''
+    Structs:
+      - name: test
+        fields:
+          - type: time_t
+            field: relative_time
+          - member: abs
+            field: absolute_time
+          - type: BOOL
+            field: bool
+            size: 4
+            abbr: bool
+            name: A BOOL
+    '''
+    config.parse_file('test', only_text=text)
+    yield config.StructConfig.find('test')
+    del config.StructConfig.configs['test']
+
+@fields.test
+def fields_rule(conf):
+    """Test that config support rules for custom fields."""
+    one, = conf.get_rules('abs', 'short')
+    assert one.field == 'absolute_time'
+    assert one.size is None and one.abbr is None
+    two, = conf.get_rules(None, 'BOOL')
+    assert two.field == 'bool' and two.size == 4
+    assert two.abbr == 'bool' and two.name == 'A BOOL'
+    three, = conf.get_rules(None, 'time_t')
+    assert three.field == 'relative_time'
+    assert three.size is None and three.abbr is None
 

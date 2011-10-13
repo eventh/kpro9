@@ -1,0 +1,16 @@
+Structs:
+  - name: struct_test
+    id: 17
+    description: Testing struct
+  - name: postcode
+    id: 18
+    description: Testing struct - postcode
+  - name: user
+    id: 19
+    description: Testing struct - user
+  - name: name
+    id: 20
+    description: Testing struct - name
+  - name: user_and_name
+    id: 21
+    description: Testing struct - user_and_name

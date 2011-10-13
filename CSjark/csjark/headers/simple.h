@@ -20,5 +20,5 @@ struct basic {
     // Single and double precision
     float value;
     double twice;
-    long double car;
+    //long double car;
 };

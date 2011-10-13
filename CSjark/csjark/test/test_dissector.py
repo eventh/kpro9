@@ -14,7 +14,7 @@ def compare_lua(code, template, write_to_file=''):
     """Test that generated lua code equals what is expected."""
     if write_to_file:
         with open(write_to_file, 'a') as f:
-            f.write(code.replace('\t',''))
+            f.write('%s\n' % code.replace('\t',''))
     def simplify(text):
         return ''.join(text.strip().split())
     return simplify(code) == simplify(template)
@@ -121,10 +121,10 @@ bits = Tests()
 def create_bit_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None, None)
-    bits = [(0, 1, 'R', {0: 'No', 1: 'Yes'}),
-            (1, 1, 'B', {0: 'No', 1: 'Yes'}),
-            (2, 1, 'G', {0: 'No', 1: 'Yes'})]
-    proto.add_field(dissector.BitField('bit', 'int32', 4, bits))
+    bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
+            (2, 1, 'B', {0: 'No', 1: 'Yes'}),
+            (3, 1, 'G', {0: 'No', 1: 'Yes'})]
+    proto.add_field(dissector.BitField('bit', 'uint32', 4, bits))
     yield proto.fields[0]
 
 @bits.test
@@ -132,21 +132,23 @@ def bitfield_def(field):
     """Test that BitField generates valid defintion code."""
     assert field
     assert compare_lua(field.get_definition(), '''
-f.R = ProtoField.int32("test.bit.R", "R", nil, {[0]="No", [1]="Yes"})
-f.B = ProtoField.int32("test.bit.B", "B", nil, {[0]="No", [1]="Yes"})
-f.G = ProtoField.int32("test.bit.G", "G", nil, {[0]="No", [1]="Yes"})
+-- Bitstring definitions for bit
+f.bit = ProtoField.uint32("test.bit", "bit (bitstring)", base.HEX)
+f.bit_R = ProtoField.uint32("test.bit.R", "R", nil, {[0]="No", [1]="Yes"}, 0x1)
+f.bit_B = ProtoField.uint32("test.bit.B", "B", nil, {[0]="No", [1]="Yes"}, 0x2)
+f.bit_G = ProtoField.uint32("test.bit.G", "G", nil, {[0]="No", [1]="Yes"}, 0x4)
 ''')
+
 
 @bits.test
 def bitfield_code(field):
     """Test that BitField generates valid code."""
     assert compare_lua(field.get_code(0), '''
 -- Bitstring handling for bit
-local bittree = subtree:add("bit (bitstring)")
-local range = buffer(0, 4)
-bittree:add(f.R, range:bitfield(0, 1))
-bittree:add(f.B, range:bitfield(1, 1))
-bittree:add(f.G, range:bitfield(2, 1))
+local bittree = subtree:add(f.bit, buffer(0, 4))
+bittree:add(f.bit_R, buffer(0, 4))
+bittree:add(f.bit_B, buffer(0, 4))
+bittree:add(f.bit_G, buffer(0, 4))
 ''')
 
 

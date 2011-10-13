@@ -45,25 +45,35 @@ class Field:
         if self.abbr is None:
             self.abbr = '%s.%s' % (self.proto.name, self.name)
 
-    def get_definition(self):
-        """Get the ProtoField definition for this field."""
-        # Create definition string
-        t = '{var} = ProtoField.{type}("{abbr}", "{name}"'.format(
-                var=self.var, name=self.name, abbr=self.abbr, type=self.type)
+    def create_field(self, var, type_, abbr, name,
+            base=None, values=None, mask=None, desc=None):
+        """Create a ProtoField definition."""
+        template = '{var} = ProtoField.{type}("{abbr}", "{name}"{rest})'
+        args = {'var': var, 'type': type_, 'abbr': abbr, 'name': name}
 
         # Add other parameters if applicable
-        if self.desc is not None:
-            self.desc = '"%s"' % self.desc
-        rest = []
-        for var in reversed([self.base, self.values, self.mask, self.desc]):
-            if rest or var is not None:
+        if desc is not None:
+            desc = '"%s"' % desc
+
+        other = []
+        for var in reversed([base, values, mask, desc]):
+            if other or var is not None:
                 if var is None:
                     var = 'nil'
-                rest.append(var)
-        if rest:
-            rest.append('')
+                other.append(var)
 
-        return '%s%s)' % (t, ', '.join(reversed(rest)))
+        if other:
+            other.append('')
+            args['rest'] = ', '.join(reversed(other))
+        else:
+            args['rest'] = ''
+
+        return template.format(**args)
+
+    def get_definition(self):
+        """Get the ProtoField definition for this field."""
+        return self.create_field(self.var, self.type, self.abbr,
+                self.name, self.base, self.values, self.mask, self.desc)
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
@@ -125,9 +135,10 @@ class ArrayField(Field):
     def get_definition(self):
         data = ['-- Array definition for %s' % self.name]
         for i in range(self.elements):
-            t = '{var}_{i} = ProtoField.{type}("{abbr}.{i}", "[{i}]")'
-            data.append(t.format(var=self.var,
-                                 type=self.type, abbr=self.abbr, i=i))
+            var = '%s_%i' % (self.var, i)
+            abbr = '%s.%i' % (self.abbr, i)
+            name = '[%i]' % i
+            data.append(self.create_field(var, self.type, abbr, name))
         return '\n'.join(data)
 
     def get_code(self, offset):
@@ -207,47 +218,53 @@ class SubDissectorField(Field):
 
 class BitField(Field):
     def __init__(self, name, type, size, bits):
-        # Bitstrings need to be unsigned for HEX?? Research needed!
-        if 'int' in type and not type.startswith('u'):
-            type = 'u%s' % type
         super().__init__(name, type, size)
-        self._name = name
         self.bits = bits
 
     def _bit_var(self, name):
-        return '%s.%s' % (self.var, create_lua_var(name))
+        return '%s_%s' % (self.var, create_lua_var(name))
 
     def _bit_abbr(self, name):
         return '%s.%s' % (self.abbr, name.replace(' ', '_'))
 
     def get_definition(self):
-        data = ['-- Bitstring definitions for %s' % self._name]
+        data = ['-- Bitstring definitions for %s' % self.name]
+
+        # Bitstrings need to be unsigned for HEX?? Research needed!
+        if 'int' in self.type and not self.type.startswith('u'):
+            type_ = 'u%s' % self.type
+        else:
+            type_ = self.type
 
         # Create bitstring tree definition
-        self.name = '%s (bitstring)' % self._name
-        self.base = 'base.HEX'
-        data.append(super().get_definition())
+        data.append(self.create_field(self.var, type_,
+                self.abbr, '%s (bitstring)' % self.name, base='base.HEX'))
 
         # Create definitions for all bits
         for i, j, name, values in self.bits:
-            t = '{var} = ProtoField.{type}("{abbr}", "{name}", nil, {values})'
-            data.append(t.format(var=self._bit_var(name), type=self.type,
-                                 abbr=self._bit_abbr(name), name=name,
-                                 values=self._dict_to_table(values)))
+
+            # Create a mask for the bits
+            tmp = [0] * self.size * 8
+            for k in range(j):
+                tmp[-(i+k)] = 1
+            mask = '0x%x' % int(''.join(str(i) for i in tmp), 2)
+
+            values = self._dict_to_table(values)
+            data.append(self.create_field(self._bit_var(name), type_,
+                    self._bit_abbr(name), name, values=values, mask=mask))
 
         return '\n'.join(data)
 
     def get_code(self, offset):
-        data = ['\t-- Bitstring handling for %s' % self._name]
+        data = ['\t-- Bitstring handling for %s' % self.name]
 
-        tree = '\tlocal bittree = subtree:add("{name} (bitstring)")'
-        buffer = '\tlocal range = buffer({offset}, {size})'
-        data.append(tree.format(name=self.name))
-        data.append(buffer.format(offset=offset, size=self.size))
+        buff = 'buffer({off}, {size})'.format(off=offset, size=self.size)
+        t = '\tlocal bittree = subtree:add({var}, {buff})'
+        data.append(t.format(var=self.var, buff=buff))
 
         for i, j, name, values in self.bits:
-            t = '\tbittree:add({var}, range:bitfield({i}, {j}))'
-            data.append(t.format(var=self._bit_var(name), i=i, j=j))
+            data.append('\tbittree:add({var}, {buff})'.format(
+                                var=self._bit_var(name), buff=buff))
 
         data.append('')
         return '\n'.join(data)

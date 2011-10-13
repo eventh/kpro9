@@ -123,6 +123,34 @@ arraytree:add(f.str__0, buffer(0, 30))
 arraytree:add(f.str__1, buffer(30, 30))
 ''')
 
+#Test StuctField
+structs = Tests()
+
+@structs.context
+def create_struct_field():
+    proto = dissector.Protocol('test', None, None)
+    proto.add_field(dissector.SubDissectorField('test', 8, 32, 'testStructType'))
+    proto.add_field(dissector.SubDissectorField('test2', 9, 64, 'testStructType2'))
+    yield proto.fields[0], proto.fields[1]
+
+@structs.test
+def struct_def(one, two):
+    assert one and two
+    assert one.get_definition() is None
+    assert two.get_definition() is None
+
+@structs.test
+def struct_code(one, two):
+    assert isinstance(one, dissector.SubDissectorField)
+    assert isinstance(two, dissector.SubDissectorField)
+    assert compare_lua(one.get_code(0), '''
+    local subsubtree = subtree:add("test:")
+    luastructs_dt:try(8, buffer(0, 32):tvb(), pinfo, subsubtree)
+    ''')
+    assert compare_lua(two.get_code(32), '''
+    local subsubtree = subtree:add("test2:")
+    luastructs_dt:try(9, buffer(32, 64):tvb(), pinfo, subsubtree)
+    ''')
 
 # Test BitField
 bits = Tests()
@@ -148,7 +176,6 @@ f.bit_R = ProtoField.uint32("test.bit.R", "R", nil, {[0]="No", [1]="Yes"}, 0x1)
 f.bit_B = ProtoField.uint32("test.bit.B", "B", nil, {[0]="No", [1]="Yes"}, 0x2)
 f.bit_G = ProtoField.uint32("test.bit.G", "G", nil, {[0]="No", [1]="Yes"}, 0x4)
 ''')
-
 
 @bits.test
 def bitfield_code(field):

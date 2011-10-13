@@ -10,7 +10,7 @@ import dissector
 from config import StructConfig
 
 
-def compare_lua(code, template, write_to_file='tmp.lua'):
+def compare_lua(code, template, write_to_file=''):
     """Test that generated lua code equals what is expected."""
     if write_to_file:
         with open(write_to_file, 'a') as f:

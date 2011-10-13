@@ -106,8 +106,6 @@ def create_struct(proto, type_name, name, structs):
     id = struct.id
     proto.add_field(SubDissectorField(name, id, size, type_name))
 
-
-
 def create_field(proto, name, ctype, size=None):
     """Create a dissector field representing the struct member."""
     field = None

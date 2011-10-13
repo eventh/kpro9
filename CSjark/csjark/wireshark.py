@@ -20,6 +20,7 @@ DEFAULT_C_TYPE_MAP = {
         "int": "int32",
         'signed int': "int32",
         'unsigned int': "uint32",
+        'signed': "int32",
         'long': "int64",
         'signed long': "int64",
         'unsigned long': "uint64",

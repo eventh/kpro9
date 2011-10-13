@@ -67,40 +67,54 @@ find_structs = Tests()
 def create_structs():
     """Creates an AST and finds all structs within it."""
     code = '''
+    struct inner {
+        int a1;
+        int a2;
+        int a3;
+    };
     enum color { RED, GREEN=3, YELLOW, RED=10 };
     struct find {
         int a; float b; char c;
         enum color enumtest;
         char str[30]; float d[3];
+        struct inner inner_struct;
     };
     '''
     ast = cparser.parse(code, 'test')
-    yield cparser.find_structs(ast)[0].fields
+    yield cparser.find_structs(ast)[1].fields
     del cparser.StructVisitor.all_struct_names['find']
 
 @find_structs.test
-def find_basic_types(structs):
+def find_basic_types(fields):
     """Test that we find structs which has members of basic types."""
-    a, b, c = structs[:3]
+    a, b, c = fields[:3]
     assert a.name == 'a' and b.name == 'b' and c.name == 'c'
     assert a.type == 'int32' and b.type == 'float' and c.type == 'string'
     assert a.size == 4 and b.size == 4 and c.size == 1
 
 @find_structs.test
-def find_enum_types(structs):
+def find_enum_types(fields):
     """Test that we find structs which has enums as members."""
-    enum = structs[3]
+    enum = fields[3]
     assert enum.name == 'enumtest'
     assert enum.values == '{[0]="RED", [10]="RED", [3]="GREEN", [4]="YELLOW"}'
     assert enum.type == 'uint32' and enum.size == 4
 
 @find_structs.test
-def find_array_types(structs):
+def find_array_types(fields):
     """Test that we find structs which has arrays as members."""
-    a, b = structs[4:6]
+    a, b = fields[4:6]
     assert a.name == 'str' and b.name == 'd'
     assert a.type == 'string' and b.type == 'float'
     assert a.size == 30 and b.size == 12
+
+@find_structs.test
+def find_struct_types(fields):
+    """Test that we find structs which has arrays as members."""
+    a = fields[6]
+    assert a.name == 'inner_struct'
+    assert a.type == 'inner'
+    assert a.size == 12
 
 @find_structs.test
 def parse_error():

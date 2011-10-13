@@ -104,7 +104,7 @@ def create_struct(proto, type_name, name, structs):
     struct = structs[type_name]
     size = struct.get_size()
     id = struct.id
-    proto.add_field(SubDissectorField(name, id, size, 'struct'))
+    proto.add_field(SubDissectorField(name, id, size, type_name))
 
 
 

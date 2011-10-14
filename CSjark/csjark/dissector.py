@@ -328,6 +328,20 @@ class RangeField(Field):
         return '\n'.join(data)
 
 
+class CustomField(Field):
+    """A Field defined by a custom lua file."""
+
+    def __init__(self, name, type, size, rule):
+        super().__init__(name, type, size)
+        self.rule = rule
+
+    def get_definition(self):
+        return super().get_definition()
+
+    def get_code(self, offset):
+        return super().get_code(offset)
+
+
 class Protocol:
     """A Protocol is a collection of fields and code.
 
@@ -365,6 +379,7 @@ class Protocol:
         self.var = 'proto_{name}'.format(name=self.name)
         self.field_var = 'f'
         self.dissector = 'luastructs.message'
+        self.dissector_table = 'luastructs_dt'
 
     def add_field(self, field):
         """Add a field to the protocol, updates the fields proto reference."""
@@ -379,10 +394,12 @@ class Protocol:
         self.data.append(comment)
 
         proto = 'local {var} = Proto("{name}", "{description}")'
-        table = 'local luastructs_dt = DissectorTable.get("{dissector}")'
-        self.data.append(proto.format(var=self.var,
-                         name=self.name, description=self.description))
-        self.data.append(table.format(dissector=self.dissector))
+        self.data.append(proto.format(var=self.var, name=self.name,
+                                      description=self.description))
+
+        table = 'local {table} = DissectorTable.get("{dissector}")'
+        self.data.append(table.format(dissector=self.dissector,
+                                      table=self.dissector_table))
         self.data.append('')
 
     def _fields_definition(self):
@@ -465,12 +482,30 @@ class Protocol:
             else:
                 offset += rule.size
 
+    def _custom_lua_file(self, rule):
+        """Handle custom lua file for this protocol."""
+        text = rule.contents
+
+        # Interpolate dissector func
+        if '{DEFAULT_BODY}' in text:
+            self.data = []
+            self._dissector_func()
+            text = text.format(DEFAULT_BODY='\n'.join(self.data))
+
+        return text
+
     def create(self):
         """Returns all the code for dissecting this protocol."""
+        # Handle custom lua file rules
+        if self.conf and self.conf.lua_file:
+            return self._custom_lua_file(self.conf.lua_file)
+
+        # Create dissector content
         self._header_defintion()
         self._fields_definition()
         self._dissector_func()
 
+        # Add code for registering the protocol
         end = 'luastructs_dt:add({id}, {var})\n'
         self.data.append(end.format(id=self.id, var=self.var))
 

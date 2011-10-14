@@ -1,7 +1,7 @@
 """
 A module for Wireshark specific data structures and functions.
 """
-from dissector import (Field, EnumField, RangeField,
+from dissector import (Field, EnumField, RangeField, CustomField,
         ArrayField, BitField, TrailerField, SubDissectorField)
 
 
@@ -125,8 +125,7 @@ def create_field(proto, name, ctype, size=None):
 
         # Luafile field rule
         if luafiles and field is None:
-            #field = FileField(name, type_, size, luafiles[0])
-            pass
+            field = CustomField(name, type_, size, luafiles[0])
 
         # Trailer field rule
         if trailers and field is None:

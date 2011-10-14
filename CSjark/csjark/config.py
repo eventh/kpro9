@@ -64,7 +64,7 @@ class StructConfig:
 
 
 class BaseRule:
-    """A base class for rules refering to protocol fields."""
+    """A base class for rules referring to protocol fields."""
 
     def __init__(self, conf, obj):
         # A field rule refers either to a type or a member
@@ -99,6 +99,7 @@ class Range(BaseRule):
 
 class Enum(BaseRule):
     """Rule for emulating enum with int-like types in structs."""
+
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
         self.strict = obj.get('strict', True)
@@ -212,6 +213,8 @@ class Field(BaseRule):
 
 
 class Luafile(BaseRule):
+    """Rule for specifying using custom lua files."""
+
     def __init__(self, conf, obj):
         # Find the lua file
         self.file = str(obj['file'])
@@ -230,7 +233,7 @@ class Luafile(BaseRule):
 
         # Read content of the specified file
         with open(self.file, 'r') as f:
-            self.content = f.read()
+            self.contents = f.read()
 
 
 def handle_struct(obj):

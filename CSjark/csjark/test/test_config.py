@@ -147,3 +147,38 @@ def fields_rule(conf):
     assert three.field == 'relative_time'
     assert three.size is None and three.abbr is None
 
+
+# Test that configuration support trailers
+trailers = Tests()
+
+@trailers.context
+def create_trailers():
+    """Create struct config with trailer rules."""
+    text = '''
+    Structs:
+      - name: test
+        trailers:
+          - name: ber
+            count: 3
+            size: 8
+          - name: ber
+            count: asn1_count
+            size: 12
+          - name: ber
+            count: 1
+    '''
+    config.parse_file('test', only_text=text)
+    yield config.StructConfig.find('test')
+    del config.StructConfig.configs['test']
+
+@trailers.test
+def trailers_rule(conf):
+    """Test that config support rules for trailers."""
+    one, = conf.get_rules('asn1_count', None)
+    assert one
+    one, two, three = conf.trailers
+    assert one.name == 'ber' and three.name == 'ber'
+    assert one.count == 3 and two.count is None and three.count == 1
+    assert two.member == 'asn1_count' and one.member is None
+    assert one.size == 8 and two.size == 12 and three.size is None
+

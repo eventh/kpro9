@@ -67,19 +67,19 @@ class Cli:
                 default=cls.debug, help='print debugging information')
 
         # No CPP flag
-        parser.add_argument('-n', '-nocpp', action='store_false', dest='nocpp',
+        parser.add_argument('-n', '--nocpp', action='store_false', dest='nocpp',
                 default=cls.use_cpp, help='disable C preprocessor')
 
         # A list of C header files
-        parser.add_argument('-input', metavar='header',
+        parser.add_argument('-i', '--input', metavar='header',
                 default=[], nargs='*', help='C file(s) to parse')
 
         # Configuration file
-        parser.add_argument('-config', metavar='config', dest='configs',
+        parser.add_argument('-c', '--config', metavar='config', dest='configs',
                  default=[], nargs='*', help='configuration file(s) to parse')
 
         # Write output to destination file
-        parser.add_argument('-output', metavar='output',
+        parser.add_argument('-o', '--output', metavar='output',
                 nargs='?', help='write output to directory/file')
 
         # Parse arguments

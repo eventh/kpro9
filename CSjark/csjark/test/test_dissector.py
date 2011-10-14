@@ -7,7 +7,7 @@ import sys, os
 from attest import Tests, assert_hook, contexts
 
 import dissector
-from config import StructConfig
+from config import StructConfig, Trailer
 
 
 def compare_lua(code, template, write_to_file=''):
@@ -152,6 +152,7 @@ def struct_code(one, two):
     luastructs_dt:try(9, buffer(32, 64):tvb(), pinfo, subsubtree)
     ''')
 
+
 # Test BitField
 bits = Tests()
 
@@ -221,34 +222,29 @@ end
 ''')
 
 
-# Test DissectorField
-diss = Tests()
+# Test TrailerField
+trailer = Tests()
 
-@diss.context
-def create_dissector_field():
+@trailer.context
+def create_trailer_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None, None)
-    proto.add_field(dissector.DissectorField('ber', 12))
-    yield proto.fields[0]
+    conf = StructConfig('tester')
+    rules = [Trailer(conf, {'name': 'ber', 'count': 1})]
+    proto.add_field(dissector.TrailerField('count', 'int32', 4, rules))
+    yield conf, proto.fields[0]
+    del conf
 
-@diss.test
-def dissector_def(field):
-    """Test that DissectorField generates valid defintion code."""
-    assert field
-    assert field.get_definition() is None
-
-@diss.test
-def dissector_code(field):
-    """Test that DissectorField generates correct code."""
-    assert isinstance(field, dissector.DissectorField)
-    assert compare_lua(field.get_code(0), '''
-local subdissector = Dissector.get("ber")
-dissector:call(buffer(0, 12):tvb(), pinfo, tree)
-''')
-
-
-# Test SubDissectorField
-# TODO
+@trailer.test
+def trailer_code(conf, field):
+    """Test that TrailerField generates correct code."""
+    assert len(conf.trailers) == 1
+    assert isinstance(field, dissector.TrailerField)
+    assert conf.trailers[0]._field is field
+    assert compare_lua(field.get_code(0), 'subtree:add(f.count, buffer(0, 4))')
+    assert compare_lua(field.get_definition(), '''
+    f.count = ProtoField.int32("test.count", "count")
+    ''')
 
 
 # Test Field
@@ -287,11 +283,16 @@ def create_protos():
     conf = StructConfig('tester')
     conf.id = 25
     conf.description = 'This is a test'
+
+    rules = [Trailer(conf, {'name': 'bur', 'count': 3, 'size': 8}),
+             Trailer(conf, {'name': 'ber', 'count': 'count'})]
     proto = dissector.Protocol('tester', None, conf)
+
     proto.add_field(dissector.Field('one', 'float', 4))
     proto.add_field(dissector.RangeField('range', 'float', 4, 0, 10))
     proto.add_field(dissector.ArrayField('array', 'float', 4, [1, 2, 3]))
     proto.add_field(dissector.ArrayField('str', 'string', 30, [2]))
+    proto.add_field(dissector.TrailerField('count', 'int32', 4, rules))
     yield proto
     del StructConfig.configs['tester']
 
@@ -302,6 +303,15 @@ def protos_id(proto):
     assert proto.id == 25
     assert proto.description == 'This is a test'
     assert proto.var == 'proto_tester'
+
+@protos.test
+def protos_trailer(proto):
+    """Test that the Protocol has trailers."""
+    assert proto.conf
+    assert proto.conf.trailers
+    assert len(proto.conf.trailers) == 2
+    assert proto.conf.trailers[1]._field is not None
+    assert proto.conf.trailers[0].name == 'bur'
 
 @protos.test
 def protos_create_dissector(proto):
@@ -330,6 +340,7 @@ f.str_0 = ProtoField.string("tester.str", "str")
 f.str_1 = ProtoField.string("tester.str", "str")
 f.str__0 = ProtoField.string("tester.str.0", "[0]")
 f.str__1 = ProtoField.string("tester.str.1", "[1]")
+f.count = ProtoField.int32("tester.count", "count")
 -- Dissector function for struct: tester
 function proto_tester.dissector(buffer, pinfo, tree)
 local subtree = tree:add(proto_tester, buffer())
@@ -362,6 +373,14 @@ local arraytree = subtree:add(f.str_0, buffer(32, 60))
 arraytree:set_text("str (array: 2 x string)")
 arraytree:add(f.str__0, buffer(32, 30))
 arraytree:add(f.str__1, buffer(62, 30))
+subtree:add(f.count, buffer(92, 4))
+-- Trailers handling for struct: tester
+for i = 0, 3 do
+local trailer = Dissector.get("bur")
+trailer:call(buffer(96+(i*8),8):tvb(), pinfo, tree)
+end
+local trailer = Dissector.get("ber")
+trailer:call(buffer(120):tvb(), pinfo, tree)
 end
 luastructs_dt:add(25, proto_tester)
 ''')

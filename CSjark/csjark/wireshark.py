@@ -2,7 +2,7 @@
 A module for Wireshark specific data structures and functions.
 """
 from dissector import (Field, EnumField, RangeField,
-        ArrayField, BitField, DissectorField, SubDissectorField)
+        ArrayField, BitField, TrailerField, SubDissectorField)
 
 
 # Mapping of c type and their wireshark field type.
@@ -100,11 +100,13 @@ def create_array(proto, name, ctype, size, depth):
     """Create a dissector field representing an array."""
     proto.add_field(ArrayField(name, map_type(ctype), size, depth))
 
+
 def create_struct(proto, type_name, name, structs):
     struct = structs[type_name]
     size = struct.get_size()
     id = struct.id
     proto.add_field(SubDissectorField(name, id, size, type_name))
+
 
 def create_field(proto, name, ctype, size=None):
     """Create a dissector field representing the struct member."""
@@ -119,15 +121,15 @@ def create_field(proto, name, ctype, size=None):
     #       now we simply discard all but one rule, try to merge them?
     if proto.conf is not None:
         rules = proto.conf.get_rules(name, ctype, sorted=True)
-        diss, bits, enums, ranges, customs = rules
+        trailers, bits, enums, ranges, customs = rules
+
+        # Trailer field rule
+        if trailers and field is None:
+            field = TrailerField(name, type_, size, trailers)
 
         # Custom Field rules
         if customs and field is None:
             field = customs[0].create(Field, name, size) # Hack, refactor pls!
-
-        # Dissector rules
-        if diss and field is None:
-            field = DissectorField(diss[0].name, diss[0].size)
 
         # Bit string rules
         if bits and field is None:

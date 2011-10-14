@@ -6,6 +6,7 @@
 *.out
 *.class
 *.synctex.gz
+*.synctex.gz(busy)
 *.bbl
 *.blg
 *.pdf

@@ -25,6 +25,7 @@ class StructConfig:
         self.description = None
         self.members = {}
         self.types = {}
+        self.trailers = []
 
     def get_rules(self, member, type, sorted=False):
         rules = self.members.get(member, [])
@@ -34,7 +35,7 @@ class StructConfig:
             return rules
 
         # Sort the rules
-        types = (Dissector, Bitstring, Enum, Range, Field)
+        types = (Trailer, Bitstring, Enum, Range, Field)
         values = ([], [], [], [], [])
         for rule in rules:
             for i, type_ in enumerate(types):
@@ -149,17 +150,34 @@ class Bitstring(BaseRule):
             raise ConfigError('Invalid bitstring rule for %s' % conf.name)
 
 
-class Dissector(BaseRule):
-    """Rule for specifying a trailer?."""
+class Trailer(BaseRule):
+    """Rule for specifying one or more trailer protocol(s)."""
 
     def __init__(self, conf, obj):
-        super().__init__(conf, obj)
         self.name = str(obj['name'])
+        conf.trailers.append(self)
+
+        # Count or member, which holds the amount of trailers
+        self.member = None
+        self.count = obj['count']
+        try:
+            self.count = int(self.count)
+        except ValueError:
+            self.member = str(self.count)
+            self.count = None
+        if self.member:
+            conf.add_member_rule(self.member, self)
+            self._field = None # Used to link TrailerField to this rule
+        if not self.count and not self.member:
+            raise ConfigError('No count in trailer rule for %s' % conf.name)
+
+        # Optional size a single trailing protocol
         self.size = None
         if 'size' in obj:
             self.size = int(obj['size'])
+
         if not self.name:
-            raise ConfigError('Invalid dissector rule for %s' % conf.name)
+            raise ConfigError('Invalid trailer rule for %s' % conf.name)
 
 
 class Field(BaseRule):
@@ -208,7 +226,7 @@ def handle_struct(obj):
 
     # Handle rules
     types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,
-             'dissectors': Dissector, 'fields': Field}
+             'trailers': Trailer, 'fields': Field}
     for name, type_ in types.items():
         if name in obj:
             for rule in obj[name]:

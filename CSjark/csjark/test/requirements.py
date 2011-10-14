@@ -170,6 +170,12 @@ def create_rules():
         fields:
           - member: abs
             field: absolute_time
+        trailers:
+          - name: ber
+            count: asn1_count
+            size: 12
+          - name: ber
+            count: 1
       - name: two
         id: 11
         ranges:
@@ -185,6 +191,10 @@ def create_rules():
             size: 4
             abbr: bool
             name: A BOOL
+        trailers:
+          - name: ber
+            count: 3
+            size: 8
     '''
     config.parse_file('test', only_text=text)
     yield config.StructConfig.find('one'), config.StructConfig.find('two')
@@ -224,7 +234,15 @@ def req4_d(one, two):
     assert one.description == 'a struct' and two.description is None
 
 # FR4-E: Configuration must support various trailers
-
+@configuration.test
+def req4_e(one, two):
+    a, = one.get_rules('asn1_count', None)
+    assert isinstance(a, config.Trailer)
+    a, b, c = one.trailers + two.trailers
+    assert a.name == 'ber' and b.name == 'ber' and c.name == 'ber'
+    assert c.count == 3 and a.count is None and b.count == 1
+    assert a.member == 'asn1_count' and c.member is None
+    assert c.size == 8 and a.size == 12 and b.size is None
 
 # FR4-F: Configuration must support integers which represent enums
 

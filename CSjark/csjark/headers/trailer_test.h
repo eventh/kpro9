@@ -1,4 +1,4 @@
 struct trailer_test {
-    long long also_asn1;
-    int asn1;
+    float tmp[5];
+    int asn1_count;
 };

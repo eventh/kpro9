@@ -7,3 +7,6 @@ Structs:
         size: 8 # Size of the buffer to feed to the protocol
       - name: ber
         count: asn1_count
+        size: 12
+      - name: ber
+        count: 1

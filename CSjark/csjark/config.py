@@ -164,6 +164,7 @@ class Trailer(BaseRule):
             self.count = int(self.count)
         except ValueError:
             self.member = str(self.count)
+            self.count = None
         if self.member:
             conf.add_member_rule(self.member, self)
             self._field = None # Used to link TrailerField to this rule

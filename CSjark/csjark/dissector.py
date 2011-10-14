@@ -218,6 +218,7 @@ class TrailerField(Field):
 
     def __init__(self, name, type, size, rules):
         super().__init__(name, type, size)
+        self.func_type = self._get_func_type(type)
         self.offset = None # Needed when finding nr of trailers
         for rule in rules:
             rule._field = self
@@ -403,20 +404,51 @@ class Protocol:
 
         # Delegate rest of buffer to any trailing protocols
         if self.conf and self.conf.trailers:
-            self._trailers(self.conf.trailers)
+            self._trailers(self.conf.trailers, offset)
 
         self.data.append('end')
         self.data.append('')
 
-    def _trailers(self, rules):
+    def _trailers(self, rules, offset):
         print(rules)
-        self.data.append('-- Trailers handling for struct: %s' % self.name)
+        self.data.append('\n\t-- Trailers handling for struct: %s' % self.name)
 
-        #if self.size is not None:
-        #    offset = '%s, %s' % (offset, self.size)
-        #t = '\tlocal subdissector = Dissector.get("{name}")\n' \
-        #    '\tdissector:call(buffer({offset}):tvb(), pinfo, tree)'
-        #return t.format(offset=offset, name=self.name)
+        for rule in rules:
+            if rule.count == 1 or rule.size is None:
+                trail = '\tlocal trailer = Dissector.get("{name}")'
+                call = '\ttrailer:call(buffer({offset}):tvb(), pinfo, tree)'
+                self.data.append(trail.format(name=rule.name))
+                self.data.append(call.format(offset=offset))
+                if rule.size is not None:
+                    offset += rule.size
+                continue
+
+            # Find the count
+            if rule.member is not None and rule._field is not None:
+                count = 'trail_count'
+                t = '\tlocal {var} = buffer({off}, {size}):{type}()'
+                self.data.append(t.format(off=rule._field.offset, var=count,
+                        size=rule._field.size, type=rule._field.func_type))
+            elif rule.count:
+                count = rule.count
+            else:
+                continue
+
+            # Call trailers 'count' times
+            self.data.append('\tfor i = 0, {count} do'.format(count=count))
+
+            trail = '\t\tlocal trailer = Dissector.get("{name}")'
+            call = '\t\ttrailer:call(buffer({offset}+(i*{size}),' \
+                        '{size}):tvb(), pinfo, tree)'
+            self.data.append(trail.format(name=rule.name))
+            self.data.append(call.format(offset=offset, size=rule.size))
+            self.data.append('\tend')
+            self.data.append('')
+
+            if rule.count:
+                offset += rule.size * rule.count
+            else:
+                offset += rule.size
 
     def create(self):
         self._header_defintion()

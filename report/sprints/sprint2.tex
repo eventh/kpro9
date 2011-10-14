@@ -258,7 +258,7 @@ For sprint 2 the team decided to refactor some of the code in order to make it e
 
 \subsection{Utility}
 %--------------------
-/autoref{fig:sp2:class} shows the changes we made to the design for the utility for sprint 2. The main change was the creation of the wireshark module where the team gathered most of the functionality for creating dissector fields and looking up default C-types and their sizes. The developers also added new functionality to the config and dissector modules that handles the datatypes the utility was slated to support for sprint 2.
+\autoref{fig:sp2:class} shows the changes we made to the design for the utility for sprint 2. The main change was the creation of the wireshark module where the team gathered most of the functionality for creating dissector fields and looking up default C-types and their sizes. The developers also added new functionality to the config and dissector modules that handles the datatypes the utility was slated to support for sprint 2.
 \begin{figure}[!htb]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s2}
@@ -268,9 +268,35 @@ For sprint 2 the team decided to refactor some of the code in order to make it e
 
 
 
-%-----------------------
+%---------------------------
 \section{Implementation}
-%-----------------------
+%---------------------------
+
+The previous sprint had a focus on creating a native implementation of the 
+utility. In this sprint the focus has been on implementing data types for the 
+C programming language and make it possible to configure more options on how 
+the dissector will function. This section will cover the requirements 
+implemented, how they are implemented and what the ''output'' look like.
+
+\subsection{Support enum members}
+%------------------------------------------
+Enum is a type declaration in C, which specifies enumeration constants.  Enum 
+is supported because it is a basic datatype in the C language. 
+\autoref{code:cenum} shows an example of an enum in a c-header file. The 
+wireshark dissector will displayed the named value, because this will make it 
+easier to read, an example is shown in \autoref{fig:wscenum}. 
+
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/wireshark_cenum}
+	\caption{Class Diagram\label{fig:wscenum}}
+\end{figure}
+
+
+\lstset{language=C,caption={Enum support},label=code:cenum}
+\lstinputlisting[language=C]{./sprints/code/cenum_test.h}
+
 
 
 %-----------------------

@@ -329,9 +329,20 @@ class RangeField(Field):
 
 
 class Protocol:
-    counter = 0
+    """A Protocol is a collection of fields and code.
 
-    def __init__(self, name, coord, conf=None):
+    It's used to generate Wireshark dissectors written in Lua, for
+    dissecting a packet into a set of fields with values.
+    """
+    counter = 0 # Used to give protocols unique IDs if needed
+
+    def __init__(self, name, coord=None, conf=None):
+        """Create a Protocol, for generating a dissector.
+
+        'name' is the name of the Protocol to dissect.
+        'coord' is the source location (file and line).
+        'conf' is the configuration for this Protocol.
+        """
         self.name = name
         self.coord = coord
         self.conf = conf
@@ -356,11 +367,12 @@ class Protocol:
         self.dissector = 'luastructs.message'
 
     def add_field(self, field):
-        """Add a field to the dissector, updates the fields protocol."""
+        """Add a field to the protocol, updates the fields proto reference."""
         field.set_protocol(self)
         self.fields.append(field)
 
     def _header_defintion(self):
+        """Add the code for the header of the protocol."""
         comment = '-- Dissector for struct: %s' % self.name
         if self.description:
             comment = '%s: %s' % (comment, self.description)
@@ -374,6 +386,7 @@ class Protocol:
         self.data.append('')
 
     def _fields_definition(self):
+        """Add code for defining the ProtoField's in the protocol."""
         self.data.append('-- ProtoField defintions for struct: %s' % self.name)
         decl = 'local {field_var} = {var}.fields'
         self.data.append(decl.format(field_var=self.field_var, var=self.var))
@@ -384,6 +397,7 @@ class Protocol:
         self.data.append('')
 
     def _dissector_func(self):
+        """Add the code for the dissector function for the protocol."""
         self.data.append('-- Dissector function for struct: %s' % self.name)
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
         sub_tree = '\tlocal subtree = tree:add({var}, buffer())'
@@ -410,10 +424,11 @@ class Protocol:
         self.data.append('')
 
     def _trailers(self, rules, offset):
-        print(rules)
+        """Add code for handling of trailers to the protocol."""
         self.data.append('\n\t-- Trailers handling for struct: %s' % self.name)
 
         for rule in rules:
+            # The simple special case
             if rule.count == 1 or rule.size is None:
                 trail = '\tlocal trailer = Dissector.get("{name}")'
                 call = '\ttrailer:call(buffer({offset}):tvb(), pinfo, tree)'
@@ -432,7 +447,7 @@ class Protocol:
             elif rule.count:
                 count = rule.count
             else:
-                continue
+                continue # rule.member don't exists in the struct
 
             # Call trailers 'count' times
             self.data.append('\tfor i = 0, {count} do'.format(count=count))
@@ -451,6 +466,7 @@ class Protocol:
                 offset += rule.size
 
     def create(self):
+        """Returns all the code for dissecting this protocol."""
         self._header_defintion()
         self._fields_definition()
         self._dissector_func()
@@ -461,5 +477,6 @@ class Protocol:
         return '\n'.join(self.data)
 
     def get_size(self):
+        """Find the size of the fields in the protocol."""
         return sum(field.size for field in self.fields)
 

@@ -484,7 +484,8 @@ class Protocol:
 
     def _custom_lua_file(self, rule):
         """Handle custom lua file for this protocol."""
-        text = rule.contents
+        text = '-- Custom lua file %s for struct %s' % (rule.file, self.name)
+        text = '%s\n%s' % (text, rule.contents)
 
         # Interpolate dissector func
         if '{DEFAULT_BODY}' in text:

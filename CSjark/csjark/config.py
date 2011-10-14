@@ -168,6 +168,8 @@ class Trailer(BaseRule):
         if self.member:
             conf.add_member_rule(self.member, self)
             self._field = None # Used to link TrailerField to this rule
+        if not self.count and not self.member:
+            raise ConfigError('No count in trailer rule for %s' % conf.name)
 
         # Optional size a single trailing protocol
         self.size = None

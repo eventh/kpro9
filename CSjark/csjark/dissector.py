@@ -478,5 +478,5 @@ class Protocol:
 
     def get_size(self):
         """Find the size of the fields in the protocol."""
-        return sum(field.size for field in self.fields)
+        return sum(field.size for field in self.fields if field)
 

@@ -41,12 +41,12 @@ Structs:
         max: 4
 
     # Delegate to other registered protocols
-    dissectors:
-      - member: ans1
-        name: ber
-      - type: something
-        name: ber
-        size: 12
+    trailers:
+      - name: ber
+        count: ans1_count
+        size: 8
+      - name: ber
+        count: 1
 
     # Translation from C struct member to custom Field
     fields:
@@ -62,8 +62,8 @@ Structs:
         mask: nil
         desc: This is something dark side!
 
-    # TODO: FR4-B Support custom Lua files for specific protocols
-    customs:
-      - member: something
+    # Custom Lua files for specific protocols or fields
+    luafiles:
+      - member: special
         file: something_dissector.lua
 

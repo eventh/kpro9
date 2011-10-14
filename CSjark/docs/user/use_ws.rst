@@ -11,7 +11,6 @@ Using the generated Lua files in Wireshark
 
 
 
-
 To add further dissectors, only step 2 and 5 needs to be repeated.
 
 For further information on the lua integration in wireshark, please visit:

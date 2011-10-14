@@ -2,4 +2,8 @@
  Limitations
 =============
 
-CSjark currently only supports structs with primitive types. There are plans to support more, but currently no plans of supporting pointers, since they are mostly useless when sent over the network.
+CSjark does not support pointer types, because the pointer values are no longer relevant on a different computer with a different memory layout.
+
+CSjark currently have no way of specifying different types or endian for different platform, and will therefore only produce correct dissector for a platform that conforms with our default values and communicates with a computer with the same endian and type sizes.
+
+There are currently no support for typedef types.

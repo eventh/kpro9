@@ -213,19 +213,18 @@ class ArrayField(Field):
         return '\n'.join(data)
 
 
-class DissectorField(Field):
-    def __init__(self, name, size=None):
-        super().__init__(name, 'trailer', size)
+class TrailerField(Field):
+    """Simply used to store the offset for any field used by trailers."""
 
-    def get_definition(self):
-        pass
+    def __init__(self, name, type, size, rules):
+        super().__init__(name, type, size)
+        self.offset = None # Needed when finding nr of trailers
+        for rule in rules:
+            rule._field = self
 
     def get_code(self, offset):
-        if self.size is not None:
-            offset = '%s, %s' % (offset, self.size)
-        t = '\tlocal subdissector = Dissector.get("{name}")\n' \
-            '\tdissector:call(buffer({offset}):tvb(), pinfo, tree)'
-        return t.format(offset=offset, name=self.name)
+        self.offset = offset
+        return super().get_code(offset)
 
 
 class SubDissectorField(Field):
@@ -336,12 +335,14 @@ class Protocol:
         self.coord = coord
         self.conf = conf
 
+        # Dissector ID
         if self.conf and self.conf.id is not None:
             self.id = self.conf.id
         else:
             Protocol.counter += 1
             self.id = Protocol.counter
 
+        # Dissector description
         if self.conf and self.conf.description is not None:
             self.description = self.conf.description
         else:
@@ -400,8 +401,22 @@ class Protocol:
             if field.size is not None:
                 offset += field.size
 
+        # Delegate rest of buffer to any trailing protocols
+        if self.conf and self.conf.trailers:
+            self._trailers(self.conf.trailers)
+
         self.data.append('end')
         self.data.append('')
+
+    def _trailers(self, rules):
+        print(rules)
+        self.data.append('-- Trailers handling for struct: %s' % self.name)
+
+        #if self.size is not None:
+        #    offset = '%s, %s' % (offset, self.size)
+        #t = '\tlocal subdissector = Dissector.get("{name}")\n' \
+        #    '\tdissector:call(buffer({offset}):tvb(), pinfo, tree)'
+        #return t.format(offset=offset, name=self.name)
 
     def create(self):
         self._header_defintion()
@@ -414,11 +429,5 @@ class Protocol:
         return '\n'.join(self.data)
 
     def get_size(self):
-        size = 0
-        for field in self.fields:
-            if field.size == None:
-                raise BufferError("Unable to determine the size of the struct.")
-            size += field.size
-
-        return size
+        return sum(field.size for field in self.fields)
 

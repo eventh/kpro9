@@ -338,6 +338,7 @@ For sprint 2 the team decided to refactor some of the code in order to make it e
 
 
 
+
 %----------------------
 \section{Implementation}
 %----------------------
@@ -361,7 +362,7 @@ rectangle show the enumerated named value.
 \begin{figure}[ht]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_cenum}
-	\caption{Enumeration in Wireshark\label{fig:wscenum}}
+	\caption{Class Diagram\label{fig:wscenum}}
 \end{figure}
 
 \lstset{language=C,caption={Enum support},label=code:cenum}
@@ -386,15 +387,12 @@ raised, and the generation of the dissector is stopped.
 
 \subsection{Support display of structs within structs}
 %----------------------
-The utility is able to display structs within a struct in wireshark, the 
-member will be visible, and the struct will be in a subtree that can be 
-expanded. \autoref{fig:wsstructstruct} is a screenshot of this dissector in 
-Wireshark.
+TODO \autoref{fig:wsstructstruct}
 
 \begin{figure}[ht]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_structwithstruct}
-	\caption{Structs in Wireshark\label{fig:wsstructstruct}}
+	\caption{Class Diagram\label{fig:wsstructstruct}}
 \end{figure}
 
 \subsection{Support Enumerated Named Values}
@@ -402,10 +400,9 @@ Wireshark.
 In C there is two ways to do enumerations, the first option was explained in 
 \autoref{sec:support_enum}, the other way is to use \#define which is shown in 
 \autoref{code:def_enum}. The advantage of using \#define is  that the values 
-can be generated. Since this cannot be understand by the parser, it can be 
-generated directly from the header file, so it have to be supported by 
-configuration. \autoref{code:enum_conf}. The Lua-dissector will display the 
-enum in the same way as in \autoref{sec:support_enum}.
+can be generated. Since this cannot be understand by the parser, it can be generated directly from the header file, so it have to 
+be supported by configuration. \autoref{code:enum_conf}. The Lua-dissector 
+will display the enum in the same way as in \autoref{sec:support_enum}.
 
 \lstset{language=C,caption={Enumerated named values},label=code:def_enum}
 \lstinputlisting[language=C]{./sprints/code/def_enum.h}
@@ -416,12 +413,6 @@ enum in the same way as in \autoref{sec:support_enum}.
 \subsection{Support for Bit Strings}
 %----------------------
 TODO
-
-\begin{figure}[ht]
-	\center
-	\includegraphics[width=\textwidth]{./sprints/img/wireshark_bitstring}
-	\caption{Bit string in Wireshark\label{fig:wsbitstringt}}
-\end{figure}
 
 \subsection{Support Members of Type Array}
 %----------------------
@@ -437,15 +428,7 @@ TODO
 
 \subsection{Dissector ID}
 %----------------------
-All struct-packets that Wireshark captures, has a header, one of the fields in 
-the header is the message id. This id is used to load the the correct 
-dissector when a packet is captured. Each dissector should have an unique id, 
-to avoid possible conflicts. This is functionallity is implemented and the 
-message id must be specified in the configuration file, \autoref{code:msgid} 
-is an example on how this is done.
-
-\lstset{language=C,caption={Dissector ID config},label=code:msgid}
-\lstinputlisting[language=C]{./sprints/code/messageid.yml}
+TODO
 
 \subsection{Endian Handling}
 %----------------------
@@ -454,7 +437,6 @@ specified problem, and should be implemented togheter with platform support.
 
 \subsection{Folder Support in the CLI}
 %----------------------
-Folder support in the CLI\footnote{Command-line Interface} has been implemented, so it is possible to generate Lua-scripts for all structs stored in a folder.
 TODO
 
 \subsection{Support Custom Handling of Specified Data Types}

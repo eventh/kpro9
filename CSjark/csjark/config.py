@@ -4,6 +4,7 @@ A module for configuration of our utility.
 Should parse config files and create data structures which the parser can
 use when translating C struct definitions to Wireshark protocols and fields.
 """
+import os
 from operator import itemgetter
 import yaml
 
@@ -23,9 +24,10 @@ class StructConfig:
         self.name = name
         self.id = None
         self.description = None
-        self.members = {}
-        self.types = {}
-        self.trailers = []
+        self.members = {} # Rules for members in the struct
+        self.types = {} # Rules for types in the struct
+        self.trailers = [] # Rules for struct trailers
+        self.lua_file = None # Custom lua file for the struct
 
     def get_rules(self, member, type, sorted=False):
         rules = self.members.get(member, [])
@@ -35,8 +37,8 @@ class StructConfig:
             return rules
 
         # Sort the rules
-        types = (Trailer, Bitstring, Enum, Range, Field)
-        values = ([], [], [], [], [])
+        types = (Trailer, Bitstring, Enum, Range, Field, Luafile)
+        values = [[]] * len(types)
         for rule in rules:
             for i, type_ in enumerate(types):
                 if isinstance(rule, type_):
@@ -209,6 +211,28 @@ class Field(BaseRule):
         return field
 
 
+class Luafile(BaseRule):
+    def __init__(self, conf, obj):
+        # Find the lua file
+        self.file = str(obj['file'])
+        if not os.path.isfile(self.file):
+            self.file = os.path.join(os.path.dirname(__file__), self.file)
+        if not os.path.isfile(self.file):
+            raise ConfigError('Unknown file: %s' % str(obj['file']))
+
+        # Member or Type or Struct?
+        if 'member' in obj or 'type' in obj:
+            super().__init__(conf, obj)
+        elif conf.lua_file is None:
+            conf.lua_file = self
+        else:
+            raise ConfigError('To many luafiles for struct: %s' %self.name)
+
+        # Read content of the specified file
+        with open(self.file, 'r') as f:
+            self.content = f.read()
+
+
 def handle_struct(obj):
     """Handle rules and configuration for a struct."""
     conf = StructConfig.find(obj['name'])
@@ -226,7 +250,7 @@ def handle_struct(obj):
 
     # Handle rules
     types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,
-             'trailers': Trailer, 'fields': Field}
+             'trailers': Trailer, 'fields': Field, 'luafiles': Luafile}
     for name, type_ in types.items():
         if name in obj:
             for rule in obj[name]:

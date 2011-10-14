@@ -64,6 +64,6 @@ Structs:
 
     # Custom Lua files for specific protocols or fields
     luafiles:
-      - member: special
-        file: something_dissector.lua
+      - file: etc/custom_lua.lua
+        member: something
 

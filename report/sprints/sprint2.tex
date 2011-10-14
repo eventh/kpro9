@@ -209,35 +209,37 @@ estimate. \autoref{tab:sprint2req} is the sprint backlog for the first phase.
 	\cmidrule(r){4-5}
 	\# & Req. & Description & Est. & Act. \\
 	\midrule
-	1 & FR1-B & Support members of type enums & 6 & 5\\
+	1 & FR1-B & Support members of type enums & \underline{ 6 } & 5 \\
 	   &  & Implementation			   	& 3 & 2\\
 	   &  & Testing - unit				   	& 1 & 1\\
 	   &  & Testing - end to end			& 2 & 2\\
 	\addlinespace
-	2 & FR1-C & Support members of type structs & 7 & 3.5 \\
-	   &  & Implementation			   	& 3 & 2\\
-	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
+	2 & FR1-C & Support members of type structs & \underline{ 7 } & 3.5  \\
+	   &  & Implementation			   	& 6 & 3\\
+	   &  & Testing - unit				   	& 1 & 0.5\\
 	\addlinespace
-	3 & FR1-F & Detect structs with same name & 3 & 3.5 \\
-	   &  & Implementation			   	& 3 & 2\\
+	3 & FR1-F & Detect structs with same name & \underline{ 3 } &  3.5  \\
+	   &  & Implementation			   	& 2 & 2.5\\
 	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
 	\addlinespace
-	4 & FR2-B & Support display of structs within structs & 11 & - \\
-	   &  & Implementation			   	& 3 & 2\\
-	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
+	4 & FR2-B & Support display of structs within structs & \underline{ 11 } &  -  \\
+	   &  & Implementation			   	& 5 & 2\\
+	   &  & Testing - unit				   	& 2 & 1\\
+	   &  & Testing - end to end			& 4 & 2\\
 	\addlinespace
-	5 & FR4-F & Support enumerated named values  & 5 & - \\
-	   &  & Implementation			   	& 3 & 2\\
-	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
+	5 & FR4-F & Support enumerated named values  & \underline{ 5 } &  -  \\
+	   &  & Design				   	& 1 & 0.5\\	   
+	   &  & Implementation			   	& 1 & 0.5\\
+	   &  & Testing - unit				   	& 1 & -\\
+	   &  & Testing - end to end			& 1 & 1.5\\
+	   &  & User documentation		   	& 1 & -\\
 	\addlinespace
-	6 & FR4-G & Support for bit strings & 10 & 11.5 \\
-	   &  & Implementation			   	& 3 & 2\\
-	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
+	6 & FR4-G & Support for bit strings & \underline{ 10 } & 11.5 \\
+	   &  & Design				   	& 2 & 2\\	   
+	   &  & Implementation			   	& 3 & 6\\
+	   &  & Testing - unit				   	& 2 & 1\\
+	   &  & Testing - end to end			& 2 & 1\\
+	   &  & User documentation		   	& 1 & 1.5\\
 	\bottomrule
 \end{tabularx}
 \end{table}
@@ -250,40 +252,45 @@ estimate. \autoref{tab:sprint2req} is the sprint backlog for the first phase.
 	\cmidrule(r){4-5}
 	\# & Req. & Description & Est. & Act. \\
 	\midrule
-	7 & FR1-E & Support members of type array & 7 & 11 \\
-	   &  & Implementation			   	& 3 & 2\\
+	7 & FR1-E & Support members of type array & \underline{ 7 } & 11 \\
+	   &  & Implementation			   	& 3 & 6\\
 	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
+	   &  & Testing - end to end			& 3 & 4\\
 	\addlinespace
-	8 & FR4-E & Structs with various trailers & 18 & - \\
-	   &  & Implementation			   	& 3 & 2\\
-	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
+	8 & FR4-E & Structs with various trailers & \underline{ 18 } & - \\
+	   &  & Design				   	& 3 & 2\\
+	   &  & Implementation			   	& 6 & 4\\
+	   &  & Testing - unit				   	& 2 & 1\\
+	   &  & Testing - end to end			& 5 & -\\
+	   &  & User documentation		   	& 2 & -\\
 	\addlinespace
-	9 & FR4-B & Support for custom Lua configuration & 14 & - \\
-	   &  & Implementation			   	& 3 & 2\\
-	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
+	9 & FR4-B & Support for custom Lua configuration & \underline{ 14 } & - \\
+	   &  & Design				   	& 2 & -\\
+	   &  & Implementation			   	& 5 & -\\
+	   &  & Testing - unit				   	& 1 & -\\
+	   &  & Testing - end to end			& 4 & -\\
+	   &  & User documentation		   	& 2 & -\\
 	\addlinespace
-	10 & FR4-D & Dissector ID & 4 & - \\
-	   &  & Implementation			   	& 3 & 2\\
+	10 & FR4-D & Dissector ID & \underline{ 4 } & - \\
+	   &  & Implementation			   	& 1 & 1\\
 	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
+	   &  & User documentation 			& 2 & -\\
 	\addlinespace
-	11 & FR5-C & Endian handeling & 11 & - \\
-	   &  & Implementation			   	& 3 & 2\\
-	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
+	11 & FR5-C & Endian handeling & \underline{ 11 } & - \\
+	   &  & Implementation			   	& 5 & -\\
+	   &  & Testing - unit				   	& 2 & -\\
+	   &  & Testing - end to end			& 6 & -\\
 	\addlinespace
-	12 & FR6-C & Batch mode; folder support in the command line interface & 7 & - \\
-	   &  & Implementation			   	& 3 & 2\\
-	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
+	12 & FR6-C & Batch mode; folder support in the CLI & \underline{ 7 } & - \\
+	   &  & Implementation			   	& 4 & -\\
+	   &  & Testing - unit				   	& 2 & -\\
+	   &  & User documentation			& 1 & -\\
 	\addlinespace
-	13 & FR4-C & Support custom handeling of specific data types & 5 & - \\
-	   &  & Implementation			   	& 3 & 2\\
-	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
+	13 & FR4-C & Support custom handeling of specific data types & \underline{ 5 } & - \\
+	   &  & Implementation			   	& 2 & -\\
+	   &  & Testing - unit				   	& 1 & -\\
+	   &  & Testing - end to end			& 1 & -\\
+	   &  & User documentation			& 1 & -\\
 	\midrule
 	& & Total: & 108  & - \\
 	\bottomrule
@@ -444,7 +451,7 @@ to avoid possible conflicts. This is functionallity is implemented and the
 message id must be specified in the configuration file, \autoref{code:msgid} 
 is an example on how this is done.
 
-\lstset{language=C,caption={Dissector ID config},label=code:msgid}
+-\lstset{language=C,caption={Dissector ID config},label=code:msgid}
 \lstinputlisting[language=C]{./sprints/code/messageid.yml}
 
 \subsection{Endian Handling}

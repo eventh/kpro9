@@ -268,9 +268,9 @@ Figure \ref{fig:sp2_class} shows the changes we made to the design for the utili
 
 
 
-%---------------------------
+%----------------------
 \section{Implementation}
-%---------------------------
+%----------------------
 
 The previous sprint had a focus on creating a native implementation of the 
 utility. In this sprint the focus has been on implementing data types for the 
@@ -278,14 +278,15 @@ C programming language and make it possible to configure more options on how
 the dissector will function. This section will cover the requirements 
 implemented, how they are implemented and what the ''output'' look like.
 
-\subsection{Support enum members}
-%------------------------------------------
+\subsection{Support Members of Type enum}
+%----------------------
+\label{sec:support_enum}
 Enum is a type declaration in C, which specifies enumeration constants.  Enum 
 is supported because it is a basic datatype in the C language. 
 \autoref{code:cenum} shows an example of an enum in a c-header file. The 
 wireshark dissector will displayed the named value, because this will make it 
-easier to read, an example is shown in \autoref{fig:wscenum}. 
-
+easier to read, an example is shown in \autoref{fig:wscenum}. The red 
+rectangle show the enumerated named value.
 
 \begin{figure}[ht]
 	\center
@@ -293,11 +294,44 @@ easier to read, an example is shown in \autoref{fig:wscenum}.
 	\caption{Class Diagram\label{fig:wscenum}}
 \end{figure}
 
-
 \lstset{language=C,caption={Enum support},label=code:cenum}
 \lstinputlisting[language=C]{./sprints/code/cenum_test.h}
 
+\subsection{Support Members of Type Struct}
+%----------------------
+Structs is an important part of the C language, a struct decalaration consists 
+of a group of different fields, these fields can have any type, also struct. 
+This was therfore a important requirement to implemented. An example is shown 
+in \autoref{code:structmember}.
 
+\lstset{language=C,caption={Struct support},label=code:structmember}
+\lstinputlisting[language=C]{./sprints/code/struct_member.h}
+
+\subsection{Detect Structs with Same Name}
+%----------------------
+It is possible that two structs can have the same name, therefore it is 
+important to detect if there is more than one struct with the same name. If 
+the parser finds two structs with the same name, an exception is 
+raised, and the generation of the dissector is stopped.
+
+\subsection{Support display of structs within structs}
+%----------------------
+TODO
+
+\subsection{Support Enumerated Named Values}
+%----------------------
+In C there is two ways to do enumerations, the first option was explained in 
+\autoref{sec:support_enum}, the other way is to use \#define which is shown in 
+\autoref{code:def_enum}. The advantage of using \#define is  that the values 
+can be generated. Since this cannot be understand by the parser, it can be generated directly from the header file, so it have to 
+be supported by configuration. \autoref{code:enum_conf}. The Lua-dissector 
+will display the enum in the same way as in \autoref{sec:support_enum}.
+
+\lstset{language=C,caption={Enumerated named values},label=code:def_enum}
+\lstinputlisting[language=C]{./sprints/code/def_enum.h}
+
+\lstset{language=C,caption={Enumerated named values config},label=code:enum_conf}
+\lstinputlisting[language=C]{./sprints/code/def_enum.yml}
 
 %-----------------------
 \section{Sprint Testing}

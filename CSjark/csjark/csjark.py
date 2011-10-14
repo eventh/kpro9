@@ -59,15 +59,15 @@ class Cli:
         parser.add_argument('config', nargs='?', help='config file to parse')
 
         # Verbose flag
-        parser.add_argument('-verbose', action='store_true',
+        parser.add_argument('-v', '--verbose', action='store_true',
                 default=cls.verbose, help='print detailed information')
 
         # Debug flag
-        parser.add_argument('-debug', action='store_true',
+        parser.add_argument('-d', '--debug', action='store_true',
                 default=cls.debug, help='print debugging information')
 
         # No CPP flag
-        parser.add_argument('-nocpp', action='store_false', dest='nocpp',
+        parser.add_argument('-n', '-nocpp', action='store_false', dest='nocpp',
                 default=cls.use_cpp, help='disable C preprocessor')
 
         # A list of C header files

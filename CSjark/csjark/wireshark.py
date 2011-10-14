@@ -121,7 +121,12 @@ def create_field(proto, name, ctype, size=None):
     #       now we simply discard all but one rule, try to merge them?
     if proto.conf is not None:
         rules = proto.conf.get_rules(name, ctype, sorted=True)
-        trailers, bits, enums, ranges, customs = rules
+        trailers, bits, enums, ranges, customs, luafiles = rules
+
+        # Luafile field rule
+        if luafiles and field is None:
+            #field = FileField(name, type_, size, luafiles[0])
+            pass
 
         # Trailer field rule
         if trailers and field is None:

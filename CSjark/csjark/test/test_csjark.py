@@ -24,7 +24,7 @@ def cli_headerfile1(cli):
     """Test the default commandline interface flags"""
     header = os.path.join(os.path.dirname(__file__), 'cpp.h')
     assert os.path.isfile(header)
-    headers, configs = cli.parse_args([header, '-verbose', '-debug'])
+    headers, configs = cli.parse_args([header, '--verbose', '--debug'])
     assert len(headers) == 1
 
 #test for requirement FR07A
@@ -34,7 +34,7 @@ def cli_headerfile2(cli):
     header = os.path.join(os.path.dirname(__file__), 'cpp.h')
     include = os.path.join(os.path.dirname(__file__), 'include.h')
     assert os.path.isfile(include)
-    headers, _ = cli.parse_args([header, '-verbose', '-debug', '-i', include])
+    headers, _ = cli.parse_args([header, '-v', '-d', '-i', include])
     assert len(headers) == 2
 
 #test for requirement FR07B
@@ -46,7 +46,7 @@ def cli_headerfile_and_configfile(cli):
     config = os.path.join(os.path.dirname(__file__), 'test.yml')
     assert os.path.isfile(config)
     headers, configs = cli.parse_args(
-            [header, '-verbose', '-debug', '-i', include, '-config', config])
+            [header, '--verbose', '-d', '-i', include, '--config', config])
     assert len(headers) == 2
 
 @cli.test
@@ -54,7 +54,7 @@ def cli_flag_verbose(cli):
     """Test the default commandline interface flags"""
     assert cli.verbose == False
     header = os.path.join(os.path.dirname(__file__), 'cpp.h')
-    cli.parse_args(['-verbose', header])
+    cli.parse_args(['--verbose', header])
     assert cli.verbose == True
 
 @cli.test
@@ -62,7 +62,7 @@ def cli_flag_debug(cli):
     """Test the default commandline interface flags"""
     assert cli.debug == False
     header = os.path.join(os.path.dirname(__file__), 'cpp.h')
-    cli.parse_args(['-debug', header])
+    cli.parse_args(['--debug', header])
     assert cli.debug == True
 
 @cli.test
@@ -70,7 +70,7 @@ def cli_flag_nocpp(cli):
     """Test the default commandline interface flags"""
     assert cli.use_cpp == True
     header = os.path.join(os.path.dirname(__file__), 'cpp.h')
-    cli.parse_args(['-nocpp', header])
+    cli.parse_args(['--nocpp', header])
     assert cli.use_cpp == False
 
 @cli.test
@@ -97,7 +97,7 @@ def cli_no_file(cli):
     """Test that providing no header or config prints usage message."""
     with contexts.capture_output() as (out, err):
         with contexts.raises(SystemExit) as error:
-            headers, configs = cli.parse_args(['-verbose', '-debug'])
+            headers, configs = cli.parse_args(['-v', '-d'])
     assert str(error) == '2'
     assert out[0].startswith('usage:')
 

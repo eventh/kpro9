@@ -190,7 +190,7 @@ implemented, how they are implemented and what the ''output'' look like.
 
 \subsection{Support Members of Type enum}
 %----------------------
-\label{sec:support_enum}
+\label{sec:supportenum}
 Enum is a type declaration in C, which specifies enumeration constants.  Enum 
 is supported because it is a basic datatype in the C language. 
 \autoref{code:cenum} shows an example of an enum in a c-header file. The 
@@ -240,17 +240,17 @@ Wireshark.
 \subsection{Support Enumerated Named Values}
 %----------------------
 In C there is two ways to do enumerations, the first option was explained in 
-\autoref{sec:support_enum}, the other way is to use \#define which is shown in 
-\autoref{code:def_enum}. The advantage of using \#define is  that the values 
+\autoref{sec:supportenum}, the other way is to use \#define which is shown in 
+\autoref{code:defenum}. The advantage of using \#define is  that the values 
 can be generated. Since this cannot be understand by the parser, it can be 
 generated directly from the header file, so it have to be supported by 
-configuration. \autoref{code:enum_conf}. The Lua-dissector will display the 
-enum in the same way as in \autoref{sec:support_enum}.
+configuration. \autoref{code:enumconf}. The Lua-dissector will display the 
+enum in the same way as in \autoref{sec:supportenum}.
 
-\lstset{language=C,caption={Enumerated named values},label=code:def_enum}
+\lstset{language=C,caption={Enumerated named values},label=code:defenum}
 \lstinputlisting[language=C]{./sprints/code/def_enum.h}
 
-\lstset{language=C,caption={Enumerated named values config},label=code:enum_conf}
+\lstset{language=C,caption={Enumerated named values config},label=code:enumconf}
 \lstinputlisting[language=C]{./sprints/code/def_enum.yml}
 
 \subsection{Support for Bit Strings}
@@ -291,7 +291,7 @@ to avoid possible conflicts. This is functionallity is implemented and the
 message id must be specified in the configuration file, \autoref{code:msgid} 
 is an example on how this is done.
 
--\lstset{language=C,caption={Dissector ID config},label=code:msgid}
+\lstset{language=C,caption={Dissector ID config},label=code:msgid}
 \lstinputlisting[language=C]{./sprints/code/messageid.yml}
 
 \subsection{Endian Handling}
@@ -301,8 +301,19 @@ specified problem, and should be implemented togheter with platform support.
 
 \subsection{Folder Support in the CLI}
 %----------------------
-Folder support in the CLI\footnote{Command-line Interface} has been implemented, so it is possible to generate Lua-scripts for all structs stored in a folder.
-TODO
+Folder support in the CLI\footnote{Command-line Interface} has been 
+implemented, so it is possible to generate Lua-scripts for all structs stored 
+in a given folder. At this moment, all dissectors will be regenerated. 
+Functionallity to only generate modified or new header-files will be added in 
+the next sprint. \autoref{fig:csjarkfolder} is an example usage of CSjark. 
+Where the command first shows the usage of csjark, and the second command 
+generates dissectors from the folder ''header/'' and configutrations from ''etc/''.
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/csjark_folder}
+	\caption{Arrays in Wireshark\label{fig:csjarkfolder}}
+\end{figure}
 
 \subsection{Support Custom Handling of Specified Data Types}
 %----------------------
@@ -323,17 +334,18 @@ This section introduces the tests preformed during the sprint and their results.
 %subsection{Tests}
 During the sprint the team executed a total of 6 tests with names as seen below. Tests executed:
 \begin{itemize}
-	\item TID08 - Supporting members of type enum \autoref{tab:TID08}
-	\item TID09 - Supporting members of type array  \autoref{tab:TID09}
-	\item TID10 - Supporting the display of structs within structs  \autoref{tab:TID10}
-	\item TID11 - Supporting enumerated named values  \autoref{tab:TID11}
-	\item TID12 - Supporting bit strings  \autoref{tab:TID12}
-	\item TID13 - Supporting structs with various trailers \autoref{tab:TID13}
+	\item TID08 - Supporting members of type enum \autoref{tab:sp2TID08}
+	\item TID09 - Supporting members of type array  \autoref{tab:sp2TID09}
+	\item TID10 - Supporting the display of structs within structs  \autoref{tab:sp2TID10}
+	\item TID11 - Supporting enumerated named values  \autoref{tab:sp2TID11}
+	\item TID12 - Supporting bit strings  \autoref{tab:sp2TID12}
+	\item TID13 - Supporting structs with various trailers \autoref{tab:sp2TID13}
+\end{itemize}
 
 \subsection{Test Results}
 %----------------------------
 \begin{table}[!htb] \footnotesize \center
-\caption{Recognizing Supporting enums \label{tab:sp1_tid08}}
+\caption{Recognizing Supporting enums \label{tab:sp2TID08}}
 \begin{tabular}{l l}
 	\toprule
 	Header & Description \\
@@ -347,7 +359,7 @@ During the sprint the team executed a total of 6 tests with names as seen below.
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Recognizing Supporting arrays \label{tab:sp1_tid09}}
+\caption{Recognizing Supporting arrays \label{tab:sp2TID09}}
 \begin{tabular}{l l}
 	\toprule
 	Header & Description \\

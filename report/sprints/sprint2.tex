@@ -265,8 +265,10 @@ enum in the same way as in \autoref{sec:supportenum}.
 
 \subsection{Support Members of Type Array}
 %----------------------
-\autoref{fig:wsarray}
-TODO
+Csjark supports header-files with arrays, and is able to display them in 
+wireshark with the Lua-dissector. Csjark supports arrays of all data types 
+implemented so far.....  A representation of array's in wireshark is displayed in \autoref{fig:wsarray}.
+TODO: Not finished
 
 \begin{figure}[ht]
 	\center
@@ -321,10 +323,12 @@ TODO
 
 \subsection{Typedef Support}
 %----------------------
-TODO
+Csjark is supporting the keyword typedef, which is a facility to create new 
+data types names. \autoref{code:typedef} shows examples of typedef's that 
+csjark supports.
 
-
-
+\lstset{language=C,caption={Typedef example},label=code:typedef}
+\lstinputlisting[language=C]{./sprints/code/typedef.h}
 
 %-----------------------
 \section{Sprint Testing}

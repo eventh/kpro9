@@ -202,5 +202,95 @@
 \end{tabularx}}
 \end{table}
 
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID10}\label{tab:TID010}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting the display of structs within structs \\
+	Tester & Erik Bergersen \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that the utility iis able to support c-header files with structs that have other struct members  and display it properly in wireshark\\
+	\addlinespace
+	\multirow{4}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct with another struct member \\
+	\addlinespace
+	& 2. Read the output \\
+	\addlinespace
+	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
+	\addlinespace
+	& 4. Open the pcap file for this test with wireshark\\
+	\addlinespace
+	& 5. Look at the different struct members that are displayed in wireshark\\
+	\addlinespace
+	\multirow{2}{*}{Expected result} & 2. The program should provide the user with some text expressing the success of the LUA-file generation\\
+	\addlinespace
+	& 5. The struct members within structs should be displayed as subtrees, indicated by having a clickable "+" box to the left whch when clicked, displayes the contents of the given struct
+	\bottomrule
+\end{tabularx}}
+\end{table}
 
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID11}\label{tab:TID011}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting enumerated named values \\
+	Tester & Erik Bergersen \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that the utility iis able to support c-header files which uses integers as enums without declaring them as enums \\
+	\addlinespace
+	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes enumerated named values \\
+	\addlinespace
+	& 2. Read the output \\
+	\addlinespace
+	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID12}\label{tab:TID012}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting bit strings \\
+	Tester & Erik Bergersen \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that the utility iis able to support c-header files with bit strings \\
+	\addlinespace
+	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct using bit strings \\
+	\addlinespace
+	& 2. Read the output \\
+	\addlinespace
+	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID13}\label{tab:TID013}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting structs with various trailers \\
+	Tester & Erik Bergersen \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that the utility iis able to support c-header files with trailers \\
+	\addlinespace
+	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct that has a trailer \\
+	\addlinespace
+	& 2. Read the output \\
+	\addlinespace
+	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
 

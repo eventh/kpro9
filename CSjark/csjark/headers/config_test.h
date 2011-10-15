@@ -28,7 +28,7 @@ struct config_test {
     short shortbitstring;
     int intbitstring;
     unsigned int uintbitstring;
-    unsigned long longbitstring; 
+    unsigned long longbitstring;
     unsigned long int typebitstring;
     /* array test */
     int array_1d[2];

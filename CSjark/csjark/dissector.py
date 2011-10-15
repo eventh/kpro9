@@ -526,8 +526,9 @@ class Protocol:
             else:
                 offset += rule.size
 
-    def _custom_lua_file(self, rule):
+    def _conformance(self, rule):
         """Handle custom lua file for this protocol."""
+        return ''
         text = '-- Custom lua file %s for struct %s' % (rule.file, self.name)
         text = '%s\n%s' % (text, rule.contents)
 
@@ -542,8 +543,8 @@ class Protocol:
     def create(self):
         """Returns all the code for dissecting this protocol."""
         # Handle custom lua file rules
-        if self.conf and self.conf.lua_file:
-            return self._custom_lua_file(self.conf.lua_file)
+        if self.conf and self.conf.conformance is not None:
+            return self._conformance(self.conf.conformance)
 
         # Create dissector content
         self._header_defintion()

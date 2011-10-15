@@ -110,10 +110,10 @@ class StructConfig:
         self.name = name
         self.id = None
         self.description = None
+        self.conformance = None # Custom Conformance File
         self.members = {} # Rules for members in the struct
         self.types = {} # Rules for types in the struct
         self.trailers = [] # Rules for struct trailers
-        self.lua_file = None # Custom lua file for the struct
 
     @classmethod
     def find(cls, name):
@@ -142,26 +142,24 @@ class StructConfig:
         type_ = map_type(ctype)
 
         # Sort the rules
-        types = (Trailer, Bitstring, Enum, Range, Custom, Luafile)
-        values = [[], [], [], [], [], []]
+        types = (Trailer, Bitstring, Enum, Range, Custom)
+        values = [[], [], [], [], []]
         for rule in self.get_rules(name, ctype):
             for i, tmp in enumerate(types):
                 if isinstance(rule, tmp):
                     values[i].append(rule)
-        trailers, bits, enums, ranges, customs, luafiles = values
+        trailers, bits, enums, ranges, customs = values
 
         if enums:
             rule = enums[0]
             return proto.add_enum(name, type_, size, rule.values, rule.strict)
-        if customs:
-            return customs[0].create(proto, name, type_, size, ctype)
         if bits:
             return proto.add_bit(name, type_, size, bits[0].bits)
         if ranges:
             rule = ranges[0]
             return proto.add_range(name, type_, size, rule.min, rule.max)
-        if luafiles:
-            return proto.add_custom(name, type_, size, luafiles[0])
+        if customs:
+            return customs[0].create(proto, name, type_, size, ctype)
         if trailers:
             return proto.add_trailer(name, type_, size, trailers)
 
@@ -341,6 +339,11 @@ class Luafile(BaseRule):
             self.contents = f.read()
 
 
+class ConformanceFile:
+    def __init__(self, conf, obj):
+        pass
+
+
 def handle_struct(obj):
     """Handle rules and configuration for a struct."""
     conf = StructConfig.find(obj['name'])
@@ -356,9 +359,13 @@ def handle_struct(obj):
     if 'description' in obj:
         conf.description = obj['description']
 
+    # Structs optional conformance file
+    if 'conformance' in obj:
+        conf.conformance = ConformanceFile(conf, obj['conformance'])
+
     # Handle rules
     types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,
-             'trailers': Trailer, 'customs': Custom, 'luafiles': Luafile}
+             'trailers': Trailer, 'customs': Custom}
     for name, type_ in types.items():
         if name in obj:
             for rule in obj[name]:

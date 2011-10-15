@@ -167,7 +167,7 @@ def create_rules():
           - member: flags
             1: Test
             2: [Flag, A, B]
-        fields:
+        customs:
           - member: abs
             field: absolute_time
         trailers:
@@ -185,7 +185,7 @@ def create_rules():
           - type: short
             1-3: [Short, A, B, C, D, E, F, G, H]
             4: [Nih]
-        fields:
+        customs:
           - type: BOOL
             field: bool
             size: 4

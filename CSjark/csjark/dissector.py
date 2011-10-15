@@ -332,7 +332,7 @@ class RangeField(Field):
 
 
 class CustomField(Field):
-    """A Field defined by a custom lua file."""
+    """A Field defined by a Custom rule."""
 
     def __init__(self, name, type, size, rule):
         super().__init__(name, type, size)
@@ -392,38 +392,39 @@ class Protocol:
         """Add a field to the protocol, updates the fields proto reference."""
         field.set_protocol(self)
         self.fields.append(field)
+        return field
 
     def add_field(self, *args, **vargs):
         """Create and add a new Field to the protocol."""
-        self._add(Field(*args, **vargs))
+        return self._add(Field(*args, **vargs))
 
     def add_array(self, *args, **vargs):
         """Create and add a new ArrayField to the protocol."""
-        self._add(ArrayField(*args, **vargs))
+        return self._add(ArrayField(*args, **vargs))
 
     def add_enum(self, *args, **vargs):
         """Create and add a new EnumField to the protocol."""
-        self._add(EnumField(*args, **vargs))
+        return self._add(EnumField(*args, **vargs))
 
     def add_range(self, *args, **vargs):
         """Create and add a new RangeField to the protocol."""
-        self._add(RangeField(*args, **vargs))
+        return self._add(RangeField(*args, **vargs))
 
     def add_bit(self, *args, **vargs):
         """Create and add a new BitField to the protocol."""
-        self._add(BitField(*args, **vargs))
+        return self._add(BitField(*args, **vargs))
 
     def add_custom(self, *args, **vargs):
         """Create and add a new CustomField to the protocol."""
-        self._add(CustomField(*args, **vargs))
+        return self._add(CustomField(*args, **vargs))
 
     def add_protocol(self, *args, **vargs):
         """Create and add a new ProtocolField to the protocol."""
-        self._add(ProtocolField(*args, **vargs))
+        return self._add(ProtocolField(*args, **vargs))
 
     def add_trailer(self, *args, **vargs):
         """Create and add a new TrailerField to the protocol."""
-        self._add(TrailerField(*args, **vargs))
+        return self._add(TrailerField(*args, **vargs))
 
     def _legal_header(self):
         """Add the legal header with license info."""

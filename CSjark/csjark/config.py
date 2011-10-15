@@ -140,8 +140,9 @@ class StructConfig:
     def create_field(self, proto, name, ctype, size):
         """Create a field depending on rules."""
         type_ = map_type(ctype)
+
         # Sort the rules
-        types = (Trailer, Bitstring, Enum, Range, Field, Luafile)
+        types = (Trailer, Bitstring, Enum, Range, Custom, Luafile)
         values = [[]] * len(types)
         for rule in self.get_rules(name, ctype):
             for i, type_ in enumerate(types):
@@ -153,8 +154,8 @@ class StructConfig:
             return proto.add_custom(name, type_, size, luafiles[0])
         if trailers:
             return proto.add_trailer(name, type_, size, trailers)
-        #if customs:
-        #    return proto.add_field(customs[0].create(Field, name, size)) #TODO
+        if customs:
+            return customs[0].create(proto, name, type_, size, ctype)
         if bits:
             return proto_add_bit(name, type_, size, bits[0].bits)
         if enums:
@@ -287,7 +288,7 @@ class Trailer(BaseRule):
             raise ConfigError('Invalid trailer rule for %s' % conf.name)
 
 
-class Field(BaseRule):
+class Custom(BaseRule):
     """Rule for specifying a custom field handling."""
 
     def __init__(self, conf, obj):
@@ -301,12 +302,12 @@ class Field(BaseRule):
         self.mask = obj.get('mask', None)
         self.desc = obj.get('desc', None)
         if not self.field:
-            raise ConfigError('No field for Field rule for %s' % conf.name)
+            raise ConfigError('No field for Custom rule for %s' % conf.name)
 
-    def create(self, cls, name, size):
+    def create(self, proto, name, type_, size, ctype):
         if self.size is not None:
             size = self.size
-        field = cls(name, self.field, size)
+        field = proto.add_custom(name, self.field, size, rule)
         field.abbr = self.abbr
         field.base = self.base
         if self.values:
@@ -357,7 +358,7 @@ def handle_struct(obj):
 
     # Handle rules
     types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,
-             'trailers': Trailer, 'fields': Field, 'luafiles': Luafile}
+             'trailers': Trailer, 'customs': Custom, 'luafiles': Luafile}
     for name, type_ in types.items():
         if name in obj:
             for rule in obj[name]:

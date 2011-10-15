@@ -1,10 +1,10 @@
 Structs:
   - name: custom_lua
     id: 99
-    luafiles:
-      - file: etc/custom_lua_test.lua
-        member: normal
-      - file: etc/custom_lua_test.lua
-        type: long long
-      - file: etc/custom_lua.lua
+#    luafiles:
+#      - file: etc/custom_lua_test.lua
+#        member: normal
+#      - file: etc/custom_lua_test.lua
+#        type: long long
+#      - file: etc/custom_lua.lua
 

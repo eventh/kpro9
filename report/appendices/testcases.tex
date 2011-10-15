@@ -1,3 +1,4 @@
+
 %==============
 \chapter{Test Cases}
 %==============
@@ -172,11 +173,19 @@
 	Prerequisites & The utility has to be up and running \\
 	Feature & Test that the utility iis able to support c-header files with enums \\
 	\addlinespace
-	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct using enums \\
+	\multirow{4}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct using enums and its configuration file \\
 	\addlinespace
 	& 2. Read the output \\
 	\addlinespace
-	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
+	\addlinespace
+	& 4. Open the pcap file for this test with wireshark\\
+	\addlinespace
+	& 5. Look at the different packets and struct members that are displayed in wireshark\\
+	\addlinespace
+	\multirow{2}{*}{Expected result } & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\ 
+	\addlinespace
+	& 5 The different packets should be displayed as having structs with enums, showing the value of the enum by its name\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -226,7 +235,7 @@
 	\addlinespace
 	\multirow{2}{*}{Expected result} & 2. The program should provide the user with some text expressing the success of the LUA-file generation\\
 	\addlinespace
-	& 5. The struct members within structs should be displayed as subtrees, indicated by having a clickable "+" box to the left whch when clicked, displayes the contents of the given struct
+	& 5. The struct members within structs should be displayed as subtrees, indicated by having a clickable "+" box to the left whch when clicked, displayes the contents of the given struct\\
 	\bottomrule
 \end{tabularx}}
 \end{table}

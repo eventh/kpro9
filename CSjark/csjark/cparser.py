@@ -62,16 +62,16 @@ def find_structs(ast):
     """Walks the AST nodes to find structs."""
     visitor = StructVisitor()
     visitor.visit(ast)
-    return list(visitor.structs.values())
+    return visitor.structs
 
 
 class StructVisitor(c_ast.NodeVisitor):
     """A class which visit struct nodes in the AST."""
 
-    all_struct_names = {} # Map struct names and their coords
+    all_structs = {} # Map struct names and their protocol
 
     def __init__(self):
-        self.structs = {} # All structs encountered in this AST
+        self.structs = [] # All structs encountered in this AST
         self.enums = {} # All enums encountered in this AST
         self.aliases = {} # Typedefs and their base type
         self.type_decl = [] # Queue of current type declaration
@@ -111,18 +111,17 @@ class StructVisitor(c_ast.NodeVisitor):
                 raise ParseError('Unknown struct member: %s' % repr(child))
 
         # Disallow structs with same name
-        if node.name in StructVisitor.all_struct_names:
-            o = StructVisitor.all_struct_names[node.name]
+        if node.name in StructVisitor.all_structs:
+            o = StructVisitor.all_structs[node.name].coord
             if (os.path.normpath(o.file) != os.path.normpath(node.coord.file)
                     or o.line != node.coord.line):
                 raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
                        node.name, o.file, o.line, node.coord.file, node.coord.line))
-        else:
-            StructVisitor.all_struct_names[node.name] = node.coord
 
         # Don't add protocols with no fields? Sounds reasonably
         if proto.fields:
-            self.structs[node.name] = proto
+            self.structs.append(proto)
+            self.all_structs[node.name] = proto
 
     def visit_Enum(self, node):
         """Visit a Enum node in the AST."""
@@ -177,7 +176,7 @@ class StructVisitor(c_ast.NodeVisitor):
         elif isinstance(child, c_ast.Union):
             self.add_field(proto, node.declname, 'union')
         elif isinstance(child, c_ast.Struct):
-            subproto = self.structs[child.name]
+            subproto = self.all_structs[child.name]
             size = subproto.get_size()
             proto.add_protocol(node.declname, subproto.id, size, child.name)
         else:

@@ -143,27 +143,27 @@ class StructConfig:
 
         # Sort the rules
         types = (Trailer, Bitstring, Enum, Range, Custom, Luafile)
-        values = [[]] * len(types)
+        values = [[], [], [], [], [], []]
         for rule in self.get_rules(name, ctype):
-            for i, type_ in enumerate(types):
-                if isinstance(rule, type_):
+            for i, tmp in enumerate(types):
+                if isinstance(rule, tmp):
                     values[i].append(rule)
         trailers, bits, enums, ranges, customs, luafiles = values
 
+        if enums:
+            rule = enums[0]
+            return proto.add_enum(name, type_, size, rule.values, rule.strict)
+        if customs:
+            return customs[0].create(proto, name, type_, size, ctype)
+        if bits:
+            return proto.add_bit(name, type_, size, bits[0].bits)
+        if ranges:
+            rule = ranges[0]
+            return proto.add_range(name, type_, size, rule.min, rule.max)
         if luafiles:
             return proto.add_custom(name, type_, size, luafiles[0])
         if trailers:
             return proto.add_trailer(name, type_, size, trailers)
-        if customs:
-            return customs[0].create(proto, name, type_, size, ctype)
-        if bits:
-            return proto_add_bit(name, type_, size, bits[0].bits)
-        if enums:
-            rule = enums[0]
-            return proto.add_enum(name, type_, size, rule.values, rule.strict)
-        if ranges:
-            rule = ranges[0]
-            return proto.add_range(name, type_, size, rule.min, rule.max)
 
         proto.add_field(name, type_, size)
 

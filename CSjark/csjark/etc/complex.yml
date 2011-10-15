@@ -12,7 +12,7 @@ Flags:
 
 # List of rules and options for structs
 Structs:
-  - name: cenum_test
+  - name: wtf_tmp
     id: 11
 
     # Rules which tells which bit in a bitstring represent which value
@@ -49,7 +49,7 @@ Structs:
         count: 1
 
     # Translation from C struct member to custom Field
-    fields:
+    customs:
       - type: time_t
         field: relative_time
       - member: something
@@ -63,7 +63,7 @@ Structs:
         desc: This is something dark side!
 
     # Custom Lua files for specific protocols or fields
-    luafiles:
-      - file: etc/custom_lua.lua
-        member: something
+    #luafiles:
+    #  - file: etc/custom_lua.lua
+    #    member: something
 

@@ -9,6 +9,92 @@ from operator import itemgetter
 import yaml
 
 
+# Mapping of c type and their wireshark field type.
+DEFAULT_C_TYPE_MAP = {
+        'bool': 'bool',
+        'char': 'string',
+        'signed char': 'string',
+        'unsigned char': 'string',
+        'short': "int16",
+        'signed short': "int16",
+        'unsigned short': "uint16",
+        'short int': "int16",
+        'signed short int': "int16",
+        'unsigned short int': "uint16",
+        "int": "int32",
+        'signed int': "int32",
+        'unsigned int': "uint32",
+        'signed': "int32",
+        'long': "int64",
+        'signed long': "int64",
+        'unsigned long': "uint64",
+        'long int': "int64",
+        'signed long int': "int64",
+        'unsigned long int': "uint64",
+        'long long': "int64",
+        'signed long long': "int64",
+        'unsigned long long': "uint64",
+        'long long int': "int64",
+        'signed long long int': "int64",
+        'unsigned long long int': "uint64",
+        'float': 'float',
+        'double': 'double',
+        'long double': 'todo',
+        'pointer': 'int32',
+        'enum': 'uint32',
+}
+
+
+# Mapping of c type and their default size in bytes.
+DEFAULT_C_SIZE_MAP = {
+        'bool': 1,
+        'char': 1,
+        'signed char': 1,
+        'unsigned char': 1,
+        'short': 2,
+        'signed short': 2,
+        'unsigned short': 2,
+        'short int': 2,
+        'signed short int': 2,
+        'unsigned short int': 2,
+        'int': 4,
+        'signed int': 4,
+        'unsigned int': 4,
+        'signed': 4,
+        'long': 8,
+        'signed long': 8,
+        'unsigned long': 8,
+        'long int': 8,
+        'signed long int': 8,
+        'unsigned long int': 8,
+        'long long': 8,
+        'signed long long': 8,
+        'unsigned long long': 8,
+        'long long int': 8,
+        'signed long long int': 8,
+        'unsigned long long int': 8,
+        'float': 4,
+        'double': 8,
+        'long double': 16,
+        'pointer': 4,
+        'enum': 4,
+}
+
+
+def map_type(ctype):
+    """Find the wireshark type for a ctype."""
+    return DEFAULT_C_TYPE_MAP.get(ctype, ctype)
+
+
+def size_of(ctype):
+    """Find the size of a c type in bytes."""
+    if ctype in DEFAULT_C_SIZE_MAP.keys():
+        return DEFAULT_C_SIZE_MAP[ctype]
+    else:
+        return 1 # TODO: fix unknown types
+        raise Exception(ctype)
+
+
 class ConfigError(Exception):
     """Exception raised by invalid configuration."""
     pass
@@ -29,21 +115,12 @@ class StructConfig:
         self.trailers = [] # Rules for struct trailers
         self.lua_file = None # Custom lua file for the struct
 
-    def get_rules(self, member, type, sorted=False):
-        rules = self.members.get(member, [])
-        rules.extend(self.types.get(type, []))
-
-        if not sorted:
-            return rules
-
-        # Sort the rules
-        types = (Trailer, Bitstring, Enum, Range, Field, Luafile)
-        values = [[]] * len(types)
-        for rule in rules:
-            for i, type_ in enumerate(types):
-                if isinstance(rule, type_):
-                    values[i].append(rule)
-        return values
+    @classmethod
+    def find(cls, name):
+        if name not in cls.configs.keys():
+            return cls(name)
+        else:
+            return cls.configs[name]
 
     def add_member_rule(self, member, rule):
         if member not in self.members.keys():
@@ -55,12 +132,39 @@ class StructConfig:
             self.types[type] = []
         self.types[type].append(rule)
 
-    @classmethod
-    def find(cls, name):
-        if name not in cls.configs.keys():
-            return cls(name)
-        else:
-            return cls.configs[name]
+    def get_rules(self, member, type):
+        rules = self.members.get(member, [])
+        rules.extend(self.types.get(type, []))
+        return rules
+
+    def create_field(self, proto, name, ctype, size):
+        """Create a field depending on rules."""
+        type_ = map_type(ctype)
+        # Sort the rules
+        types = (Trailer, Bitstring, Enum, Range, Field, Luafile)
+        values = [[]] * len(types)
+        for rule in self.get_rules(name, ctype):
+            for i, type_ in enumerate(types):
+                if isinstance(rule, type_):
+                    values[i].append(rule)
+        trailers, bits, enums, ranges, customs, luafiles = values
+
+        if luafiles:
+            return proto.add_custom(name, type_, size, luafiles[0])
+        if trailers:
+            return proto.add_trailer(name, type_, size, trailers)
+        #if customs:
+        #    return proto.add_field(customs[0].create(Field, name, size)) #TODO
+        if bits:
+            return proto_add_bit(name, type_, size, bits[0].bits)
+        if enums:
+            rule = enums[0]
+            return proto.add_enum(name, type_, size, rule.values, rule.strict)
+        if ranges:
+            rule = ranges[0]
+            return proto.add_range(name, type_, size, rule.min, rule.max)
+
+        proto.add_field(name, type_, size)
 
 
 class BaseRule:

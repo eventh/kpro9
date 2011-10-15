@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 """
 A module for parsing C files, and searching AST for struct definitions.
 
@@ -10,10 +9,8 @@ import os
 import pycparser
 from pycparser import c_ast, c_parser, plyparser
 
-from config import StructConfig
+from config import size_of, map_type, StructConfig
 from dissector import Protocol
-from wireshark import (size_of, create_field,
-                       create_enum, create_array, create_struct)
 
 
 class ParseError(plyparser.ParseError):
@@ -65,16 +62,16 @@ def find_structs(ast):
     """Walks the AST nodes to find structs."""
     visitor = StructVisitor()
     visitor.visit(ast)
-    return list(visitor.structs.values())
+    return visitor.structs
 
 
 class StructVisitor(c_ast.NodeVisitor):
     """A class which visit struct nodes in the AST."""
 
-    all_struct_names = {} # Map struct names and their coords
+    all_structs = {} # Map struct names and their protocol
 
     def __init__(self):
-        self.structs = {} # All structs encountered in this AST
+        self.structs = [] # All structs encountered in this AST
         self.enums = {} # All enums encountered in this AST
         self.aliases = {} # Typedefs and their base type
         self.type_decl = [] # Queue of current type declaration
@@ -114,18 +111,17 @@ class StructVisitor(c_ast.NodeVisitor):
                 raise ParseError('Unknown struct member: %s' % repr(child))
 
         # Disallow structs with same name
-        if node.name in StructVisitor.all_struct_names:
-            o = StructVisitor.all_struct_names[node.name]
+        if node.name in StructVisitor.all_structs:
+            o = StructVisitor.all_structs[node.name].coord
             if (os.path.normpath(o.file) != os.path.normpath(node.coord.file)
                     or o.line != node.coord.line):
                 raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
                        node.name, o.file, o.line, node.coord.file, node.coord.line))
-        else:
-            StructVisitor.all_struct_names[node.name] = node.coord
 
         # Don't add protocols with no fields? Sounds reasonably
         if proto.fields:
-            self.structs[node.name] = proto
+            self.structs.append(proto)
+            self.all_structs[node.name] = proto
 
     def visit_Enum(self, node):
         """Visit a Enum node in the AST."""
@@ -171,15 +167,18 @@ class StructVisitor(c_ast.NodeVisitor):
         child = node.children()[0]
         if isinstance(child, c_ast.IdentifierType):
             ctype = self._get_type(child)
-            create_field(proto, node.declname, ctype)
+            self.add_field(proto, node.declname, ctype)
         elif isinstance(child, c_ast.Enum):
             if child.name not in self.enums.keys():
                 raise ParseError('Unknown enum: %s' % child.name)
-            create_enum(proto, node.declname, self.enums[child.name])
+            type, size = map_type('enum'), size_of('enum')
+            proto.add_enum(node.declname, type, size, self.enums[child.name])
         elif isinstance(child, c_ast.Union):
-            create_field(proto, node.declname, 'union')
+            self.add_field(proto, node.declname, 'union')
         elif isinstance(child, c_ast.Struct):
-            create_struct(proto, child.name, node.declname, self.structs)
+            subproto = self.all_structs[child.name]
+            size = subproto.get_size()
+            proto.add_protocol(node.declname, subproto.id, size, child.name)
         else:
             raise ParseError('Unknown type declaration: %s' % repr(child))
 
@@ -208,11 +207,12 @@ class StructVisitor(c_ast.NodeVisitor):
         # String array
         if (isinstance(child, c_ast.TypeDecl) and
                 child.children()[0].names[0] == 'char'):
+            type = map_type('string')
             size *= size_of('char')
             if depth:
-                create_array(proto, child.declname, 'string', size, depth)
+                proto.add_array(child.declname, type, size, depth)
             else:
-                create_field(proto, child.declname, 'string', size)
+                self.add_field(proto, child.declname, type, size)
             return
 
         # Multidimensional, handle recursively
@@ -224,10 +224,20 @@ class StructVisitor(c_ast.NodeVisitor):
         # Single dimensional normal array
         else:
             depth.append(size)
-            type = self._get_type(child.children()[0])
-            create_array(proto, child.declname, type, size_of(type), depth)
+            ctype = self._get_type(child.children()[0])
+            size = size_of(ctype)
+            proto.add_array(child.declname, map_type(ctype), size, depth)
 
     def handle_ptr_decl(self, node, proto):
         """Find member details in a pointer declaration."""
-        create_field(proto, node.children()[0].declname, 'pointer')
+        self.add_field(proto, node.children()[0].declname, 'pointer')
+
+    def add_field(self, proto, name, ctype, size=None):
+        """Add a field representing the struct member to the protocol."""
+        if size is None:
+            size = size_of(ctype)
+        if proto.conf is None:
+            proto.add_field(name, map_type(ctype), size)
+        else:
+            proto.conf.create_field(proto, name, ctype, size)
 

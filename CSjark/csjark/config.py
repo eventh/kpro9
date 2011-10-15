@@ -91,8 +91,8 @@ def size_of(ctype):
     if ctype in DEFAULT_C_SIZE_MAP.keys():
         return DEFAULT_C_SIZE_MAP[ctype]
     else:
+        return 1 # TODO: fix unknown types
         raise Exception(ctype)
-        return 1
 
 
 class ConfigError(Exception):
@@ -115,21 +115,12 @@ class StructConfig:
         self.trailers = [] # Rules for struct trailers
         self.lua_file = None # Custom lua file for the struct
 
-    def get_rules(self, member, type, sorted=False):
-        rules = self.members.get(member, [])
-        rules.extend(self.types.get(type, []))
-
-        if not sorted:
-            return rules
-
-        # Sort the rules
-        types = (Trailer, Bitstring, Enum, Range, Field, Luafile)
-        values = [[]] * len(types)
-        for rule in rules:
-            for i, type_ in enumerate(types):
-                if isinstance(rule, type_):
-                    values[i].append(rule)
-        return values
+    @classmethod
+    def find(cls, name):
+        if name not in cls.configs.keys():
+            return cls(name)
+        else:
+            return cls.configs[name]
 
     def add_member_rule(self, member, rule):
         if member not in self.members.keys():
@@ -141,12 +132,39 @@ class StructConfig:
             self.types[type] = []
         self.types[type].append(rule)
 
-    @classmethod
-    def find(cls, name):
-        if name not in cls.configs.keys():
-            return cls(name)
-        else:
-            return cls.configs[name]
+    def get_rules(self, member, type):
+        rules = self.members.get(member, [])
+        rules.extend(self.types.get(type, []))
+        return rules
+
+    def create_field(self, proto, name, ctype, size):
+        """Create a field depending on rules."""
+        type_ = map_type(ctype)
+        # Sort the rules
+        types = (Trailer, Bitstring, Enum, Range, Field, Luafile)
+        values = [[]] * len(types)
+        for rule in self.get_rules(name, ctype):
+            for i, type_ in enumerate(types):
+                if isinstance(rule, type_):
+                    values[i].append(rule)
+        trailers, bits, enums, ranges, customs, luafiles = values
+
+        if luafiles:
+            return proto.add_custom(name, type_, size, luafiles[0])
+        if trailers:
+            return proto.add_trailer(name, type_, size, trailers)
+        #if customs:
+        #    return proto.add_field(customs[0].create(Field, name, size)) #TODO
+        if bits:
+            return proto_add_bit(name, type_, size, bits[0].bits)
+        if enums:
+            rule = enums[0]
+            return proto.add_enum(name, type_, size, rule.values, rule.strict)
+        if ranges:
+            rule = ranges[0]
+            return proto.add_range(name, type_, size, rule.min, rule.max)
+
+        proto.add_field(name, type_, size)
 
 
 class BaseRule:

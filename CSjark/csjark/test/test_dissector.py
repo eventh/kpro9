@@ -287,8 +287,8 @@ fields = Tests()
 def create_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None, None)
-    proto.add_field(dissector.Field('one', 'float', 4))
-    proto.add_field(dissector.Field('two', 'string', 12))
+    proto.add_field('one', 'float', 4)
+    proto.add_field('two', 'string', 12)
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -326,7 +326,7 @@ def create_protos():
              Trailer(conf, {'name': 'ber', 'count': 'count'})]
     proto = dissector.Protocol('tester', None, conf)
 
-    proto.add_field(dissector.Field('one', 'float', 4))
+    proto.add_field('one', 'float', 4)
     proto.add_range('range', 'float', 4, 0, 10)
     proto.add_array('array', 'float', 4, [1, 2, 3])
     proto.add_array('str', 'string', 30, [2])
@@ -341,6 +341,7 @@ def protos_id(proto):
     assert proto.id == 25
     assert proto.description == 'This is a test'
     assert proto.var == 'proto_tester'
+    assert isinstance(proto.fields[0], dissector.Field)
 
 @protos.test
 def protos_trailer(proto):

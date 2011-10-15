@@ -393,36 +393,36 @@ class Protocol:
         field.set_protocol(self)
         self.fields.append(field)
 
-    def add_field(self, field):
-        # TODO
-        self._add(field)
+    def add_field(self, *args, **vargs):
+        """Create and add a new Field to the protocol."""
+        self._add(Field(*args, **vargs))
 
     def add_array(self, *args, **vargs):
-        """Add a new ArrayField to the protocol."""
+        """Create and add a new ArrayField to the protocol."""
         self._add(ArrayField(*args, **vargs))
 
     def add_enum(self, *args, **vargs):
-        """Add a new EnumField to the protocol."""
+        """Create and add a new EnumField to the protocol."""
         self._add(EnumField(*args, **vargs))
 
     def add_range(self, *args, **vargs):
-        """Add a new RangeField to the protocol."""
+        """Create and add a new RangeField to the protocol."""
         self._add(RangeField(*args, **vargs))
 
     def add_bit(self, *args, **vargs):
-        """Add a new BitField to the protocol."""
+        """Create and add a new BitField to the protocol."""
         self._add(BitField(*args, **vargs))
 
     def add_custom(self, *args, **vargs):
-        """Add a new CustomField to the protocol."""
+        """Create and add a new CustomField to the protocol."""
         self._add(CustomField(*args, **vargs))
 
     def add_protocol(self, *args, **vargs):
-        """Add a new ProtocolField to the protocol."""
+        """Create and add a new ProtocolField to the protocol."""
         self._add(ProtocolField(*args, **vargs))
 
     def add_trailer(self, *args, **vargs):
-        """Add a new TrailerField to the protocol."""
+        """Create and add a new TrailerField to the protocol."""
         self._add(TrailerField(*args, **vargs))
 
     def _legal_header(self):

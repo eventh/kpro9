@@ -119,7 +119,7 @@ def create_fields():
     text = '''
     Structs:
       - name: test
-        fields:
+        customs:
           - type: time_t
             field: relative_time
           - member: abs

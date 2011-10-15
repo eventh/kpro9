@@ -152,9 +152,17 @@ class StructVisitor(c_ast.NodeVisitor):
         # Find the type
         child = node.children()[0].children()[0]
         if isinstance(child, c_ast.IdentifierType):
-            type = self._get_type(child)
-            type = self.aliases.get(type, type)
-            self.aliases[node.name] = type
+            ctype = self._get_type(child)
+            self.aliases[node.name] = self.aliases.get(ctype, (ctype, None))
+        elif isinstance(child, c_ast.Enum):
+            self.aliases[node.name] = (child.name, 'enum')
+        elif isinstance(child, c_ast.Struct):
+            self.aliases[node.name] = (child.name, 'struct')
+        elif isinstance(child, c_ast.Union):
+            self.aliases[node.name] = (child.name, 'union')
+        else:
+            print(node, node.name, child) # For testing purposes
+            raise ParseError('Unknown typedef type: %s' % child)
 
     def visit_TypeDecl(self, node):
         """Keep track of Type Declaration nodes."""
@@ -165,22 +173,50 @@ class StructVisitor(c_ast.NodeVisitor):
     def handle_type_decl(self, node, proto):
         """Find member details in a type declaration."""
         child = node.children()[0]
+
+        # Identifier member, simple type or typedef type
         if isinstance(child, c_ast.IdentifierType):
             ctype = self._get_type(child)
-            self.add_field(proto, node.declname, ctype)
+
+            # Typedef type, which is an alias for another type
+            if ctype in self.aliases:
+                base, token = self.aliases[ctype]
+                if token == 'enum':
+                    self.handle_enum(proto, node.declname, base)
+                elif token == 'struct':
+                    self.handle_struct(proto, node.declname, base)
+                else:
+                    # If any rules exists, use new type and not base
+                    if proto.conf.get_rules(None, ctype):
+                        base = ctype # Is this wise?
+                    self.add_field(proto, node.declname, base)
+            else:
+                self.add_field(proto, node.declname, ctype)
+
+        # Enum member
         elif isinstance(child, c_ast.Enum):
-            if child.name not in self.enums.keys():
-                raise ParseError('Unknown enum: %s' % child.name)
-            type, size = map_type('enum'), size_of('enum')
-            proto.add_enum(node.declname, type, size, self.enums[child.name])
+            self.handle_enum(proto, node.declname, child.name)
+        # Union member
         elif isinstance(child, c_ast.Union):
             self.add_field(proto, node.declname, 'union')
+        # Struct member
         elif isinstance(child, c_ast.Struct):
-            subproto = self.all_structs[child.name]
-            size = subproto.get_size()
-            proto.add_protocol(node.declname, subproto.id, size, child.name)
+            self.handle_struct(proto, node.declname, child.name)
+        # Error
         else:
             raise ParseError('Unknown type declaration: %s' % repr(child))
+
+    def handle_struct(self, proto, name, protoname):
+        """Add an ProtocolField to the protocol."""
+        subproto = self.all_structs[protoname]
+        proto.add_protocol(name, subproto.id, subproto.get_size(), protoname)
+
+    def handle_enum(self, proto, name, enum):
+        """Add an EnumField to the protocol."""
+        if enum not in self.enums.keys():
+            raise ParseError('Unknown enum: %s' % enum)
+        type, size = map_type('enum'), size_of('enum')
+        proto.add_enum(name, type, size, self.enums[enum])
 
     def _get_array_size(self, node):
         """Calculate the size of the array."""

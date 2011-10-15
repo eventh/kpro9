@@ -236,8 +236,6 @@ def req4_d(one, two):
 # FR4-E: Configuration must support various trailers
 @configuration.test
 def req4_e(one, two):
-    a, = one.get_rules('asn1_count', None)
-    assert isinstance(a, config.Trailer)
     a, b, c = one.trailers + two.trailers
     assert a.name == 'ber' and b.name == 'ber' and c.name == 'ber'
     assert c.count == 3 and a.count is None and b.count == 1

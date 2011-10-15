@@ -251,35 +251,6 @@ def ranges_code(field):
     ''')
 
 
-# Test TrailerField
-trailer = Tests()
-
-@trailer.context
-def create_trailer_field():
-    """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
-    conf = StructConfig('tester')
-    rules = [Trailer(conf, {'name': 'ber', 'count': 3, 'size': 8}),
-             Trailer(conf, {'name': 'ber', 'count': 'count'})]
-    proto.add_trailer('count', 'int32', 4, rules)
-    yield conf, proto.fields[0]
-    del conf, proto
-
-@trailer.test
-def trailer_code(conf, field):
-    """Test that TrailerField generates correct code."""
-    assert len(conf.trailers) == 2
-    assert isinstance(field, dissector.TrailerField)
-    assert conf.trailers[0].member is None
-    assert conf.trailers[1]._field is field
-    assert compare_lua(field.get_code(0), '''
-    subtree:add(f.count, buffer(0, 4))
-    ''')
-    assert compare_lua(field.get_definition(), '''
-    f.count = ProtoField.int32("test.count", "count")
-    ''')
-
-
 # Test Field
 fields = Tests()
 
@@ -324,13 +295,14 @@ def create_protos():
              Trailer(conf, {'name': 'simple', 'count': 1, 'size': 4}),
              Trailer(conf, {'name': 'bur', 'count': 3, 'size': 8}),
              Trailer(conf, {'name': 'ber', 'count': 'count'})]
+
     proto = dissector.Protocol('tester', None, conf)
 
     proto.add_field('one', 'float', 4)
     proto.add_range('range', 'float', 4, 0, 10)
     proto.add_array('array', 'float', 4, [1, 2, 3])
     proto.add_array('str', 'string', 30, [2])
-    proto.add_trailer('count', 'int32', 4, rules)
+    proto.add_field('count', 'int32', 4)
     yield proto
     del StructConfig.configs['tester'], proto
 
@@ -351,8 +323,6 @@ def protos_trailer(proto):
     assert len(proto.conf.trailers) == 4
     assert proto.conf.trailers[2].name == 'bur'
     assert proto.conf.trailers[3].count is None
-    assert proto.conf.trailers[3]._field is not None
-    assert proto.conf.trailers[0]._field is None
 
 @protos.test
 def protos_create_dissector(proto):

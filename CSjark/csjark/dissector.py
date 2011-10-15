@@ -38,6 +38,7 @@ class Field:
         self.values = None # Dict with the text that corresponds to the values
         self.mask = None # Integer mask of this field
         self.desc = None # Description of the field
+        self.offset = None # Useful for others to access buffer(offset, size)
 
     def set_protocol(self, proto):
         self.proto = proto
@@ -77,14 +78,15 @@ class Field:
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
+        self.offset = offset
         t = '\tsubtree:add({var}, buffer({offset}, {size}))'
         return t.format(var=self.var, offset=offset, size=self.size)
 
-    def _get_func_type(self, type):
+    def _get_func_type(self):
         """Get the lua function to read values from buffers."""
-        if type[-2:] in ('8', '16', '32'):
-            return type[:-2]
-        return type
+        if self.type[-2:] in ('8', '16', '32'):
+            return self.type[:-2]
+        return self.type
 
     def _dict_to_table(self, pydict):
         """Convert a python dictionary to lua table."""
@@ -98,7 +100,7 @@ class EnumField(Field):
         self.values = self._dict_to_table(values)
         self.strict = strict
         self.keys = ', '.join(str(i) for i in sorted(values.keys()))
-        self.func_type = self._get_func_type(type)
+        self.func_type = self._get_func_type()
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
@@ -130,7 +132,7 @@ class ArrayField(Field):
             self.elements *= size
 
         super().__init__(name, type, self.elements * self.base_size)
-        self.func_type = self._get_func_type(type)
+        self.func_type = self._get_func_type()
 
     def get_definition(self):
         data = ['-- Array definition for %s' % self.name]
@@ -213,22 +215,6 @@ class ArrayField(Field):
         return '\n'.join(data)
 
 
-class TrailerField(Field):
-    """Simply used to store the offset for any field used by trailers."""
-
-    def __init__(self, name, type, size, rules):
-        super().__init__(name, type, size)
-        self.func_type = self._get_func_type(type)
-        self.offset = None # Needed when finding nr of trailers
-        for rule in rules:
-            if rule.member is not None and rule.member == name:
-                rule._field = self
-
-    def get_code(self, offset):
-        self.offset = offset
-        return super().get_code(offset)
-
-
 class ProtocolField(Field):
     def __init__(self, name, id, size, type_name):
         super().__init__(name, type_name, size)
@@ -304,7 +290,7 @@ class RangeField(Field):
         super().__init__(name, type, size)
         self.min = min
         self.max = max
-        self.func_type = self._get_func_type(type)
+        self.func_type = self._get_func_type()
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
@@ -422,10 +408,6 @@ class Protocol:
         """Create and add a new ProtocolField to the protocol."""
         return self._add(ProtocolField(*args, **vargs))
 
-    def add_trailer(self, *args, **vargs):
-        """Create and add a new TrailerField to the protocol."""
-        return self._add(TrailerField(*args, **vargs))
-
     def _legal_header(self):
         """Add the legal header with license info."""
         pass
@@ -500,15 +482,19 @@ class Protocol:
                 continue
 
             # Find the count
-            if rule.member is not None and rule._field is not None:
+            if rule.member is not None:
+                # Find offset, size and func_type
+                fields = [i for i in self.fields if i.name == rule.member]
+                if not fields:
+                    continue # rule.member don't exists in the struct
+                func = fields[0]._get_func_type()
+
                 count = 'trail_count'
-                t = '\tlocal {var} = buffer({off}, {size}):{type}()'
-                self.data.append(t.format(off=rule._field.offset, var=count,
-                        size=rule._field.size, type=rule._field.func_type))
-            elif rule.count:
-                count = rule.count
+                t = '\tlocal {var} = buffer({off}, {size}):{func}()'
+                self.data.append(t.format(off=fields[0].offset,
+                                 var=count, size=fields[0].size, func=func))
             else:
-                continue # rule.member don't exists in the struct
+                count = rule.count
 
             # Call trailers 'count' times
             self.data.append('\tfor i = 0, {count} do'.format(count=count))
@@ -526,7 +512,7 @@ class Protocol:
             else:
                 offset += rule.size
 
-    def _conformance(self, rule):
+    def _cnf_rules(self, rule):
         """Handle custom lua file for this protocol."""
         return ''
         text = '-- Custom lua file %s for struct %s' % (rule.file, self.name)
@@ -543,8 +529,8 @@ class Protocol:
     def create(self):
         """Returns all the code for dissecting this protocol."""
         # Handle custom lua file rules
-        if self.conf and self.conf.conformance is not None:
-            return self._conformance(self.conf.conformance)
+        if self.conf and self.conf.cnf is not None:
+            return self._cnf_rules(self.conf.cnf)
 
         # Create dissector content
         self._header_defintion()

@@ -110,7 +110,7 @@ class StructConfig:
         self.name = name
         self.id = None
         self.description = None
-        self.conformance = None # Custom Conformance File
+        self.cnf = None # Conformance File, for custom lua code
         self.members = {} # Rules for members in the struct
         self.types = {} # Rules for types in the struct
         self.trailers = [] # Rules for struct trailers
@@ -142,28 +142,34 @@ class StructConfig:
         type_ = map_type(ctype)
 
         # Sort the rules
-        types = (Trailer, Bitstring, Enum, Range, Custom)
-        values = [[], [], [], [], []]
+        types = (Bitstring, Enum, Range, Custom)
+        values = [[], [], [], []]
         for rule in self.get_rules(name, ctype):
             for i, tmp in enumerate(types):
                 if isinstance(rule, tmp):
                     values[i].append(rule)
-        trailers, bits, enums, ranges, customs = values
+        bits, enums, ranges, customs = values
 
+        # Bitstring rules
+        if bits:
+            return proto.add_bit(name, type_, size, bits[0].bits)
+
+        # Enum rules
         if enums:
             rule = enums[0]
             return proto.add_enum(name, type_, size, rule.values, rule.strict)
-        if bits:
-            return proto.add_bit(name, type_, size, bits[0].bits)
+
+        # Range rules
         if ranges:
             rule = ranges[0]
             return proto.add_range(name, type_, size, rule.min, rule.max)
+
+        # Custom field rules
         if customs:
             return customs[0].create(proto, name, type_, size, ctype)
-        if trailers:
-            return proto.add_trailer(name, type_, size, trailers)
 
-        proto.add_field(name, type_, size)
+        # Create basic Field if no rules fired
+        return proto.add_field(name, type_, size)
 
 
 class BaseRule:
@@ -271,9 +277,6 @@ class Trailer(BaseRule):
         except ValueError:
             self.member = str(self.count)
             self.count = None
-        if self.member:
-            conf.add_member_rule(self.member, self)
-            self._field = None # Used to link TrailerField to this rule
         if not self.count and not self.member:
             raise ConfigError('No count in trailer rule for %s' % conf.name)
 
@@ -291,7 +294,18 @@ class Custom(BaseRule):
 
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
-        self.field = str(obj['field'])
+
+        # Conformance File specification for this member or type
+        self.cnf = None
+        if 'cnf' in obj:
+            self.cnf = ConformanceFile(conf, obj['cnf'])
+
+        # Field, optional if conformance
+        self.field = str(obj.get('field', ''))
+        if not self.field and self.cnf is None:
+            raise ConfigError('No field in Custom rule for %s' % conf.name)
+
+        # TODO: validate that the parameters are valid for the field type
         self.size = obj.get('size', None)
         self.abbr = obj.get('abbr', None)
         self.name = obj.get('name', None)
@@ -299,13 +313,11 @@ class Custom(BaseRule):
         self.values = obj.get('values', None)
         self.mask = obj.get('mask', None)
         self.desc = obj.get('desc', None)
-        if not self.field:
-            raise ConfigError('No field for Custom rule for %s' % conf.name)
 
     def create(self, proto, name, type_, size, ctype):
         if self.size is not None:
             size = self.size
-        field = proto.add_custom(name, self.field, size, rule)
+        field = proto.add_custom(name, self.field, size, self)
         field.abbr = self.abbr
         field.base = self.base
         if self.values:
@@ -315,33 +327,18 @@ class Custom(BaseRule):
         return field
 
 
-class Luafile(BaseRule):
-    """Rule for specifying using custom lua files."""
-
-    def __init__(self, conf, obj):
-        # Find the lua file
-        self.file = str(obj['file'])
+class ConformanceFile:
+    def __init__(self, conf, file, rule=None):
+        # Find the specified file
+        self.file = str(file)
         if not os.path.isfile(self.file):
             self.file = os.path.join(os.path.dirname(__file__), self.file)
         if not os.path.isfile(self.file):
-            raise ConfigError('Unknown file: %s' % str(obj['file']))
-
-        # Member or Type or Struct?
-        if 'member' in obj or 'type' in obj:
-            super().__init__(conf, obj)
-        elif conf.lua_file is None:
-            conf.lua_file = self
-        else:
-            raise ConfigError('To many luafiles for struct: %s' %self.name)
+            raise ConfigError('Unknown file: %s' % file)
 
         # Read content of the specified file
         with open(self.file, 'r') as f:
             self.contents = f.read()
-
-
-class ConformanceFile:
-    def __init__(self, conf, obj):
-        pass
 
 
 def handle_struct(obj):
@@ -360,8 +357,8 @@ def handle_struct(obj):
         conf.description = obj['description']
 
     # Structs optional conformance file
-    if 'conformance' in obj:
-        conf.conformance = ConformanceFile(conf, obj['conformance'])
+    if 'cnf' in obj:
+        conf.cnf = ConformanceFile(conf, obj['cnf'])
 
     # Handle rules
     types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,

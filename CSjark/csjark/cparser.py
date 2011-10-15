@@ -10,10 +10,8 @@ import os
 import pycparser
 from pycparser import c_ast, c_parser, plyparser
 
-from config import StructConfig
-from dissector import Protocol
-from wireshark import (size_of, create_field,
-                       create_enum, create_array, create_struct)
+from config import size_of, map_type, StructConfig
+from dissector import Protocol, Field
 
 
 class ParseError(plyparser.ParseError):
@@ -66,6 +64,35 @@ def find_structs(ast):
     visitor = StructVisitor()
     visitor.visit(ast)
     return list(visitor.structs.values())
+
+
+def create_field(proto, name, ctype, size=None):
+    """Create a dissector field representing the struct member."""
+    type_ = map_type(ctype)
+    if size is None:
+        size = size_of(ctype)
+
+    # Find all rules relevant for this field
+    if proto.conf is not None:
+        rules = proto.conf.get_rules(name, ctype, sorted=True)
+        trailers, bits, enums, ranges, customs, luafiles = rules
+
+        if luafiles:
+            return proto.add_custom(name, type_, size, luafiles[0])
+        if trailers:
+            return proto.add_trailer(name, type_, size, trailers)
+        if customs:
+            return proto.add_field(customs[0].create(Field, name, size)) #TODO
+        if bits:
+            return proto_add_bit(name, type_, size, bits[0].bits)
+        if enums:
+            rule = enums[0]
+            return proto.add_enum(name, type_, size, rule.values, rule.strict)
+        if ranges:
+            rule = ranges[0]
+            return proto.add_range(name, type_, size, rule.min, rule.max)
+
+    proto.add_field(Field(name, type_, size))
 
 
 class StructVisitor(c_ast.NodeVisitor):
@@ -175,11 +202,14 @@ class StructVisitor(c_ast.NodeVisitor):
         elif isinstance(child, c_ast.Enum):
             if child.name not in self.enums.keys():
                 raise ParseError('Unknown enum: %s' % child.name)
-            create_enum(proto, node.declname, self.enums[child.name])
+            type, size = map_type('enum'), size_of('enum')
+            proto.add_enum(node.declname, type, size, self.enums[child.name])
         elif isinstance(child, c_ast.Union):
             create_field(proto, node.declname, 'union')
         elif isinstance(child, c_ast.Struct):
-            create_struct(proto, child.name, node.declname, self.structs)
+            subproto = self.structs[child.name]
+            size = subproto.get_size()
+            proto.add_protocol(node.declname, subproto.id, size, child.name)
         else:
             raise ParseError('Unknown type declaration: %s' % repr(child))
 
@@ -208,11 +238,12 @@ class StructVisitor(c_ast.NodeVisitor):
         # String array
         if (isinstance(child, c_ast.TypeDecl) and
                 child.children()[0].names[0] == 'char'):
+            type = map_type('string')
             size *= size_of('char')
             if depth:
-                create_array(proto, child.declname, 'string', size, depth)
+                proto.add_array(child.declname, type, size, depth)
             else:
-                create_field(proto, child.declname, 'string', size)
+                create_field(proto, child.declname, type, size)
             return
 
         # Multidimensional, handle recursively
@@ -224,8 +255,9 @@ class StructVisitor(c_ast.NodeVisitor):
         # Single dimensional normal array
         else:
             depth.append(size)
-            type = self._get_type(child.children()[0])
-            create_array(proto, child.declname, type, size_of(type), depth)
+            ctype = self._get_type(child.children()[0])
+            size = size_of(ctype)
+            proto.add_array(child.declname, map_type(ctype), size, depth)
 
     def handle_ptr_decl(self, node, proto):
         """Find member details in a pointer declaration."""

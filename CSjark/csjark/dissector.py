@@ -221,14 +221,15 @@ class TrailerField(Field):
         self.func_type = self._get_func_type(type)
         self.offset = None # Needed when finding nr of trailers
         for rule in rules:
-            rule._field = self
+            if rule.member is not None and rule.member == name:
+                rule._field = self
 
     def get_code(self, offset):
         self.offset = offset
         return super().get_code(offset)
 
 
-class SubDissectorField(Field):
+class ProtocolField(Field):
     def __init__(self, name, id, size, type_name):
         super().__init__(name, type_name, size)
         self.id = id
@@ -238,8 +239,10 @@ class SubDissectorField(Field):
 
     def get_code(self, offset):
         t = '\tlocal subsubtree = subtree:add("{name}:")\n' \
-            '\tluastructs_dt:try({id}, buffer({offset}, {size}):tvb(), pinfo, subsubtree)'
-        return t.format(name = self.name, id = self.id, offset = offset, size = self.size)
+            '\tluastructs_dt:try({id}, buffer({offset},' \
+            '{size}):tvb(), pinfo, subsubtree)'
+        return t.format(name=self.name, id=self.id,
+                        offset=offset, size=self.size)
 
 
 class BitField(Field):
@@ -381,10 +384,50 @@ class Protocol:
         self.dissector = 'luastructs.message'
         self.dissector_table = 'luastructs_dt'
 
-    def add_field(self, field):
+    def get_size(self):
+        """Find the size of the fields in the protocol."""
+        return sum(field.size for field in self.fields if field)
+
+    def _add(self, field):
         """Add a field to the protocol, updates the fields proto reference."""
         field.set_protocol(self)
         self.fields.append(field)
+
+    def add_field(self, field):
+        # TODO
+        self._add(field)
+
+    def add_array(self, *args, **vargs):
+        """Add a new ArrayField to the protocol."""
+        self._add(ArrayField(*args, **vargs))
+
+    def add_enum(self, *args, **vargs):
+        """Add a new EnumField to the protocol."""
+        self._add(EnumField(*args, **vargs))
+
+    def add_range(self, *args, **vargs):
+        """Add a new RangeField to the protocol."""
+        self._add(RangeField(*args, **vargs))
+
+    def add_bit(self, *args, **vargs):
+        """Add a new BitField to the protocol."""
+        self._add(BitField(*args, **vargs))
+
+    def add_custom(self, *args, **vargs):
+        """Add a new CustomField to the protocol."""
+        self._add(CustomField(*args, **vargs))
+
+    def add_protocol(self, *args, **vargs):
+        """Add a new ProtocolField to the protocol."""
+        self._add(ProtocolField(*args, **vargs))
+
+    def add_trailer(self, *args, **vargs):
+        """Add a new TrailerField to the protocol."""
+        self._add(TrailerField(*args, **vargs))
+
+    def _legal_header(self):
+        """Add the legal header with license info."""
+        pass
 
     def _header_defintion(self):
         """Add the code for the header of the protocol."""
@@ -511,8 +554,4 @@ class Protocol:
         self.data.append(end.format(id=self.id, var=self.var))
 
         return '\n'.join(self.data)
-
-    def get_size(self):
-        """Find the size of the fields in the protocol."""
-        return sum(field.size for field in self.fields if field)
 

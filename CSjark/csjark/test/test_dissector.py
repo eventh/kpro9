@@ -27,9 +27,9 @@ enums = Tests()
 def create_enum_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None, None)
-    field = dissector.EnumField('enum', 'int32', 4, dict(enumerate('ABCDE')))
-    proto.add_field(field)
+    proto.add_enum('enum', 'int32', 4, dict(enumerate('ABCDE')))
     yield proto.fields[0]
+    del proto
 
 @enums.test
 def enum_def(field):
@@ -61,9 +61,10 @@ arrays = Tests()
 def create_array_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None, None)
-    proto.add_field(dissector.ArrayField('arr', 'float', 4, [1, 2, 3]))
-    proto.add_field(dissector.ArrayField('str', 'string', 30, [2]))
+    proto.add_array('arr', 'float', 4, [1, 2, 3])
+    proto.add_array('str', 'string', 30, [2])
     yield proto.fields[0], proto.fields[1]
+    del proto
 
 @arrays.test
 def arrays_def(one, two):
@@ -123,26 +124,31 @@ def arrays_str(one, two):
     arraytree:add(f.str__1, buffer(30, 30))
     ''')
 
-#Test StuctField
-structs = Tests()
 
-@structs.context
-def create_struct_field():
+# Test ProtocolField
+protofields = Tests()
+
+@protofields.context
+def create_protocol_field():
+    """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None, None)
-    proto.add_field(dissector.SubDissectorField('test', 8, 32, 'testStructType'))
-    proto.add_field(dissector.SubDissectorField('test2', 9, 64, 'testStructType2'))
+    proto.add_protocol('test', 8, 32, 'proto_one')
+    proto.add_protocol('test2', 9, 64, 'proto_two')
     yield proto.fields[0], proto.fields[1]
+    del proto
 
-@structs.test
-def struct_def(one, two):
+@protofields.test
+def proto_field_def(one, two):
+    """Test that ProtocolField generates no defintion code."""
     assert one and two
     assert one.get_definition() is None
     assert two.get_definition() is None
 
-@structs.test
-def struct_code(one, two):
-    assert isinstance(one, dissector.SubDissectorField)
-    assert isinstance(two, dissector.SubDissectorField)
+@protofields.test
+def proto_field_code(one, two):
+    """Test that ProtocolField generates correct code."""
+    assert isinstance(one, dissector.ProtocolField)
+    assert isinstance(two, dissector.ProtocolField)
     assert compare_lua(one.get_code(0), '''
     local subsubtree = subtree:add("test:")
     luastructs_dt:try(8, buffer(0, 32):tvb(), pinfo, subsubtree)
@@ -163,30 +169,52 @@ def create_bit_field():
     bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
             (2, 1, 'B', {0: 'No', 1: 'Yes'}),
             (3, 1, 'G', {0: 'No', 1: 'Yes'})]
-    proto.add_field(dissector.BitField('bit', 'int32', 4, bits))
-    yield proto.fields[0]
+    proto.add_bit('bit1', 'int32', 4, bits)
+    proto.add_bit('bit2', 'uint16', 2, bits)
+    yield proto.fields[0], proto.fields[1]
+    del proto
 
 @bits.test
-def bitfield_def(field):
+def bitfield_def(one, two):
     """Test that BitField generates valid defintion code."""
-    assert field
-    assert compare_lua(field.get_definition(), '''
-    -- Bitstring definitions for bit
-    f.bit = ProtoField.uint32("test.bit", "bit (bitstring)", base.HEX)
-    f.bit_R = ProtoField.uint32("test.bit.R", "R", nil, {[0]="No", [1]="Yes"}, 0x1)
-    f.bit_B = ProtoField.uint32("test.bit.B", "B", nil, {[0]="No", [1]="Yes"}, 0x2)
-    f.bit_G = ProtoField.uint32("test.bit.G", "G", nil, {[0]="No", [1]="Yes"}, 0x4)
+    assert one and two
+    assert compare_lua(one.get_definition(), '''
+    -- Bitstring definitions for bit1
+    f.bit1 = ProtoField.uint32("test.bit1", "bit1 (bitstring)", base.HEX)
+    f.bit1_R = ProtoField.uint32("test.bit1.R",
+            "R", nil, {[0]="No", [1]="Yes"}, 0x1)
+    f.bit1_B = ProtoField.uint32("test.bit1.B",
+            "B", nil, {[0]="No", [1]="Yes"}, 0x2)
+    f.bit1_G = ProtoField.uint32("test.bit1.G",
+            "G", nil, {[0]="No", [1]="Yes"}, 0x4)
+    ''')
+    assert compare_lua(two.get_definition(), '''
+    -- Bitstring definitions for bit2
+    f.bit2 = ProtoField.uint16("test.bit2", "bit2 (bitstring)", base.HEX)
+    f.bit2_R = ProtoField.uint16("test.bit2.R",
+            "R", nil, {[0]="No", [1]="Yes"}, 0x1)
+    f.bit2_B = ProtoField.uint16("test.bit2.B",
+            "B", nil, {[0]="No", [1]="Yes"}, 0x2)
+    f.bit2_G = ProtoField.uint16("test.bit2.G",
+            "G", nil, {[0]="No", [1]="Yes"}, 0x4)
     ''')
 
 @bits.test
-def bitfield_code(field):
+def bitfield_code(one, two):
     """Test that BitField generates valid code."""
-    assert compare_lua(field.get_code(0), '''
-    -- Bitstring handling for bit
-    local bittree = subtree:add(f.bit, buffer(0, 4))
-    bittree:add(f.bit_R, buffer(0, 4))
-    bittree:add(f.bit_B, buffer(0, 4))
-    bittree:add(f.bit_G, buffer(0, 4))
+    assert compare_lua(one.get_code(0), '''
+    -- Bitstring handling for bit1
+    local bittree = subtree:add(f.bit1, buffer(0, 4))
+    bittree:add(f.bit1_R, buffer(0, 4))
+    bittree:add(f.bit1_B, buffer(0, 4))
+    bittree:add(f.bit1_G, buffer(0, 4))
+    ''')
+    assert compare_lua(two.get_code(4), '''
+    -- Bitstring handling for bit2
+    local bittree = subtree:add(f.bit2, buffer(4, 2))
+    bittree:add(f.bit2_R, buffer(4, 2))
+    bittree:add(f.bit2_B, buffer(4, 2))
+    bittree:add(f.bit2_G, buffer(4, 2))
     ''')
 
 
@@ -197,8 +225,9 @@ ranges = Tests()
 def create_range_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None, None)
-    proto.add_field(dissector.RangeField('range', 'float', 4, 0, 10))
+    proto.add_range('range', 'float', 4, 0, 10)
     yield proto.fields[0]
+    del proto
 
 @ranges.test
 def ranges_def(field):
@@ -232,16 +261,17 @@ def create_trailer_field():
     conf = StructConfig('tester')
     rules = [Trailer(conf, {'name': 'ber', 'count': 3, 'size': 8}),
              Trailer(conf, {'name': 'ber', 'count': 'count'})]
-    proto.add_field(dissector.TrailerField('count', 'int32', 4, rules))
+    proto.add_trailer('count', 'int32', 4, rules)
     yield conf, proto.fields[0]
-    del conf
+    del conf, proto
 
 @trailer.test
 def trailer_code(conf, field):
     """Test that TrailerField generates correct code."""
     assert len(conf.trailers) == 2
     assert isinstance(field, dissector.TrailerField)
-    assert conf.trailers[0]._field is field
+    assert conf.trailers[0].member is None
+    assert conf.trailers[1]._field is field
     assert compare_lua(field.get_code(0), '''
     subtree:add(f.count, buffer(0, 4))
     ''')
@@ -260,6 +290,7 @@ def create_field():
     proto.add_field(dissector.Field('one', 'float', 4))
     proto.add_field(dissector.Field('two', 'string', 12))
     yield proto.fields[0], proto.fields[1]
+    del proto
 
 @fields.test
 def fields_def(one, two):
@@ -289,17 +320,19 @@ def create_protos():
     conf.id = 25
     conf.description = 'This is a test'
 
-    rules = [Trailer(conf, {'name': 'bur', 'count': 3, 'size': 8}),
+    rules = [Trailer(conf, {'name': 'missing', 'count': 'missing', 'size': 0}),
+             Trailer(conf, {'name': 'simple', 'count': 1, 'size': 4}),
+             Trailer(conf, {'name': 'bur', 'count': 3, 'size': 8}),
              Trailer(conf, {'name': 'ber', 'count': 'count'})]
     proto = dissector.Protocol('tester', None, conf)
 
     proto.add_field(dissector.Field('one', 'float', 4))
-    proto.add_field(dissector.RangeField('range', 'float', 4, 0, 10))
-    proto.add_field(dissector.ArrayField('array', 'float', 4, [1, 2, 3]))
-    proto.add_field(dissector.ArrayField('str', 'string', 30, [2]))
-    proto.add_field(dissector.TrailerField('count', 'int32', 4, rules))
+    proto.add_range('range', 'float', 4, 0, 10)
+    proto.add_array('array', 'float', 4, [1, 2, 3])
+    proto.add_array('str', 'string', 30, [2])
+    proto.add_trailer('count', 'int32', 4, rules)
     yield proto
-    del StructConfig.configs['tester']
+    del StructConfig.configs['tester'], proto
 
 @protos.test
 def protos_id(proto):
@@ -314,9 +347,11 @@ def protos_trailer(proto):
     """Test that the Protocol has trailers."""
     assert proto.conf
     assert proto.conf.trailers
-    assert len(proto.conf.trailers) == 2
-    assert proto.conf.trailers[1]._field is not None
-    assert proto.conf.trailers[0].name == 'bur'
+    assert len(proto.conf.trailers) == 4
+    assert proto.conf.trailers[2].name == 'bur'
+    assert proto.conf.trailers[3].count is None
+    assert proto.conf.trailers[3]._field is not None
+    assert proto.conf.trailers[0]._field is None
 
 @protos.test
 def protos_create_dissector(proto):
@@ -380,42 +415,15 @@ def protos_create_dissector(proto):
     arraytree:add(f.str__1, buffer(62, 30))
     subtree:add(f.count, buffer(92, 4))
     -- Trailers handling for struct: tester
+    local trailer = Dissector.get("simple")
+    trailer:call(buffer(96):tvb(), pinfo, tree)
     for i = 0, 3 do
     local trailer = Dissector.get("bur")
-    trailer:call(buffer(96+(i*8),8):tvb(), pinfo, tree)
+    trailer:call(buffer(100+(i*8),8):tvb(), pinfo, tree)
     end
     local trailer = Dissector.get("ber")
-    trailer:call(buffer(120):tvb(), pinfo, tree)
+    trailer:call(buffer(124):tvb(), pinfo, tree)
     end
     luastructs_dt:add(25, proto_tester)
-    ''')
-
-#Test StuctField
-structs = Tests()
-
-@structs.context
-def create_struct_field():
-    proto = dissector.Protocol('test', None, None)
-    proto.add_field(dissector.SubDissectorField('test', 8, 32, 'testStructType'))
-    proto.add_field(dissector.SubDissectorField('test2', 9, 64, 'testStructType2'))
-    yield proto.fields[0], proto.fields[1]
-
-@structs.test
-def struct_def(one, two):
-    assert one and two
-    assert one.get_definition() is None
-    assert two.get_definition() is None
-
-@structs.test
-def struct_code(one, two):
-    assert isinstance(one, dissector.SubDissectorField)
-    assert isinstance(two, dissector.SubDissectorField)
-    assert compare_lua(one.get_code(0), '''
-    local subsubtree = subtree:add("test:")
-    luastructs_dt:try(8, buffer(0, 32):tvb(), pinfo, subsubtree)
-    ''')
-    assert compare_lua(two.get_code(32), '''
-    local subsubtree = subtree:add("test2:")
-    luastructs_dt:try(9, buffer(32, 64):tvb(), pinfo, subsubtree)
     ''')
 

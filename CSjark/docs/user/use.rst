@@ -32,3 +32,6 @@ The arguments here specify the following:
 
     python csjark.py -v -nocpp headerfile.h configfile.yml
 
+
+**Batch mode:** ::
+TEst

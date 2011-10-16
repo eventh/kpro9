@@ -49,6 +49,16 @@ def cli_headerfile_and_configfile(cli):
             [header, '--verbose', '-d', '-i', include, '--config', config])
     assert len(headers) == 2
 
+    #test for requirement FR06C
+@cli.test
+def cli_headerfile_and_configfile_from_folder(cli):
+    """Test the support for batch processing"""
+    header = os.path.join(os.path.dirname(__file__), 'headers')
+    headers, configs = cli.parse_args(
+            [header, '--verbose', '-d',])
+    assert len(headers) == len(os.listdir(headers))
+
+
 @cli.test
 def cli_flag_verbose(cli):
     """Test the default commandline interface flags"""

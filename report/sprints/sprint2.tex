@@ -255,7 +255,14 @@ enum in the same way as in \autoref{sec:supportenum}.
 
 \subsection{Support for Bit Strings}
 %----------------------
-\autoref{fig:wsbitstring}TODO
+All bits in a basic data type can represent different values. An integer is 
+represented by 4 bytes(32 bits), each of these bits can for example represent 
+32 ''true/false' values. Our utility support configuration of these bits. Bits 
+can be in groups, so they can represent more than two values. 
+\autoref{code:bitstring} shows how bit string can be configured. 
+\autoref{fig:wsbitstring} shows an example of how bit strings are displayed in 
+Wireshark. Each group of bits are masked, so it is easier to see the values. 
+The values are also named, if they are configured.
 
 \begin{figure}[ht]
 	\center
@@ -263,12 +270,16 @@ enum in the same way as in \autoref{sec:supportenum}.
 	\caption{Bit string in Wireshark\label{fig:wsbitstring}}
 \end{figure}
 
+\lstset{language=C,caption={Bitstring configuration},label=code:bitstring}
+\lstinputlisting[language=C]{./sprints/code/bitstring.yml}
+
 \subsection{Support Members of Type Array}
 %----------------------
 Csjark supports header-files with arrays, and is able to display them in 
 wireshark with the Lua-dissector. Csjark supports arrays of all data types 
-implemented so far.....  A representation of array's in wireshark is displayed in \autoref{fig:wsarray}.
-TODO: Not finished
+implemented so far. The wireshark dissector can display multidimensional 
+arrays, and will create a new subtree for each dimension.  A representation of 
+arrays in wireshark is displayed in \autoref{fig:wsarray}.
 
 \begin{figure}[ht]
 	\center
@@ -278,11 +289,14 @@ TODO: Not finished
 
 \subsection{Struct with Various Trailers}
 %----------------------
-TODO 
+The utility is able to support struct that has various trailers. Trailers is 
+data that follows a struct, this can be any kind of data. The utility is able to configure these data.
+TODO: Not finished(add example + screenshot)
 
 \subsection{Custom Lua Configuration}
 %----------------------
-TODO
+Csjark can support custom Lua configuration, by including Lua-scripts from a file specified in the configuration file. This is implemented so the users of the utility can include parts for the dissector, which our utility is not able to generate. The Lua-script can also include dissector for trailers, which are not from a struct.
+TODO: Not finished(add example + screenshot)
 
 \subsection{Dissector ID}
 %----------------------
@@ -319,7 +333,8 @@ generates dissectors from the folder ''header/'' and configutrations from ''etc/
 
 \subsection{Support Custom Handling of Specified Data Types}
 %----------------------
-TODO
+Functionallity to support  time\_t and nstime\_t has been added to the utility.
+TODO: Not finished(add example + screenshot)
 
 \subsection{Typedef Support}
 %----------------------

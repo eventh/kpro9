@@ -165,11 +165,11 @@ The second sprint we will implement thirteen requirements. These are listed in T
 %----------------------
 \section{System Design}
 %----------------------
-For sprint 2 the team decided to refactor some of the code in order to make it easier to read and to split the functionalities of the utility in such a way that it reduces coupling within the system.Some new functionality was also added on the parser side in order to get the utility to recognize the datatypes mentioned in the sprint 2 backlog. Other than that, most of the design didn't change from sprint 1
+For sprint 2 the team decided to refactor some of the code in order to make it easier to read and to split the functionalities of the utility in such a way that it reduces coupling within the system.Some new functionality was also added on the parser side in order to get the utility to recognize the datatypes mentioned in the sprint 2 backlog. Other than that, there were no other changes or additions made to the design during sprint 2.
 
 \subsection{Utility}
 %--------------------
-\autoref{fig:sp2:class} ilustrates the class diagram the team made for sprint 2. The main difference from sprint 1 was the creation of the wireshark module where the team gathered most of the functionality for creating dissector fields and looking up default C-types and their sizes. The developers also added new functionality to the config and dissector modules that handles the datatypes the utility was slated to support for sprint 2.
+\autoref{fig:sp2:class} shows the class diagram the team made for sprint 2. The main differences from sprint 1 are the additions of new classes, extending the functionality of the utility so that the utility can handle more domplex header files than it could before. The developers also generalized some of the modules and used inheritance to support the re-use of code 
 \begin{figure}[!htb]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s2}
@@ -333,8 +333,29 @@ generates dissectors from the folder ''header/'' and configutrations from ''etc/
 
 \subsection{Support Custom Handling of Specified Data Types}
 %----------------------
-Functionallity to support  time\_t and nstime\_t has been added to the utility.
-TODO: Not finished(add example + screenshot)
+The utility support custom handling of different data types, this includes 
+functionallity to support  time\_t and nstime\_t. Alle basic data types and 
+struct members can be configured to be handled in special way. 
+\autoref{code:customstruct} show an example of a struct with four members, two 
+of them are time fields, and the last two is a BOOL and an integer to be 
+handled in a custom way. This struct is configured in 
+\autoref{code:customconfig}, in the config the two time fields are configured 
+to be respectively absolute time and relative time, and the BOOL  type to have 
+a size of four bytes. The struct member ''all' is configured with a enumrated 
+value, and will be visible as a hex-value. \autoref{fig:customdatatype} is a 
+screenshot of the struct in Wireshark.
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/wireshark_custom}
+	\caption{Custom handling of Data Typesk\label{fig:customdatatype}}
+\end{figure}
+
+\lstset{language=C,caption={Struct for custom handling},label=code:customstruct}
+\lstinputlisting[language=C]{./sprints/code/customfield.h}
+
+\lstset{language=C,caption={Config for custom handling},label=code:customconfig}
+\lstinputlisting[language=C]{./sprints/code/customfield.yml}
 
 \subsection{Typedef Support}
 %----------------------

@@ -42,6 +42,7 @@ DEFAULT_C_TYPE_MAP = {
         'long double': 'todo',
         'pointer': 'int32',
         'enum': 'uint32',
+        'time_t': 'relative_time',
 }
 
 
@@ -78,6 +79,7 @@ DEFAULT_C_SIZE_MAP = {
         'long double': 16,
         'pointer': 4,
         'enum': 4,
+        'time_t': 4,
 }
 
 
@@ -91,8 +93,7 @@ def size_of(ctype):
     if ctype in DEFAULT_C_SIZE_MAP.keys():
         return DEFAULT_C_SIZE_MAP[ctype]
     else:
-        return 1 # TODO: fix unknown types
-        raise Exception(ctype)
+        raise ValueError('No known size for type %s' % ctype)
 
 
 class ConfigError(Exception):
@@ -137,7 +138,7 @@ class StructConfig:
         rules.extend(self.types.get(type, []))
         return rules
 
-    def create_field(self, proto, name, ctype, size):
+    def create_field(self, proto, name, ctype, size=None):
         """Create a field depending on rules."""
         type_ = map_type(ctype)
 
@@ -149,6 +150,14 @@ class StructConfig:
                 if isinstance(rule, tmp):
                     values[i].append(rule)
         bits, enums, ranges, customs = values
+
+        # Custom field rules
+        if customs:
+            return customs[0].create(proto, name, type_, size, ctype)
+
+        # If size is None and not customs rule, we are in trouble.
+        if size is None:
+            raise ConfigError('Unknown field size for %s' % name)
 
         # Bitstring rules
         if bits:
@@ -163,10 +172,6 @@ class StructConfig:
         if ranges:
             rule = ranges[0]
             return proto.add_range(name, type_, size, rule.min, rule.max)
-
-        # Custom field rules
-        if customs:
-            return customs[0].create(proto, name, type_, size, ctype)
 
         # Create basic Field if no rules fired
         return proto.add_field(name, type_, size)
@@ -317,6 +322,8 @@ class Custom(BaseRule):
     def create(self, proto, name, type_, size, ctype):
         if self.size is not None:
             size = self.size
+        if size is None:
+            raise ConfigError('Missing size for field %s' % name)
         field = proto.add_custom(name, self.field, size, self)
         field.abbr = self.abbr
         field.base = self.base

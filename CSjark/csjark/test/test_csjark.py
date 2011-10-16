@@ -56,7 +56,7 @@ def cli_headerfile_and_configfile_from_folder(cli):
     header = os.path.join(os.path.dirname(__file__), 'headers')
     headers, configs = cli.parse_args(
             [header, '--verbose', '-d',])
-    assert len(headers) == len(os.listdir(headers))
+    assert len(headers) == len(os.listdir(header))
 
 
 @cli.test

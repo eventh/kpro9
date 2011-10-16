@@ -1,3 +1,4 @@
+
 %==============
 \chapter{Test Cases}
 %==============
@@ -172,11 +173,19 @@
 	Prerequisites & The utility has to be up and running \\
 	Feature & Test that the utility iis able to support c-header files with enums \\
 	\addlinespace
-	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct using enums \\
+	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct using enums and its configuration file \\
 	\addlinespace
 	& 2. Read the output \\
 	\addlinespace
-	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
+	\addlinespace
+	& 4. Open the pcap file for this test with wireshark\\
+	\addlinespace
+	& 5. Look at the different packets and struct members that are displayed in wireshark\\
+	\addlinespace
+	\multirow{2}{*}{Expected result } & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\ 
+	\addlinespace
+	& 5 The different packets should be displayed as having structs with enums, showing the value of the enum by its name and value\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -193,14 +202,139 @@
 	Prerequisites & The utility has to be up and running \\
 	Feature & Test that the utility iis able to support c-header files with arrays \\
 	\addlinespace
-	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct using arrays \\
+	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct using arrays \\
 	\addlinespace
 	& 2. Read the output \\
 	\addlinespace
-	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
+	\addlinespace
+	& 4. Open the pcap file for this test with wireshark\\
+	\addlinespace
+	& 5. Look at the different packets and struct members that are displayed in wireshark\\
+	\addlinespace
+	\multirow{5}{*}{Expected result} & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\addlinespace
+	& 5 The different packets should be displayed as having structs with arrays, showing the values of the cells in the array. Multidimensional arrays should also be displayed as being arrays with subtrees of other arrays. This should be indicated by the multidimensional arrays having a clickable "+" box to the left which when pressed shows the values of the cells of the inner arrays \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID10}\label{tab:TID10}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting the display of structs within structs \\
+	Tester & Erik Bergersen \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that the utility iis able to support c-header files with structs that have other struct members  and display it properly in wireshark\\
+	\addlinespace
+	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct with another struct member \\
+	\addlinespace
+	& 2. Read the output \\
+	\addlinespace
+	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
+	\addlinespace
+	& 4. Open the pcap file for this test with wireshark\\
+	\addlinespace
+	& 5. Look at the different struct members that are displayed in wireshark\\
+	\addlinespace
+	\multirow{2}{*}{Expected result} & 2. The program should provide the user with some text expressing the success of the LUA-file generation\\
+	\addlinespace
+	& 5. The struct members within structs should be displayed as subtrees, indicated by having a clickable "+" box to the left whch when clicked, displayes the contents of the given struct\\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID11}\label{tab:TID11}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting enumerated named values \\
+	Tester & Erik Bergersen \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that the utility iis able to support c-header files which uses integers as enums without declaring them as enums \\
+	\addlinespace
+	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes enumerated named values \\
+	\addlinespace
+	& 2. Read the output \\
+	\addlinespace
+	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
+	\addlinespace
+	& 4. Open the pcap file for this test with wireshark\\
+	\addlinespace
+	& 5. Look at the different struct members that are displayed in wireshark\\
+	\addlinespace
+	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\addlinespace
+	& 5. The different packets should be displayed as containing enumerated named values expressed by their name and not value\\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID12}\label{tab:TID12}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting bit strings \\
+	Tester & Erik Bergersen \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that the utility iis able to support c-header files with bit strings \\
+	\addlinespace
+	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct using bit strings \\
+	\addlinespace
+	& 2. Read the output \\
+	\addlinespace
+	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
+	\addlinespace
+	& 4. Open the pcap file for this test with wireshark\\
+	\addlinespace
+	& 5. Look at the different struct members that are displayed in wireshark\\
+	\addlinespace
+	\multirow{2}{*}{Expected result} & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\addlinespace
+	& 5. The packets should be displayed as containing bit strings. Bit strings should be displayed as subtrees indicated by a clickable "+" box to the left which shows the values of the different bits in the bit string when pressed\\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID13}\label{tab:TID13}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting structs with various trailers \\
+	Tester & Erik Bergersen \\
+	Prerequisites & The utility has to be up and running \\
+	Feature & Test that the utility iis able to support c-header files with trailers \\
+	\addlinespace
+	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct that has a trailer \\
+	\addlinespace
+	& 2. Read the output \\
+	\addlinespace
+	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
+	\addlinespace
+	& 4. Open the pcap file for this test with wireshark\\
+	\addlinespace
+	& 5. Look at the different struct members that are displayed in wireshark\\
+	\addlinespace
+	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\addlinespace
+	& 5. The packets should be displayed as containing ... TODO I DON'T KNOW HOW WE ARE SUPPOSED TO DISPLAY THESE, ERIK SHOULD PROBABLY WRITE THIS PART\\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
 
 
 

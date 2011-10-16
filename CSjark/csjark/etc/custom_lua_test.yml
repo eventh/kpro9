@@ -1,7 +1,13 @@
 Structs:
-  - name: field_test
-    id: 67
-    fields:
+  - name: custom_lua
+    id: 21
+    #cnf: etc/custom_lua.cnf
+    id: 74
+    customs:
+      #- member: special
+      #  field: int32
+      #  size: 4
+      #  cnf: etc/custom_lua_field.cnf
       - type: time_t
         field: relative_time
       - member: abs

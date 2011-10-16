@@ -73,16 +73,19 @@ def create_structs():
         int a3;
     };
     enum color { RED, GREEN=3, YELLOW, RED=10 };
+    typedef enum weekday { MON, TUE, WED, FRI=5 } weekday_t;
     struct find {
         int a; float b; char c;
         enum color enumtest;
         char str[30]; float d[3];
         struct inner inner_struct;
+        unsigned short oprs[+2][9-7][((5 * 3) + (-5)) / 5];
+        weekday_t day;
     };
     '''
     ast = cparser.parse(code, 'test')
     yield cparser.find_structs(ast)[1].fields
-    del cparser.StructVisitor.all_struct_names['find']
+    del cparser.StructVisitor.all_structs['find']
 
 @find_structs.test
 def find_basic_types(fields):
@@ -115,6 +118,24 @@ def find_struct_types(fields):
     assert a.name == 'inner_struct'
     assert a.type == 'inner'
     assert a.size == 12
+
+@find_structs.test
+def find_struct_array_math(fields):
+    """Test that expressions in array declarations are evaluated."""
+    arr = fields[7]
+    assert arr.name == 'oprs'
+    assert arr.type == 'uint16'
+    assert arr.size == 16
+
+@find_structs.test
+def find_struct_typedef_enum(fields):
+    """Test that we find typedef enums as array members."""
+    enum = fields[8]
+    assert enum
+    assert enum.name == 'day'
+    assert enum.type == 'uint32'
+    assert enum.values and enum.keys
+    assert enum.func_type == 'uint'
 
 @find_structs.test
 def parse_error():

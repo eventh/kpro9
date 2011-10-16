@@ -4,8 +4,96 @@ A module for configuration of our utility.
 Should parse config files and create data structures which the parser can
 use when translating C struct definitions to Wireshark protocols and fields.
 """
+import os
 from operator import itemgetter
 import yaml
+
+
+# Mapping of c type and their wireshark field type.
+DEFAULT_C_TYPE_MAP = {
+        'bool': 'bool',
+        'char': 'string',
+        'signed char': 'string',
+        'unsigned char': 'string',
+        'short': "int16",
+        'signed short': "int16",
+        'unsigned short': "uint16",
+        'short int': "int16",
+        'signed short int': "int16",
+        'unsigned short int': "uint16",
+        "int": "int32",
+        'signed int': "int32",
+        'unsigned int': "uint32",
+        'signed': "int32",
+        'long': "int64",
+        'signed long': "int64",
+        'unsigned long': "uint64",
+        'long int': "int64",
+        'signed long int': "int64",
+        'unsigned long int': "uint64",
+        'long long': "int64",
+        'signed long long': "int64",
+        'unsigned long long': "uint64",
+        'long long int': "int64",
+        'signed long long int': "int64",
+        'unsigned long long int': "uint64",
+        'float': 'float',
+        'double': 'double',
+        'long double': 'todo',
+        'pointer': 'int32',
+        'enum': 'uint32',
+        'time_t': 'relative_time',
+}
+
+
+# Mapping of c type and their default size in bytes.
+DEFAULT_C_SIZE_MAP = {
+        'bool': 1,
+        'char': 1,
+        'signed char': 1,
+        'unsigned char': 1,
+        'short': 2,
+        'signed short': 2,
+        'unsigned short': 2,
+        'short int': 2,
+        'signed short int': 2,
+        'unsigned short int': 2,
+        'int': 4,
+        'signed int': 4,
+        'unsigned int': 4,
+        'signed': 4,
+        'long': 8,
+        'signed long': 8,
+        'unsigned long': 8,
+        'long int': 8,
+        'signed long int': 8,
+        'unsigned long int': 8,
+        'long long': 8,
+        'signed long long': 8,
+        'unsigned long long': 8,
+        'long long int': 8,
+        'signed long long int': 8,
+        'unsigned long long int': 8,
+        'float': 4,
+        'double': 8,
+        'long double': 16,
+        'pointer': 4,
+        'enum': 4,
+        'time_t': 4,
+}
+
+
+def map_type(ctype):
+    """Find the wireshark type for a ctype."""
+    return DEFAULT_C_TYPE_MAP.get(ctype, ctype)
+
+
+def size_of(ctype):
+    """Find the size of a c type in bytes."""
+    if ctype in DEFAULT_C_SIZE_MAP.keys():
+        return DEFAULT_C_SIZE_MAP[ctype]
+    else:
+        raise ValueError('No known size for type %s' % ctype)
 
 
 class ConfigError(Exception):
@@ -23,25 +111,17 @@ class StructConfig:
         self.name = name
         self.id = None
         self.description = None
-        self.members = {}
-        self.types = {}
-        self.trailers = []
+        self.cnf = None # Conformance File, for custom lua code
+        self.members = {} # Rules for members in the struct
+        self.types = {} # Rules for types in the struct
+        self.trailers = [] # Rules for struct trailers
 
-    def get_rules(self, member, type, sorted=False):
-        rules = self.members.get(member, [])
-        rules.extend(self.types.get(type, []))
-
-        if not sorted:
-            return rules
-
-        # Sort the rules
-        types = (Trailer, Bitstring, Enum, Range, Field)
-        values = ([], [], [], [], [])
-        for rule in rules:
-            for i, type_ in enumerate(types):
-                if isinstance(rule, type_):
-                    values[i].append(rule)
-        return values
+    @classmethod
+    def find(cls, name):
+        if name not in cls.configs.keys():
+            return cls(name)
+        else:
+            return cls.configs[name]
 
     def add_member_rule(self, member, rule):
         if member not in self.members.keys():
@@ -53,16 +133,52 @@ class StructConfig:
             self.types[type] = []
         self.types[type].append(rule)
 
-    @classmethod
-    def find(cls, name):
-        if name not in cls.configs.keys():
-            return cls(name)
-        else:
-            return cls.configs[name]
+    def get_rules(self, member, type):
+        rules = self.members.get(member, [])
+        rules.extend(self.types.get(type, []))
+        return rules
+
+    def create_field(self, proto, name, ctype, size=None):
+        """Create a field depending on rules."""
+        type_ = map_type(ctype)
+
+        # Sort the rules
+        types = (Bitstring, Enum, Range, Custom)
+        values = [[], [], [], []]
+        for rule in self.get_rules(name, ctype):
+            for i, tmp in enumerate(types):
+                if isinstance(rule, tmp):
+                    values[i].append(rule)
+        bits, enums, ranges, customs = values
+
+        # Custom field rules
+        if customs:
+            return customs[0].create(proto, name, type_, size, ctype)
+
+        # If size is None and not customs rule, we are in trouble.
+        if size is None:
+            raise ConfigError('Unknown field size for %s' % name)
+
+        # Bitstring rules
+        if bits:
+            return proto.add_bit(name, type_, size, bits[0].bits)
+
+        # Enum rules
+        if enums:
+            rule = enums[0]
+            return proto.add_enum(name, type_, size, rule.values, rule.strict)
+
+        # Range rules
+        if ranges:
+            rule = ranges[0]
+            return proto.add_range(name, type_, size, rule.min, rule.max)
+
+        # Create basic Field if no rules fired
+        return proto.add_field(name, type_, size)
 
 
 class BaseRule:
-    """A base class for rules refering to protocol fields."""
+    """A base class for rules referring to protocol fields."""
 
     def __init__(self, conf, obj):
         # A field rule refers either to a type or a member
@@ -97,6 +213,7 @@ class Range(BaseRule):
 
 class Enum(BaseRule):
     """Rule for emulating enum with int-like types in structs."""
+
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
         self.strict = obj.get('strict', True)
@@ -165,9 +282,6 @@ class Trailer(BaseRule):
         except ValueError:
             self.member = str(self.count)
             self.count = None
-        if self.member:
-            conf.add_member_rule(self.member, self)
-            self._field = None # Used to link TrailerField to this rule
         if not self.count and not self.member:
             raise ConfigError('No count in trailer rule for %s' % conf.name)
 
@@ -180,12 +294,23 @@ class Trailer(BaseRule):
             raise ConfigError('Invalid trailer rule for %s' % conf.name)
 
 
-class Field(BaseRule):
+class Custom(BaseRule):
     """Rule for specifying a custom field handling."""
 
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
-        self.field = str(obj['field'])
+
+        # Conformance File specification for this member or type
+        self.cnf = None
+        if 'cnf' in obj:
+            self.cnf = ConformanceFile(conf, obj['cnf'])
+
+        # Field, optional if conformance
+        self.field = str(obj.get('field', ''))
+        if not self.field and self.cnf is None:
+            raise ConfigError('No field in Custom rule for %s' % conf.name)
+
+        # TODO: validate that the parameters are valid for the field type
         self.size = obj.get('size', None)
         self.abbr = obj.get('abbr', None)
         self.name = obj.get('name', None)
@@ -193,13 +318,13 @@ class Field(BaseRule):
         self.values = obj.get('values', None)
         self.mask = obj.get('mask', None)
         self.desc = obj.get('desc', None)
-        if not self.field:
-            raise ConfigError('No field for Field rule for %s' % conf.name)
 
-    def create(self, cls, name, size):
+    def create(self, proto, name, type_, size, ctype):
         if self.size is not None:
             size = self.size
-        field = cls(name, self.field, size)
+        if size is None:
+            raise ConfigError('Missing size for field %s' % name)
+        field = proto.add_custom(name, self.field, size, self)
         field.abbr = self.abbr
         field.base = self.base
         if self.values:
@@ -207,6 +332,20 @@ class Field(BaseRule):
         field.mask = self.mask
         field.desc = self.desc
         return field
+
+
+class ConformanceFile:
+    def __init__(self, conf, file, rule=None):
+        # Find the specified file
+        self.file = str(file)
+        if not os.path.isfile(self.file):
+            self.file = os.path.join(os.path.dirname(__file__), self.file)
+        if not os.path.isfile(self.file):
+            raise ConfigError('Unknown file: %s' % file)
+
+        # Read content of the specified file
+        with open(self.file, 'r') as f:
+            self.contents = f.read()
 
 
 def handle_struct(obj):
@@ -224,9 +363,13 @@ def handle_struct(obj):
     if 'description' in obj:
         conf.description = obj['description']
 
+    # Structs optional conformance file
+    if 'cnf' in obj:
+        conf.cnf = ConformanceFile(conf, obj['cnf'])
+
     # Handle rules
     types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,
-             'trailers': Trailer, 'fields': Field}
+             'trailers': Trailer, 'customs': Custom}
     for name, type_ in types.items():
         if name in obj:
             for rule in obj[name]:

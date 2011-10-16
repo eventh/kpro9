@@ -119,7 +119,7 @@ def create_fields():
     text = '''
     Structs:
       - name: test
-        fields:
+        customs:
           - type: time_t
             field: relative_time
           - member: abs
@@ -174,8 +174,8 @@ def create_trailers():
 @trailers.test
 def trailers_rule(conf):
     """Test that config support rules for trailers."""
-    one, = conf.get_rules('asn1_count', None)
-    assert one
+    rules = conf.get_rules('asn1_count', None)
+    assert len(rules) == 0
     one, two, three = conf.trailers
     assert one.name == 'ber' and three.name == 'ber'
     assert one.count == 3 and two.count is None and three.count == 1

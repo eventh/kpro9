@@ -33,5 +33,5 @@ The arguments here specify the following:
     python csjark.py -v -nocpp headerfile.h configfile.yml
 
 
-**Batch mode:** ::
-TEst
+**Batch processing of header- and config-files:**
+CSjark support batch processing of input files: header- and config-files. The utility can process multiple files without manual intervention. When the utility is provided with arguments, the header and config fields are checked by the Command Line Interface if they are single files or a directory. If single files are provided, the utility will parse these. If a directory is provided, the utility iterates through that directory including all valid header- and config-files. If there are directories inside the provided directory, they are included and handled recursive.

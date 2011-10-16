@@ -1,6 +1,6 @@
 Structs:
   - name: custom_lua
-    id: 21
+    id: 74
     cnf: etc/custom_lua.cnf
     customs:
       - member: special

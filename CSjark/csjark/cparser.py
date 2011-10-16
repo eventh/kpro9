@@ -5,6 +5,7 @@ Requires PLY and pycparser.
 """
 import sys
 import os
+import operator
 
 import pycparser
 from pycparser import c_ast, c_parser, plyparser
@@ -160,6 +161,8 @@ class StructVisitor(c_ast.NodeVisitor):
             self.aliases[node.name] = (child.name, 'struct')
         elif isinstance(child, c_ast.Union):
             self.aliases[node.name] = (child.name, 'union')
+        elif isinstance(node.children()[0], c_ast.ArrayDecl):
+            pass # TODO
         else:
             print(node, node.name, child) # For testing purposes
             raise ParseError('Unknown typedef type: %s' % child)
@@ -187,7 +190,7 @@ class StructVisitor(c_ast.NodeVisitor):
                     self.handle_struct(proto, node.declname, base)
                 else:
                     # If any rules exists, use new type and not base
-                    if proto.conf.get_rules(None, ctype):
+                    if proto.conf and proto.conf.get_rules(None, ctype):
                         base = ctype # Is this wise?
                     self.add_field(proto, node.declname, base)
             else:
@@ -220,14 +223,21 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def _get_array_size(self, node):
         """Calculate the size of the array."""
-        child = node.children()[1]
-
-        if isinstance(child, c_ast.Constant):
-            size = int(child.value)
-        elif isinstance(child, c_ast.BinaryOp):
-            size = 0 # TODO: evaluate BinaryOp expression
-        elif isinstance(child, c_ast.ID):
-            size = 0 # TODO: PATH_MAX WTF?
+        if isinstance(node, c_ast.Constant):
+            size = int(node.value)
+        elif isinstance(node, c_ast.UnaryOp):
+            if node.op == '-':
+                size = operator.neg(self._get_array_size(node.expr))
+            else:
+                size = self._get_array_size(node.expr)
+        elif isinstance(node, c_ast.BinaryOp):
+            mapping = {'+': operator.add, '-': operator.sub,
+                       '*': operator.mul, '/': operator.floordiv}
+            left = self._get_array_size(node.left)
+            right = self._get_array_size(node.right)
+            size = mapping[node.op](left, right)
+        elif isinstance(node, c_ast.ID):
+            size = 0 # TODO: PATH_MAX?
         else:
             raise ParseError('This type of array not supported: %s' % node)
 
@@ -238,7 +248,7 @@ class StructVisitor(c_ast.NodeVisitor):
         if depth is None:
             depth = []
         child = node.children()[0]
-        size = self._get_array_size(node)
+        size = self._get_array_size(node.children()[1])
 
         # String array
         if (isinstance(child, c_ast.TypeDecl) and

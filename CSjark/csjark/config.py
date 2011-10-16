@@ -42,6 +42,7 @@ DEFAULT_C_TYPE_MAP = {
         'long double': 'todo',
         'pointer': 'int32',
         'enum': 'uint32',
+        'time_t': 'relative_time',
 }
 
 
@@ -78,6 +79,7 @@ DEFAULT_C_SIZE_MAP = {
         'long double': 16,
         'pointer': 4,
         'enum': 4,
+        'time_t': 4,
 }
 
 

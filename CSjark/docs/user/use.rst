@@ -28,6 +28,9 @@ The arguments here specify the following:
   -o output, --output=output         		     Writes the output to the specified file ``output``.
 
 
+Valid arguments for input are files with extension: '.h' for header-file and '.yml' for config-file.
+
+
 **Example usage:** ::
 
     python csjark.py -v -nocpp headerfile.h configfile.yml
@@ -35,4 +38,8 @@ The arguments here specify the following:
 
 **Batch processing of header- and config-files:**
 
-CSjark support batch processing of input files: header- and config-files. The utility can process multiple files without manual intervention. When the utility is provided with arguments, the header and config fields are checked by the Command Line Interface if they are single files or a directory. If single files are provided, the utility will parse these. If a directory is provided, the utility iterates through that directory including all valid header- and config-files. If there are directories inside the provided directory, they are included and handled recursive.
+CSjark support batch processing of input files: header- and config-files. The utility can process multiple files without manual intervention. When the utility is provided with arguments, the header and config fields are examined and determined by the Command Line Interface. If single files are given as input, the utility will parse these. If the input is a directory, the utility iterates through that directory including all valid header- and config-files. If there are directories inside the provided directory, they are included and handled recursive. The batch processing can thereby be given a root folder, iterate through all files and include valid files for parsing.    
+
+
+
+

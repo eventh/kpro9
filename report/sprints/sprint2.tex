@@ -333,8 +333,29 @@ generates dissectors from the folder ''header/'' and configutrations from ''etc/
 
 \subsection{Support Custom Handling of Specified Data Types}
 %----------------------
-Functionallity to support  time\_t and nstime\_t has been added to the utility.
-TODO: Not finished(add example + screenshot)
+The utility support custom handling of different data types, this includes 
+functionallity to support  time\_t and nstime\_t. Alle basic data types and 
+struct members can be configured to be handled in special way. 
+\autoref{code:customstruct} show an example of a struct with four members, two 
+of them are time fields, and the last two is a BOOL and an integer to be 
+handled in a custom way. This struct is configured in 
+\autoref{code:customconfig}, in the config the two time fields are configured 
+to be respectively absolute time and relative time, and the BOOL  type to have 
+a size of four bytes. The struct member ''all' is configured with a enumrated 
+value, and will be visible as a hex-value. \autoref{fig:customdatatype} is a 
+screenshot of the struct in Wireshark.
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/wireshark_custom}
+	\caption{Custom handling of Data Typesk\label{fig:customdatatype}}
+\end{figure}
+
+\lstset{language=C,caption={Struct for custom handling},label=code:customstruct}
+\lstinputlisting[language=C]{./sprints/code/customfield.h}
+
+\lstset{language=C,caption={Config for custom handling},label=code:customconfig}
+\lstinputlisting[language=C]{./sprints/code/customfield.yml}
 
 \subsection{Typedef Support}
 %----------------------

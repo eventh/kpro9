@@ -161,8 +161,8 @@ class StructVisitor(c_ast.NodeVisitor):
             self.aliases[node.name] = (child.name, 'struct')
         elif isinstance(child, c_ast.Union):
             self.aliases[node.name] = (child.name, 'union')
-        elif isinstance(node.children()[0], c_ast.ArrayDecl):
-            pass # TODO
+        #elif isinstance(node.children()[0], c_ast.ArrayDecl):
+        #    pass # TODO
         else:
             print(node, node.name, child) # For testing purposes
             raise ParseError('Unknown typedef type: %s' % child)
@@ -281,8 +281,13 @@ class StructVisitor(c_ast.NodeVisitor):
     def add_field(self, proto, name, ctype, size=None):
         """Add a field representing the struct member to the protocol."""
         if size is None:
-            size = size_of(ctype)
+            try:
+                size = size_of(ctype)
+            except ValueError :
+                size = None # Acceptable if there are rules for the field
         if proto.conf is None:
+            if size is None:
+                raise ParseError('Unknown size for type %s' % ctype)
             proto.add_field(name, map_type(ctype), size)
         else:
             proto.conf.create_field(proto, name, ctype, size)

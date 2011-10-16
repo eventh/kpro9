@@ -35,6 +35,8 @@ goto :eof
     copy /y references.bib tmp\references.bib
     cd tmp
     bibtex report.aux
+    perl -v
+    if errorlevel 0 makeglossaries report
     cd ..
     pdflatex -output-directory tmp report.tex
     pdflatex -output-directory tmp report.tex

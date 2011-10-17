@@ -10,7 +10,6 @@ import csjark
 
 cli = Tests()
 
-
 @cli.context
 def create_cli():
     """Create Cli as a context to reset it afterwards."""

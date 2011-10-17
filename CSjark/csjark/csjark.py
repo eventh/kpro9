@@ -4,10 +4,11 @@ A module for creating Wireshark dissectors from C structs.
 
 Usage:
 ---------
-csjark.py [-h] [-verbose] [-debug] [-nocpp]
-          [-input [header [header ...]]]
-          [-config [config [config ...]]] [-output [output]]
-          [header] [config]
+usage: csjark.py [-h] [-v] [-d] [-n] [-i [header [header ...]]]
+                 [-c [config [config ...]]] [-o [output]]
+                 [header] [config]
+
+Generate Wireshark dissectors from C structs.
 
 positional arguments:
   header                C file to parse
@@ -15,14 +16,15 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -verbose              print detailed information
-  -debug                print debugging information
-  -nocpp                disable C preprocessor
-  -input [header [header ...]]
+  -v, --verbose         print detailed information
+  -d, --debug           print debugging information
+  -n, --nocpp           disable C preprocessor
+  -i [header [header ...]], --input [header [header ...]]
                         C file(s) to parse
-  -config [config [config ...]]
+  -c [config [config ...]], --config [config [config ...]]
                         configuration file(s) to parse
-  -output [output]      write output to file
+  -o [output], --output [output]
+                        write output to directory/file
 
 Example:
 "python csjark.py -v -nocpp headerfile.h configfile.yml"
@@ -178,15 +180,15 @@ def main():
             print("Parsed config file '%s' successfully." % filename)
 
     # Create dissectors
-    dissectors = 0
+    dissector_count = 0
     for filename in headers:
-        dissectors += create_dissector(filename)
+        dissector_count += create_dissector(filename)
 
         if Cli.verbose:
             print("Parsed header file '%s' successfully." % filename)
 
     print("Successfully parsed %i file(s), created %i dissector(s)." % (
-            len(headers), dissectors))
+            len(headers), dissector_count))
 
 
 if __name__ == "__main__":

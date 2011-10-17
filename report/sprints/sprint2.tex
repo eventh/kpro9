@@ -152,25 +152,25 @@ The second sprint we will implement thirteen requirements. These are listed in T
 %----------------------
 \subsection{User Stories}
 %----------------------
-
+\line(1,0){360}\\
 \textbf{Requirement:} FR1-B: The utility must support members of type enum\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user wants the utility to support structs with members of type enum.\\
 \textbf{How:} When the cparser module detects an enum member in a struct, the cparser should search in an enum dictionary and the enum member will be mapped to the correct value found in the dictionary. \\
 \textbf{Result:} The utility supports members of type enum.\\
-\\
+\line(1,0){360}\\
 \textbf{Requirement:} FR1-C: The utility must support members of type struct\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user wants the utility to support structs with members of type struct. \\
 \textbf{How:} When the cparser module detects a struct in the AST that is a member of another struct, the cparser searches for its definition in the dictionary of previously detected structs. When it finds it, it looks up the identification number and the size of the inner struct and creates a struct\_field object with that information inside the prototype object corresponding to the outer struct.\\
 \textbf{Result:} The utility supports members of type structs.\\
-\\
+\line(1,0){360}\\
 \textbf{Requirement:} FR1-F: The utility should detect structs with the same name, and report it as an error\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user wants the utility to report an error if it discovers structs with the same name to avoid unforeseen name collisions.\\
 \textbf{How:} When the cparser module traverses the AST to look for structs, it will detect if there are structs with the same name by keeping a database of all structs it has found so far, and the program will crash with an error message.\\
 \textbf{Result:} The utility will detect duplicated name of structs.\\
-\\
+\line(1,0){360}\\
 \textbf{Requirement:} The dissector shall be able to support structs within structs\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The utility should be able to create a Lua dissector that correctly displays structs within structs in Wireshark. \\
@@ -178,73 +178,74 @@ The second sprint we will implement thirteen requirements. These are listed in T
 The dissector module encodes the identification number and the size for the inner struct into the Lua dissector for the outer struct. The identification number is used to access the dissector for the inner struct when the outer struct dissector is used. The outer struct dissector uses the size of the inner struct to know how much of the network package to forward to the inner struct dissector.
 The size and identification number of the inner struct will be available in the struct field corresponding to the inner struct inside the protocol object corresponding to the outer struct.\\
 \textbf{Result:} The dissector module supports nested structs\\
-\\
+\line(1,0){360}\\
 \textbf{Requirement:} FR4-F: Configuration must support integer members which represent an enumerated named value\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user wants to specify integer members, represented by an enumerated named value, in a configuration file.\\
 \textbf{How:} The config module should read config files provided to the command line interface, and find any rules regarding enumerated integer values. The rules are used by the cparser when it translates struct definitions to Protocol, and makes the cparser create EnumFields instead of normal Fields for the specified members.\\
 \textbf{Result:} Enum members can be specified in the configuration.\\
-\\
+\line(1,0){360}\\
 \textbf{User doc:} FR4-F: User documentation for writing configuration for integer members which represent an enumerated named value.\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user should be able to educate himself of how to give CSjark the necessary information to get integer values mapped to names in the generated dissector.\\
 \textbf{How:} The user opens the user documentation and finds the section about configuration. From here he locates the sub section about enumerated names integer values. This section gives a good description of how to write such configuration, and the user is able to implement his desired configuration after reading trough once and looking at provided examples.\\
 \textbf{Result:} The user is now able to use the enumerated named value functionality.\\
-\\
+\line(1,0){360}\\
 \textbf{Requirement:} FR4-G: Configuration must support members which are bit strings\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user wants to specify members that represent bit strings in the configuration.\\
 \textbf{How:} The config module should read config files provided to the command line interface, and find any rules regarding bit strings. The rules are used by the cparser when it translates struct definitions to Protocol and BitField instances found in the dissector module.\\
 \textbf{Result:} Bit string members can be specified in the configuration.\\
-\\
+\line(1,0){360}\\
 \textbf{User doc:} FR4-G: User documentation for writing configuration for integer members which are bit strings.\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user should be able to educate himself of how to give CSjark the necessary information to get integer values mapped to bit string in the generated dissector.\\
 \textbf{How:} The user opens the user documentation and finds the section about configuration. From here he locates the sub section about bit string integer values. This section gives a good description of how to write such configuration, and the user is able to implement his desired configuration after reading through once and looking at provided examples.\\
 \textbf{Result:} The user is now able to configure CSjark to generate dissector that recognises and formats bit strings correctly.\\
-\\
+\line(1,0){360}\\
 \textbf{Requirement:} FR1-E: The utility must support members of type array\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user wants the utility to support structs with members of type array.\\
 \textbf{How:} When the cparser module find an array declaration, it recursively traverses the tree until till it encounters the bottom of the declaration to discover the size of the array. The parser module creates an instance of an array field with the size and type of the array. From the array field the dissector module generates a dissector which has a sub tree for each level of the array.\\
 \textbf{Result:} The utility support array members in structs.\\
-\\
+\line(1,0){360}\\
 \textbf{Requirement:} FR4-E: Configuration must support various trailers (other registered protocol)\\
 \textbf{Who:} Administrator\\ 
 \textbf{What:} The user wants to specify trailers to a C header file in the configuration.\\
 \textbf{How:} The config module should read config files provided to the command line interface, and find any rules regarding trailers. A member in a struct will say how many packets of other protocols that follows the header. In the config-file it is specified which member contains this number, and what type of protocol the packet(s) belong to. When the dissector module generates a struct containing a trailer, the correct dissector for the trailer packet(s) will be called for the rest of the buffer.\\
 \textbf{Result:} The utility can handle trailer packets following the header, specified in the configuration.\\
-\\
+\line(1,0){360}\\
 \textbf{User doc:} FR4-E: User documentation for how to specify trailers (other registered protocol)\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user should be able to find out how to specify trailers to a header struct by reading the user documentation.\\
 \textbf{How:} The user opens the user documentation and finds the section about configuration. From here he locates the sub section about trailers. This section gives a good description of how to write such configuration for different types of trailers and provides sufficient examples, so that it is  clear to the user how to write the configuration he needs after reading the section.\\
 \textbf{Result:} The user is now able to utilise the trailer feature of CSjark.\\
-\\
+\line(1,0){360}\\
 \textbf{Requirement:} FR4-B: Configuration must support custom Lua files for specific protocols\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user wants to specify custom Lua files in the configuration, that are to be used in complex cases where our utility is unable to generate a dissector for the C header.\\
 \textbf{How:} The config module should read config files provided to the command line interface, and find any rules regarding the use of custom Lua files. When such a rule is found the dissector module will use the Lua code found in the file(s) in addition to its own generated Lua code.
 This us done by reading the custom Lua file(s) and writing the content to the relevant parts of the dissector.\\
 \textbf{Result:} The use of custom Lua files can be specified in the configuration.\\
-\\
+\line(1,0){360}\\
 \textbf{Requirement:} FR4-D: Configuration must support specifying the ID of dissectors \\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user wants to specify the ID of a dissector in a configuration file.\\
 \textbf{How:} When the cparser finds a struct in the abstract syntax tree it looks for a configuration file for the struct. If a config-file is found, the ID of the dissector is mapped to the ID given in the config-file when generating the dissector.\\
 \textbf{Result:} The configuration supports specifying the ID of dissectors.\\
-\\
+\line(1,0){360}\\
 \textbf{Requirement:} FR5-C: Generate dissectors which support both little and big endian platforms\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user wants the utility to produce dissectors that can be used on both little and big endian platforms.\\
 \textbf{How:} The user will specify platforms he is using in a configuration file by adding a message flag and endian pair. When the dissector for a struct is beeng generated, the dissector module in CSjark will encode a flag to endian dictionary inside the Lua dissector file. This dictionary will be used to look up the endian for a message given its flag. If no endian is found in the dictionary, it will use a default value.\\
 \textbf{Result:} The dissectors are now able to support messages from platforms with different endian.\\
-\\
+\line(1,0){360}\\
 \textbf{Requirement:} FR6-C: Command line shall support batch processing of C header and configuration files\\
 \textbf{Who:} Administrator\\
 \textbf{What:} The user wants to set up the program to run automatically, so that the program creates dissectors from the C header and configuration file(s) that are specified.\\
 \textbf{How:} When the user feeds the command line with an input argument, header or configuration, the utility shall check if the input is a single file or a directory (folder). If it is a file, parse it. If it is a folder, retrieve all files in that folder and add them to a list, this list will be sent to the parser and all the files will be parsed one after another. If there is a directory within a directory, that should be included, and they will be traversed recursively. This way we can start in a root folder and include all files, independent of the depth. The batch mode shall only include files with the extension .h (a header file) or .yml (config file), which are the files that are going to be parsed as input.\\
-\textbf{Result:} Now it shall be possible to feed the utility with folders to make dissectors of all the headers found, also called batch mode.\\
+\textbf{Result:} Now it shall be possible to feed the utility with folders to make dissectors of all the headers found, also called batch mode.
+\line(1,0){360}\\	
 
 Requirement: FR1-B: The utility must support members of type enum
 Who: Administrator

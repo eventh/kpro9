@@ -5,6 +5,7 @@ import sys, os
 from attest import Tests, assert_hook, contexts
 from pycparser import c_ast
 
+import csjark
 import cparser
 import config
 import dissector
@@ -236,6 +237,7 @@ def req4_d(one, two):
 # FR4-E: Configuration must support various trailers
 @configuration.test
 def req4_e(one, two):
+    """Test requirement FR4-E: Configuration of trailers."""
     a, b, c = one.trailers + two.trailers
     assert a.name == 'ber' and b.name == 'ber' and c.name == 'ber'
     assert c.count == 3 and a.count is None and b.count == 1
@@ -272,8 +274,45 @@ def req4_g(one, two):
 
 # Tests for the sixth requirement, support command line interface
 # FR6: The utility shall support parameters from command line
+cli = Tests()
+
+@cli.context
+def create_cli():
+    """Create Cli as a context to reset it afterwards."""
+    c = csjark.Cli
+    defaults = c.verbose, c.debug, c.use_cpp, c.output_dir, c.output_file
+    yield c
+    c.verbose, c.debug, c.use_cpp, c.output_dir, c.output_file = defaults
+
 # FR6-A: Command line shall support parameter for C header file
+@cli.test
+def req6_a(cli):
+    """Test requirement FR6-A: Parameter for C header file."""
+    header = os.path.join(os.path.dirname(__file__), 'cpp.h')
+    include = os.path.join(os.path.dirname(__file__), 'include.h')
+    assert os.path.isfile(include)
+    headers, _ = cli.parse_args([header, '-v', '-d', '-i', include])
+    assert len(headers) == 2
+
 # FR6-B: Command line shall support parameter for configuration file
+@cli.test
+def req6_b(cli):
+    """Test requirement FR6-B: Parameter for configuration file."""
+    header = os.path.join(os.path.dirname(__file__), 'cpp.h')
+    include = os.path.join(os.path.dirname(__file__), 'include.h')
+    config = os.path.join(os.path.dirname(__file__), 'test.yml')
+    assert os.path.isfile(config)
+    headers, configs = cli.parse_args(
+            [header, '--verbose', '-d', '-i', include, '--config', config])
+    assert len(headers) == 2
+
 # FR6-C: Command line shall support batch mode of C header and config files
+@cli.test
+def req6_c(cli):
+    """Test requirement FR6-C: Parameters for batch processing."""
+    test_folder = os.path.dirname(__file__)
+    headers, configs = cli.parse_args([test_folder])
+    assert len(headers) > 0 # Requires that test folder has header files
+
 # FR6-D: In batch mode, don't regenerate dissectors which aren't modified
 

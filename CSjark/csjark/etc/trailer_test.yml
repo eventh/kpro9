@@ -11,3 +11,9 @@ Structs:
       - name: ber
         count: 1
         size: 5
+      - name: ber
+        count: 2
+        size: 6
+      - name: ber
+        count: 1
+        size: 5

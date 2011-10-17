@@ -361,47 +361,53 @@ class ConformanceFile:
 
     def _get_token(self, line):
         tmp = line[2:].strip().split(' ')
-        return tmp[0]
+        return tmp[0], [], {}
 
     def handle_body(self, content):
         if '%(DEFAULT_BODY)s' in content:
             content = content.replace('%(DEFAULT_BODY)s', '{DEFAULT_BODY}')
         self.body = content
-        print("body", self.body)
 
     def handle_header(self, content):
         self.header = content
-        print("header", self.header)
 
     def parse(self):
-        token = None
-        content = ''
-        mapping = {self.t_body: self.handle_body}
+        """Parse the conformance file's sections and content."""
+        token = None # Current section beeing parsed
+        args = [] # Positional arguments for the handle function
+        vargs = {} # Named arguments for the handle function
+        content = '' # Current content for the section parsed so far
 
-        def store():
-            nonlocal content, token, mapping
-            if token in mapping:
-                mapping[token](content)
-            content = ''
+        # Maps token to function for handling its content
+        mapping = {
+                self.t_body: self.handle_body,
+                self.t_hdr: self.handle_header,
+        }
 
         # Go through all lines and assign content
         for line in self._lines:
             if not line.startswith('#.'):
-                content += line
+                content += line.strip()
                 continue
 
-            new_token = self._get_token(line)
+            # Store current content when new token is found
             if token is not None:
-                store() # Save current content
+                if token in mapping:
+                    mapping[token](content, *args, **vargs)
 
-            token = new_token
+            content = ''
+            token, args, vargs = self._get_token(line)
+
             if token == self.t_end_cnf:
                 break # End of cnf file
             if token == self.t_end:
                 continue # End token
 
+        # Reached end of file without an end token
         if token not in (self.t_end, self.t_end_cnf):
-            store() # File ended without end token
+            if token in mapping:
+                mapping[token](content)
+            content = ''
 
 
 def handle_struct(obj):

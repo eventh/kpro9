@@ -8,6 +8,9 @@
 *.synctex.gz
 *.synctex.gz(busy)
 *.bbl
+*.glo
+*.acn
+*.ist
 *.blg
 *.pdf
 *.swp

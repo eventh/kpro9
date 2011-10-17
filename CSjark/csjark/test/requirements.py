@@ -173,7 +173,7 @@ def create_rules():
             field: absolute_time
         trailers:
           - name: ber
-            count: asn1_count
+            member: asn1_count
             size: 12
           - name: ber
             count: 1

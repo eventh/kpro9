@@ -275,15 +275,14 @@ class Trailer(BaseRule):
         conf.trailers.append(self)
 
         # Count or member, which holds the amount of trailers
-        self.member = None
-        self.count = obj['count']
-        try:
-            self.count = int(self.count)
-        except ValueError:
-            self.member = str(self.count)
-            self.count = None
-        if not self.count and not self.member:
-            raise ConfigError('No count in trailer rule for %s' % conf.name)
+        self.count = self.member = None
+        if 'count' in obj:
+            self.count = int(obj['count'])
+        if 'member' in obj:
+            self.member = str(obj['member'])
+        if ((self.count is None and not self.member) or
+                (self.count is not None and self.member is not None)):
+            raise ConfigError('Invalid trailer rule for %s' % conf.name)
 
         # Optional size a single trailing protocol
         self.size = None

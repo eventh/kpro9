@@ -1,6 +1,5 @@
 Structs:
   - name: custom_lua
-    id: 21
     #cnf: etc/custom_lua.cnf
     id: 74
     customs:

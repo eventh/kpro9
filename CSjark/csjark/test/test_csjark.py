@@ -27,7 +27,6 @@ def cli_headerfile1(cli):
     headers, configs = cli.parse_args([header, '--verbose', '--debug'])
     assert len(headers) == 1
 
-#test for requirement FR07A
 @cli.test
 def cli_headerfile2(cli):
     """Test the default commandline interface flags"""
@@ -37,7 +36,6 @@ def cli_headerfile2(cli):
     headers, _ = cli.parse_args([header, '-v', '-d', '-i', include])
     assert len(headers) == 2
 
-#test for requirement FR07B
 @cli.test
 def cli_headerfile_and_configfile(cli):
     """Test the default commandline interface flags"""
@@ -49,15 +47,12 @@ def cli_headerfile_and_configfile(cli):
             [header, '--verbose', '-d', '-i', include, '--config', config])
     assert len(headers) == 2
 
-    #test for requirement FR06C
 @cli.test
 def cli_headerfile_and_configfile_from_folder(cli):
     """Test the support for batch processing"""
-    header = os.path.join(os.path.dirname(__file__), 'headers')
-    headers, configs = cli.parse_args(
-            [header, '--verbose', '-d',])
-    assert len(headers) == len(os.listdir(header))
-
+    test_folder = os.path.dirname(__file__)
+    headers, configs = cli.parse_args([test_folder])
+    assert len(headers) > 0 # Requires that test folder has header files
 
 @cli.test
 def cli_flag_verbose(cli):

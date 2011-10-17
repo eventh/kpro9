@@ -388,10 +388,15 @@ arrays in wireshark is displayed in \autoref{fig:wsarray}.
 
 \subsection{Struct with Various Trailers}
 %----------------------
-The utility is able to support struct that has various trailers. Trailers are
-data that follows a struct, this can be any kind of data. The utility is able to configure these data.
-Screenshot \autoref{fig:wstrailer}, header \autoref{code:trailer} and config \autoref{code:trailerconf}
-TODO: Not finished
+The utility is able to support struct that has ASN.1 trailers, encoded with 
+BER\footnote{Basic Encoding Rules}. Trailers are data that follows a struct, 
+this can be any kind of data, but our dissectors currently only support ASN.1. 
+The utility is able to configure these data.  In \autoref{code:trailer}, we 
+specify ''asn1\_count'' as a member in the struct, this is used to tell the 
+number of ASN.1 fields. The config in  \autoref{code:trailerconf} specifies 
+fields with size of six bytest, the number of fields are specified by the data 
+sent with the struct. At the end there is aa field of size five bytes. An 
+example of ASN.1 in wireshark, can be seen in \autoref{fig:wstrailer}.
 
 \begin{figure}[ht]
 	\center

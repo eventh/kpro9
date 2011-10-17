@@ -1,0 +1,42 @@
+Structs:
+  - name: array_test
+    id: 16
+    description: Multidimensional array
+
+  - name: bitstring_test
+    id: 13
+    description: Bit string test
+    bitstrings:
+      - member: flags
+        1: In use
+        2: [Endian, Big, Little]
+        3-4: [Platform, Win, Linux, Mac, Solaris]
+        5: [Test]
+      - type: short
+        1: RED
+        2: Blue
+        3: Green
+
+  - name: cenum_test
+    id: 11
+    description: C Enum test        
+
+  - name: enum_test
+    id: 10
+    description: Enum config test
+    enums:
+      - member: weekday
+        values: {1: MONDAY, 2: TUESDAY, 3: WEDNESDAY, 4: THURSDAY, 5: FRIDAY, 6: SATURDAY, 7: SUNDAY}
+      - type: int
+        values: [Zero, One, Two, Three, Four, Five]
+        strict: True
+
+  - name: range_test
+    id: 9
+    description: Range rules test
+    ranges:
+      - member: age
+        min: 0
+        max: 100
+
+

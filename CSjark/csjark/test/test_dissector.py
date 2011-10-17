@@ -291,10 +291,10 @@ def create_protos():
     conf.id = 25
     conf.description = 'This is a test'
 
-    rules = [Trailer(conf, {'name': 'missing', 'count': 'missing', 'size': 0}),
+    rules = [Trailer(conf, {'name': 'missing', 'member': 'missing', 'size': 0}),
              Trailer(conf, {'name': 'simple', 'count': 1, 'size': 4}),
              Trailer(conf, {'name': 'bur', 'count': 3, 'size': 8}),
-             Trailer(conf, {'name': 'ber', 'count': 'count'})]
+             Trailer(conf, {'name': 'ber', 'member': 'count'})]
 
     proto = dissector.Protocol('tester', None, conf)
 

@@ -43,7 +43,7 @@ Structs:
     id: 66
     trailers:
       - name: ber
-        count: asn1_count
+        member: asn1_count
         size: 6
       - name: ber
         count: 1

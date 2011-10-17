@@ -334,6 +334,13 @@ class Custom(BaseRule):
 
 
 class ConformanceFile:
+    # Tokens for different sections
+    t_hdr = 'FN_HDR'
+    t_body = 'FN_BODY'
+    t_end = 'END'
+    t_end_cnf = 'END_OF_CNF'
+    tokens = [t_hdr, t_body, t_end, t_end_cnf]
+
     def __init__(self, conf, file, rule=None):
         # Find the specified file
         self.file = str(file)
@@ -344,7 +351,57 @@ class ConformanceFile:
 
         # Read content of the specified file
         with open(self.file, 'r') as f:
-            self.contents = f.read()
+            self._lines = f.readlines()
+
+        # Section contents
+        self.header = None
+        self.body = None
+
+        self.parse()
+
+    def _get_token(self, line):
+        tmp = line[2:].strip().split(' ')
+        return tmp[0]
+
+    def handle_body(self, content):
+        if '%(DEFAULT_BODY)s' in content:
+            content = content.replace('%(DEFAULT_BODY)s', '{DEFAULT_BODY}')
+        self.body = content
+        print("body", self.body)
+
+    def handle_header(self, content):
+        self.header = content
+        print("header", self.header)
+
+    def parse(self):
+        token = None
+        content = ''
+        mapping = {self.t_body: self.handle_body}
+
+        def store():
+            nonlocal content, token, mapping
+            if token in mapping:
+                mapping[token](content)
+            content = ''
+
+        # Go through all lines and assign content
+        for line in self._lines:
+            if not line.startswith('#.'):
+                content += line
+                continue
+
+            new_token = self._get_token(line)
+            if token is not None:
+                store() # Save current content
+
+            token = new_token
+            if token == self.t_end_cnf:
+                break # End of cnf file
+            if token == self.t_end:
+                continue # End token
+
+        if token not in (self.t_end, self.t_end_cnf):
+            store() # File ended without end token
 
 
 def handle_struct(obj):

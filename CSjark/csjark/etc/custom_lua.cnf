@@ -1,6 +1,10 @@
+#.FN_BODY
 Magic!!
 
-{DEFAULT_BODY}
+%(DEFAULT_BODY)s
 
+#.END
 More magic!!
+
+#.END_OF_CNF
 

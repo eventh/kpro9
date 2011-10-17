@@ -43,9 +43,11 @@ def create_protocols():
     yield structs
 
     # Write out dissectors for manual testing
-    for name, code in structs.items():
-        with open('%s.lua' % name, 'w') as f:
-            f.write(code)
+    if True:
+        path = os.path.dirname(__file__)
+        for name, code in structs.items():
+            with open('%s/%s.lua' % (path, name), 'w') as f:
+                f.write(code)
 
     # Clean up context
     del structs
@@ -307,5 +309,57 @@ def ranges(structs):
 @sprint2.test
 def trailers(structs):
     """End-to-end test headers with trailers in them."""
-    pass
+    assert structs['trailer_test']
+    assert compare_lua(structs['trailer_test'], '''
+    -- Dissector for struct: trailer_test: struct trailer_test
+    local proto_trailer_test = Proto("trailer_test", "struct trailer_test")
+    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- ProtoField defintions for struct: trailer_test
+    local f = proto_trailer_test.fields
+    -- Array definition for tmp
+    f.tmp_0 = ProtoField.bytes("trailer_test.tmp", "tmp")
+    f.tmp_1 = ProtoField.bytes("trailer_test.tmp", "tmp")
+    f.tmp_2 = ProtoField.bytes("trailer_test.tmp", "tmp")
+    f.tmp_3 = ProtoField.bytes("trailer_test.tmp", "tmp")
+    f.tmp_4 = ProtoField.bytes("trailer_test.tmp", "tmp")
+    f.tmp__0 = ProtoField.float("trailer_test.tmp.0", "[0]")
+    f.tmp__1 = ProtoField.float("trailer_test.tmp.1", "[1]")
+    f.tmp__2 = ProtoField.float("trailer_test.tmp.2", "[2]")
+    f.tmp__3 = ProtoField.float("trailer_test.tmp.3", "[3]")
+    f.tmp__4 = ProtoField.float("trailer_test.tmp.4", "[4]")
+    f.asn1_count = ProtoField.int32("trailer_test.asn1_count", "asn1_count")
+    -- Dissector function for struct: trailer_test
+    function proto_trailer_test.dissector(buffer, pinfo, tree)
+    local subtree = tree:add(proto_trailer_test, buffer())
+    pinfo.cols.info:append(" (" .. proto_trailer_test.description .. ")")
+    -- Array handling for tmp
+    local arraytree = subtree:add(f.tmp_0, buffer(0, 20))
+    arraytree:set_text("tmp (array: 5 x float)")
+    arraytree:add(f.tmp__0, buffer(0, 4))
+    arraytree:add(f.tmp__1, buffer(4, 4))
+    arraytree:add(f.tmp__2, buffer(8, 4))
+    arraytree:add(f.tmp__3, buffer(12, 4))
+    arraytree:add(f.tmp__4, buffer(16, 4))
+    subtree:add(f.asn1_count, buffer(20, 4))
+    -- Trailers handling for struct: trailer_test
+    local trail_offset = 24
+    local trail_count = buffer(20, 4):int()
+    for i = 1, trail_count do
+    local trailer = Dissector.get("ber")
+    trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
+    trail_offset += i * 6
+    end
+    local trailer = Dissector.get("ber")
+    trailer:call(buffer(trail_offset, 5):tvb(), pinfo, tree)
+    trail_offset += 5
+    for i = 1, 2 do
+    local trailer = Dissector.get("ber")
+    trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
+    trail_offset += i * 6
+    end
+    local trailer = Dissector.get("ber")
+    trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
+    end
+    luastructs_dt:add(66, proto_trailer_test)
+    ''')
 

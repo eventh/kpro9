@@ -35,3 +35,8 @@ struct range_test {
     int age;
 };
 
+struct trailer_test {
+    float tmp[5];
+    int asn1_count;
+};
+

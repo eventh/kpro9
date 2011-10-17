@@ -497,7 +497,7 @@ class Protocol:
                 count = rule.count
 
             # Call trailers 'count' times
-            self.data.append('\tfor i = 0, {count} do'.format(count=count-1))
+            self.data.append('\tfor i = 0, {count} - 1 do'.format(count=count))
 
             trail = '\t\tlocal trailer = Dissector.get("{name}")'
             call = '\t\ttrailer:call(buffer({offset}+(i*{size}),' \

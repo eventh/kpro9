@@ -5,9 +5,9 @@ Structs:
       #- name: ber # Name of the protocol
       #  count: 3 # Number of struct member with amount of protocols
       #  size: 8 # Size of the buffer to feed to the protocol
-      #- name: ber
-      #  count: asn1_count
-      #  size: 12
       - name: ber
-        count: 2
+        count: asn1_count
         size: 6
+      #- name: ber
+      #  count: 2
+      #  size: 6

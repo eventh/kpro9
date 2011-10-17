@@ -251,7 +251,7 @@ This us done by reading the custom Lua file(s) and writing the content to the re
 \textbf{Who:} Administrator\\
 \textbf{What:} The user wants to set up the program to run automatically, so that the program creates dissectors from the C header and configuration file(s) that are specified.\\
 \textbf{How:} When the user feeds the command line with an input argument, header or configuration, the utility shall check if the input is a single file or a directory (folder). If it is a file, parse it. If it is a folder, retrieve all files in that folder and add them to a list, this list will be sent to the parser and all the files will be parsed one after another. If there is a directory within a directory, that should be included, and they will be traversed recursively. This way we can start in a root folder and include all files, independent of the depth. The batch mode shall only include files with the extension .h (a header file) or .yml (config file), which are the files that are going to be parsed as input.\\
-\textbf{Result:} Now it shall be possible to feed the utility with folders to make dissectors of all the headers found, also called batch mode.
+\textbf{Result:} Now it shall be possible to feed the utility with folders to make dissectors of all the headers found, also called batch mode.\\
 \line(1,0){360}\\	
 
 
@@ -262,7 +262,7 @@ For sprint 2 the team decided to refactor some of the code in order to make it e
 
 \subsection{Utility}
 %--------------------
-\autoref{fig:sp2:class} shows the class diagram the team made for sprint 2. The main differences from sprint 1 are the additions of new classes, extending the functionality of the utility so that the utility can handle more domplex header files than it could before. The developers also generalized some of the modules and used inheritance to support the re-use of code 
+\autoref{fig:sp2:class} shows the class diagram the team made for sprint 2. The main differences from sprint 1 are the additions of new classes, extending the functionality of the utility so that the utility can handle more complex header files than it could before. The developers also generalized some of the modules and used inheritance to support the re-use of code 
 \begin{figure}[!htb]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s2}

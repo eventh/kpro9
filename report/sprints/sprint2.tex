@@ -182,21 +182,21 @@ For sprint 2 the team decided to refactor some of the code in order to make it e
 \section{Implementation}
 %----------------------
 
-The previous sprint had a focus on creating a native implementation of the 
-utility. In this sprint the focus has been on implementing data types for the 
-C programming language and make it possible to configure more options on how 
+In the previous sprint we focused on creating a native implementation of the 
+utility. In this sprint the focus was on implementing data types for the 
+C programming language and making it possible to configure more options on how 
 the dissector will function. This section will cover the requirements 
-implemented, how they are implemented and what the ''output'' look like.
+implemented, how they were implemented and what the ''output'' looks like.
 
 \subsection{Support Members of Type enum}
 %----------------------
 \label{sec:supportenum}
 Enum is a type declaration in C, which specifies enumeration constants.  Enum 
 is supported because it is a basic datatype in the C language. 
-\autoref{code:cenum} shows an example of an enum in a c-header file. The 
-wireshark dissector will displayed the named value, because this will make it 
+\autoref{code:cenum} shows an example of an enum in a C-header file. The 
+Wireshark dissector will display the named value, making it 
 easier to read, an example is shown in \autoref{fig:wscenum}. The red 
-rectangle show the enumerated named value.
+rectangle shows the enumerated named value.
 
 \begin{figure}[ht]
 	\center
@@ -209,9 +209,9 @@ rectangle show the enumerated named value.
 
 \subsection{Support Members of Type Struct}
 %----------------------
-Structs is an important part of the C language, a struct decalaration consists 
+Structs are an important part of the C language, a struct declaration consists 
 of a group of different fields, these fields can have any type, also struct. 
-This was therfore a important requirement to implemented. An example is shown 
+This was therefore an important requirement to implement. An example is shown 
 in \autoref{code:structmember}.
 
 \lstset{language=C,caption={Struct support},label=code:structmember}
@@ -219,14 +219,13 @@ in \autoref{code:structmember}.
 
 \subsection{Detect Structs with Same Name}
 %----------------------
-It is possible that two structs can have the same name, therefore it is 
-important to detect if there is more than one struct with the same name. If 
-the parser finds two structs with the same name, an exception is 
-raised, and the generation of the dissector is stopped.
+Two structs can have the same name, and therefore we needed a way of detecting it. 
+If the parser finds two structs with the same name, an exception is 
+raised, and the generation of the dissector is terminated.
 
 \subsection{Support display of structs within structs}
 %----------------------
-The utility is able to display structs within a struct in wireshark, the 
+The utility is able to display structs within a struct in Wireshark, the 
 member will be visible, and the struct will be in a subtree that can be 
 expanded. \autoref{fig:wsstructstruct} is a screenshot of this dissector in 
 Wireshark.
@@ -239,10 +238,10 @@ Wireshark.
 
 \subsection{Support Enumerated Named Values}
 %----------------------
-In C there is two ways to do enumerations, the first option was explained in 
+In C there are two ways to do enumerations, the first option was explained in 
 \autoref{sec:supportenum}, the other way is to use \#define which is shown in 
-\autoref{code:defenum}. The advantage of using \#define is  that the values 
-can be generated. Since this cannot be understand by the parser, it can be 
+\autoref{code:defenum}. The advantage of using \#define is that the values 
+can be generated. Since this cannot be understood by the parser, it can be 
 generated directly from the header file, so it have to be supported by 
 configuration. \autoref{code:enumconf}. The Lua-dissector will display the 
 enum in the same way as in \autoref{sec:supportenum}.
@@ -276,8 +275,8 @@ The values are also named, if they are configured.
 \subsection{Support Members of Type Array}
 %----------------------
 Csjark supports header-files with arrays, and is able to display them in 
-wireshark with the Lua-dissector. Csjark supports arrays of all data types 
-implemented so far. The wireshark dissector can display multidimensional 
+Wireshark with the Lua-dissector. Csjark supports arrays of all data types 
+implemented so far. The Wireshark dissector can display multidimensional 
 arrays, and will create a new subtree for each dimension.  A representation of 
 arrays in wireshark is displayed in \autoref{fig:wsarray}.
 
@@ -289,41 +288,41 @@ arrays in wireshark is displayed in \autoref{fig:wsarray}.
 
 \subsection{Struct with Various Trailers}
 %----------------------
-The utility is able to support struct that has various trailers. Trailers is 
+The utility is able to support struct that has various trailers. Trailers are
 data that follows a struct, this can be any kind of data. The utility is able to configure these data.
 TODO: Not finished(add example + screenshot)
 
 \subsection{Custom Lua Configuration}
 %----------------------
-Csjark can support custom Lua configuration, by including Lua-scripts from a file specified in the configuration file. This is implemented so the users of the utility can include parts for the dissector, which our utility is not able to generate. The Lua-script can also include dissector for trailers, which are not from a struct.
+Csjark can support custom Lua configuration, by including Lua-scripts from a file specified in the configuration file. This is implemented so that the users of the utility can include parts for the dissector, which our utility is not able to generate. The Lua-script can also include dissector for trailers, which are not from a struct.
 TODO: Not finished(add example + screenshot)
 
 \subsection{Dissector ID}
 %----------------------
 All struct-packets that Wireshark captures, has a header, one of the fields in 
 the header is the message id. This id is used to load the the correct 
-dissector when a packet is captured. Each dissector should have an unique id, 
-to avoid possible conflicts. This is functionallity is implemented and the 
+dissector when a packet is captured. Each dissector should have a unique id, 
+to avoid possible conflicts. This functionallity is implemented and the 
 message id must be specified in the configuration file, \autoref{code:msgid} 
-is an example on how this is done.
+is an example of how this is done.
 
 \lstset{language=C,caption={Dissector ID config},label=code:msgid}
 \lstinputlisting[language=C]{./sprints/code/messageid.yml}
 
 \subsection{Endian Handling}
 %----------------------
-Endian handling is postponed to the next sprint, since it is a platform 
-specified problem, and should be implemented togheter with platform support.
+Endian handling is postponed to the next sprint, because it is a platform 
+specific problem, and should be implemented together with platform support.
 
 \subsection{Folder Support in the CLI}
 %----------------------
 Folder support in the CLI\footnote{Command-line Interface} has been 
 implemented, so it is possible to generate Lua-scripts for all structs stored 
-in a given folder. At this moment, all dissectors will be regenerated. 
-Functionallity to only generate modified or new header-files will be added in 
-the next sprint. \autoref{fig:csjarkfolder} is an example usage of CSjark. 
-Where the command first shows the usage of csjark, and the second command 
-generates dissectors from the folder ''header/'' and configutrations from ''etc/''.
+in a given folder. At the moment, all dissectors will be regenerated. 
+Functionality to only generate modified or new header-files will be added in 
+the next sprint. \autoref{fig:csjarkfolder} is an example usage of CSjark where
+the command first shows the usage of CSjark, and the second command 
+generates dissectors from the folder ''header/'' and configurations from ''etc/''.
 
 \begin{figure}[ht]
 	\center
@@ -333,15 +332,15 @@ generates dissectors from the folder ''header/'' and configutrations from ''etc/
 
 \subsection{Support Custom Handling of Specified Data Types}
 %----------------------
-The utility support custom handling of different data types, this includes 
-functionallity to support  time\_t and nstime\_t. Alle basic data types and 
-struct members can be configured to be handled in special way. 
+The utility supports custom handling of different data types, this includes 
+functionality to support  time\_t and nstime\_t. All basic data types and 
+struct members can be configured to be handled in a special way. 
 \autoref{code:customstruct} show an example of a struct with four members, two 
 of them are time fields, and the last two is a BOOL and an integer to be 
 handled in a custom way. This struct is configured in 
 \autoref{code:customconfig}, in the config the two time fields are configured 
-to be respectively absolute time and relative time, and the BOOL  type to have 
-a size of four bytes. The struct member ''all' is configured with a enumrated 
+to be respectively absolute time and relative time, and the BOOL type to have 
+a size of four bytes. The struct member ''all' is configured with an enumerated 
 value, and will be visible as a hex-value. \autoref{fig:customdatatype} is a 
 screenshot of the struct in Wireshark.
 

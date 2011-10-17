@@ -2,11 +2,12 @@ Structs:
   - name: trailer_test
     id: 66
     trailers:
-      - name: ber # Name of the protocol
-        count: 3 # Number of struct member with amount of protocols
-        size: 8 # Size of the buffer to feed to the protocol
+      #- name: ber # Name of the protocol
+      #  count: 3 # Number of struct member with amount of protocols
+      #  size: 8 # Size of the buffer to feed to the protocol
+      #- name: ber
+      #  count: asn1_count
+      #  size: 12
       - name: ber
-        count: asn1_count
-        size: 12
-      - name: ber
-        count: 1
+        count: 2
+        size: 6

@@ -504,9 +504,9 @@ class Protocol:
                 self.data.append('\tfor i = 1, {count} do'.format(count=count))
                 t1 = '\t%s' % t1
                 t2 = '\t%s' % t2
-                t3 = '\t\t{var} += i * {size}'
+                t3 = '\t\t{var} = {var} + (i * {size})'
             else:
-                t3 = '\t{var} += {size}'
+                t3 = '\t{var} = {var} + {size}'
 
             self.data.append(t1.format(name=rule.name))
             self.data.append(t2.format(off=offset_var, size=size_str))

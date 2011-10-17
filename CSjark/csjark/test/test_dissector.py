@@ -389,11 +389,11 @@ def protos_create_dissector(proto):
     local trail_offset = 96
     local trailer = Dissector.get("simple")
     trailer:call(buffer(trail_offset, 4):tvb(), pinfo, tree)
-    trail_offset += 4
+    trail_offset = trail_offset + 4
     for i = 1, 3 do
     local trailer = Dissector.get("bur")
     trailer:call(buffer(trail_offset, 8):tvb(), pinfo, tree)
-    trail_offset += i * 8
+    trail_offset = trail_offset + 8
     end
     local trail_count = buffer(92, 4):int()
     for i = 1, trail_count do

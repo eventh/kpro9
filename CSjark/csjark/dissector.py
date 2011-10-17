@@ -471,9 +471,9 @@ class Protocol:
         self.data.append('\n\t-- Trailers handling for struct: %s' % self.name)
 
         # Offset variable and variable declaration
-        offset_var = 'trail_offset'
+        off_var = 'trail_offset'
         t_offset = '\tlocal {var} = {offset}'
-        self.data.append(t_offset.format(offset=offset, var=offset_var))
+        self.data.append(t_offset.format(offset=offset, var=off_var))
 
         for i, rule in enumerate(rules):
             # Find the count
@@ -495,25 +495,23 @@ class Protocol:
             if rule.size is not None:
                 size_str = ', %i' % rule.size
 
-            # Call trailers 'count' times
-            t1 = '\tlocal trailer = Dissector.get("{name}")'
-            t2 = '\ttrailer:call(buffer({off}{size}):tvb(), pinfo, tree)'
 
-            # Add for loop if neceseary
+            # Call trailers 'count' times
+            tabs = '\t'
             if rule.member is not None or count > 1:
                 self.data.append('\tfor i = 1, {count} do'.format(count=count))
-                t1 = '\t%s' % t1
-                t2 = '\t%s' % t2
-                t3 = '\t\t{var} = {var} + (i * {size})'
-            else:
-                t3 = '\t{var} = {var} + {size}'
+                tabs += '\t'
 
-            self.data.append(t1.format(name=rule.name))
-            self.data.append(t2.format(off=offset_var, size=size_str))
+            t1 = '{tabs}local trailer = Dissector.get("{name}")'
+            t2 = '{tabs}trailer:call(buffer({off}{size}):tvb(), pinfo, tree)'
+            t3 = '{tabs}{var} = {var} + {size}'
+            self.data.append(t1.format(tabs=tabs, name=rule.name))
+            self.data.append(t2.format(tabs=tabs, off=off_var, size=size_str))
 
             # Update offset after all but last trailer
             if i < len(rules)-1:
-                self.data.append(t3.format(var=offset_var, size=rule.size))
+                self.data.append(t3.format(tabs=tabs,
+                                           var=off_var, size=rule.size))
 
             if rule.member is not None or count > 1:
                 self.data.append('\tend') # End for loop

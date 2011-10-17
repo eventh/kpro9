@@ -347,15 +347,15 @@ def trailers(structs):
     for i = 1, trail_count do
     local trailer = Dissector.get("ber")
     trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
-    trail_offset += i * 6
+    trail_offset = trail_offset + 6
     end
     local trailer = Dissector.get("ber")
     trailer:call(buffer(trail_offset, 5):tvb(), pinfo, tree)
-    trail_offset += 5
+    trail_offset = trail_offset + 5
     for i = 1, 2 do
     local trailer = Dissector.get("ber")
     trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
-    trail_offset += i * 6
+    trail_offset = trail_offset + 6
     end
     local trailer = Dissector.get("ber")
     trailer:call(buffer(trail_offset):tvb(), pinfo, tree)

@@ -41,7 +41,62 @@ Example: ::
         type: int
         min: 0
         max: 100
+
+Enums
+~~~~~
+
+Values of integer variables can be assigned to string values similarly to enumerated values in most programming languages. Thus, instead of integer value, a corresponding value defined in configuration file as a enumeration can be displayed. 
+
+The enumeration definition can be of two types. The first one, mapping specified integer by its struct member name, so it gains string value dependent on the actual integer value. And the second, where assigned string values correspond to every struct member of the type defined in the configuration.
+
+The enum definition, as an attribute of the ``Structs`` item of the configuration file, always starts by ``enums`` keyword. It is followed by list of members/types for which we want to define enumerated integer values for. Each list item consists 2 mandatory and 1 optional value
+::
+
+    - member | type: member name | type name
+      values: [value1, value2, ...] | { key1: value1, key2: value2, ...}
+      strict: True | False
+
+where 
+
+- ``member name``/``type name`` contains string value of integer variable name for which we want to define enumerated values
+- ``[value1, value2, ...]`` is comma-separated list of enumerated values (implicitly numbered, starting from 0) 
+- ``{ key1: value1, key2: value2, ...}`` is comma-separated list of key-value pairs, where ``key`` is integer value and ``value`` is it's assigned string value
+- ``strict`` is boolean value, which disables warning, if integer does not contain a value specified in the enum list (default ``True``)
     
+
+
+Member Config
+#############
+
+Example of Struct definition with member named ``weekday`` and values defined as a list of key-value pairs.
+
+::
+
+    Structs:
+      - name: enum_example1
+        id: 10
+        description: Enum config example 1
+        enums:
+          - member: weekday
+            values: {1: MONDAY, 2: TUESDAY, 3: WEDNESDAY, 4: THURSDAY, 5: FRIDAY, 6: SATURDAY, 7: SUNDAY}
+
+Type config
+###########
+
+In this example we can see definition of enumerated values for ``int`` type. Values are given by simple list, therefore numbering is implicit (starting from 0, i.e. ``Blue`` = 2). Warning in case of invalid integer value *will* be displayed.
+
+::
+
+    Structs:
+      - name: enum_example2
+        id: 10
+        description: Enum config example 2
+        enums:       
+          - type: int
+            values: [Black, Red, Blue, Green, Yellow, White]
+            strict: True # Disable warning if not a valid value
+
+
 Bitstrings
 ~~~~~~~~~~
 
@@ -87,7 +142,19 @@ This example specifies a bitstring for all data types of short. ::
             0: Red
             1: Green
             2: Blue
-        
+
+
+Dissector ID
+~~~~~~~~~~~~~~~~~~
+
+In every struct-packet that Wireshark captures, there is a header. One of the fields in the header, the id field, specifies which dissector that should be loaded to dissect the actual struct. This field can be specified in the configuration file. If no configfile is given, the packet will be assigned a default dissector.  
+
+This is an example of the specification ::
+
+    Structs: 
+	−name: structname 
+	id: 10 
+
 Value explanations
 ~~~~~~~~~~~~~~~~~~
 

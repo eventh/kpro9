@@ -407,7 +407,6 @@ class ConformanceFile:
         if token not in (self.t_end, self.t_end_cnf):
             if token in mapping:
                 mapping[token](content)
-            content = ''
 
 
 def handle_struct(obj):

@@ -195,7 +195,10 @@ There are two ways to configure the trailers, specifiy the total number of trail
 	  - size: "size of the buffer"
 
 Example:
-The example below shows an example with BER\footnote{Basic Encoding Rules}, which av 4 trailers with a size of 6 bytes.
+The example below shows an example with BER [#]_, which av 4 trailers with a size of 6 bytes.
+
+.. [#] Basic Encoding Rules
+
 ::
 
 	trailers:

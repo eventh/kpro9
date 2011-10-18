@@ -75,6 +75,7 @@ def arrays_def(one, two):
     f.arr_0 = ProtoField.bytes("test.arr", "arr")
     f.arr_1 = ProtoField.bytes("test.arr", "arr")
     f.arr_2 = ProtoField.bytes("test.arr", "arr")
+    f.arr_3 = ProtoField.bytes("test.arr", "arr")
     f.arr__0 = ProtoField.float("test.arr.0", "[0]")
     f.arr__1 = ProtoField.float("test.arr.1", "[1]")
     f.arr__2 = ProtoField.float("test.arr.2", "[2]")
@@ -86,6 +87,7 @@ def arrays_def(one, two):
     -- Array definition for str
     f.str_0 = ProtoField.string("test.str", "str")
     f.str_1 = ProtoField.string("test.str", "str")
+    f.str_2 = ProtoField.string("test.str", "str")
     f.str__0 = ProtoField.string("test.str.0", "[0]")
     f.str__1 = ProtoField.string("test.str.1", "[1]")
     ''')
@@ -340,6 +342,7 @@ def protos_create_dissector(proto):
     f.array_0 = ProtoField.bytes("tester.array", "array")
     f.array_1 = ProtoField.bytes("tester.array", "array")
     f.array_2 = ProtoField.bytes("tester.array", "array")
+    f.array_3 = ProtoField.bytes("tester.array", "array")
     f.array__0 = ProtoField.float("tester.array.0", "[0]")
     f.array__1 = ProtoField.float("tester.array.1", "[1]")
     f.array__2 = ProtoField.float("tester.array.2", "[2]")
@@ -349,6 +352,7 @@ def protos_create_dissector(proto):
     -- Array definition for str
     f.str_0 = ProtoField.string("tester.str", "str")
     f.str_1 = ProtoField.string("tester.str", "str")
+    f.str_2 = ProtoField.string("tester.str", "str")
     f.str__0 = ProtoField.string("tester.str.0", "[0]")
     f.str__1 = ProtoField.string("tester.str.1", "[1]")
     f.count = ProtoField.int32("tester.count", "count")

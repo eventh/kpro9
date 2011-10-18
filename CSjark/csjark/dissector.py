@@ -142,6 +142,12 @@ class ArrayField(Field):
         type_ = self.type
         if type_ not in ('string', 'stringz'):
             type_ = 'bytes'
+
+        # Top-level subtree
+        data.append(self.create_field('%s_%i' % (
+                    self.var, i), type_, self.abbr, self.name))
+        i += 1
+
         for k, size in enumerate(self.depth):
             if len(self.depth) > 1 and k == len(self.depth) - 1:
                 continue # Multi-dim array, no subtree last depth level
@@ -317,20 +323,6 @@ class RangeField(Field):
         return '\n'.join(data)
 
 
-class CustomField(Field):
-    """A Field defined by a Custom rule."""
-
-    def __init__(self, name, type, size, rule):
-        super().__init__(name, type, size)
-        self.rule = rule
-
-    def get_definition(self):
-        return super().get_definition()
-
-    def get_code(self, offset):
-        return super().get_code(offset)
-
-
 class Protocol:
     """A Protocol is a collection of fields and code.
 
@@ -400,10 +392,6 @@ class Protocol:
         """Create and add a new BitField to the protocol."""
         return self._add(BitField(*args, **vargs))
 
-    def add_custom(self, *args, **vargs):
-        """Create and add a new CustomField to the protocol."""
-        return self._add(CustomField(*args, **vargs))
-
     def add_protocol(self, *args, **vargs):
         """Create and add a new ProtocolField to the protocol."""
         return self._add(ProtocolField(*args, **vargs))
@@ -454,7 +442,9 @@ class Protocol:
         offset = 0
         for field in self.fields:
             code = field.get_code(offset)
-            if code is not None:
+            if self.conf and self.conf.cnf:
+                code = self._cnf_field_code(field, code)
+            if code:
                 self.data.append(code)
             if field.size is not None:
                 offset += field.size
@@ -516,26 +506,28 @@ class Protocol:
             if rule.member is not None or count > 1:
                 self.data.append('\tend') # End for loop
 
-    def _cnf_rules(self, rule):
-        """Handle custom lua file for this protocol."""
-        return ''
-        text = '-- Custom lua file %s for struct %s' % (rule.file, self.name)
-        text = '%s\n%s' % (text, rule.contents)
+    def _cnf_field_code(self, field, code):
+        """Modify fields code if a cnf file demands it."""
+        if field.name in self.conf.cnf.rules:
+            rules = self.conf.cnf.rules[field.name]
 
-        # Interpolate dissector func
-        if '{DEFAULT_BODY}' in text:
-            self.data = []
-            self._dissector_func()
-            text = text.format(DEFAULT_BODY='\n'.join(self.data))
+            # Header rule, insert custom lua before generated code
+            if self.conf.cnf.t_hdr in rules:
+                return '%s\n%s' % (rules[self.conf.cnf.t_hdr], code)
 
-        return text
+            # Body rules, replace custom lua with generated code
+            elif self.conf.cnf.t_body in rules:
+                content = rules[self.conf.cnf.t_body]
+                if '%(DEFAULT_BODY)s' in content:
+                    content = content.replace('%(DEFAULT_BODY)s', code)
+                if '{DEFAULT_BODY}' in content:
+                    content = content.format(DEFAULT_BODY=code)
+                return content
+
+        return code
 
     def create(self):
         """Returns all the code for dissecting this protocol."""
-        # Handle custom lua file rules
-        if self.conf and self.conf.cnf is not None:
-            return self._cnf_rules(self.conf.cnf)
-
         # Create dissector content
         self._header_defintion()
         self._fields_definition()

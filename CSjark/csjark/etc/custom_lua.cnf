@@ -1,14 +1,10 @@
-#.FN_BODY
-Magic!!
+#.FN_HDR truth
+--magic!!
 
+#.FN_BODY str
 %(DEFAULT_BODY)s
-
+-- More Magic!!
 #.END
-More magic!!
-
-#.FN_HDR
-
-something else
 
 #.END_OF_CNF
 

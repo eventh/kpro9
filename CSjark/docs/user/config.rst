@@ -147,12 +147,13 @@ This example specifies a bitstring for all data types of short. ::
 Dissector ID
 ~~~~~~~~~~~~~~~~~~
 
-All struct-packets that Wireshark captures, has a header, one of the ﬁelds in 
-the header is the message id. This id is used to load the the correct dissector 
-when a packet is captured. Each dissector should have a unique id, to avoid 
-possible conﬂicts. This functionallity is implemented and the message id
-must be speciﬁed in the conﬁguration ﬁle, Listing 1.8 is an example of how 
-this is done. 
+In every struct-packet that Wireshark captures, there is a header. One of the fields in the header, the id field, specifies which dissector that should be loaded to dissect the actual struct. This field can be specified in the configuration file. If no configfile is given, the packet will be assigned a default dissector.  
+
+This is an example of the specification ::
+
+    Structs: 
+	‚àíname: structname 
+	id: 10 
 
 Value explanations
 ~~~~~~~~~~~~~~~~~~

@@ -470,17 +470,12 @@ class Protocol:
         """Add code for handling of trailers to the protocol."""
         self.data.append('\n\t-- Trailers handling for struct: %s' % self.name)
 
-        for rule in rules:
-            # The simple special case
-            if rule.count == 1 or rule.size is None:
-                trail = '\tlocal trailer = Dissector.get("{name}")'
-                call = '\ttrailer:call(buffer({offset}):tvb(), pinfo, tree)'
-                self.data.append(trail.format(name=rule.name))
-                self.data.append(call.format(offset=offset))
-                if rule.size is not None:
-                    offset += rule.size
-                continue
+        # Offset variable and variable declaration
+        off_var = 'trail_offset'
+        t_offset = '\tlocal {var} = {offset}'
+        self.data.append(t_offset.format(offset=offset, var=off_var))
 
+        for i, rule in enumerate(rules):
             # Find the count
             if rule.member is not None:
                 # Find offset, size and func_type
@@ -496,21 +491,30 @@ class Protocol:
             else:
                 count = rule.count
 
+            size_str = ''
+            if rule.size is not None:
+                size_str = ', %i' % rule.size
+
+
             # Call trailers 'count' times
-            self.data.append('\tfor i = 0, {count} - 1 do'.format(count=count))
+            tabs = '\t'
+            if rule.member is not None or count > 1:
+                self.data.append('\tfor i = 1, {count} do'.format(count=count))
+                tabs += '\t'
 
-            trail = '\t\tlocal trailer = Dissector.get("{name}")'
-            call = '\t\ttrailer:call(buffer({offset}+(i*{size}),' \
-                        '{size}):tvb(), pinfo, tree)'
-            self.data.append(trail.format(name=rule.name))
-            self.data.append(call.format(offset=offset, size=rule.size))
-            self.data.append('\tend')
-            self.data.append('')
+            t1 = '{tabs}local trailer = Dissector.get("{name}")'
+            t2 = '{tabs}trailer:call(buffer({off}{size}):tvb(), pinfo, tree)'
+            t3 = '{tabs}{var} = {var} + {size}'
+            self.data.append(t1.format(tabs=tabs, name=rule.name))
+            self.data.append(t2.format(tabs=tabs, off=off_var, size=size_str))
 
-            if rule.count:
-                offset += rule.size * rule.count
-            else:
-                offset += rule.size
+            # Update offset after all but last trailer
+            if i < len(rules)-1:
+                self.data.append(t3.format(tabs=tabs,
+                                           var=off_var, size=rule.size))
+
+            if rule.member is not None or count > 1:
+                self.data.append('\tend') # End for loop
 
     def _cnf_rules(self, rule):
         """Handle custom lua file for this protocol."""

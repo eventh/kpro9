@@ -1,4 +1,8 @@
+#include "time.h"
+
 #define STRING_LEN 10
+
+typedef signed int BOOL;
 
 struct array_test {
     char chararr1[16];
@@ -23,6 +27,16 @@ struct cenum_test {
     enum Months mnd;
 };
 
+struct custom_lua {
+    short normal;
+    long long special;
+
+    time_t abs;
+    time_t rel;
+    BOOL bol;
+    int all;
+};
+
 struct enum_test {
     int id;
     char name[STRING_LEN];
@@ -33,5 +47,10 @@ struct enum_test {
 struct range_test {
     char name[STRING_LEN];
     int age;
+};
+
+struct trailer_test {
+    float tmp[5];
+    int asn1_count;
 };
 

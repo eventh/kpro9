@@ -43,9 +43,11 @@ def create_protocols():
     yield structs
 
     # Write out dissectors for manual testing
-    for name, code in structs.items():
-        with open('%s.lua' % name, 'w') as f:
-            f.write(code)
+    if True:
+        path = os.path.dirname(__file__)
+        for name, code in structs.items():
+            with open('%s/%s.lua' % (path, name), 'w') as f:
+                f.write(code)
 
     # Clean up context
     del structs
@@ -57,6 +59,7 @@ def create_protocols():
 @sprint2.test
 def arrays(structs):
     """End-to-end test headers with arrays in them."""
+    assert 'array_test' in structs
     assert structs['array_test']
     assert compare_lua(structs['array_test'], '''
     -- Dissector for struct: array_test: Multidimensional array
@@ -158,6 +161,7 @@ def arrays(structs):
 @sprint2.test
 def bitstrings(structs):
     """End-to-end test headers with bitstrings in them."""
+    assert 'bitstring_test' in structs
     assert structs['bitstring_test']
     assert compare_lua(structs['bitstring_test'], '''
     -- Dissector for struct: bitstring_test: Bit string test
@@ -211,6 +215,7 @@ def bitstrings(structs):
 @sprint2.test
 def cenums(structs):
     """End-to-end test headers with C enums in them."""
+    assert 'cenum_test' in structs
     assert structs['cenum_test']
     assert compare_lua(structs['cenum_test'], '''
     -- Dissector for struct: cenum_test: C Enum test
@@ -237,8 +242,41 @@ def cenums(structs):
 
 
 @sprint2.test
+def custom(structs):
+    """End-to-end test headers with custom field rules."""
+    assert 'custom_lua' in structs
+    assert structs['custom_lua']
+    assert compare_lua(structs['custom_lua'], '''
+    -- Dissector for struct: custom_lua: struct custom_lua
+    local proto_custom_lua = Proto("custom_lua", "struct custom_lua")
+    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- ProtoField defintions for struct: custom_lua
+    local f = proto_custom_lua.fields
+    f.normal = ProtoField.int16("custom_lua.normal", "normal")
+    f.special = ProtoField.int64("custom_lua.special", "special")
+    f.abs = ProtoField.absolute_time("None", "abs")
+    f.rel = ProtoField.relative_time("None", "rel")
+    f.bol = ProtoField.bool("bool", "bol")
+    f.all = ProtoField.uint32("all.all", "all", base.HEX, {[0]="Monday", [1]="Tuesday"}, nil, "This is something dark side!")
+    -- Dissector function for struct: custom_lua
+    function proto_custom_lua.dissector(buffer, pinfo, tree)
+    local subtree = tree:add(proto_custom_lua, buffer())
+    pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
+    subtree:add(f.normal, buffer(0, 2))
+    subtree:add(f.special, buffer(2, 8))
+    subtree:add(f.abs, buffer(10, 4))
+    subtree:add(f.rel, buffer(14, 4))
+    subtree:add(f.bol, buffer(18, 4))
+    subtree:add(f.all, buffer(22, 4))
+    end
+    luastructs_dt:add(74, proto_custom_lua)
+    ''')
+
+
+@sprint2.test
 def enums(structs):
     """End-to-end test headers with enums in them."""
+    assert 'enum_test' in structs
     assert structs['enum_test']
     assert compare_lua(structs['enum_test'], '''
     -- Dissector for struct: enum_test: Enum config test
@@ -278,6 +316,7 @@ def enums(structs):
 @sprint2.test
 def ranges(structs):
     """End-to-end test headers with ranges in them."""
+    assert 'range_test' in structs
     assert structs['range_test']
     assert compare_lua(structs['range_test'], '''
     -- Dissector for struct: range_test: Range rules test
@@ -307,5 +346,58 @@ def ranges(structs):
 @sprint2.test
 def trailers(structs):
     """End-to-end test headers with trailers in them."""
-    pass
+    assert 'trailer_test' in structs
+    assert structs['trailer_test']
+    assert compare_lua(structs['trailer_test'], '''
+    -- Dissector for struct: trailer_test: struct trailer_test
+    local proto_trailer_test = Proto("trailer_test", "struct trailer_test")
+    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- ProtoField defintions for struct: trailer_test
+    local f = proto_trailer_test.fields
+    -- Array definition for tmp
+    f.tmp_0 = ProtoField.bytes("trailer_test.tmp", "tmp")
+    f.tmp_1 = ProtoField.bytes("trailer_test.tmp", "tmp")
+    f.tmp_2 = ProtoField.bytes("trailer_test.tmp", "tmp")
+    f.tmp_3 = ProtoField.bytes("trailer_test.tmp", "tmp")
+    f.tmp_4 = ProtoField.bytes("trailer_test.tmp", "tmp")
+    f.tmp__0 = ProtoField.float("trailer_test.tmp.0", "[0]")
+    f.tmp__1 = ProtoField.float("trailer_test.tmp.1", "[1]")
+    f.tmp__2 = ProtoField.float("trailer_test.tmp.2", "[2]")
+    f.tmp__3 = ProtoField.float("trailer_test.tmp.3", "[3]")
+    f.tmp__4 = ProtoField.float("trailer_test.tmp.4", "[4]")
+    f.asn1_count = ProtoField.int32("trailer_test.asn1_count", "asn1_count")
+    -- Dissector function for struct: trailer_test
+    function proto_trailer_test.dissector(buffer, pinfo, tree)
+    local subtree = tree:add(proto_trailer_test, buffer())
+    pinfo.cols.info:append(" (" .. proto_trailer_test.description .. ")")
+    -- Array handling for tmp
+    local arraytree = subtree:add(f.tmp_0, buffer(0, 20))
+    arraytree:set_text("tmp (array: 5 x float)")
+    arraytree:add(f.tmp__0, buffer(0, 4))
+    arraytree:add(f.tmp__1, buffer(4, 4))
+    arraytree:add(f.tmp__2, buffer(8, 4))
+    arraytree:add(f.tmp__3, buffer(12, 4))
+    arraytree:add(f.tmp__4, buffer(16, 4))
+    subtree:add(f.asn1_count, buffer(20, 4))
+    -- Trailers handling for struct: trailer_test
+    local trail_offset = 24
+    local trail_count = buffer(20, 4):int()
+    for i = 1, trail_count do
+    local trailer = Dissector.get("ber")
+    trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
+    trail_offset = trail_offset + 6
+    end
+    local trailer = Dissector.get("ber")
+    trailer:call(buffer(trail_offset, 5):tvb(), pinfo, tree)
+    trail_offset = trail_offset + 5
+    for i = 1, 2 do
+    local trailer = Dissector.get("ber")
+    trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
+    trail_offset = trail_offset + 6
+    end
+    local trailer = Dissector.get("ber")
+    trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
+    end
+    luastructs_dt:add(66, proto_trailer_test)
+    ''')
 

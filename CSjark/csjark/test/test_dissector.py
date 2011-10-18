@@ -291,10 +291,10 @@ def create_protos():
     conf.id = 25
     conf.description = 'This is a test'
 
-    rules = [Trailer(conf, {'name': 'missing', 'count': 'missing', 'size': 0}),
+    rules = [Trailer(conf, {'name': 'missing', 'member': 'missing', 'size': 0}),
              Trailer(conf, {'name': 'simple', 'count': 1, 'size': 4}),
              Trailer(conf, {'name': 'bur', 'count': 3, 'size': 8}),
-             Trailer(conf, {'name': 'ber', 'count': 'count'})]
+             Trailer(conf, {'name': 'ber', 'member': 'count'})]
 
     proto = dissector.Protocol('tester', None, conf)
 
@@ -386,14 +386,20 @@ def protos_create_dissector(proto):
     arraytree:add(f.str__1, buffer(62, 30))
     subtree:add(f.count, buffer(92, 4))
     -- Trailers handling for struct: tester
+    local trail_offset = 96
     local trailer = Dissector.get("simple")
-    trailer:call(buffer(96):tvb(), pinfo, tree)
-    for i = 0, 3 do
+    trailer:call(buffer(trail_offset, 4):tvb(), pinfo, tree)
+    trail_offset = trail_offset + 4
+    for i = 1, 3 do
     local trailer = Dissector.get("bur")
-    trailer:call(buffer(100+(i*8),8):tvb(), pinfo, tree)
+    trailer:call(buffer(trail_offset, 8):tvb(), pinfo, tree)
+    trail_offset = trail_offset + 8
     end
+    local trail_count = buffer(92, 4):int()
+    for i = 1, trail_count do
     local trailer = Dissector.get("ber")
-    trailer:call(buffer(124):tvb(), pinfo, tree)
+    trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
+    end
     end
     luastructs_dt:add(25, proto_tester)
     ''')

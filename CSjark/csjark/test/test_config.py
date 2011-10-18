@@ -73,6 +73,39 @@ def struct_rule_description(one, two):
     assert one and two
     assert one.description == 'a struct' and two.description is None
 
+# Test that configuration support enums
+enum = Tests()
+
+@enum.context
+def create_enum():
+    """Create struct config with enum rules."""
+    text = '''
+    Structs:
+        - name: enum
+          id: 10
+          description: Enum config test
+          enums:
+            - member: weekday
+              values: {1: MONDAY, 2: TUESDAY, 3: WEDNESDAY, 4: THURSDAY, 5: FRIDAY, 6: SATURDAY, 7: SUNDAY}
+            - type: int
+              values: [Zero, One, Two, Three, Four, Five]
+              strict: True # Disable warning if not a valid value
+    '''
+    config.parse_file('test', only_text=text)
+    yield config.StructConfig.find('enum')
+    del config.StructConfig.configs['enum']
+
+@enum.test
+def enum_rule(conf):
+    """Test that config support rules for enums."""
+    member, type = conf.get_rules('weekday', 'int')
+    assert member and type
+    assert len(member.values) == 7
+    assert member.values[3] == 'WEDNESDAY'
+    assert member.strict == True
+    assert len(type.values) == 6
+    assert type.values[0] == 'Zero'
+    assert type.strict == True
 
 # Test that configuration support bit strings
 bitstring = Tests()
@@ -181,4 +214,3 @@ def trailers_rule(conf):
     assert one.count == 3 and two.count is None and three.count == 1
     assert two.member == 'asn1_count' and one.member is None
     assert one.size == 8 and two.size == 12 and three.size is None
-

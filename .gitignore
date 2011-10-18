@@ -31,3 +31,4 @@ yacctab.py
 /CSjark/docs/_template
 /CSjark/csjark/*.lua
 /CSjark/csjark/tmp
+/CSjark/csjark/test/*.lua

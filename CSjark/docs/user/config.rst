@@ -205,4 +205,12 @@ The example below shows an example with BER [#]_, which av 4 trailers with a siz
 	  - count: 4
 	  - size: 6
 
+
+Custom handeling of datatypes
+-------------------------------------------
+
+The utility supports custom handling of specified data types, which also includes functionality to support time_t and nstime_t. All basic data types and struct members can be configured to be handled as a special case. The custom handeling must be done through a configuration file. 
+
+
 .. [#] Basic Encoding Rules
+

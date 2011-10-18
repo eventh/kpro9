@@ -101,3 +101,34 @@ External Lua dissectors
 Sometimes CSjark will not be able to deliver the desired result from its own analysis, and the configuration options above may be too constraining. In this case, it is possible to write the lua dissector by hand, either for a given member or for an entire struct. This can be done with the following syntax:
 
 *Insert when implemented*
+
+Configuration of various trailers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+CSjark only creates dissectors from c-struct, to be able to use built-in dissectors in wireshark, it is necessary to configure it. Wireshark has more than 1000 built-in dissectors. Several trailer can be configured for a packet.
+
+The following parameters is allowed in trailers:
+- name: The protocol name for the built-in dissector
+- count: The number of trailers
+- member: Struct member, that contain the amount of trailers
+- size: Size of the buffer to feed to the protocol
+
+There are two ways to configure the trailers, specifiy the total number of trailers or give a variable in the struct, which contains the amount of trailers. The two ways to configure trailers are listed below.
+
+	trailers:
+	  - name: "protocol name"
+	  - member: "variable in struct, which contain amount of trailers"
+	  - size: "size of the buffer"
+
+	trailers:
+	  - name: "protocol name"
+	  - count: "Number of trailers"
+	  - size: "size of the buffer"
+
+Example:
+The example below shows an example with BER\footnote{Basic Encoding Rules}, which av 4 trailers with a size of 6 bytes.
+
+	trailers:
+	  - name: ber
+	  - count: 4
+	  - size: 6

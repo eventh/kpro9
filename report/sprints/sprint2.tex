@@ -273,6 +273,7 @@ This us done by reading the custom Lua file(s) and writing the content to the re
 \textbf{How:} When the user feeds the command line with an input argument, header or configuration, the utility shall check if the input is a single file or a directory (folder). If it is a file, parse it. If it is a folder, retrieve all files in that folder and add them to a list, this list will be sent to the parser and all the files will be parsed one after another. If there is a directory within a directory, that should be included, and they will be traversed recursively. This way we can start in a root folder and include all files, independent of the depth. The batch mode shall only include files with the extension .h (a header file) or .yml (config file), which are the files that are going to be parsed as input.\\
 \textbf{Result:} Now it shall be possible to feed the utility with folders to make dissectors of all the headers found, also called batch mode.\\
 \line(1,0){360}\\	
+
 \begin{table}[htbp] \footnotesize \center
 \caption{User stories part 1\label{tab:req:stories1}}
 \noindent\makebox[\textwidth]{%
@@ -295,7 +296,7 @@ This us done by reading the custom Lua file(s) and writing the content to the re
 	What & The user wants the utility to support structs with members of type struct. \\
 	How & When the cparser module detects a struct in the AST that is a member of another struct, the cparser searches for its definition in the 
 		dictionary of previously detected structs. When it finds it, it looks up the identification number and the size of the inner struct and creates a 
-		struct_field object with that information inside the prototype object corresponding to the outer struct. \\
+		struct\_field object with that information inside the prototype object corresponding to the outer struct. \\
 	Result & The utility supports members of type structs. \\
 	\midrule
 	ID & US11 \\

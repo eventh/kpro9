@@ -214,3 +214,4 @@ def trailers_rule(conf):
     assert one.count == 3 and two.count is None and three.count == 1
     assert two.member == 'asn1_count' and one.member is None
     assert one.size == 8 and two.size == 12 and three.size is None
+

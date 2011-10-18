@@ -182,11 +182,13 @@ The following parameters is allowed in trailers:
 
 There are two ways to configure the trailers, specifiy the total number of trailers or give a variable in the struct, which contains the amount of trailers. The two ways to configure trailers are listed below.
 
+::
+
 	trailers:
 	  - name: "protocol name"
 	  - member: "variable in struct, which contain amount of trailers"
 	  - size: "size of the buffer"
-
+	  
 	trailers:
 	  - name: "protocol name"
 	  - count: "Number of trailers"
@@ -194,6 +196,7 @@ There are two ways to configure the trailers, specifiy the total number of trail
 
 Example:
 The example below shows an example with BER\footnote{Basic Encoding Rules}, which av 4 trailers with a size of 6 bytes.
+::
 
 	trailers:
 	  - name: ber

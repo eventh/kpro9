@@ -175,6 +175,7 @@ Configuration of various trailers
 CSjark only creates dissectors from c-struct, to be able to use built-in dissectors in wireshark, it is necessary to configure it. Wireshark has more than 1000 built-in dissectors. Several trailer can be configured for a packet.
 
 The following parameters is allowed in trailers:
+
 - name: The protocol name for the built-in dissector
 - count: The number of trailers
 - member: Struct member, that contain the amount of trailers
@@ -197,11 +198,11 @@ There are two ways to configure the trailers, specifiy the total number of trail
 Example:
 The example below shows an example with BER [#]_, which av 4 trailers with a size of 6 bytes.
 
-.. [#] Basic Encoding Rules
-
 ::
 
 	trailers:
 	  - name: ber
 	  - count: 4
 	  - size: 6
+
+.. [#] Basic Encoding Rules

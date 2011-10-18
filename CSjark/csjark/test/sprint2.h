@@ -3,6 +3,8 @@
 #define STRING_LEN 10
 
 typedef signed int BOOL;
+typedef enum {TRUE, FALSE} bool_t;
+typedef int array[5];
 
 struct array_test {
     char chararr1[16];
@@ -35,6 +37,11 @@ struct custom_lua {
     time_t rel;
     BOOL bol;
     int all;
+
+    bool_t truth;
+    array five;
+    int *pointer;
+    char str[4][3][2];
 };
 
 struct enum_test {

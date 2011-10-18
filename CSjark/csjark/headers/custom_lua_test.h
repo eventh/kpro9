@@ -1,7 +1,7 @@
 #include "time.h"
 
 typedef signed int BOOL;
-typedef enum {false, true} bool_t;
+typedef enum {TRUE, FALSE} bool_t;
 typedef int array[5];
 
 struct custom_lua {

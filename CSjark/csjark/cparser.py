@@ -77,10 +77,6 @@ class StructVisitor(c_ast.NodeVisitor):
         self.aliases = {} # Typedefs and their base type
         self.type_decl = [] # Queue of current type declaration
 
-    def _get_type(self, node):
-        """Get the C type from a node."""
-        return ' '.join(reversed(node.names))
-
     def visit_Struct(self, node):
         """Visit a Struct node in the AST."""
         # Visit children
@@ -105,9 +101,9 @@ class StructVisitor(c_ast.NodeVisitor):
             if isinstance(child, c_ast.TypeDecl):
                 self.handle_type_decl(child, proto)
             elif isinstance(child, c_ast.ArrayDecl):
-                self.handle_array_decl(child, proto)
+                self.handle_array(proto, *self.handle_array_decl(child))
             elif isinstance(child, c_ast.PtrDecl):
-                self.handle_ptr_decl(child, proto)
+                self.handle_pointer(child, proto)
             else:
                 raise ParseError('Unknown struct member: %s' % repr(child))
 
@@ -154,15 +150,16 @@ class StructVisitor(c_ast.NodeVisitor):
         child = node.children()[0].children()[0]
         if isinstance(child, c_ast.IdentifierType):
             ctype = self._get_type(child)
-            self.aliases[node.name] = self.aliases.get(ctype, (ctype, None))
+            self.aliases[node.name] = self.aliases.get(ctype, (None, ctype))
         elif isinstance(child, c_ast.Enum):
-            self.aliases[node.name] = (child.name, 'enum')
+            self.aliases[node.name] = ('enum', child.name)
         elif isinstance(child, c_ast.Struct):
-            self.aliases[node.name] = (child.name, 'struct')
+            self.aliases[node.name] = ('struct', child.name)
         elif isinstance(child, c_ast.Union):
-            self.aliases[node.name] = (child.name, 'union')
-        #elif isinstance(node.children()[0], c_ast.ArrayDecl):
-        #    pass # TODO
+            self.aliases[node.name] = ('union', child.name)
+        elif isinstance(node.children()[0], c_ast.ArrayDecl):
+            values = self.handle_array_decl(node.children()[0])
+            self.aliases[node.name] = ('array', values)
         else:
             print(node, node.name, child) # For testing purposes
             raise ParseError('Unknown typedef type: %s' % child)
@@ -183,43 +180,99 @@ class StructVisitor(c_ast.NodeVisitor):
 
             # Typedef type, which is an alias for another type
             if ctype in self.aliases:
-                base, token = self.aliases[ctype]
+                token, base = self.aliases[ctype]
                 if token == 'enum':
-                    self.handle_enum(proto, node.declname, base)
+                    return self.handle_enum(proto, node.declname, base)
                 elif token == 'struct':
-                    self.handle_struct(proto, node.declname, base)
+                    return self.handle_struct(proto, node.declname, base)
+                elif token == 'array':
+                    tmp, ctype, size, depth = base
+                    return self.handle_array(proto, node.declname,
+                                             ctype, size, depth)
                 else:
                     # If any rules exists, use new type and not base
                     if proto.conf and proto.conf.get_rules(None, ctype):
                         base = ctype # Is this wise?
-                    self.add_field(proto, node.declname, base)
+                    return self.handle_field(proto, node.declname, base)
             else:
-                self.add_field(proto, node.declname, ctype)
+                return self.handle_field(proto, node.declname, ctype)
 
         # Enum member
         elif isinstance(child, c_ast.Enum):
-            self.handle_enum(proto, node.declname, child.name)
+            return self.handle_enum(proto, node.declname, child.name)
         # Union member
         elif isinstance(child, c_ast.Union):
-            self.add_field(proto, node.declname, 'union')
+            return self.handle_field(proto, node.declname, 'union')
         # Struct member
         elif isinstance(child, c_ast.Struct):
-            self.handle_struct(proto, node.declname, child.name)
+            return self.handle_struct(proto, node.declname, child.name)
         # Error
         else:
             raise ParseError('Unknown type declaration: %s' % repr(child))
 
+    def handle_array_decl(self, node, depth=None):
+        """Find the depth and size of the array."""
+        if depth is None:
+            depth = []
+        child = node.children()[0]
+        size = self._get_array_size(node.children()[1])
+
+        # String array
+        if (isinstance(child, c_ast.TypeDecl) and
+                child.children()[0].names[0] == 'char'):
+            size *= size_of('char')
+            return child.declname, 'string', size, depth
+
+        # Multidimensional, handle recursively
+        if isinstance(child, c_ast.ArrayDecl):
+            if size > 1:
+                depth.append(size)
+            return self.handle_array_decl(child, depth)
+
+        # Single dimensional normal array
+        depth.append(size)
+        ctype = self._get_type(child.children()[0])
+        return child.declname, ctype, size_of(ctype), depth
+
+    def handle_array(self, proto, name, ctype, size, depth):
+        """Add an ArrayField to the protocol."""
+        if not depth:
+            return self.handle_field(proto, name, ctype, size)
+        return proto.add_array(name, map_type(ctype), size, depth)
+
+    def handle_pointer(self, node, proto):
+        """Find member details in a pointer declaration."""
+        return self.handle_field(proto, node.children()[0].declname, 'pointer')
+
     def handle_struct(self, proto, name, protoname):
         """Add an ProtocolField to the protocol."""
         subproto = self.all_structs[protoname]
-        proto.add_protocol(name, subproto.id, subproto.get_size(), protoname)
+        return proto.add_protocol(name, subproto.id, subproto.get_size(), protoname)
 
     def handle_enum(self, proto, name, enum):
         """Add an EnumField to the protocol."""
         if enum not in self.enums.keys():
             raise ParseError('Unknown enum: %s' % enum)
         type, size = map_type('enum'), size_of('enum')
-        proto.add_enum(name, type, size, self.enums[enum])
+        return proto.add_enum(name, type, size, self.enums[enum])
+
+    def handle_field(self, proto, name, ctype, size=None):
+        """Add a field representing the struct member to the protocol."""
+        if size is None:
+            try:
+                size = size_of(ctype)
+            except ValueError :
+                size = None # Acceptable if there are rules for the field
+        if proto.conf is None:
+            if size is None:
+                raise ParseError('Unknown size for type %s' % ctype)
+            return proto.add_field(name, map_type(ctype), size)
+        else:
+            return proto.conf.create_field(proto, name, ctype, size)
+
+    def _get_type(self, node):
+        """Get the C type from a node."""
+        return ' '.join(reversed(node.names))
 
     def _get_array_size(self, node):
         """Calculate the size of the array."""
@@ -242,53 +295,4 @@ class StructVisitor(c_ast.NodeVisitor):
             raise ParseError('This type of array not supported: %s' % node)
 
         return size
-
-    def handle_array_decl(self, node, proto, depth=None):
-        """Find member details in an array declaration."""
-        if depth is None:
-            depth = []
-        child = node.children()[0]
-        size = self._get_array_size(node.children()[1])
-
-        # String array
-        if (isinstance(child, c_ast.TypeDecl) and
-                child.children()[0].names[0] == 'char'):
-            type = map_type('string')
-            size *= size_of('char')
-            if depth:
-                proto.add_array(child.declname, type, size, depth)
-            else:
-                self.add_field(proto, child.declname, type, size)
-            return
-
-        # Multidimensional, handle recursively
-        if isinstance(child, c_ast.ArrayDecl):
-            if size > 1:
-                depth.append(size)
-            self.handle_array_decl(child, proto, depth)
-
-        # Single dimensional normal array
-        else:
-            depth.append(size)
-            ctype = self._get_type(child.children()[0])
-            size = size_of(ctype)
-            proto.add_array(child.declname, map_type(ctype), size, depth)
-
-    def handle_ptr_decl(self, node, proto):
-        """Find member details in a pointer declaration."""
-        self.add_field(proto, node.children()[0].declname, 'pointer')
-
-    def add_field(self, proto, name, ctype, size=None):
-        """Add a field representing the struct member to the protocol."""
-        if size is None:
-            try:
-                size = size_of(ctype)
-            except ValueError :
-                size = None # Acceptable if there are rules for the field
-        if proto.conf is None:
-            if size is None:
-                raise ParseError('Unknown size for type %s' % ctype)
-            proto.add_field(name, map_type(ctype), size)
-        else:
-            proto.conf.create_field(proto, name, ctype, size)
 

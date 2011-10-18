@@ -86,12 +86,18 @@
 % Abstract
 %==========
 \begin{abstract}
-\Gls{wireshark} is a program used to analyze packet data sent between network nodes.
-The purpose of this project was to allow the use of Wireshark to also
-decode inter-process communication, which is important, but was difficult to accomplish before.
-The project resulted in a stand-alone utility, written in Python, which act as a supporting tool for Wireshark. 
-The utility automates the process of generating dissectors for Wireshark from C header files. 
-This functionality makes debugging and testing some programs a lot easier.
+\Gls{wireshark} is a program used to analyze packet data sent between network
+nodes. The purpose of this project was to allow the use of Wireshark to also
+decode inter-process communication, which is important for help debugging and
+ensure correctness of programs. The process of decoding packages manually is
+often time-consuming and in some cases impossible.
+
+The project resulted in a stand-alone utility which acts as a supporting tool
+for Wireshark. Our utility is written in Python, and uses open source libraries
+like pycparser and ply to achieve this. The utility automates the process of
+generating dissectors for Wireshark from C header files. This functionality
+makes debugging and testing some programs a lot easier.
+
 \end{abstract}
 
 %=========

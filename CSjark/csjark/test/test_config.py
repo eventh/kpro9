@@ -195,7 +195,7 @@ def create_trailers():
             count: 3
             size: 8
           - name: ber
-            count: asn1_count
+            member: asn1_count
             size: 12
           - name: ber
             count: 1

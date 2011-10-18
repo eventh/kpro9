@@ -323,7 +323,7 @@ class Custom(BaseRule):
             size = self.size
         if size is None:
             raise ConfigError('Missing size for field %s' % name)
-        field = proto.add_custom(name, self.field, size, self)
+        field = proto.add_field(name, self.field, size)
         field.abbr = self.abbr
         field.base = self.base
         if self.values:
@@ -335,10 +335,11 @@ class Custom(BaseRule):
 
 class ConformanceFile:
     # Tokens for different sections
-    t_hdr = 'FN_HDR'
-    t_body = 'FN_BODY'
-    t_end = 'END'
-    t_end_cnf = 'END_OF_CNF'
+    t_hdr = 'FN_HDR' # Lua code to be inserted before a field code
+    t_body = 'FN_BODY' # Lua code to replace a field code
+    t_end = 'END' # End of a section
+    t_end_cnf = 'END_OF_CNF' # End of the conformance file
+
     tokens = [t_hdr, t_body, t_end, t_end_cnf]
 
     def __init__(self, conf, file, rule=None):
@@ -353,36 +354,18 @@ class ConformanceFile:
         with open(self.file, 'r') as f:
             self._lines = f.readlines()
 
-        # Section contents
-        self.header = None
-        self.body = None
-
+        self.rules = {}
         self.parse()
 
     def _get_token(self, line):
-        tmp = line[2:].strip().split(' ')
-        return tmp[0], [], {}
-
-    def handle_body(self, content):
-        if '%(DEFAULT_BODY)s' in content:
-            content = content.replace('%(DEFAULT_BODY)s', '{DEFAULT_BODY}')
-        self.body = content
-
-    def handle_header(self, content):
-        self.header = content
+        values = line[2:].strip().split(' ') + [None]
+        return values[0], values[1]
 
     def parse(self):
         """Parse the conformance file's sections and content."""
         token = None # Current section beeing parsed
-        args = [] # Positional arguments for the handle function
-        vargs = {} # Named arguments for the handle function
+        field = None # Field the section refers to
         content = '' # Current content for the section parsed so far
-
-        # Maps token to function for handling its content
-        mapping = {
-                self.t_body: self.handle_body,
-                self.t_hdr: self.handle_header,
-        }
 
         # Go through all lines and assign content
         for line in self._lines:
@@ -392,11 +375,12 @@ class ConformanceFile:
 
             # Store current content when new token is found
             if token is not None:
-                if token in mapping:
-                    mapping[token](content, *args, **vargs)
+                if field not in self.rules:
+                    self.rules[field] = {}
+                self.rules[field][token] = content
 
             content = ''
-            token, args, vargs = self._get_token(line)
+            token, field = self._get_token(line)
 
             if token == self.t_end_cnf:
                 break # End of cnf file

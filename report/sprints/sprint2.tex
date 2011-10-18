@@ -168,6 +168,8 @@ The second sprint we will implement thirteen requirements. These are listed in T
 	\bottomrule
 \end{tabularx}
 \end{table}
+
+
 %----------------------
 \subsection{User Stories}
 %----------------------
@@ -271,7 +273,63 @@ This us done by reading the custom Lua file(s) and writing the content to the re
 \textbf{How:} When the user feeds the command line with an input argument, header or configuration, the utility shall check if the input is a single file or a directory (folder). If it is a file, parse it. If it is a folder, retrieve all files in that folder and add them to a list, this list will be sent to the parser and all the files will be parsed one after another. If there is a directory within a directory, that should be included, and they will be traversed recursively. This way we can start in a root folder and include all files, independent of the depth. The batch mode shall only include files with the extension .h (a header file) or .yml (config file), which are the files that are going to be parsed as input.\\
 \textbf{Result:} Now it shall be possible to feed the utility with folders to make dissectors of all the headers found, also called batch mode.\\
 \line(1,0){360}\\	
-
+\begin{table}[htbp] \footnotesize \center
+\caption{User stories part 1\label{tab:req:stories1}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Value \\
+	\midrule
+	ID & US09 \\
+	Requirement & FR1-B: The utility must support members of type enum \\
+	Who & Administrator \\
+	What & The user wants the utility to support structs with members of type enum. \\
+	How & When the cparser module detects an enum member in a struct, the cparser should search in an enum dictionary and the enum member 
+		will be mapped to the correct value found in the dictionary. A field representing the enum will be added to the prototype object corresponding
+		to the enclosing struct. \\
+	Result & The utility supports members of type enum. \\
+	\midrule
+	ID & US10 \\
+	Requirements & FR1-C: The utility must support members of type struct \\
+	Who & Administrator \\
+	What & The user wants the utility to support structs with members of type struct. \\
+	How & When the cparser module detects a struct in the AST that is a member of another struct, the cparser searches for its definition in the 
+		dictionary of previously detected structs. When it finds it, it looks up the identification number and the size of the inner struct and creates a 
+		struct_field object with that information inside the prototype object corresponding to the outer struct. \\
+	Result & The utility supports members of type structs. \\
+	\midrule
+	ID & US11 \\
+	Requirements & FR1-F: The utility should detect structs with the same name, and report it as an error \\
+	Who & Administrator \\
+	What & The user wants the utility to report an error if it discovers structs with the same name to avoid unforeseen name collisions. \\
+	How & When the cparser module traverses the AST to look for structs, it will detect if there are structs with the same name by keeping a database 
+		of all structs it has found so far, and the program will 	crash with an error message. \\
+	Result & The utility will detect duplicated name of structs. \\
+	\midrule
+	ID & US12 \\
+	Requirements & FR2-B: The dissector shall be able to support structs within structs \\
+	Who & Administrator \\
+	What & The utility should be able to create a Lua dissector that correctly
+	displays structs within structs in Wireshark. \\
+	How & For each struct definition encountered in cparser, a prototype object is created. This object will include an 	identifier number used to locate
+		the Lua dissector for that struct. When a struct member is located inside an outer struct. The dissector module encodes the identification number 
+		and the size for the inner struct into the Lua dissector for the outer struct. The identification number is used to access the dissector for the inner
+		struct when the outer struct dissector is used. The outer struct dissector uses the size of the inner struct to know how much of the network package
+		to forward to the inner struct dissector. The size and identification number of the inner struct will be available in the struct field corresponding to
+		the inner struct inside the protocol object corresponding to the outer struct.  \\
+	Result & The dissector module supports nested structs \\
+	\midrule
+	ID & US13 \\
+	Requirements & FR4-F: Configuration must support integer members which represent an enumerated named value \\
+	Who & Administrator \\
+	What & The user wants to specify integer members, represented by an enumerated named value, in a configuration file. \\
+	How & The config module should read config files provided to the command line interface, and find any rules regarding enumerated integer values.
+		The rules are used by the cparser when it translates 	struct definitions to Protocol, and makes the cparser create EnumFields instead of normal
+		Fields for the specified members. \\
+	Result & Enum members can be specified in the configuration. \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
 
 %----------------------
 \section{System Design}

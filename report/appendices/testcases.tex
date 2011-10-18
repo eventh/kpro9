@@ -311,19 +311,16 @@
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting structs with various trailers \\
-	Tester & Sondre Mannsverk \\
-	Prerequisites & The utility has to be up and running \\
-	Feature & Configuration must support custom Lua files for specific protocols \\
+	Description & Sprint 2 functionality test \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to have been installed on the system as well as the attest testing framework \\
+	Feature & Checking that the utility is able to create a valid dissector from header files with all of the data types that were to be supported for sprint 2, including: trailers, bit strings, enumerated named values, structs within structs and arrays \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1.  \\
-	& 2.  \\
-	& 3. \\
-	& 4. \\
-	& 5. \\
+	\multirow{3}{*}{Execution} & 1. Navigate to the folder where CSjark is installed through the terminal orcommand line \\
+	& 2.  type "python -m attest" into the terminal or command line and then press enter  \\
+	& 3. Read the output\\
 	\midrule
-	\multirow{2}{*}{Expected result}  & 2. \\
-	& 5. \\
+	\multirow{2}{*}{Expected result}  & 3. The user should be presented with some text expressing the failure of 0 assertions  \\
 	\bottomrule
 \end{tabularx}}
 \end{table}

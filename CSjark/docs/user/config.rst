@@ -87,7 +87,18 @@ This example specifies a bitstring for all data types of short. ::
             0: Red
             1: Green
             2: Blue
-        
+
+
+Dissector ID
+~~~~~~~~~~~~~~~~~~
+
+All struct-packets that Wireshark captures, has a header, one of the ﬁelds in 
+the header is the message id. This id is used to load the the correct dissector 
+when a packet is captured. Each dissector should have a unique id, to avoid 
+possible conﬂicts. This functionallity is implemented and the message id
+must be speciﬁed in the conﬁguration ﬁle, Listing 1.8 is an example of how 
+this is done. 
+
 Value explanations
 ~~~~~~~~~~~~~~~~~~
 

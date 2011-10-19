@@ -352,19 +352,140 @@
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Support custom Lua configuration and specific data types  \\
-	Tester & Erik Bergersen \\
+	Description & Supporting custom Lua configuration  \\
+	Tester & Sondre Mannsverk \\
 	Prerequisites & The utility has to be up and running \\
-	Feature & Configuration must support custom handling of specific data types \\
+	Feature & Test that the utility is able to support custom Lua files by configuration \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1.  \\
-	& 2.  \\
-	& 3. \\
-	& 4. \\
-	& 5. \\
+	\multirow{6}{*}{Execution} & 1. Look at the custom Lua file(s) and understand what they do  \\
+	& 2. Feed the utility with a C header-file, that needs to have specific parts of it dissected by		
+	custom Lua file(s), and a configuration file that specifies what Lua file(s) should be used. \\
+	& 3. Read the output \\
+	& 4. Move the resulting dissector into the plugins folder in the personal configuration
+	folder of wireshark\\
+	& 5. Open the pcap file for this test with wireshark \\
+	& 6. Look at the different struct members that are displayed in wireshark \\
 	\midrule
-	\multirow{2}{*}{Expected result}  & 2. \\
-	& 5. \\
+	\multirow{2}{*}{Expected result}  & 3.  The program should provide the user with some text expressing the			success of the Lua file generation \\
+	& 6. Assert that the custom Lua file(s) have affected the display of the struct members in the 		
+	expected way. \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID17}\label{tab:TID17}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting unions \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be up and running \\
+	Feature &  Test that the utility is able to support c-header files with unions \\
+	\midrule
+	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a header file with unions and its configuration file  \\
+	& 2. Read output from the utility \\
+	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
+	& 4. Open the pcap file for this test with wireshark\\
+	& 5. Look at the different struct members that are displayed in wireshark\\
+	\midrule
+	Expected result  & 2. The utility should provide the user some text expressing the success of the LUA-file generation \\
+	& 5. The unions should be displayed as subtrees with the names of all the union members and their values, even the ones that haven't been explicitly set\\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID18}\label{tab:TID18}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X} 
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Support filter and search in wireshark  \\
+	Tester & Erik Bergersen \\
+	Prerequisites & Wireshark has to be up and running with the trailer\_test.lua \\
+	Feature & The dissector must support Wireshark's built-in filter and search on attributes \\
+	\midrule
+	\multirow{3}{*}{Execution} & 1. Open the pcap-file, which contains trailer\_test packets.   \\
+	& 2. Type the following in the filter-textbox: ''luatructs.message == 66'' and click apply\\
+	& 3. Look on the packet view. \\
+	\midrule
+	Expected result  & 3. Only trailer\_test packets will be visible in the packet view.\\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID20}\label{tab:TID20}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting the use of flags specifying platforms to display member values correctly \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & A dissector for dissecting a header according to it's configuration, as well as a pcap file for that header needs to be in place\\
+	Feature &  Test that the utility is able to create dissectors that support the use of different flags. These flags should specify the originating platform of the packet and be used to display the member values properly.\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1. Open a pcap file which includes packets with different flags but the same structs and member values just with different sizes according to the originating platform specified in the flags\\
+	& 2. Look at how the different packets are displayed in wireshark\\
+	\midrule
+	Expected result  & 2. The different packages should have the exact same member values just with different flag-values \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID21}\label{tab:TID21}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X} 
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Suppurt platforms with different endian  \\
+	Tester & Erik Bergersen \\
+	Prerequisites & There have to exist a header-file, config-file and pcap-file to do the test. \\
+	Feature & Generate dissectors which support both little and big endian platforms \\
+	\midrule
+	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct \\
+	& 2. Read the output \\
+	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
+	& 4. Open the pcap file for this test with wireshark\\
+	& 5. Look at the different members in wireshark that have data types that can be affected by endianness. \\
+	\midrule
+	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	& 5. The packets sent from platforms with different endian, should display the same values.\\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\clearpage
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID22}\label{tab:TID22}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X} 
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Suppurt alignments  \\
+	Tester & Erik Bergersen \\
+	Prerequisites & There have to exist a header-file, config-file and pcap-file to do the test. \\
+	Feature & Genereate dissectors on platforms with different alignment \\
+	\midrule
+	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct \\
+	& 2. Read the output \\
+	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
+	& 4. Open the pcap file for this test with wireshark\\
+	& 5. Look at the different packets from platforms that uses different alignments. \\
+	\midrule
+	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	& 5. The packets sent from platforms that uses different alignments, should display equal values.\\
 	\bottomrule
 \end{tabularx}}
 \end{table}

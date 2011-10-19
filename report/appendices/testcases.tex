@@ -352,19 +352,23 @@
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Support custom Lua configuration and specific data types  \\
-	Tester & Erik Bergersen \\
+	Description & Supporting custom Lua configuration  \\
+	Tester & Sondre Mannsverk \\
 	Prerequisites & The utility has to be up and running \\
-	Feature & Configuration must support custom handling of specific data types \\
+	Feature & Test that the utility is able to support custom Lua files by configuration \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1.  \\
-	& 2.  \\
-	& 3. \\
-	& 4. \\
-	& 5. \\
+	\multirow{5}{*}{Execution} & 1. Look at the custom Lua file(s) and understand what they do  \\
+	& 2. Feed the utility with a C header-file, that needs to have specific parts of it dissected by		
+	custom Lua file(s), and a configuration file that specifies what Lua file(s) should be used. \\
+	& 3. Read the output \\
+	& 4. Move the resulting dissector into the plugins folder in the personal configuration
+	folder of wireshark\\
+	& 5. Open the pcap file for this test with wireshark \\
+	& 6. Look at the different struct members that are displayed in wireshark \\
 	\midrule
-	\multirow{2}{*}{Expected result}  & 2. \\
-	& 5. \\
+	\multirow{2}{*}{Expected result}  & 3.  The program should provide the user with some text expressing the			success of the LUA-file generation \\
+	& 6. Assert that the custom Lua file(s) have affected the display of the struct members in the 		
+	expected way. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}

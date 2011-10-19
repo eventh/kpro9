@@ -335,7 +335,7 @@ This us done by reading the custom Lua file(s) and writing the content to the re
 %----------------------
 \section{System Design}
 %----------------------
-For sprint 2 the team decided to refactor some of the code in order to make it easier to read and to split the functionalities of the utility in such a way that it reduces coupling within the system.Some new functionality was also added on the parser side in order to get the utility to recognize the datatypes mentioned in the sprint 2 backlog. Other than that, there were no other changes or additions made to the design during sprint 2.
+For sprint 2 the team decided to refactor some of the code in order to make it easier to read and to split the functionalities of the utility in such a way that it reduces coupling within the system.Some new functionality was also added on the parser side in order to get the utility to recognize the datatypes mentioned in the sprint 2 backlog. This new functionality is represented in the by the addition of new classes in the dissector and config modules. These classes include the BitField, ArrayField,EnumField and ProtocolField classes, which contain the functionality required to handle Bitstrings, arrays, enums and structs within structs respectively. The classes added to the config module include the Trailer, Bitstring, Custom and Enum classes which handles the configuration needs for structs with trailers, bitstrings, custom handling of data types and enums respectively. Other than that, there were no other changes or additions made to the design during sprint 2.
 
 \subsection{Utility}
 %--------------------

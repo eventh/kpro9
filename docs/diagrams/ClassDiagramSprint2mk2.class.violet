@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_24" class="java.beans.XMLDecoder"> 
+<java version="1.6.0_26" class="java.beans.XMLDecoder"> 
  <object class="com.horstmann.violet.ClassDiagramGraph"> 
   <void method="addNode"> 
    <object id="PackageNode0" class="com.horstmann.violet.PackageNode"> 
@@ -168,12 +168,12 @@ size: Integer</string>
         <string>cnf: ConformanceFile
 field: String
 size: Integer
-abbr: 
+abbr: String
 name: String
-base: 
+base: String
 values: list
-mask:
-desc:
+mask: String
+desc: String
 </string> 
        </void> 
       </void> 
@@ -314,7 +314,7 @@ create_lua_var()</string>
         <string>name: String
 type: String
 size: Integer
-abbr:
+abbr: String
 base: String
 values: dict
 mask: Integer
@@ -360,7 +360,7 @@ get_code()
       </void> 
       <void property="name"> 
        <void property="text"> 
-        <string>EnumField()</string> 
+        <string>EnumField</string> 
        </void> 
       </void> 
      </object> 
@@ -457,7 +457,7 @@ func_type: String
       </void> 
       <void property="name"> 
        <void property="text"> 
-        <string>RangeField()</string> 
+        <string>RangeField</string> 
        </void> 
       </void> 
      </object> 
@@ -466,31 +466,9 @@ func_type: String
      <object id="ClassNode17" class="com.horstmann.violet.ClassNode"> 
       <void property="attributes"> 
        <void property="text"> 
-        <string>rule:</string> 
-       </void> 
-      </void> 
-      <void property="methods"> 
-       <void property="text"> 
-        <string>__init__()
-get_definition()
-get_code()
-</string> 
-       </void> 
-      </void> 
-      <void property="name"> 
-       <void property="text"> 
-        <string>CustomField</string> 
-       </void> 
-      </void> 
-     </object> 
-    </void> 
-    <void method="addChild"> 
-     <object id="ClassNode18" class="com.horstmann.violet.ClassNode"> 
-      <void property="attributes"> 
-       <void property="text"> 
         <string>name: String
-coord:
-conf:
+coord: pycparser.plyparser.Coord
+conf: StructConfig
 id: Integer
 discription: String
 fields: list
@@ -549,7 +527,7 @@ create()
    </object> 
   </void> 
   <void method="addNode"> 
-   <object id="ClassNode19" class="com.horstmann.violet.ClassNode"> 
+   <object id="ClassNode18" class="com.horstmann.violet.ClassNode"> 
     <void property="attributes"> 
      <void property="text"> 
       <string>verbose: Boolean
@@ -573,8 +551,8 @@ output_file: String</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>37.0</double> 
-     <double>1031.0</double> 
+     <double>83.0</double> 
+     <double>1008.0</double> 
     </void> 
    </object> 
   </void> 
@@ -589,8 +567,8 @@ main()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>185.0</double> 
-     <double>1095.0</double> 
+     <double>231.0</double> 
+     <double>1072.0</double> 
     </void> 
    </object> 
   </void> 
@@ -734,7 +712,7 @@ main()</string>
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
      <double>29.0</double> 
-     <double>159.0</double> 
+     <double>160.0</double> 
     </void> 
    </object> 
   </void> 
@@ -750,7 +728,7 @@ main()</string>
   <void method="addNode"> 
    <object id="PackageNode7" class="com.horstmann.violet.PackageNode"> 
     <void method="addChild"> 
-     <object idref="ClassNode19"/> 
+     <object idref="ClassNode18"/> 
     </void> 
     <void method="addChild"> 
      <object idref="PackageNode6"/> 
@@ -761,8 +739,8 @@ main()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>30.0</double> 
-     <double>1000.0</double> 
+     <double>70.0</double> 
+     <double>980.0</double> 
     </void> 
    </object> 
   </void> 
@@ -770,7 +748,7 @@ main()</string>
    <object idref="ClassNode14"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>311.0</double> 
+     <double>397.0</double> 
      <double>510.0</double> 
     </void> 
    </object> 
@@ -779,8 +757,8 @@ main()</string>
    <object idref="ClassNode15"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>198.0</double> 
-     <double>514.0</double> 
+     <double>262.0</double> 
+     <double>513.0</double> 
     </void> 
    </object> 
   </void> 
@@ -788,22 +766,13 @@ main()</string>
    <object idref="ClassNode16"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>87.0</double> 
-     <double>511.0</double> 
+     <double>115.0</double> 
+     <double>510.0</double> 
     </void> 
    </object> 
   </void> 
   <void method="addNode"> 
    <object idref="ClassNode17"/> 
-   <object class="java.awt.geom.Point2D$Double"> 
-    <void method="setLocation"> 
-     <double>373.0</double> 
-     <double>397.0</double> 
-    </void> 
-   </object> 
-  </void> 
-  <void method="addNode"> 
-   <object idref="ClassNode18"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
      <double>499.0</double> 
@@ -1063,18 +1032,6 @@ main()</string>
   <void method="connect"> 
    <object class="com.horstmann.violet.ClassRelationshipEdge"> 
     <void property="bentStyle"> 
-     <object class="com.horstmann.violet.BentStyle" field="HVH"/> 
-    </void> 
-    <void property="endArrowHead"> 
-     <object class="com.horstmann.violet.ArrowHead" field="TRIANGLE"/> 
-    </void> 
-   </object> 
-   <object idref="ClassNode17"/> 
-   <object idref="ClassNode11"/> 
-  </void> 
-  <void method="connect"> 
-   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
-    <void property="bentStyle"> 
      <object class="com.horstmann.violet.BentStyle" field="VHV"/> 
     </void> 
     <void property="endArrowHead"> 
@@ -1099,7 +1056,7 @@ main()</string>
      <string>Contains</string> 
     </void> 
    </object> 
-   <object idref="ClassNode18"/> 
+   <object idref="ClassNode17"/> 
    <object idref="ClassNode11"/> 
   </void> 
  </object> 

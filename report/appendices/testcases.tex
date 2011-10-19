@@ -368,3 +368,26 @@
 	\bottomrule
 \end{tabularx}}
 \end{table}
+
+
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID18}\label{tab:TID18}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X} 
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Support filter and search in wireshark  \\
+	Tester & Erik Bergersen \\
+	Prerequisites & Wireshark has to be up and running with the trailer\_test.lua \\
+	Feature & The dissector must support Wireshark's built-in filter and search on attributes \\
+	\midrule
+	\multirow{3}{*}{Execution} & 1. Open the pcap-file, which contains trailer\_test packets.   \\
+	& 2. Type the following in the filter-textbox: ''luatructs.message == 66'' and click apply\\
+	& 3. Look on the packet view. \\
+	\midrule
+	Expected result  & 3. Only trailer\_test packets will be visible in the packet view.\\
+	\bottomrule
+\end{tabularx}}
+\end{table}

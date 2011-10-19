@@ -368,3 +368,27 @@
 	\bottomrule
 \end{tabularx}}
 \end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID17}\label{tab:TID17}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting unions \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be up and running \\
+	Feature &  Test that the utility is able to support c-header files with unions \\
+	\midrule
+	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a header file with unions and its configuration file  \\
+	& 2. Read output from the utility \\
+	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
+	& 4. Open the pcap file for this test with wireshark\\
+	& 5. Look at the different struct members that are displayed in wireshark\\
+	\midrule
+	Expected result  & 2. The utility should provide the user some text expressing the success of the LUA-file generation \\
+	& 5. The unions should be displayed as subtrees with the names of all the union members and their values, even the ones that haven't been explicitly set\\
+	\bottomrule
+\end{tabularx}}
+\end{table}

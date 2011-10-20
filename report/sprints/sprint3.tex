@@ -14,7 +14,7 @@ There will be two major changes this sprint:
 \begin {itemize}
 \item We will have a complete planning meeting. The meeting should result in a good planning document, user stories for all the requirements, complete set of work items in the sprint backlog and a early understanding of the design. This approach will be differently from earlier sprints, where user stories was written in parallel with implementation. The user story should now be in place before the implementation, and the implementation should be based on the user story. This will make documenting the process easier, and will in turn give the advisors more documentation of what we are doing. Then we can receive valuable feedback from them.
 
-\item In the sprint backlog we will have work items for every task that needs to be done throughout the sprint, including writing minutes, doing documentation, implementation and so on.  Assignment of responsibilities for items in the backlog should not be done at the planning meeting, we rather only give responsibility for one item for each team member at a time. The rest of the items will be unassigned. At each stand-up meeting we pick a task and must be done before the next meeting. This will ensure efficiency and the work done by others are easier to check and revise. It will give us a better work balance, as no team member can gap over to many tasks and leave none for the others.
+\item In the sprint backlog we will have work items for every task that needs to be done throughout the sprint, including writing minutes, doing documentation, implementation and so on.  Assignment of responsibilities for items in the backlog should not be done at the planning meeting, we rather only give responsibility for one item for each team member at a time. The rest of the items will be unassigned. At each stand-up meeting we pick a task and must be done before the next meeting. This will ensure efficiency and the work done by others are easier to check and revise. It will give us a better work balance, as no team member can gap over too many tasks and leave none for the others.
 \end{itemize}
 We think that these changes will improve our work efficiency, and make sprint 3 the best one so far.
 
@@ -29,11 +29,78 @@ The sprint started with the planning meeting the 19th of October and our work st
 %-----------------------
 For the third sprint the team will update CSjark to version 0.3 which will extend the utility so that it contains the complete functionality requested by the customer at this phase of the project. In this sprint we will pick all of the current requirements from the product backlog as all of the underlying functionality needed for them are already in place from the previous sprints. This means that we will also aim to create a draft of the final design of the system during the sprint.
 
-The most important function that is going to be implemented in this sprint is being able to display packets from different originating platforms properly. This will be implemented by having every packet contain a flag specifying a their originating platforms, and by having our dissectors use this flag value to influence how it handles the data in the packet.
+The most important function that is going to be implemented in this sprint is being able to display packets from different originating platforms properly. This will be implemented by having every packet contain a flag specifying their originating platform, and by having our dissectors use this flag value to influence how it handles the data in the packet.
 
 \subsection{Back Log}
 %--------------------
 
+\subsection{User Stories}
+%--------------------
+
+This section lists the user stories for the second sprint. They complement
+the work items in the TODO. As we are developing a very technical utility we
+have written user stories with an implementation level of abstraction. These
+user stories represent how we intend to add the functionality of the each
+requirement to the utility. This section is subject to change throughout the
+sprint, as we do not know all the details yet.\\
+
+\begin{table}[htbp] \footnotesize \center
+\caption{User stories - Sprint 2 part 1\label{tab:req:stories3}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Value \\
+	\midrule
+	ID & US09 \\
+	Requirement & FR1-B: The utility must support members of type enum \\
+	Who & Administrator \\
+	What & The user wants the utility to support structs with members of type enum. \\
+	How & When the cparser module detects an enum member in a struct, the cparser should search in an enum dictionary and the enum member 
+		will be mapped to the correct value found in the dictionary. A field representing the enum will be added to the prototype object corresponding
+		to the enclosing struct. \\
+	Result & The utility supports members of type enum. \\
+	\midrule
+	ID & US10 \\
+	Requirements & FR1-C: The utility must support members of type struct \\
+	Who & Administrator \\
+	What & The user wants the utility to support structs with members of type struct. \\
+	How & When the cparser module detects a struct in the AST that is a member of another struct, the cparser searches for its definition in the 
+		dictionary of previously detected structs. When it finds it, it looks up the identification number and the size of the inner struct and creates a 
+		struct\_field object with that information inside the prototype object corresponding to the outer struct. \\
+	Result & The utility supports members of type structs. \\
+	\midrule
+	ID & US11 \\
+	Requirements & FR1-F: The utility should detect structs with the same name, and report it as an error \\
+	Who & Administrator \\
+	What & The user wants the utility to report an error if it discovers structs with the same name to avoid unforeseen name collisions. \\
+	How & When the cparser module traverses the AST to look for structs, it will detect if there are structs with the same name by keeping a database 
+		of all structs it has found so far, and the program will 	crash with an error message. \\
+	Result & The utility will detect duplicated name of structs. \\
+	\midrule
+	ID & US12 \\
+	Requirements & FR2-B: The dissector shall be able to support structs within structs \\
+	Who & Administrator \\
+	What & The utility should be able to create a Lua dissector that correctly
+	displays structs within structs in Wireshark. \\
+	How & For each struct definition encountered in cparser, a prototype object is created. This object will include an 	identifier number used to locate
+		the Lua dissector for that struct. When a struct member is located inside an outer struct. The dissector module encodes the identification number 
+		and the size for the inner struct into the Lua dissector for the outer struct. The identification number is used to access the dissector for the inner
+		struct when the outer struct dissector is used. The outer struct dissector uses the size of the inner struct to know how much of the network package
+		to forward to the inner struct dissector. The size and identification number of the inner struct will be available in the struct field corresponding to
+		the inner struct inside the protocol object corresponding to the outer struct.  \\
+	Result & The dissector module supports nested structs \\
+	\midrule
+	ID & US13 \\
+	Requirements & FR4-F: Configuration must support integer members which represent an enumerated named value \\
+	Who & Administrator \\
+	What & The user wants to specify integer members, represented by an enumerated named value, in a configuration file. \\
+	How & The config module should read config files provided to the command line interface, and find any rules regarding enumerated integer values.
+		The rules are used by the cparser when it translates 	struct definitions to Protocol, and makes the cparser create EnumFields instead of normal
+		Fields for the specified members. \\
+	Result & Enum members can be specified in the configuration. \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
 
 %----------------------
 \section{System Design}

@@ -47,36 +47,36 @@ The second sprint we will implement thirteen requirements. These are listed in T
 	\# & Req. & Description & Est. & Act. \\
 	\midrule
 	1 & FR1-B & Support members of type enums & \underline{ 6 } & 5 \\
-	   &  & Implementation			   	& 3 & 2\\
-	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 2 & 2\\
+	   &  & Implementation & 3 & 2 \\
+	   &  & Testing - unit & 1 & 1 \\
+	   &  & Testing - end to end & 2 & 2 \\
 	\addlinespace
-	2 & FR1-C & Support members of type structs & \underline{ 7 } & 3.5  \\
-	   &  & Implementation			   	& 6 & 3\\
-	   &  & Testing - unit				   	& 1 & 0.5\\
+	2 & FR1-C & Support members of type structs & \underline{ 7 } & 3.5 \\
+	   &  & Implementation & 6 & 3 \\
+	   &  & Testing - unit & 1 & 0.5 \\
 	\addlinespace
-	3 & FR1-F & Detect structs with same name & \underline{ 3 } &  3.5  \\
-	   &  & Implementation			   	& 2 & 2.5\\
-	   &  & Testing - unit				   	& 1 & 1\\
+	3 & FR1-F & Detect structs with same name & \underline{ 3 } & 3.5 \\
+	   &  & Implementation & 2 & 2.5 \\
+	   &  & Testing - unit & 1 & 1 \\
 	\addlinespace
-	4 & FR2-B & Support display of structs within structs & \underline{ 11 } &  -  \\
-	   &  & Implementation			   	& 5 & 2\\
-	   &  & Testing - unit				   	& 2 & 1\\
-	   &  & Testing - end to end			& 4 & 2\\
+	4 & FR2-B & Support display of structs within structs & \underline{ 11 } & 15 \\
+	   &  & Implementation & 5 & 6 \\
+	   &  & Testing - unit & 2 & 2 \\
+	   &  & Testing - end to end & 4 & 7 \\
 	\addlinespace
-	5 & FR4-F & Support enumerated named values  & \underline{ 5 } &  -  \\
-	   &  & Design				   	& 1 & 0.5\\	   
-	   &  & Implementation			   	& 1 & 0.5\\
-	   &  & Testing - unit				   	& 1 & -\\
-	   &  & Testing - end to end			& 1 & 1.5\\
-	   &  & User documentation		   	& 1 & -\\
+	5 & FR4-F & Support enumerated named values & \underline{ 5 } & 6.5 \\
+	   &  & Design & 1 & 0.5 \\
+	   &  & Implementation & 1 & 0.5 \\
+	   &  & Testing - unit & 1 & 2.5 \\
+	   &  & Testing - end to end & 1 & 1.5 \\
+	   &  & User documentation & 1 & 1.5 \\
 	\addlinespace
 	6 & FR4-G & Support for bit strings & \underline{ 10 } & 11.5 \\
-	   &  & Design				   	& 2 & 2\\	   
-	   &  & Implementation			   	& 3 & 6\\
-	   &  & Testing - unit				   	& 2 & 1\\
-	   &  & Testing - end to end			& 2 & 1\\
-	   &  & User documentation		   	& 1 & 1.5\\
+	   &  & Design & 2 & 2 \\
+	   &  & Implementation & 3 & 6 \\
+	   &  & Testing - unit & 2 & 1 \\
+	   &  & Testing - end to end & 2 & 1 \\
+	   &  & User documentation & 1 & 1.5 \\
 	\bottomrule
 \end{tabularx}
 \end{table}
@@ -89,47 +89,47 @@ The second sprint we will implement thirteen requirements. These are listed in T
 	\cmidrule(r){4-5}
 	\# & Req. & Description & Est. & Act. \\
 	\midrule
-	7 & FR1-E & Support members of type array & \underline{ 7 } & 11 \\
-	   &  & Implementation			   	& 3 & 6\\
-	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & Testing - end to end			& 3 & 4\\
+	7 & FR1-E & Support members of type array & \underline{ 7 } & 12 \\
+	   &  & Implementation & 3 & 7 \\
+	   &  & Testing - unit & 1 & 1 \\
+	   &  & Testing - end to end & 3 & 4 \\
 	\addlinespace
-	8 & FR4-E & Structs with various trailers & \underline{ 18 } & - \\
-	   &  & Design				   	& 3 & 2\\
-	   &  & Implementation			   	& 6 & 4\\
-	   &  & Testing - unit				   	& 2 & 1\\
-	   &  & Testing - end to end			& 5 & -\\
-	   &  & User documentation		   	& 2 & -\\
+	8 & FR4-E & Structs with various trailers & \underline{ 18 } & 15 \\
+	   &  & Design & 3 & 2 \\
+	   &  & Implementation & 6 & 6 \\
+	   &  & Testing - unit & 2 & 1.5 \\
+	   &  & Testing - end to end & 5 & 3.5 \\
+	   &  & User documentation & 2 & 2 \\
 	\addlinespace
-	9 & FR4-B & Support for custom Lua configuration & \underline{ 14 } & - \\
-	   &  & Design				   	& 2 & -\\
-	   &  & Implementation			   	& 5 & -\\
-	   &  & Testing - unit				   	& 1 & -\\
-	   &  & Testing - end to end			& 4 & -\\
-	   &  & User documentation		   	& 2 & -\\
+	9 & FR4-B & Support for custom Lua configuration & \underline{ 14 } & 7 \\
+	   &  & Design & 2 & 1 \\
+	   &  & Implementation & 5 & 5 \\
+	   &  & Testing - unit & 1 & - \\
+	   &  & Testing - end to end & 4 & 1 \\
+	   &  & User documentation & 2 & - \\
 	\addlinespace
-	10 & FR4-D & Dissector ID & \underline{ 4 } & - \\
-	   &  & Implementation			   	& 1 & 1\\
-	   &  & Testing - unit				   	& 1 & 1\\
-	   &  & User documentation 			& 2 & -\\
+	10 & FR4-D & Dissector ID & \underline{ 4 } & 3 \\
+	   &  & Implementation & 1 & 1 \\
+	   &  & Testing - unit & 1 & 1 \\
+	   &  & User documentation & 2 & 1 \\
 	\addlinespace
 	11 & FR5-C & Endian handeling & \underline{ 11 } & - \\
-	   &  & Implementation			   	& 5 & -\\
-	   &  & Testing - unit				   	& 2 & -\\
-	   &  & Testing - end to end			& 6 & -\\
+	   &  & Implementation & 5 & - \\
+	   &  & Testing - unit & 2 & - \\
+	   &  & Testing - end to end & 6 & - \\
 	\addlinespace
-	12 & FR6-C & Batch mode; folder support in the CLI & \underline{ 7 } & - \\
-	   &  & Implementation			   	& 4 & -\\
-	   &  & Testing - unit				   	& 2 & -\\
-	   &  & User documentation			& 1 & -\\
+	12 & FR6-C & Batch processing; folder support in the CLI & \underline{ 7 } & 4.5 \\
+	   &  & Implementation & 4 & 2 \\
+	   &  & Testing - unit & 2 & 1.5 \\
+	   &  & User documentation & 1 & 1 \\
 	\addlinespace
-	13 & FR4-C & Support custom handeling of specific data types & \underline{ 5 } & - \\
-	   &  & Implementation			   	& 2 & -\\
-	   &  & Testing - unit				   	& 1 & -\\
-	   &  & Testing - end to end			& 1 & -\\
-	   &  & User documentation			& 1 & -\\
+	13 & FR4-C & Support custom handeling of specific data types & \underline{ 5 } & 3 \\
+	   &  & Implementation & 2 & 1.5 \\
+	   &  & Testing - unit & 1 & 0.5 \\
+	   &  & Testing - end to end & 1 & 1 \\
+	   &  & User documentation & 1 & -\\
 	\midrule
-	& & Total: & 108  & - \\
+	& & Total: & 108 & 104.5 \\
 	\bottomrule
 \end{tabularx}
 \end{table}

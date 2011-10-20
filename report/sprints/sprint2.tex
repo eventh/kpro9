@@ -2,9 +2,9 @@
 \chapter{Sprint 2}
 %=================
 
-%------------------------
+%-------------------
 \section{Pre-sprint}
-%------------------------
+%-------------------
 Sprint 1 gave the desired result, but the team was not satisfied with the way the Scrum process was conducted, especially the sprint planning. In sprint 1 retrospect we decided to conform more to, in our mind, proper Scrum. Applying experience and advice from the first sprint, to get a better process. 
 
 This planning meeting we will try to have more descriptive work items in the sprint backlog. This will ease the process of design, implementation, testing and documentation of the utility, and we do not have to redo any parts that will end up in the report in order to assist the reader. We focus on good user stories to ensure that the elements are low enough level.
@@ -17,10 +17,8 @@ The first sprint resulted in a solid core for the utility. During the next sprin
 
 Not yet understanding the complexity of all the requirements in the sprint backlog, the team ended in an uncertain person-hours estimate for some work objects. Time will show if we understood the complexity and assigned enough hours to implement it. The more complex, but not so critical functionalities will be part of sprint 3 and 4.   
 
-
-
 \subsection{Duration}
-%-----------------------
+%--------------------
 According to the work breakdown structure, \autoref{tab:wbs}, the planning meeting of the second sprint should have been conducted the 5th of October. After a request from the customer to see our planning for the second sprint at the weekly customer meeting, which was scheduled to be before our planning meeting the same day, we decided to advance the planning to the 4th of October. This is to maintain the good relationship to the customer and submit to their preference.
 
 The sprint started with the planning meeting the 4th of October and our work started the following day. The sprint duration is 14 days, and will end the 18th of October with a review meeting.  
@@ -31,14 +29,13 @@ The second sprint will build on the core created in the first sprint. During the
 
 One of the most crucial functions to work in a real environment, is the support for nested header-files. The handling of the \#include-statement gives the utility this feature. The goal of the sprint is to implement the \#include and mainly to have support for enums, bit streams, endianness and batch mode. 
 
-
 \subsection{Back Log}
-%-----------------------
+%--------------------
 \label{sec:sp2backlog}
 The second sprint we will implement thirteen requirements. These are listed in Table
 \ref{tab:sprint2req1} and Table \ref{tab:sprint2req2}.
 
-\begin{table}[!ht] \small \center
+\begin{table}[!htb] \small \center
 \caption{Sprint 2 Requirements\label{tab:sprint2req1}}
 \begin{tabularx}{\textwidth}{l l X c c}
 	\toprule
@@ -77,11 +74,16 @@ The second sprint we will implement thirteen requirements. These are listed in T
 	   &  & Testing - unit & 2 & 1 \\
 	   &  & Testing - end to end & 2 & 1 \\
 	   &  & User documentation & 1 & 1.5 \\
+	\addlinespace
+	7 & FR1-E & Support members of type array & \underline{ 7 } & 12 \\
+	   &  & Implementation & 3 & 7 \\
+	   &  & Testing - unit & 1 & 1 \\
+	   &  & Testing - end to end & 3 & 4 \\
 	\bottomrule
 \end{tabularx}
 \end{table}
 
-\begin{table}[!ht] \small \center
+\begin{table}[!htb] \small \center
 \caption{Sprint 2 Requirements continued\label{tab:sprint2req2}}
 \begin{tabularx}{\textwidth}{l l X c c}
 	\toprule
@@ -89,11 +91,6 @@ The second sprint we will implement thirteen requirements. These are listed in T
 	\cmidrule(r){4-5}
 	\# & Req. & Description & Est. & Act. \\
 	\midrule
-	7 & FR1-E & Support members of type array & \underline{ 7 } & 12 \\
-	   &  & Implementation & 3 & 7 \\
-	   &  & Testing - unit & 1 & 1 \\
-	   &  & Testing - end to end & 3 & 4 \\
-	\addlinespace
 	8 & FR4-E & Structs with various trailers & \underline{ 18 } & 15 \\
 	   &  & Design & 3 & 2 \\
 	   &  & Implementation & 6 & 6 \\
@@ -104,19 +101,19 @@ The second sprint we will implement thirteen requirements. These are listed in T
 	9 & FR4-B & Support for custom Lua configuration & \underline{ 14 } & 7 \\
 	   &  & Design & 2 & 1 \\
 	   &  & Implementation & 5 & 5 \\
-	   &  & Testing - unit & 1 & - \\
+	   &  & Testing - unit & 1 & 0 \\
 	   &  & Testing - end to end & 4 & 1 \\
-	   &  & User documentation & 2 & - \\
+	   &  & User documentation & 2 & 0 \\
 	\addlinespace
 	10 & FR4-D & Dissector ID & \underline{ 4 } & 3 \\
 	   &  & Implementation & 1 & 1 \\
 	   &  & Testing - unit & 1 & 1 \\
 	   &  & User documentation & 2 & 1 \\
 	\addlinespace
-	11 & FR5-C & Endian handeling & \underline{ 11 } & - \\
-	   &  & Implementation & 5 & - \\
-	   &  & Testing - unit & 2 & - \\
-	   &  & Testing - end to end & 6 & - \\
+	11 & FR5-C & Endian handling & \underline{ 11 } & 0.5 \\
+	   &  & Implementation & 5 & 0.5 \\
+	   &  & Testing - unit & 2 & 0 \\
+	   &  & Testing - end to end & 6 & 0 \\
 	\addlinespace
 	12 & FR6-C & Batch processing; folder support in the CLI & \underline{ 7 } & 4.5 \\
 	   &  & Implementation & 4 & 2 \\
@@ -127,16 +124,23 @@ The second sprint we will implement thirteen requirements. These are listed in T
 	   &  & Implementation & 2 & 1.5 \\
 	   &  & Testing - unit & 1 & 0.5 \\
 	   &  & Testing - end to end & 1 & 1 \\
-	   &  & User documentation & 1 & -\\
+	   &  & User documentation & 1 & 0 \\
+	\addlinespace
+	14 &  & Non-requirement programming tasks & \underline{ 26 } & 25.5 \\
+	   &  & Refactoring & 3 & 7 \\
+	   &  & Bug fixing & & 2 \\
+	   &  & Manual end-to-end tests & 8 & 4 \\
+	   &  & Automatic end-to-end tests & 4 & 3 \\
+	   &  & Misc testsing & 4 & 3 \\
+	   &  & Misc user documentation & 7 & 6.5 \\
 	\midrule
-	& & Total: & 108 & 104.5 \\
+	& & Total: & 134 & 120 \\
 	\bottomrule
 \end{tabularx}
 \end{table}
 
 
-
-\begin{table}[!ht] \small \center
+\begin{table}[!htb] \small \center
 \caption{Sprint 2 Timetable\label{tab:sprint2time}}
 \begin{tabularx}{\textwidth}{X c c}
 	\toprule
@@ -146,20 +150,19 @@ The second sprint we will implement thirteen requirements. These are listed in T
 	\midrule
 	\textbf{Sprint planning} & \textbf{30} & \textbf{35.5} \\
 	\addlinespace
-	\textbf{Sprint 2 requirements} & \textbf{144} & \textbf{118} \\
+	\textbf{Sprint 2 requirements} & \textbf{144} & \textbf{115.5} \\
 	Design & 8 & 5.5 \\
 	Implementation & 46 & 42.5 \\
-	Testing & 67 & 47.5 \\
+	Testing & 67 & 45 \\
 	User Documentation & 17 & 13.5 \\
-	Refactoring & 3 & 7 \\
-	Bug fixes & 3 & 2 \\
+	Other & 3 & 9 \\
 	\addlinespace
 	\textbf{Sprint review} & \textbf{20} & \textbf{17.5} \\
 	\addlinespace
-	\textbf{Report documentation} & \textbf{58} & \textbf{59} \\
+	\textbf{Report documentation} & \textbf{58} & \textbf{69} \\
 	Sprint 1 document & 14 & 5 \\
 	Sprint 2 document & 44 & 54 \\
-	Report document & - & - \\ % TODO: look at effort table, glossaries/requirement report
+	Report document & & 10 \\
 	\addlinespace
 	\textbf{Lectures} & \textbf{25} & \textbf{27.5} \\
 	\addlinespace
@@ -168,23 +171,20 @@ The second sprint we will implement thirteen requirements. These are listed in T
 	Customer meetings & 6 & 8 \\
 	Stand-up meetings & 21 & 14 \\
 	\addlinespace
-	\textbf{Miscellaneous} & \textbf{20} & \textbf{-} \\ % TODO: more detailed
+	\textbf{Project Managment} & \textbf{20} & \textbf{40} \\
 	\midrule
-	Total: & 347 & 305.5 \\
+	Total: & 347 & 355.5 \\
 	\bottomrule
 \end{tabularx}
 \end{table}
 
 
-%----------------------
 \subsection{User Stories}
-%----------------------
-
+%------------------------
 This section lists the user stories for the second sprint. They complement the work items in the \ref{sec:sp2backlog}. 
 As we are developing a very technical utility we have written user stories with an implementation level of abstraction. 
 These user stories represent how we intend to add the functionality of the each requirement to the utility.
-This section is subject to change throughout the sprint, as we do not know all the details yet.\\
-\\
+This section is subject to change throughout the sprint, as we do not know all the details yet.
 
 \begin{table}[htbp] \footnotesize \center
 \caption{User stories - Sprint 2 part 1\label{tab:req:stories3}}

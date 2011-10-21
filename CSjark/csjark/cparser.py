@@ -235,6 +235,14 @@ class StructVisitor(c_ast.NodeVisitor):
         ctype = self._get_type(child.children()[0])
         return child.declname, ctype, size_of(ctype), depth
 
+    def handle_union_decl(self, node):
+        """Find the members and size of an union."""
+        pass
+
+    def handle_union(self, proto, name, members):
+        """Add an UnionField to the protocol."""
+        pass
+
     def handle_array(self, proto, name, ctype, size, depth):
         """Add an ArrayField to the protocol."""
         if not depth:

@@ -75,6 +75,7 @@ DEFAULT_C_SIZE_MAP = {
         'pointer': 4,
         'enum': 4,
         'time_t': 4,
+        'union': 0, # Tmp hack
 }
 
 

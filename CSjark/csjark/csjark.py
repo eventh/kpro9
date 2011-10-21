@@ -147,6 +147,7 @@ class Cli:
 
 def create_dissector(filename):
     """Create a Wireshark dissector from 'filename'."""
+    # Parse the filename and find all struct definitions
     try:
         ast = cparser.parse_file(filename, use_cpp=Cli.use_cpp)
         protocols = cparser.find_structs(ast)
@@ -162,7 +163,7 @@ def create_dissector(filename):
                 print()
             return 0
 
-    if Cli.verbose:
+    if Cli.debug:
         ast.show()
 
     # Generate and write lua dissectors

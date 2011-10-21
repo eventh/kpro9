@@ -233,6 +233,14 @@ class StructVisitor(c_ast.NodeVisitor):
         # Single dimensional normal array
         depth.append(size)
         ctype = self._get_type(child.children()[0])
+
+        # Support for typedef
+        if ctype in self.aliases:
+            token, ctype = self.aliases[ctype]
+            if token is not None:
+                print(token, ctype) # TODO
+                raise ParseError('Incomplete support for array of typedefs')
+
         return child.declname, ctype, size_of(ctype), depth
 
     def handle_union_decl(self, node):

@@ -1,7 +1,11 @@
 """
-A module which holds platform specific configuration and support
-for creating dissectors for messages which originates from various
-platforms.
+A module which holds platform specific configuration.
+
+It holds the Platform class which holds specific configuration
+for one platform, and a list of all supported platforms.
+
+It is used when creating dissectors for messages which can originate
+from various platforms.
 """
 
 
@@ -26,6 +30,14 @@ class Platform:
     mappings = {} # Map platform name to instance
 
     def __init__(self, name, flag, endian, macros=None, sizes=None):
+        """Create a configuration for a specific platform.
+
+        'name' is the name of the platform
+        'flag' is an unique integer value representing this platform
+        'endian' is either Platform.big or Platform.little
+        'macros' is C preprocessor platform-specific macros like _WIN32
+        'sizes' is a dict which maps C types to their size in bytes
+        """
         if macros is None:
             macros = []
         if sizes is None:
@@ -52,7 +64,6 @@ class Platform:
             return self.sizes[ctype]
         else:
             raise ValueError('No known size for type %s' % ctype)
-
 
 
 # Default mapping of C type and their wireshark field type.
@@ -130,21 +141,65 @@ DEFAULT_C_SIZE_MAP = {
 }
 
 
+# Mapping of C sizes for unix like platforms
+UNIX_C_SIZE_MAP = {
+        'long': 8,
+        'long int': 8,
+        'signed long': 8,
+        'signed long int': 8,
+        'unsigned long': 8,
+        'unsigned long int': 8,
+}
+
+
+# Platform-specific C preprocessor macros
+WIN32_MACROS = ['WIN32', '_WIN32', '__WIN32__', '__TOS_WIN__', '__WINDOWS__']
+SOLARIS_MACROS = ['sun', '__sun']
+MACOS_MACROS = ['macintosh', 'Macintosh', '__APPLE__ & __MACH__']
+
+X86_MACROS = [
+    'i386', '__i386__', '__i386', '__IA32__', '_M_IX86', '__X86__',
+    '_X86_', '__THW_INTEL__', '__I86__', '__INTEL__',
+]
+
+X64_MACROS = [
+    '__amd64__', '__amd64', '__x86_64', '__x86_64__', '_M_X64',
+    '__ia64__', '_IA64', '__IA64__', '__ia64', '_M_IA64', '_M_IA64',
+    '__itanium__', '__x86_64', '__x86_64__',
+]
+
+SPARC_MACROS = ['__sparc__', '__sparc', '__sparcv8', '__sparcv9']
+
+
 # Register different platforms
 
 # Default platform
 Platform(None, 0, Platform.big)
 
 # Windows 32 bit
-WIN32_MACROS = ['WIN32', '_WIN32', '__WIN32__', '__TOS_WIN__', '__WINDOWS__']
-Platform('win32', 1, Platform.little, macros=WIN32_MACROS)
+Platform('win32', 1, Platform.little, macros=WIN32_MACROS+X86_MACROS)
 
 # Windows 64 bit
-Platform('win64', 2, Platform.little, macros=WIN32_MACROS+['_WIN64'])
+Platform('win64', 2, Platform.little,
+         macros=WIN32_MACROS+X64_MACROS+['_WIN64'])
 
 # Solaris 32 bit
+Platform('solaris32', 3, Platform.little,
+         macros=SOLARIS_MACROS+X86_MACROS, sizes=UNIX_C_SIZE_MAP)
 
 # Solaris 64 bit
+Platform('solaris64', 4, Platform.little,
+         macros=SOLARIS_MACROS+X64_MACROS, sizes=UNIX_C_SIZE_MAP)
 
 # Solaris SPARC 64 bit
+Platform('sparc', 5, Platform.big,
+         macros=SOLARIS_MACROS+SPARC_MACROS, sizes=UNIX_C_SIZE_MAP)
+
+# MacOS
+Platform('macos', 6, Platform.little,
+         macros=MACOS_MACROS, sizes=UNIX_C_SIZE_MAP)
+
+# Linux
+Platform('linux', 7, Platform.little,
+         macros=['__linux__'], sizes=UNIX_C_SIZE_MAP)
 

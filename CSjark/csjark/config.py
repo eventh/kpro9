@@ -8,92 +8,7 @@ import os
 from operator import itemgetter
 import yaml
 
-
-# Mapping of c type and their wireshark field type.
-DEFAULT_C_TYPE_MAP = {
-        'bool': 'bool',
-        'char': 'string',
-        'signed char': 'string',
-        'unsigned char': 'string',
-        'short': "int16",
-        'signed short': "int16",
-        'unsigned short': "uint16",
-        'short int': "int16",
-        'signed short int': "int16",
-        'unsigned short int': "uint16",
-        "int": "int32",
-        'signed int': "int32",
-        'unsigned int': "uint32",
-        'signed': "int32",
-        'long': "int64",
-        'signed long': "int64",
-        'unsigned long': "uint64",
-        'long int': "int64",
-        'signed long int': "int64",
-        'unsigned long int': "uint64",
-        'long long': "int64",
-        'signed long long': "int64",
-        'unsigned long long': "uint64",
-        'long long int': "int64",
-        'signed long long int': "int64",
-        'unsigned long long int': "uint64",
-        'float': 'float',
-        'double': 'double',
-        'long double': 'todo',
-        'pointer': 'int32',
-        'enum': 'uint32',
-        'time_t': 'relative_time',
-}
-
-
-# Mapping of c type and their default size in bytes.
-DEFAULT_C_SIZE_MAP = {
-        'bool': 1,
-        'char': 1,
-        'signed char': 1,
-        'unsigned char': 1,
-        'short': 2,
-        'signed short': 2,
-        'unsigned short': 2,
-        'short int': 2,
-        'signed short int': 2,
-        'unsigned short int': 2,
-        'int': 4,
-        'signed int': 4,
-        'unsigned int': 4,
-        'signed': 4,
-        'long': 8,
-        'signed long': 8,
-        'unsigned long': 8,
-        'long int': 8,
-        'signed long int': 8,
-        'unsigned long int': 8,
-        'long long': 8,
-        'signed long long': 8,
-        'unsigned long long': 8,
-        'long long int': 8,
-        'signed long long int': 8,
-        'unsigned long long int': 8,
-        'float': 4,
-        'double': 8,
-        'long double': 16,
-        'pointer': 4,
-        'enum': 4,
-        'time_t': 4,
-}
-
-
-def map_type(ctype):
-    """Find the wireshark type for a ctype."""
-    return DEFAULT_C_TYPE_MAP.get(ctype, ctype)
-
-
-def size_of(ctype):
-    """Find the size of a c type in bytes."""
-    if ctype in DEFAULT_C_SIZE_MAP.keys():
-        return DEFAULT_C_SIZE_MAP[ctype]
-    else:
-        raise ValueError('No known size for type %s' % ctype)
+from platform import Platform, map_type
 
 
 class ConfigError(Exception):
@@ -393,6 +308,18 @@ class ConformanceFile:
                 mapping[token](content)
 
 
+class Option:
+    def __init__(self, obj):
+        pass
+
+        # Handle platform options
+        self.platforms = []
+        if 'platforms' in obj:
+            for platform in obj['platforms']:
+                if platform in Platform.mappings:
+                    self.platforms.append(Platform.mappings[platform])
+
+
 def handle_struct(obj):
     """Handle rules and configuration for a struct."""
     conf = StructConfig.find(obj['name'])
@@ -421,10 +348,6 @@ def handle_struct(obj):
                 type_(conf, rule)
 
 
-def handle_options(obj):
-    pass
-
-
 def parse_file(filename, only_text=None):
     """Parse a configuration file."""
     if only_text is not None:
@@ -435,7 +358,7 @@ def parse_file(filename, only_text=None):
 
     # Deal with options
     if 'Options' in obj:
-        handle_options(obj['Options'])
+        Option(obj['Options'])
 
     # Deal with struct rules
     if 'Structs' in obj:

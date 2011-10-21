@@ -10,7 +10,8 @@ import operator
 import pycparser
 from pycparser import c_ast, c_parser, plyparser
 
-from config import size_of, map_type, StructConfig
+from config import StructConfig
+from platform import size_of, map_type
 from dissector import Protocol
 
 

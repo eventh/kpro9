@@ -138,6 +138,12 @@ sprint, as we do not know all the details yet.\\
 	What & The user wants to specify the ID of a dissector in a configuration file. The dissectors should not be given any ID if it has not been 			specifically configured. \\
 	How & When the cparser finds a struct in the abstract syntax tree it looks for a configuration file for the struct. If a config-file is found, the 			ID of the prototype field representing the dissector will be mapped to the ID given in the config-file.  If it is not found, the ID will be sat to 			NONE. \\
 	Result & The configuration supports specifying the ID of dissectors. \\
+	\midrule
+	ID & US36\\
+	Who &  Developer\\
+	What & The user wants to be able to specify that some integers should be interpreted as a string of bits where every bit has a different flag-name\\
+	How & The config module should read config files provided to the command line interface, and find any rules regarding interpreting members that are supposed to be represented as bitstrings. These rules are then used by the cparser when it tralslates struct definitions to Protocol and Field instances found in the dissector module.\\
+	Result & It is possible to specify that member values in structs are to be displayed as bitstrings in wireshark.\\
 	\bottomrule
 \end{tabularx}}
 \end{table}

@@ -5,6 +5,56 @@ platforms.
 """
 
 
+def map_type(ctype):
+    """Find the wireshark type for a ctype."""
+    return DEFAULT_C_TYPE_MAP.get(ctype, ctype)
+
+
+def size_of(ctype):
+    """Find the size of a c type in bytes."""
+    if ctype in DEFAULT_C_SIZE_MAP.keys():
+        return DEFAULT_C_SIZE_MAP[ctype]
+    else:
+        raise ValueError('No known size for type %s' % ctype)
+
+
+class Platform:
+    """Represents specific attributes of an OS and/or hardware."""
+    big = 'big'
+    little = 'little'
+
+    mappings = {} # Map platform name to instance
+
+    def __init__(self, name, flag, endian, macros=None, sizes=None):
+        if macros is None:
+            macros = []
+        if sizes is None:
+            sizes = {}
+        Platform.mappings[name] = self
+        self.name = name
+        self.flag = flag
+        self.endian = endian
+        self.macros = macros
+        self.types = dict(DEFAULT_C_TYPE_MAP)
+
+        # Extend sizes with missing types from default size map
+        self.sizes = dict(DEFAULT_C_SIZE_MAP)
+        for key, value in sizes.items():
+            self.sizes[key] = value
+
+    def map_type(self, ctype):
+        """Find the Wireshark type for a ctype."""
+        return self.types.get(ctype, ctype)
+
+    def size_of(self, ctype):
+        """Find the size of a C type in bytes."""
+        if ctype in self.sizes.keys():
+            return self.sizes[ctype]
+        else:
+            raise ValueError('No known size for type %s' % ctype)
+
+
+
 # Default mapping of C type and their wireshark field type.
 DEFAULT_C_TYPE_MAP = {
         'bool': 'bool',
@@ -48,30 +98,31 @@ DEFAULT_C_SIZE_MAP = {
         'signed char': 1,
         'unsigned char': 1,
         'short': 2,
-        'signed short': 2,
-        'unsigned short': 2,
         'short int': 2,
+        'signed short': 2,
         'signed short int': 2,
+        'unsigned short': 2,
         'unsigned short int': 2,
         'int': 4,
-        'signed int': 4,
-        'unsigned int': 4,
         'signed': 4,
-        'long': 8,
-        'signed long': 8,
-        'unsigned long': 8,
-        'long int': 8,
-        'signed long int': 8,
-        'unsigned long int': 8,
+        'signed int': 4,
+        'unsigned': 4,
+        'unsigned int': 4,
+        'long': 4,
+        'long int': 4,
+        'signed long': 4,
+        'signed long int': 4,
+        'unsigned long': 4,
+        'unsigned long int': 4,
         'long long': 8,
-        'signed long long': 8,
-        'unsigned long long': 8,
         'long long int': 8,
+        'signed long long': 8,
         'signed long long int': 8,
+        'unsigned long long': 8,
         'unsigned long long int': 8,
         'float': 4,
         'double': 8,
-        'long double': 16,
+        'long double': 8,
         'pointer': 4,
         'enum': 4,
         'time_t': 4,
@@ -79,46 +130,21 @@ DEFAULT_C_SIZE_MAP = {
 }
 
 
-def map_type(ctype):
-    """Find the wireshark type for a ctype."""
-    return DEFAULT_C_TYPE_MAP.get(ctype, ctype)
+# Register different platforms
 
+# Default platform
+Platform(None, 0, Platform.big)
 
-def size_of(ctype):
-    """Find the size of a c type in bytes."""
-    if ctype in DEFAULT_C_SIZE_MAP.keys():
-        return DEFAULT_C_SIZE_MAP[ctype]
-    else:
-        raise ValueError('No known size for type %s' % ctype)
+# Windows 32 bit
+WIN32_MACROS = ['WIN32', '_WIN32', '__WIN32__', '__TOS_WIN__', '__WINDOWS__']
+Platform('win32', 1, Platform.little, macros=WIN32_MACROS)
 
+# Windows 64 bit
+Platform('win64', 2, Platform.little, macros=WIN32_MACROS+['_WIN64'])
 
-class Platform:
-    """."""
-    big = 'big'
-    little = 'little'
-    mappings = {} # Map platform name to instance
+# Solaris 32 bit
 
-    def __init__(self, name, flag, endian,
-                 macros=None, sizes=None, alignment=4):
-        if macros is None:
-            macros = []
-        if sizes is None:
-            sizes = {}
-        Platform.mappings[name] = self
-        self.name = name
-        self.flag = flag
-        self.endian = endian
-        self.macros = macros
-        self.sizes = sizes
-        self.alignment = alignment
+# Solaris 64 bit
 
-        # Extend sizes with missing types from default size map
-        for key, value in DEFAULT_C_SIZE_MAP.items():
-            if key not in self.sizes:
-                self.sizes[key] = value
-
-
-# Register platforms
-#Platform('win32', 0, Platform.big, ['win32', '_win32'])
-#Platform('win64', 1, Platform.big)
+# Solaris SPARC 64 bit
 

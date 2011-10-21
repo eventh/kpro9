@@ -44,6 +44,7 @@ class Cli:
     use_cpp = True
     output_dir = None # Store all output in a directory
     output_file = None # Store output in a single file
+    strict = True # Quit if an unexpected exception is raised
 
     @classmethod
     def parse_args(cls, args=None):
@@ -130,6 +131,7 @@ class Cli:
             i = 0
             while i < len(var):
                 if os.path.isdir(var[i]):
+                    Cli.strict = False # Batch processing
                     folder = var.pop(i)
                     var.extend(os.path.join(folder, path) for path in
                             os.listdir(folder) if os.path.isdir(path)
@@ -142,14 +144,26 @@ class Cli:
 
         return headers, configs
 
+
 def create_dissector(filename):
     """Create a Wireshark dissector from 'filename'."""
-    ast = cparser.parse_file(filename, use_cpp=Cli.use_cpp)
+    try:
+        ast = cparser.parse_file(filename, use_cpp=Cli.use_cpp)
+        protocols = cparser.find_structs(ast)
+
+    # Silence errors if not in strict mode
+    except Exception as err:
+        if Cli.strict:
+            raise
+        else:
+            print('Skipped "%s" as it raised %s' % (filename, repr(err)))
+            if Cli.debug:
+                sys.excepthook(*sys.exc_info())
+                print()
+            return 0
 
     if Cli.verbose:
         ast.show()
-
-    protocols = cparser.find_structs(ast)
 
     # Generate and write lua dissectors
     for proto in protocols:

@@ -35,6 +35,7 @@ import argparse
 
 import cparser
 import config
+import dissector
 
 
 class Cli:
@@ -217,8 +218,14 @@ def main():
         if options.verbose:
             print("Parsed config file '%s' successfully." % filename)
 
+
+    # Add current platform to list of platforms if its empty
+    options.create_default_platform()
+
+    # Create a delegator for delegating messages to the right dissector
+    options.delegator = dissector.Delegator(options.platforms)
+
     # Create dissectors
-    options.create_default_platform() # Add current platform
     dissector_count = 0
     for filename in headers:
         dissector_count += create_dissector(filename, options)
@@ -228,6 +235,10 @@ def main():
 
     print("Successfully parsed %i file(s), created %i dissector(s)." % (
             len(headers), dissector_count))
+
+    # Write the delegator to file
+    with open('luastructs.lua', 'w') as f:
+        f.write(options.delegator.create())
 
 
 if __name__ == "__main__":

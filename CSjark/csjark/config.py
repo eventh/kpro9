@@ -113,7 +113,7 @@ class BaseRule:
 
 
 class Range(BaseRule):
-    """Rule for specifying a valid range for a struct member or type."""
+    """Rule for specifying a valid range for a member or type."""
 
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
@@ -129,7 +129,7 @@ class Range(BaseRule):
 
 
 class Enum(BaseRule):
-    """Rule for emulating enum with int-like types in structs."""
+    """Rule for emulating enum with int-like types."""
 
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
@@ -144,7 +144,7 @@ class Enum(BaseRule):
 
 
 class Bitstring(BaseRule):
-    """Rule for representing bit strings in structs."""
+    """Rule for representing ints which are bit strings."""
 
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
@@ -314,7 +314,9 @@ class Options:
     strict = True
     use_cpp = True
 
-    platforms = set()
+    platforms = set() # Set of platforms to support in dissectors
+    delegator = None # Used to create a delegator dissector
+    configs = {} # Configuration for specific protocols
 
     @classmethod
     def update(cls, obj):
@@ -349,34 +351,41 @@ class Options:
         # Add the default platform, as we failed the previous step
         cls.platforms.add(Platform.mappings[''])
 
+    @classmethod
+    def handle_protocol_config(cls, obj, filename=''):
+        """Handle rules and configuration for a protocol."""
+        # Handle the name of the protocol
+        name = str(obj.get('name', ''))
+        if not name:
+            raise ConfigError('Struct config in %s not named' % filename)
 
-# TODO: move to Options class
-def handle_struct(obj):
-    """Handle rules and configuration for a struct."""
-    conf = StructConfig.find(obj['name'])
+        #if name not in cls.configs:
+        #    cls.configs[name] = StructConfig(name)
+        #conf = cls.configs[name]
+        conf = StructConfig.find(name)
 
-    # Structs optional id
-    if 'id' in obj:
-        conf.id = int(obj['id'])
-        if conf.id < 0 or conf.id > 65535:
-            raise ConfigError('Invalid dissector ID %s: %i (0 - 65535)' % (
-                    conf.name, conf.id))
+        # Protocol's optional id
+        if 'id' in obj:
+            conf.id = int(obj['id'])
+            if conf.id < 0 or conf.id > 65535:
+                raise ConfigError('Invalid dissector ID %s: %i (0 - 65535)' % (
+                        conf.name, conf.id))
 
-    # Structs optional description
-    if 'description' in obj:
-        conf.description = obj['description']
+        # Protocol's optional description
+        if 'description' in obj:
+            conf.description = obj['description']
 
-    # Structs optional conformance file
-    if 'cnf' in obj:
-        conf.cnf = ConformanceFile(conf, obj['cnf'])
+        # Protocol's optional conformance file
+        if 'cnf' in obj:
+            conf.cnf = ConformanceFile(conf, obj['cnf'])
 
-    # Handle rules
-    types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,
-             'trailers': Trailer, 'customs': Custom}
-    for name, type_ in types.items():
-        if name in obj:
-            for rule in obj[name]:
-                type_(conf, rule)
+        # Handle rules
+        types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,
+                 'trailers': Trailer, 'customs': Custom}
+        for name, type_ in types.items():
+            if name in obj:
+                for rule in obj[name]:
+                    type_(conf, rule)
 
 
 def parse_file(filename, only_text=None):
@@ -387,14 +396,14 @@ def parse_file(filename, only_text=None):
         with open(filename, 'r') as f:
             obj = yaml.safe_load(f)
 
-    # Deal with options
+    # Deal with utility options
     options = obj.get('Options', None)
     if options:
         Options.update(options)
 
-    # Deal with struct rules
-    structs = obj.get('Structs', None)
-    if structs:
-        for struct in structs:
-            handle_struct(struct)
+    # Deal with protocol configuration
+    protocols = obj.get('Structs', None)
+    if protocols:
+        for proto in protocols:
+            Options.handle_protocol_config(proto, filename)
 

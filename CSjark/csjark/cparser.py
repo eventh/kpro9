@@ -93,7 +93,8 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Create the protocol for the struct
         conf = StructConfig.configs.get(node.name, None)
-        proto = Protocol(node.name, node.coord, conf)
+        proto = Protocol(node.name, conf)
+        proto._coord = node.coord # Replace with context
 
         # Find the member definitions
         for decl in node.children():
@@ -110,7 +111,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Disallow structs with same name
         if node.name in StructVisitor.all_structs:
-            o = StructVisitor.all_structs[node.name].coord
+            o = StructVisitor.all_structs[node.name]._coord
             if (os.path.normpath(o.file) != os.path.normpath(node.coord.file)
                     or o.line != node.coord.line):
                 raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (

@@ -1,12 +1,20 @@
 """
-A module for generating LUA dissectors for Wireshark.
+A module for generating Lua dissectors for Wireshark.
+
+Contains classes for creating dissectors for a specific protocol, which
+holds a list of fields which are instances of Field or its subclasses.
+
+Also contains the class which generates a dissector for delegating
+dissecting of messages to the specific protocol dissectors.
 """
 import string
 
-INT_TYPES = ["uint8", "uint16", "uint24", "uint32", "uint64", "framenum"]
-OTHER_TYPES = ["float", "double", "string", "stringz", "bytes",
-                "bool", "ipv4", "ipv6", "ether", "oid", "guid"]
-VALID_PROTOFIELD_TYPES = INT_TYPES + OTHER_TYPES
+
+# Not used yet, maybe remove it?
+#INT_TYPES = ["uint8", "uint16", "uint24", "uint32", "uint64", "framenum"]
+#OTHER_TYPES = ["float", "double", "string", "stringz", "bytes",
+#                "bool", "ipv4", "ipv6", "ether", "oid", "guid"]
+#VALID_PROTOFIELD_TYPES = INT_TYPES + OTHER_TYPES
 
 
 def create_lua_var(var, length=None):
@@ -28,23 +36,22 @@ def create_lua_var(var, length=None):
 
 
 class Field:
-    def __init__(self, name, type, size):
+    """Represents Wireshark's ProtoFields which stores a specific value."""
+
+    def __init__(self, proto, name, type, size):
+        self.proto = proto
         self.name = name
         self.type = type
         self.size = size
 
-        self.abbr = None
+        self.var = '%s.%s' % (self.proto.field_var, self.name)
+        self.abbr = '%s.%s' % (self.proto.name, self.name)
+
         self.base = None # One of 'base.DEC', 'base.HEX' or 'base.OCT'
         self.values = None # Dict with the text that corresponds to the values
         self.mask = None # Integer mask of this field
         self.desc = None # Description of the field
         self.offset = None # Useful for others to access buffer(offset, size)
-
-    def set_protocol(self, proto):
-        self.proto = proto
-        self.var = '%s.%s' % (self.proto.field_var, self.name)
-        if self.abbr is None:
-            self.abbr = '%s.%s' % (self.proto.name, self.name)
 
     def create_field(self, var, type_, abbr, name,
             base=None, values=None, mask=None, desc=None):
@@ -95,8 +102,8 @@ class Field:
 
 
 class EnumField(Field):
-    def __init__(self, name, type, size, values, strict=True):
-        super().__init__(name, type, size)
+    def __init__(self, proto, name, type, size, values, strict=True):
+        super().__init__(proto, name, type, size)
         self.values = self._dict_to_table(values)
         self.strict = strict
         self.keys = ', '.join(str(i) for i in sorted(values.keys()))
@@ -124,14 +131,14 @@ class EnumField(Field):
 
 
 class ArrayField(Field):
-    def __init__(self, name, type, base_size, depth):
+    def __init__(self, proto, name, type, base_size, depth):
         self.base_size = base_size
         self.depth = depth
         self.elements = 1 # Number of total elements in the array
         for size in self.depth:
             self.elements *= size
 
-        super().__init__(name, type, self.elements * self.base_size)
+        super().__init__(proto, name, type, self.elements * self.base_size)
         self.func_type = self._get_func_type()
 
     def get_definition(self):
@@ -222,8 +229,8 @@ class ArrayField(Field):
 
 
 class ProtocolField(Field):
-    def __init__(self, name, id, size, type_name):
-        super().__init__(name, type_name, size)
+    def __init__(self, proto, name, id, size, type_name):
+        super().__init__(proto, name, type_name, size)
         self.id = id
 
     def get_definition(self):
@@ -238,8 +245,8 @@ class ProtocolField(Field):
 
 
 class BitField(Field):
-    def __init__(self, name, type, size, bits):
-        super().__init__(name, type, size)
+    def __init__(self, proto, name, type, size, bits):
+        super().__init__(proto, name, type, size)
         self.bits = bits
 
     def _bit_var(self, name):
@@ -292,8 +299,8 @@ class BitField(Field):
 
 
 class RangeField(Field):
-    def __init__(self, name, type, size, min, max):
-        super().__init__(name, type, size)
+    def __init__(self, proto, name, type, size, min, max):
+        super().__init__(proto, name, type, size)
         self.min = min
         self.max = max
         self.func_type = self._get_func_type()
@@ -331,15 +338,13 @@ class Protocol:
     """
     counter = 0 # Used to give protocols unique IDs if needed
 
-    def __init__(self, name, coord=None, conf=None):
+    def __init__(self, name, conf=None):
         """Create a Protocol, for generating a dissector.
 
         'name' is the name of the Protocol to dissect.
-        'coord' is the source location (file and line).
         'conf' is the configuration for this Protocol.
         """
         self.name = name
-        self.coord = coord
         self.conf = conf
 
         # Dissector ID
@@ -367,34 +372,33 @@ class Protocol:
         return sum(field.size for field in self.fields if field)
 
     def _add(self, field):
-        """Add a field to the protocol, updates the fields proto reference."""
-        field.set_protocol(self)
+        """Add a field to the protocol, returns the field."""
         self.fields.append(field)
         return field
 
     def add_field(self, *args, **vargs):
         """Create and add a new Field to the protocol."""
-        return self._add(Field(*args, **vargs))
+        return self._add(Field(self, *args, **vargs))
 
     def add_array(self, *args, **vargs):
         """Create and add a new ArrayField to the protocol."""
-        return self._add(ArrayField(*args, **vargs))
+        return self._add(ArrayField(self, *args, **vargs))
 
     def add_enum(self, *args, **vargs):
         """Create and add a new EnumField to the protocol."""
-        return self._add(EnumField(*args, **vargs))
+        return self._add(EnumField(self, *args, **vargs))
 
     def add_range(self, *args, **vargs):
         """Create and add a new RangeField to the protocol."""
-        return self._add(RangeField(*args, **vargs))
+        return self._add(RangeField(self, *args, **vargs))
 
     def add_bit(self, *args, **vargs):
         """Create and add a new BitField to the protocol."""
-        return self._add(BitField(*args, **vargs))
+        return self._add(BitField(self, *args, **vargs))
 
     def add_protocol(self, *args, **vargs):
         """Create and add a new ProtocolField to the protocol."""
-        return self._add(ProtocolField(*args, **vargs))
+        return self._add(ProtocolField(self, *args, **vargs))
 
     def _legal_header(self):
         """Add the legal header with license info."""
@@ -539,4 +543,23 @@ class Protocol:
         self.data.append('')
 
         return '\n'.join(self.data)
+
+
+class Delegator:
+    """A class for delegating dissecting to protocols.
+
+    Creates the top-level lua dissector which delegates the task
+    of dissecting specific messages to dissectors generated by
+    Protocol instances.
+
+    This top-level dissector contains code for finding the platform
+    the message originates from, and finds which specific dissector
+    handles that platform and message.
+    """
+
+    def __init__(self, platforms):
+        self.platforms = platforms
+
+    def create(self):
+        pass
 

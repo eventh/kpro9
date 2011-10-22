@@ -26,7 +26,7 @@ enums = Tests()
 @enums.context
 def create_enum_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
+    proto = dissector.Protocol('test', None)
     proto.add_enum('enum', 'int32', 4, dict(enumerate('ABCDE')))
     yield proto.fields[0]
     del proto
@@ -60,7 +60,7 @@ arrays = Tests()
 @arrays.context
 def create_array_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
+    proto = dissector.Protocol('test', None)
     proto.add_array('arr', 'float', 4, [1, 2, 3])
     proto.add_array('str', 'string', 30, [2])
     yield proto.fields[0], proto.fields[1]
@@ -133,7 +133,7 @@ protofields = Tests()
 @protofields.context
 def create_protocol_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
+    proto = dissector.Protocol('test', None)
     proto.add_protocol('test', 8, 32, 'proto_one')
     proto.add_protocol('test2', 9, 64, 'proto_two')
     yield proto.fields[0], proto.fields[1]
@@ -167,7 +167,7 @@ bits = Tests()
 @bits.context
 def create_bit_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
+    proto = dissector.Protocol('test', None)
     bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
             (2, 1, 'B', {0: 'No', 1: 'Yes'}),
             (3, 1, 'G', {0: 'No', 1: 'Yes'})]
@@ -226,7 +226,7 @@ ranges = Tests()
 @ranges.context
 def create_range_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
+    proto = dissector.Protocol('test', None)
     proto.add_range('range', 'float', 4, 0, 10)
     yield proto.fields[0]
     del proto
@@ -259,7 +259,7 @@ fields = Tests()
 @fields.context
 def create_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
+    proto = dissector.Protocol('test', None)
     proto.add_field('one', 'float', 4)
     proto.add_field('two', 'string', 12)
     yield proto.fields[0], proto.fields[1]
@@ -298,7 +298,7 @@ def create_protos():
              Trailer(conf, {'name': 'bur', 'count': 3, 'size': 8}),
              Trailer(conf, {'name': 'ber', 'member': 'count'})]
 
-    proto = dissector.Protocol('tester', None, conf)
+    proto = dissector.Protocol('tester', conf)
 
     proto.add_field('one', 'float', 4)
     proto.add_range('range', 'float', 4, 0, 10)

@@ -39,12 +39,13 @@ import config
 
 class Cli:
     """A class for handling command line interface parsing."""
+    # TODO: update tests so we can move these to config.Options
     verbose = False
     debug = False
+    strict = True # Quit if an unexpected exception is raised
     use_cpp = True
     output_dir = None # Store all output in a directory
     output_file = None # Store output in a single file
-    strict = True # Quit if an unexpected exception is raised
 
     @classmethod
     def parse_args(cls, args=None):
@@ -142,28 +143,39 @@ class Cli:
         files_in_folder(headers, ('.h', '.c'))
         files_in_folder(configs, ('.yml', ))
 
+        # Update Options
+        config.Options.verbose = Cli.verbose
+        config.Options.debug = Cli.debug
+        config.Options.strict = Cli.strict
+        config.Options.use_cpp = Cli.use_cpp
+
         return headers, configs
 
 
-def create_dissector(filename):
+def create_dissector(filename, options):
     """Create a Wireshark dissector from 'filename'."""
+
+    # Handle different platforms
+    #for platform in options.platforms:
+    #    pass
+
     # Parse the filename and find all struct definitions
     try:
-        ast = cparser.parse_file(filename, use_cpp=Cli.use_cpp)
-        protocols = cparser.find_structs(ast)
+        ast = cparser.parse_file(filename, use_cpp=options.use_cpp)
+        protocols = cparser.find_structs(ast, None)
 
     # Silence errors if not in strict mode
     except Exception as err:
-        if Cli.strict:
+        if options.strict:
             raise
         else:
             print('Skipped "%s" as it raised %s' % (filename, repr(err)))
-            if Cli.debug:
+            if options.debug:
                 sys.excepthook(*sys.exc_info())
                 print()
             return 0
 
-    if Cli.debug:
+    if options.debug:
         ast.show()
 
     # Generate and write lua dissectors
@@ -188,18 +200,20 @@ def main():
     headers, configs = Cli.parse_args()
 
     # Parse config files
+    options = config.Options
     for filename in configs:
         config.parse_file(filename)
 
-        if Cli.verbose:
+        if options.verbose:
             print("Parsed config file '%s' successfully." % filename)
 
     # Create dissectors
+    options.create_default_platform() # Add current platform
     dissector_count = 0
     for filename in headers:
-        dissector_count += create_dissector(filename)
+        dissector_count += create_dissector(filename, options)
 
-        if Cli.verbose:
+        if options.verbose:
             print("Parsed header file '%s' successfully." % filename)
 
     print("Successfully parsed %i file(s), created %i dissector(s)." % (

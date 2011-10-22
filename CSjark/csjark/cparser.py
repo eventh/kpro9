@@ -60,7 +60,7 @@ def parse(text, filename=''):
     return parser.parse(text, filename)
 
 
-def find_structs(ast):
+def find_structs(ast, platform=None):
     """Walks the AST nodes to find structs."""
     visitor = StructVisitor()
     visitor.visit(ast)

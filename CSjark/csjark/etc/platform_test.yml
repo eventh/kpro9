@@ -1,0 +1,11 @@
+Options:
+    platforms: [win32, win64]
+    #verbose: True
+    #debug: True
+    #use_cpp: True
+    #strict: False
+
+Structs:
+  - name: platform_test
+    id: 89
+

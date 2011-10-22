@@ -69,6 +69,7 @@ class Platform:
 # Default mapping of C type and their wireshark field type.
 DEFAULT_C_TYPE_MAP = {
         'bool': 'bool',
+        '_Bool': 'bool',
         'char': 'string',
         'signed char': 'string',
         'unsigned char': 'string',
@@ -105,6 +106,7 @@ DEFAULT_C_TYPE_MAP = {
 # Default mapping of C type and their default size in bytes.
 DEFAULT_C_SIZE_MAP = {
         'bool': 1,
+        '_Bool': 1,
         'char': 1,
         'signed char': 1,
         'unsigned char': 1,

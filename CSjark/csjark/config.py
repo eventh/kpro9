@@ -4,8 +4,10 @@ A module for configuration of our utility.
 Should parse config files and create data structures which the parser can
 use when translating C struct definitions to Wireshark protocols and fields.
 """
+import sys
 import os
 from operator import itemgetter
+
 import yaml
 
 from platform import Platform, map_type
@@ -213,15 +215,8 @@ class Custom(BaseRule):
 
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
-
-        # Conformance File specification for this member or type
-        self.cnf = None
-        if 'cnf' in obj:
-            self.cnf = ConformanceFile(conf, obj['cnf'])
-
-        # Field, optional if conformance
         self.field = str(obj.get('field', ''))
-        if not self.field and self.cnf is None:
+        if not self.field:
             raise ConfigError('No field in Custom rule for %s' % conf.name)
 
         # TODO: validate that the parameters are valid for the field type
@@ -308,18 +303,54 @@ class ConformanceFile:
                 mapping[token](content)
 
 
-class Option:
-    def __init__(self, obj):
-        pass
+class Options:
+    """Holds options for the whole utility.
 
+    These options are set by either command line interface or
+    one or more configuration yaml files.
+    """
+    verbose = False
+    debug = False
+    strict = True
+    use_cpp = True
+
+    platforms = set()
+
+    @classmethod
+    def update(cls, obj):
+        """Update the options from a config yaml file."""
         # Handle platform options
-        self.platforms = []
         if 'platforms' in obj:
-            for platform in obj['platforms']:
-                if platform in Platform.mappings:
-                    self.platforms.append(Platform.mappings[platform])
+            for name in obj['platforms']:
+                if name in Platform.mappings:
+                    cls.platforms.add(Platform.mappings[name])
+                else:
+                    raise ConfigError('Unknown platform %s' % name)
+
+        # Handle boolean options
+        cls.verbose = obj.get('verbose', cls.verbose)
+        cls.debug = obj.get('verbose', cls.debug)
+        cls.strict = obj.get('strict', cls.strict)
+        cls.use_cpp = obj.get('use_cpp', cls.use_cpp)
+
+    @classmethod
+    def create_default_platform(cls):
+        """If no platforms are selected, add the current platform."""
+        if cls.platforms:
+            return
+
+        # Map current platform to a platform configuration
+        mapping = {'win': 'win32', 'darwin': 'macos', 'linux': 'linux'}
+        for key, value in mapping.items():
+            if sys.platform.startswith(key):
+                cls.platforms.add(Platform.mappings[value])
+                return
+
+        # Add the default platform, as we failed the previous step
+        cls.platforms.add(Platform.mappings[None])
 
 
+# TODO: move to Options class
 def handle_struct(obj):
     """Handle rules and configuration for a struct."""
     conf = StructConfig.find(obj['name'])
@@ -358,7 +389,7 @@ def parse_file(filename, only_text=None):
 
     # Deal with options
     if 'Options' in obj:
-        Option(obj['Options'])
+        Options.update(obj['Options'])
 
     # Deal with struct rules
     if 'Structs' in obj:

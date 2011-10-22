@@ -536,6 +536,7 @@ class Protocol:
         # Add code for registering the protocol
         end = 'luastructs_dt:add({id}, {var})\n'
         self.data.append(end.format(id=self.id, var=self.var))
+        self.data.append('')
 
         return '\n'.join(self.data)
 

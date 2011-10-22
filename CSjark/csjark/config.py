@@ -347,7 +347,7 @@ class Options:
                 return
 
         # Add the default platform, as we failed the previous step
-        cls.platforms.add(Platform.mappings[None])
+        cls.platforms.add(Platform.mappings[''])
 
 
 # TODO: move to Options class
@@ -388,11 +388,13 @@ def parse_file(filename, only_text=None):
             obj = yaml.safe_load(f)
 
     # Deal with options
-    if 'Options' in obj:
-        Options.update(obj['Options'])
+    options = obj.get('Options', None)
+    if options:
+        Options.update(options)
 
     # Deal with struct rules
-    if 'Structs' in obj:
-        for struct in obj['Structs']:
+    structs = obj.get('Structs', None)
+    if structs:
+        for struct in structs:
             handle_struct(struct)
 

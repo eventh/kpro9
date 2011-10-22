@@ -176,7 +176,7 @@ SPARC_MACROS = ['__sparc__', '__sparc', '__sparcv8', '__sparcv9']
 # Register different platforms
 
 # Default platform
-Platform(None, 0, Platform.big)
+Platform('', 0, Platform.big)
 
 # Windows 32 bit
 Platform('win32', 1, Platform.little, macros=WIN32_MACROS+X86_MACROS)

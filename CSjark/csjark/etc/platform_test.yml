@@ -1,5 +1,5 @@
 Options:
-    platforms: [win32, win64]
+    #platforms: [win32, win64]
     #verbose: True
     #debug: True
     #use_cpp: True

@@ -156,43 +156,53 @@ def create_dissector(filename, options):
     """Create a Wireshark dissector from 'filename'."""
 
     # Handle different platforms
-    #for platform in options.platforms:
-    #    pass
+    protocols = {}
+    for platform in options.platforms:
 
-    # Parse the filename and find all struct definitions
-    try:
-        ast = cparser.parse_file(filename, use_cpp=options.use_cpp)
-        protocols = cparser.find_structs(ast, None)
+        # Parse the filename and find all struct definitions
+        try:
+            # TODO: create platform specfic macro header file
+            ast = cparser.parse_file(filename, use_cpp=options.use_cpp)
+            protocols[platform.name] = cparser.find_structs(ast, platform)
 
-    # Silence errors if not in strict mode
-    except Exception as err:
-        if options.strict:
-            raise
-        else:
-            print('Skipped "%s" as it raised %s' % (filename, repr(err)))
-            if options.debug:
-                sys.excepthook(*sys.exc_info())
-                print()
-            return 0
+        # Silence errors if not in strict mode
+        except Exception as err:
+            if options.strict:
+                raise
+            else:
+                print('Skipped "%s":%s as it raised %s' % (
+                        filename, platform.name, repr(err)))
+                if options.debug:
+                    sys.excepthook(*sys.exc_info())
+                    print()
+                continue
 
     if options.debug:
         ast.show()
 
+    # Delete output_file if it already exists
+    if Cli.output_file and os.path.isfile(Cli.output_file):
+        os.remove(Cli.output_file)
+
     # Generate and write lua dissectors
-    for proto in protocols:
-        code = proto.create()
+    protocols_count = 0
+    for platform_name, protos in protocols.items():
+        for proto in protos:
+            protocols_count += 1
+            code = proto.create()
 
-        if Cli.output_dir:
-            path = '%s/%s.lua' % (Cli.output_dir, proto.name)
-        elif Cli.output_file:
-            path = Cli.output_file # TODO: 'a' flag when writing
-        else:
-            path = '%s.lua' % proto.name
+            path = '%s.%s.lua' % (proto.name, platform_name)
+            flag = 'w'
+            if Cli.output_dir:
+                path = '%s/%s' % (Cli.output_dir, path)
+            elif Cli.output_file:
+                path = Cli.output_file
+                flag = 'a'
 
-        with open(path, 'w') as f:
-            f.write(code)
+            with open(path, flag) as f:
+                f.write(code)
 
-    return len(protocols)
+    return protocols_count
 
 
 def main():

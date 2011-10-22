@@ -5,6 +5,7 @@ import sys, os
 from attest import Tests, assert_hook
 
 import config
+from config import Options
 
 
 # Test that configuration support range rules.
@@ -24,8 +25,8 @@ def create_ranges():
             max: 15.5
     '''
     config.parse_file('test', only_text=text)
-    yield config.StructConfig.configs['test']
-    del config.StructConfig.configs['test']
+    yield Options.configs['test']
+    Options.configs = {}
 
 @range_rule.test
 def range_rule_member(conf):
@@ -57,9 +58,8 @@ def create_structs():
         id: 11
     '''
     config.parse_file('test', only_text=text)
-    yield config.StructConfig.find('one'), config.StructConfig.find('two')
-    del config.StructConfig.configs['one']
-    del config.StructConfig.configs['two']
+    yield Options.configs['one'], Options.configs['two']
+    Options.configs = {}
 
 @struct_rule.test
 def struct_rule_id(one, two):
@@ -92,8 +92,8 @@ def create_enum():
               strict: True # Disable warning if not a valid value
     '''
     config.parse_file('test', only_text=text)
-    yield config.StructConfig.find('enum')
-    del config.StructConfig.configs['enum']
+    yield Options.configs['enum']
+    Options.configs = {}
 
 @enum.test
 def enum_rule(conf):
@@ -125,8 +125,8 @@ def create_bitstring():
             4: [Nih]
     '''
     config.parse_file('test', only_text=text)
-    yield config.StructConfig.find('bitstring')
-    del config.StructConfig.configs['bitstring']
+    yield Options.configs['bitstring']
+    Options.configs = {}
 
 @bitstring.test
 def bitstring_rule(conf):
@@ -164,8 +164,8 @@ def create_fields():
             name: A BOOL
     '''
     config.parse_file('test', only_text=text)
-    yield config.StructConfig.find('test')
-    del config.StructConfig.configs['test']
+    yield Options.configs['test']
+    Options.configs = {}
 
 @fields.test
 def fields_rule(conf):
@@ -201,8 +201,8 @@ def create_trailers():
             count: 1
     '''
     config.parse_file('test', only_text=text)
-    yield config.StructConfig.find('test')
-    del config.StructConfig.configs['test']
+    yield Options.configs['test']
+    Options.configs = {}
 
 @trailers.test
 def trailers_rule(conf):

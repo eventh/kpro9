@@ -35,7 +35,7 @@ def create_protocols():
     # Create dissectors
     structs = {}
     for header in headers:
-        ast = cparser.parse_file(header, use_cpp=True)
+        ast = cparser.parse_file(header)
         protocols = cparser.find_structs(ast)
         for proto in protocols:
             structs[proto.name] = proto.create()
@@ -52,7 +52,7 @@ def create_protocols():
     # Clean up context
     del structs
     cparser.StructVisitor.all_structs = {}
-    config.StructConfig.configs = {}
+    config.Options.configs = {}
     c.verbose, c.debug, c.use_cpp, c.output_dir, c.output_file = defaults
 
 

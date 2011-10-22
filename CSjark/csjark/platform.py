@@ -9,19 +9,6 @@ from various platforms.
 """
 
 
-def map_type(ctype):
-    """Find the wireshark type for a ctype."""
-    return DEFAULT_C_TYPE_MAP.get(ctype, ctype)
-
-
-def size_of(ctype):
-    """Find the size of a c type in bytes."""
-    if ctype in DEFAULT_C_SIZE_MAP.keys():
-        return DEFAULT_C_SIZE_MAP[ctype]
-    else:
-        raise ValueError('No known size for type %s' % ctype)
-
-
 class Platform:
     """Represents specific attributes of an OS and/or hardware."""
     big = 'big'

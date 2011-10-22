@@ -35,7 +35,6 @@ import argparse
 
 import cparser
 import config
-import dissector
 
 
 class Cli:
@@ -153,9 +152,8 @@ class Cli:
         return headers, configs
 
 
-def create_dissector(filename, options):
-    """Create a Wireshark dissector from 'filename'."""
-
+def create_dissectors(filename, options):
+    """Parse 'filename' to create a Wireshark protocol dissector."""
     # Handle different platforms
     protocols = {}
     for platform in options.platforms:
@@ -163,7 +161,7 @@ def create_dissector(filename, options):
         # Parse the filename and find all struct definitions
         try:
             # TODO: create platform specfic macro header file
-            ast = cparser.parse_file(filename, use_cpp=options.use_cpp)
+            ast = cparser.parse_file(filename)
             protocols[platform.name] = cparser.find_structs(ast, platform)
 
         # Silence errors if not in strict mode
@@ -181,6 +179,11 @@ def create_dissector(filename, options):
     if options.debug:
         ast.show()
 
+    return protocols
+
+
+def write_dissectors_to_file(protocols, options):
+    """Write lua dissectors to file(s)."""
     # Delete output_file if it already exists
     if Cli.output_file and os.path.isfile(Cli.output_file):
         os.remove(Cli.output_file)
@@ -218,23 +221,20 @@ def main():
         if options.verbose:
             print("Parsed config file '%s' successfully." % filename)
 
-
-    # Add current platform to list of platforms if its empty
-    options.create_default_platform()
-
-    # Create a delegator for delegating messages to the right dissector
-    options.delegator = dissector.Delegator(options.platforms)
+    # Prepare platform list and delegator
+    options.prepare_for_parsing()
 
     # Create dissectors
-    dissector_count = 0
+    count = 0
     for filename in headers:
-        dissector_count += create_dissector(filename, options)
+        protocols = create_dissectors(filename, options)
+        count += write_dissectors_to_file(protocols, options)
 
         if options.verbose:
             print("Parsed header file '%s' successfully." % filename)
 
     print("Successfully parsed %i file(s), created %i dissector(s)." % (
-            len(headers), dissector_count))
+            len(headers), count))
 
     # Write the delegator to file
     with open('luastructs.lua', 'w') as f:

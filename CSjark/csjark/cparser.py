@@ -10,8 +10,8 @@ import operator
 import pycparser
 from pycparser import c_ast, c_parser, plyparser
 
-from config import StructConfig
-from platform import size_of, map_type
+from config import Options
+from platform import Platform
 from dissector import Protocol
 
 
@@ -20,37 +20,29 @@ class ParseError(plyparser.ParseError):
     pass
 
 
-def parse_file(filename, use_cpp=True, fake_includes=True, cpp_path=None):
-    """Parse a C file, returns abstract syntax tree.
+def parse_file(filename):
+    """Parse a C file, returns abstract syntax tree."""
+    cpp_path = 'cpp'
 
-    use_cpp: Enable or disable the C preprocessor
-    fake_includes: Add fake includes for libc header files
-    cpp_path: The path to cpp.exe on windows
-    """
-    cpp_args = None
-    if cpp_path is None:
-        cpp_path = 'cpp'
-
-    if use_cpp:
+    if Options.use_cpp:
         cpp_args = []
 
-        if fake_includes:
-            cpp_args.append(r'-I../utils/fake_libc_include')
+        cpp_args.append(r'-I../utils/fake_libc_include')
 
         if os.path.dirname(filename):
             cpp_args.append(r'-I%s' % os.path.dirname(filename))
 
-        # TODO: find a cleaner way to look for cpp on windows!
         if sys.platform == 'win32' and cpp_path == 'cpp':
             cpp_path = '../utils/cpp.exe' # Windows don't come with a CPP
         elif sys.platform == 'darwin':
             cpp_path = 'gcc' # Fix for a bug in Mac GCC 4.2.1
             cpp_args.append('-E')
+    else:
+        cpp_args = None
 
     # Generate an abstract syntax tree
-    ast = pycparser.parse_file(filename, use_cpp=use_cpp,
-            cpp_path=cpp_path, cpp_args=cpp_args)
-
+    ast = pycparser.parse_file(filename, use_cpp=Options.use_cpp,
+                               cpp_path=cpp_path, cpp_args=cpp_args)
     return ast
 
 
@@ -62,9 +54,26 @@ def parse(text, filename=''):
 
 def find_structs(ast, platform=None):
     """Walks the AST nodes to find structs."""
-    visitor = StructVisitor()
+    visitor = StructVisitor(platform)
     visitor.visit(ast)
     return visitor.structs
+
+
+class Context:
+    """The context in which a file is parsed."""
+
+    def __init__(self, options, platform=None):
+        """Creates a new context.
+
+        'options' is the Options class which holds configuration
+        'platform' is optionally the platform we are simulating when parsing
+        """
+        if platform is None:
+            platform = Platform.mappings[''] # Use default platform
+
+        self.configs = options.configs
+        self.map_type = platform.map_type
+        self.size_of = platform.size_of
 
 
 class StructVisitor(c_ast.NodeVisitor):
@@ -72,7 +81,9 @@ class StructVisitor(c_ast.NodeVisitor):
 
     all_structs = {} # Map struct names and their protocol
 
-    def __init__(self):
+    def __init__(self, platform):
+        self.context = Context(Options, platform)
+
         self.structs = [] # All structs encountered in this AST
         self.enums = {} # All enums encountered in this AST
         self.aliases = {} # Typedefs and their base type
@@ -92,9 +103,21 @@ class StructVisitor(c_ast.NodeVisitor):
             node.name = self.type_decl[-1]
 
         # Create the protocol for the struct
-        conf = StructConfig.configs.get(node.name, None)
-        proto = Protocol(node.name, conf)
-        proto._coord = node.coord # Replace with context
+        conf = self.context.configs.get(node.name, None)
+        proto = Protocol(node.name, conf, self.context)
+        proto._coord = node.coord
+
+        # Disallow structs with same name
+        if node.name in StructVisitor.all_structs:
+            o = StructVisitor.all_structs[node.name]._coord
+            if (os.path.normpath(o.file) != os.path.normpath(node.coord.file)
+                    or o.line != node.coord.line):
+                raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
+                       node.name, o.file, o.line, node.coord.file, node.coord.line))
+
+        # Add struct to list of all structs
+        self.structs.append(proto)
+        self.all_structs[node.name] = proto
 
         # Find the member definitions
         for decl in node.children():
@@ -108,19 +131,6 @@ class StructVisitor(c_ast.NodeVisitor):
                 self.handle_pointer(child, proto)
             else:
                 raise ParseError('Unknown struct member: %s' % repr(child))
-
-        # Disallow structs with same name
-        if node.name in StructVisitor.all_structs:
-            o = StructVisitor.all_structs[node.name]._coord
-            if (os.path.normpath(o.file) != os.path.normpath(node.coord.file)
-                    or o.line != node.coord.line):
-                raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
-                       node.name, o.file, o.line, node.coord.file, node.coord.line))
-
-        # Don't add protocols with no fields? Sounds reasonably
-        if proto.fields:
-            self.structs.append(proto)
-            self.all_structs[node.name] = proto
 
     def visit_Enum(self, node):
         """Visit a Enum node in the AST."""
@@ -222,7 +232,7 @@ class StructVisitor(c_ast.NodeVisitor):
         # String array
         if (isinstance(child, c_ast.TypeDecl) and
                 child.children()[0].names[0] == 'char'):
-            size *= size_of('char')
+            size *= self.context.size_of('char')
             return child.declname, 'string', size, depth
 
         # Multidimensional, handle recursively
@@ -242,7 +252,7 @@ class StructVisitor(c_ast.NodeVisitor):
                 print(token, ctype) # TODO
                 raise ParseError('Incomplete support for array of typedefs')
 
-        return child.declname, ctype, size_of(ctype), depth
+        return child.declname, ctype, self.context.size_of(ctype), depth
 
     def handle_union_decl(self, node):
         """Find the members and size of an union."""
@@ -256,7 +266,7 @@ class StructVisitor(c_ast.NodeVisitor):
         """Add an ArrayField to the protocol."""
         if not depth:
             return self.handle_field(proto, name, ctype, size)
-        return proto.add_array(name, map_type(ctype), size, depth)
+        return proto.add_array(name, self.context.map_type(ctype), size, depth)
 
     def handle_pointer(self, node, proto):
         """Find member details in a pointer declaration."""
@@ -265,26 +275,28 @@ class StructVisitor(c_ast.NodeVisitor):
     def handle_struct(self, proto, name, protoname):
         """Add an ProtocolField to the protocol."""
         subproto = self.all_structs[protoname]
-        return proto.add_protocol(name, subproto.id, subproto.get_size(), protoname)
+        return proto.add_protocol(name,
+                    subproto.id, subproto.get_size(), protoname)
 
     def handle_enum(self, proto, name, enum):
         """Add an EnumField to the protocol."""
         if enum not in self.enums.keys():
             raise ParseError('Unknown enum: %s' % enum)
-        type, size = map_type('enum'), size_of('enum')
+        type = self.context.map_type('enum')
+        size = self.context.size_of('enum')
         return proto.add_enum(name, type, size, self.enums[enum])
 
     def handle_field(self, proto, name, ctype, size=None):
         """Add a field representing the struct member to the protocol."""
         if size is None:
             try:
-                size = size_of(ctype)
+                size = self.context.size_of(ctype)
             except ValueError :
                 size = None # Acceptable if there are rules for the field
         if proto.conf is None:
             if size is None:
                 raise ParseError('Unknown size for type %s' % ctype)
-            return proto.add_field(name, map_type(ctype), size)
+            return proto.add_field(name, self.context.map_type(ctype), size)
         else:
             return proto.conf.create_field(proto, name, ctype, size)
 

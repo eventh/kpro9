@@ -10,7 +10,8 @@ from operator import itemgetter
 
 import yaml
 
-from platform import Platform, map_type
+from platform import Platform
+from dissector import Delegator
 
 
 class ConfigError(Exception):
@@ -18,27 +19,17 @@ class ConfigError(Exception):
     pass
 
 
-class StructConfig:
-    """Holds configuration for a specific struct."""
-    configs = {}
+class Config:
+    """Holds configuration for a specific protocol."""
 
     def __init__(self, name):
-        StructConfig.configs[name] = self
-
         self.name = name
         self.id = None
         self.description = None
         self.cnf = None # Conformance File, for custom lua code
-        self.members = {} # Rules for members in the struct
-        self.types = {} # Rules for types in the struct
-        self.trailers = [] # Rules for struct trailers
-
-    @classmethod
-    def find(cls, name):
-        if name not in cls.configs.keys():
-            return cls(name)
-        else:
-            return cls.configs[name]
+        self.members = {} # Rules for struct members
+        self.types = {} # Rules for struct member types
+        self.trailers = [] # Rules for protocol trailers
 
     def add_member_rule(self, member, rule):
         if member not in self.members.keys():
@@ -57,7 +48,7 @@ class StructConfig:
 
     def create_field(self, proto, name, ctype, size=None):
         """Create a field depending on rules."""
-        type_ = map_type(ctype)
+        type_ = proto.context.map_type(ctype)
 
         # Sort the rules
         types = (Bitstring, Enum, Range, Custom)
@@ -336,20 +327,21 @@ class Options:
         cls.use_cpp = obj.get('use_cpp', cls.use_cpp)
 
     @classmethod
-    def create_default_platform(cls):
-        """If no platforms are selected, add the current platform."""
-        if cls.platforms:
-            return
-
+    def prepare_for_parsing(cls):
+        """Prepare options before parsing starts.."""
         # Map current platform to a platform configuration
-        mapping = {'win': 'win32', 'darwin': 'macos', 'linux': 'linux'}
-        for key, value in mapping.items():
-            if sys.platform.startswith(key):
-                cls.platforms.add(Platform.mappings[value])
-                return
+        if not cls.platforms:
+            mapping = {'win': 'win32', 'darwin': 'macos', 'linux': 'linux'}
+            for key, value in mapping.items():
+                if sys.platform.startswith(key):
+                    cls.platforms.add(Platform.mappings[value])
 
         # Add the default platform, as we failed the previous step
-        cls.platforms.add(Platform.mappings[''])
+        if not cls.platforms:
+            cls.platforms.add(Platform.mappings[''])
+
+        # Delegator creates lua file which delegates messages to dissectors
+        cls.delegator = Delegator(cls.platforms)
 
     @classmethod
     def handle_protocol_config(cls, obj, filename=''):
@@ -357,12 +349,11 @@ class Options:
         # Handle the name of the protocol
         name = str(obj.get('name', ''))
         if not name:
-            raise ConfigError('Struct config in %s not named' % filename)
+            raise ConfigError('Protocol in %s not named' % filename)
 
-        #if name not in cls.configs:
-        #    cls.configs[name] = StructConfig(name)
-        #conf = cls.configs[name]
-        conf = StructConfig.find(name)
+        if name not in cls.configs:
+            cls.configs[name] = Config(name)
+        conf = cls.configs[name]
 
         # Protocol's optional id
         if 'id' in obj:

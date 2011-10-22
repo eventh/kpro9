@@ -7,7 +7,7 @@ import sys, os
 from attest import Tests, assert_hook, contexts
 
 import dissector
-from config import StructConfig, Trailer
+from config import Config, Trailer
 
 
 def compare_lua(code, template, write_to_file=''):
@@ -289,7 +289,7 @@ protos = Tests()
 @protos.context
 def create_protos():
     """Create a Protocol instance with some fields."""
-    conf = StructConfig('tester')
+    conf = Config('tester')
     conf.id = 25
     conf.description = 'This is a test'
 
@@ -306,7 +306,6 @@ def create_protos():
     proto.add_array('str', 'string', 30, [2])
     proto.add_field('count', 'int32', 4)
     yield proto
-    del StructConfig.configs['tester'], proto
 
 @protos.test
 def protos_id(proto):

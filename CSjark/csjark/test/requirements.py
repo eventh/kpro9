@@ -7,8 +7,9 @@ from pycparser import c_ast
 
 import csjark
 import cparser
-import config
 import dissector
+import config
+from config import Options
 
 
 def _child(node, depth=1):
@@ -198,9 +199,8 @@ def create_rules():
             size: 8
     '''
     config.parse_file('test', only_text=text)
-    yield config.StructConfig.find('one'), config.StructConfig.find('two')
-    del config.StructConfig.configs['one']
-    del config.StructConfig.configs['two']
+    yield Options.configs['one'], Options.configs['two']
+    Options.configs = {}
 
 # FR4-A: Configuration must support valid ranges for struct members
 @configuration.test

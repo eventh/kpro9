@@ -338,14 +338,15 @@ class Protocol:
     """
     counter = 0 # Used to give protocols unique IDs if needed
 
-    def __init__(self, name, conf=None):
+    def __init__(self, name, conf=None, context=None):
         """Create a Protocol, for generating a dissector.
 
-        'name' is the name of the Protocol to dissect.
-        'conf' is the configuration for this Protocol.
+        'name' is the name of the Protocol to dissect
+        'conf' is the configuration for this Protocol
         """
         self.name = name
         self.conf = conf
+        self.context = context
 
         # Dissector ID
         if self.conf and self.conf.id is not None:

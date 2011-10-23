@@ -42,7 +42,36 @@ The most important function that is going to be implemented in this sprint is be
 %-----------------------
 \section{Implementation}
 %-----------------------
+The main focus for this sprint was to support of different platforms. Several 
+things are dependent on platform; endianness, the memory allingment and sizes 
+of data types. It is also possible that structs can be defined differnt for 
+each platform. The utility will generate different dissectors for each 
+platform. A dissector this wil detect the platform and use the correct 
+platform dissector.
 
+Support for the union data type, finishing implementation of custom Lua files 
+and modification of functionallity implemented in the previous sprint was also 
+done in this sprint.
+
+\subsection{Specify Flags for Each Platform}
+%-----------------------
+It is necessary to specify flags for each platform to make it possible to 
+correctly detect and display packages that wireshark captures. In wireshark 
+the flags are used to tell which platform the package is sent from, so that 
+the right dissector is used to display the package in Wireshark. In the 
+utility the flag points to what kind of endianness, how memory is aligned and 
+the different sizes that is used for data types on the platform. These data 
+are used to genereate a dissector for the specific platform.
+
+\subsection{Support Little and Big Endian}
+%-----------------------
+Different platforms can order bytes in either little(left-to-right) or 
+big(right-to-left) endian. The Windows platform uses little endian, and SPARC 
+uses big endian. Since the utility has to support both platforms, it was 
+necessary to support handling of endianness. The Lua API in wireshark has 
+functionallity to display data in both little and big endian. Therefore the 
+utility has to read the specfied flag for the platform, and generate a Lua 
+dissector that displays the data correctly for the given platform.
 
 %-----------------------
 \section{Sprint Testing}

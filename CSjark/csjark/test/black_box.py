@@ -109,6 +109,10 @@ def arrays(structs):
     -- Dissector function for struct: array_test
     function proto_array_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_array_test, buffer())
+    if pinfo.private.struct_def_name then 
+    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_array_test.description)
+    pinfo.private.struct_def_name = nil
+    end
     pinfo.cols.info:append(" (" .. proto_array_test.description .. ")")
     subtree:add(f.chararr1, buffer(0, 16))
     -- Array handling for intarr2
@@ -192,6 +196,10 @@ def bitstrings(structs):
     -- Dissector function for struct: bitstring_test
     function proto_bitstring_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_bitstring_test, buffer())
+    if pinfo.private.struct_def_name then 
+    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_bitstring_test.description)
+    pinfo.private.struct_def_name = nil
+    end
     pinfo.cols.info:append(" (" .. proto_bitstring_test.description .. ")")
     subtree:add(f.id, buffer(0, 4))
     -- Bitstring handling for flags
@@ -232,6 +240,10 @@ def cenums(structs):
     -- Dissector function for struct: cenum_test
     function proto_cenum_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_cenum_test, buffer())
+    if pinfo.private.struct_def_name then 
+    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_cenum_test.description)
+    pinfo.private.struct_def_name = nil
+    end
     pinfo.cols.info:append(" (" .. proto_cenum_test.description .. ")")
     subtree:add(f.id, buffer(0, 4))
     local mnd = subtree:add(f.mnd, buffer(4, 4))
@@ -296,6 +308,10 @@ def custom(structs):
     -- Dissector function for struct: custom_lua
     function proto_custom_lua.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_custom_lua, buffer())
+    if pinfo.private.struct_def_name then 
+    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_custom_lua.description)
+    pinfo.private.struct_def_name = nil
+    end
     pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
     subtree:add(f.normal, buffer(0, 2))
     subtree:add(f.special, buffer(2, 8))
@@ -363,6 +379,10 @@ def enums(structs):
     -- Dissector function for struct: enum_test
     function proto_enum_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_enum_test, buffer())
+    if pinfo.private.struct_def_name then 
+    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_enum_test.description)
+    pinfo.private.struct_def_name = nil
+    end
     pinfo.cols.info:append(" (" .. proto_enum_test.description .. ")")
     local id = subtree:add(f.id, buffer(0, 4))
     local test = {[0]="Zero", [1]="One", [2]="Two", [3]="Three", [4]="Four", [5]="Five"}
@@ -401,6 +421,10 @@ def ranges(structs):
     -- Dissector function for struct: range_test
     function proto_range_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_range_test, buffer())
+    if pinfo.private.struct_def_name then 
+    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_range_test.description)
+    pinfo.private.struct_def_name = nil
+    end
     pinfo.cols.info:append(" (" .. proto_range_test.description .. ")")
     subtree:add(f.name, buffer(0, 10))
     local age = subtree:add(f.age, buffer(10, 4))
@@ -442,6 +466,10 @@ def trailers(structs):
     -- Dissector function for struct: trailer_test
     function proto_trailer_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_trailer_test, buffer())
+    if pinfo.private.struct_def_name then 
+    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_trailer_test.description)
+    pinfo.private.struct_def_name = nil
+    end
     pinfo.cols.info:append(" (" .. proto_trailer_test.description .. ")")
     -- Array handling for tmp
     local arraytree = subtree:add(f.tmp_0, buffer(0, 20))

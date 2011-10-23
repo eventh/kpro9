@@ -300,11 +300,15 @@ class Options:
     These options are set by either command line interface or
     one or more configuration yaml files.
     """
+    # Parser options, can also be set by command line arguments
     verbose = False
     debug = False
     strict = True
     use_cpp = True
+    output_dir = None
+    output_file = None
 
+    # Utility options
     platforms = set() # Set of platforms to support in dissectors
     delegator = None # Used to create a delegator dissector
     configs = {} # Configuration for specific protocols
@@ -397,4 +401,7 @@ def parse_file(filename, only_text=None):
     if protocols:
         for proto in protocols:
             Options.handle_protocol_config(proto, filename)
+
+    if Options.verbose:
+        print("Parsed config file '%s' successfully." % filename)
 

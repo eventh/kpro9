@@ -279,9 +279,9 @@ cli = Tests()
 @cli.context
 def create_cli():
     """Create Cli as a context to reset it afterwards."""
-    c = csjark.Cli
+    c = Options
     defaults = c.verbose, c.debug, c.use_cpp, c.output_dir, c.output_file
-    yield c
+    yield Options
     c.verbose, c.debug, c.use_cpp, c.output_dir, c.output_file = defaults
 
 # FR6-A: Command line shall support parameter for C header file
@@ -291,7 +291,7 @@ def req6_a(cli):
     header = os.path.join(os.path.dirname(__file__), 'cpp.h')
     include = os.path.join(os.path.dirname(__file__), 'include.h')
     assert os.path.isfile(include)
-    headers, _ = cli.parse_args([header, '-v', '-d', '-i', include])
+    headers, _ = csjark.parse_args([header, '-v', '-d', '-i', include])
     assert len(headers) == 2
 
 # FR6-B: Command line shall support parameter for configuration file
@@ -302,7 +302,7 @@ def req6_b(cli):
     include = os.path.join(os.path.dirname(__file__), 'include.h')
     config = os.path.join(os.path.dirname(__file__), 'test.yml')
     assert os.path.isfile(config)
-    headers, configs = cli.parse_args(
+    headers, configs = csjark.parse_args(
             [header, '--verbose', '-d', '-i', include, '--config', config])
     assert len(headers) == 2
 
@@ -311,7 +311,7 @@ def req6_b(cli):
 def req6_c(cli):
     """Test requirement FR6-C: Parameters for batch processing."""
     test_folder = os.path.dirname(__file__)
-    headers, configs = cli.parse_args([test_folder])
+    headers, configs = csjark.parse_args([test_folder])
     assert len(headers) > 0 # Requires that test folder has header files
 
 # FR6-D: In batch mode, don't regenerate dissectors which aren't modified

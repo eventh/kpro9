@@ -20,13 +20,13 @@ sprint2 = Tests()
 @sprint2.context
 def create_protocols():
     """Create protocols for all structs in sprint2.h"""
-    c = csjark.Cli
+    c = config.Options
     defaults = c.verbose, c.debug, c.use_cpp, c.output_dir, c.output_file
 
     # Parse command line arguments
     header = os.path.join(os.path.dirname(__file__), 'sprint2.h')
     yml = os.path.join(os.path.dirname(__file__), 'sprint2.yml')
-    headers, configs = c.parse_args(['-i', header, '-c', yml])
+    headers, configs = csjark.parse_args(['-i', header, '-c', yml])
 
     # Parse config files
     for filename in configs:

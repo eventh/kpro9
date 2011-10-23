@@ -35,128 +35,113 @@ import argparse
 
 import cparser
 import config
+from config import Options
 
 
-class Cli:
-    """A class for handling command line interface parsing."""
-    # TODO: update tests so we can move these to config.Options
-    verbose = False
-    debug = False
-    strict = True # Quit if an unexpected exception is raised
-    use_cpp = True
-    output_dir = None # Store all output in a directory
-    output_file = None # Store output in a single file
+def parse_args(args=None):
+    """Parse arguments given in sys.argv.
 
-    @classmethod
-    def parse_args(cls, args=None):
-        """Parse arguments given in sys.argv.
+    'args' is a list of strings to parse instead of sys.argv.
+    """
+    parser = argparse.ArgumentParser(
+            description='Generate Wireshark dissectors from C structs.')
 
-        'args' is a list of strings to parse instead of sys.argv.
-        """
-        parser = argparse.ArgumentParser(
-                description='Generate Wireshark dissectors from C structs.')
+    # A single C header file
+    parser.add_argument('header', nargs='?', help='C file to parse')
 
-        # A single C header file
-        parser.add_argument('header', nargs='?', help='C file to parse')
+    # A single config file
+    parser.add_argument('config', nargs='?', help='config file to parse')
 
-        # A single config file
-        parser.add_argument('config', nargs='?', help='config file to parse')
+    # Verbose flag
+    parser.add_argument('-v', '--verbose', action='store_true',
+            default=Options.verbose, help='print detailed information')
 
-        # Verbose flag
-        parser.add_argument('-v', '--verbose', action='store_true',
-                default=cls.verbose, help='print detailed information')
+    # Debug flag
+    parser.add_argument('-d', '--debug', action='store_true',
+            default=Options.debug, help='print debugging information')
 
-        # Debug flag
-        parser.add_argument('-d', '--debug', action='store_true',
-                default=cls.debug, help='print debugging information')
+    # No CPP flag
+    parser.add_argument('-n', '--nocpp', action='store_false', dest='nocpp',
+            default=Options.use_cpp, help='disable C preprocessor')
 
-        # No CPP flag
-        parser.add_argument('-n', '--nocpp', action='store_false', dest='nocpp',
-                default=cls.use_cpp, help='disable C preprocessor')
+    # A list of C header files
+    parser.add_argument('-i', '--input', metavar='header',
+            default=[], nargs='*', help='C file(s) to parse')
 
-        # A list of C header files
-        parser.add_argument('-i', '--input', metavar='header',
-                default=[], nargs='*', help='C file(s) to parse')
+    # Configuration file
+    parser.add_argument('-c', '--config', metavar='config', dest='configs',
+             default=[], nargs='*', help='configuration file(s) to parse')
 
-        # Configuration file
-        parser.add_argument('-c', '--config', metavar='config', dest='configs',
-                 default=[], nargs='*', help='configuration file(s) to parse')
+    # Write output to destination file
+    parser.add_argument('-o', '--output', metavar='output',
+            nargs='?', help='write output to directory/file')
 
-        # Write output to destination file
-        parser.add_argument('-o', '--output', metavar='output',
-                nargs='?', help='write output to directory/file')
+    # Parse arguments
+    if args is None:
+        namespace = parser.parse_args()
+    else:
+        namespace = parser.parse_args(args)
 
-        # Parse arguments
-        if args is None:
-            namespace = parser.parse_args()
+    # Store options
+    Options.verbose = namespace.verbose
+    Options.debug = namespace.debug
+    Options.use_cpp = namespace.nocpp
+
+    headers = namespace.input
+    if namespace.header:
+        headers.append(namespace.header)
+
+    configs = namespace.configs
+    if namespace.config:
+        configs.append(namespace.config)
+
+    # If only a .yml file is given, move it to configs
+    if len(headers) == 1 and not configs and headers[0][-4:] == '.yml':
+        configs.append(headers.pop())
+
+    # Find out where to store output from the generator
+    if namespace.output:
+        path = os.path.join(os.path.dirname(sys.argv[0]), namespace.output)
+        if os.path.isdir(path):
+            Options.output_dir = path
         else:
-            namespace = parser.parse_args(args)
+            Options.output_file = path
 
-        cls.verbose = namespace.verbose
-        cls.debug = namespace.debug
-        cls.use_cpp = namespace.nocpp
+    # Need to provide either a header file or a config file
+    if not headers and not configs:
+        parser.print_help()
+        sys.exit(2)
 
-        headers = namespace.input
-        if namespace.header:
-            headers.append(namespace.header)
+    # Make sure the files provided actually exists
+    missing = [i for i in headers + configs if not os.path.exists(i)]
+    if missing:
+        print('Unknown file(s): %s' % ', '.join(missing))
+        sys.exit(2)
 
-        configs = namespace.configs
-        if namespace.config:
-            configs.append(namespace.config)
-
-        # If only a .yml file is given, move it to configs
-        if len(headers) == 1 and not configs and headers[0][-4:] == '.yml':
-            configs.append(headers.pop())
-
-        # Find out where to store output from the generator
-        if namespace.output:
-            path = os.path.join(os.path.dirname(sys.argv[0]), namespace.output)
-            if os.path.isdir(path):
-                cls.output_dir = path
+    # Add files if headers or configs contain folders
+    def files_in_folder(var, file_extensions):
+        i = 0
+        while i < len(var):
+            if os.path.isdir(var[i]):
+                Options.strict = False # Batch processing
+                folder = var.pop(i)
+                var.extend(os.path.join(folder, path) for path in
+                        os.listdir(folder) if os.path.isdir(path)
+                        or os.path.splitext(path)[1] in file_extensions)
             else:
-                cls.output_file = path
+                i += 1
 
-        # Need to provide either a header file or a config file
-        if not headers and not configs:
-            parser.print_help()
-            sys.exit(2)
+    files_in_folder(headers, ('.h', '.c'))
+    files_in_folder(configs, ('.yml', ))
 
-        # Make sure the files provided actually exists
-        missing = [i for i in headers + configs if not os.path.exists(i)]
-        if missing:
-            print('Unknown file(s): %s' % ', '.join(missing))
-            sys.exit(2)
-
-        # Add files if headers or configs contain folders
-        def files_in_folder(var, file_extensions):
-            i = 0
-            while i < len(var):
-                if os.path.isdir(var[i]):
-                    Cli.strict = False # Batch processing
-                    folder = var.pop(i)
-                    var.extend(os.path.join(folder, path) for path in
-                            os.listdir(folder) if os.path.isdir(path)
-                            or os.path.splitext(path)[1] in file_extensions)
-                else:
-                    i += 1
-
-        files_in_folder(headers, ('.h', '.c'))
-        files_in_folder(configs, ('.yml', ))
-
-        # Update Options
-        config.Options.verbose = Cli.verbose
-        config.Options.debug = Cli.debug
-        config.Options.strict = Cli.strict
-        config.Options.use_cpp = Cli.use_cpp
-
-        return headers, configs
+    return headers, configs
 
 
-def create_dissectors(filename, options):
+def create_dissectors(filename):
     """Parse 'filename' to create a Wireshark protocol dissector."""
     # Handle different platforms
     protocols = {}
-    for platform in options.platforms:
+    for platform in Options.platforms:
 
         # Parse the filename and find all struct definitions
         try:
@@ -166,79 +151,83 @@ def create_dissectors(filename, options):
 
         # Silence errors if not in strict mode
         except Exception as err:
-            if options.strict:
+            if Options.strict:
                 raise
             else:
                 print('Skipped "%s":%s as it raised %s' % (
                         filename, platform.name, repr(err)))
-                if options.debug:
+                if Options.debug:
                     sys.excepthook(*sys.exc_info())
                     print()
                 continue
 
-    if options.debug:
+    if Options.debug:
         ast.show()
+
+    if Options.verbose:
+        print("Parsed header file '%s' successfully." % filename)
 
     return protocols
 
 
-def write_dissectors_to_file(protocols, options):
+def write_dissectors_to_file(protocols):
     """Write lua dissectors to file(s)."""
     # Delete output_file if it already exists
-    if Cli.output_file and os.path.isfile(Cli.output_file):
-        os.remove(Cli.output_file)
+    if Options.output_file and os.path.isfile(Options.output_file):
+        os.remove(Options.output_file)
 
     # Generate and write lua dissectors
-    protocols_count = 0
+    count = 0
     for platform_name, protos in protocols.items():
         for proto in protos:
-            protocols_count += 1
+            count += 1
             code = proto.create()
 
             path = '%s.%s.lua' % (proto.name, platform_name)
             flag = 'w'
-            if Cli.output_dir:
-                path = '%s/%s' % (Cli.output_dir, path)
-            elif Cli.output_file:
-                path = Cli.output_file
+            if Options.output_dir:
+                path = '%s/%s' % (Options.output_dir, path)
+            elif Options.output_file:
+                path = Options.output_file
                 flag = 'a'
 
             with open(path, flag) as f:
                 f.write(code)
 
-    return protocols_count
+            if Options.verbose:
+                print('Wrote %s:%s to %s' % (platform_name, proto.name, path))
+
+    return count
+
+
+def write_delegator_to_file():
+    """Write the lua file which delegates dissecting to dissectors."""
+    filename = 'luastructs.lua'
+    if Options.output_dir:
+        filename = '%s/%s' % (Options.output_dir, filename)
+
+    with open(filename, 'w') as f:
+        f.write(Options.delegator.create())
 
 
 def main():
     """Run the CSjark program."""
-    headers, configs = Cli.parse_args()
+    headers, configs = parse_args()
 
     # Parse config files
-    options = config.Options
     for filename in configs:
         config.parse_file(filename)
-
-        if options.verbose:
-            print("Parsed config file '%s' successfully." % filename)
-
-    # Prepare platform list and delegator
-    options.prepare_for_parsing()
+    Options.prepare_for_parsing()
 
     # Create dissectors
     count = 0
     for filename in headers:
-        protocols = create_dissectors(filename, options)
-        count += write_dissectors_to_file(protocols, options)
-
-        if options.verbose:
-            print("Parsed header file '%s' successfully." % filename)
+        protocols = create_dissectors(filename)
+        count += write_dissectors_to_file(protocols)
+    write_delegator_to_file()
 
     print("Successfully parsed %i file(s), created %i dissector(s)." % (
             len(headers), count))
-
-    # Write the delegator to file
-    with open('luastructs.lua', 'w') as f:
-        f.write(options.delegator.create())
 
 
 if __name__ == "__main__":

@@ -40,11 +40,11 @@ As in all other projects, the project members have to deal with various limitati
 
 \subsubsection{Non-technical Limitations}
 \begin{description}
-	\item[Experience] None in the group has experience with Lua-scripts,
-		running a project with larger team, or has planned a project before.
-	\item[Time] The project group has limited time of 12 weeks and a project
+	\item[Experience] None in the group have experience with Lua-scripts,
+		running a project with a larger team, or has planned a project before.
+	\item[Time] The project group has a limited time of 12 weeks and a project
 		deadline that cannot be changed. Also, the team consists of 7 members
-		that have different schedules and so finding a time when everyone is
+		that have different schedules so finding a time when everyone is
 		available for a meeting might be difficult. These limitations might
 		lead to considerable delays in the project progress.
 	\item[Language] In this project the team will have to write and speak in
@@ -73,8 +73,9 @@ hosting provided by Github\footnote{\url{http://github.com/}}.
 	\vspace{-20pt}
 \end{wrapfigure}
 We had experience with CVS, SVN, Git and Mercurial, and although everyone 
-knew SVN and only two knew Git, we selected Git for this project. We 
-evaluated free hosting sites of version control systems, which could also 
+knew SVN and only two knew Git, we selected Git for this project.
+WRITE WHY WE DID NOT CHOOSE SVN
+We evaluated free hosting sites of version control systems, which could also 
 provide us with other collaborative features that we wanted. Github, 
 Bitbucket\footnote{\url{http://bitbucket.org/}} and
 SourceForge\footnote{\url{http://sourceforge.net/}} all provided wiki and
@@ -107,22 +108,27 @@ we are not physically at the same location at the same time.
 	\includegraphics[width=2cm]{./planning/img/google_docs_logo}
 	\vspace{-20pt}
 \end{wrapfigure}
-Google Docs\footnote{\url{http://docs.google.com/}} is web-based office suite,
-which include documents, spreadsheets and presentations. It makes it possible
-to collaborate in real-time. For this project we are going to use Google Docs
+Google Docs\footnote{\url{http://docs.google.com/}} is a free web site offering
+functionality for creating documents, spreadsheets and presentations.
+The benefits of using Google Docs are that it is easy to share documents with other users, and
+it is possible to collaborate in real-time. For this project we are going to use Google Docs
 to collaborate on document drafts, and to share documents within the team and
-with the teams advisor.
+with the team's advisor.
 
 \subsubsection{\LaTeX}
-\LaTeX \,is a document markup language and document preparation system used to
+\LaTeX \,is a document markup language used to
 create reports, articles and books. It was chosen by the group for its 
 high quality typesetting which produces professional looking documents, and 
-because it is suitable for larger scientific reports. \LaTeX \,also provides
-automatic numbering of chapter and sections, automatic generation of table of
-contents, cross-referencing and bibliography management. Since \LaTeX \,files
-are plain text files they are suitable for versioning with a version control
-system like Git. We will use \LaTeX \,to write the final project report, and we
-have created a few templates for test plans and minutes.
+because it is suitable for larger scientific reports. 
+Writing documents in \LaTeX \ is very different from writing them in, for example,
+Microsoft Word, as most of the visual presentation is handled by the \LaTeX \ system 
+and not by the user itself. Because the writer does not have to spend time
+thinking about how the document looks, he can focus entirely on the content.
+\LaTeX \,also provides automatic numbering of chapters and sections,
+automatic generation of table of contents, cross-referencing and bibliography
+management. Since \LaTeX \,files are plain text files they are suitable for versioning 
+with a version control system like Git. We will use \LaTeX \,to write the final project 
+report, and we have created a few templates for test plans and minutes.
 
 \subsubsection{Mailing List}
 \begin{wrapfigure}{r}{4cm}
@@ -146,17 +152,17 @@ members can include in their own, prevents misunderstandings and duplication
 of work.
 
 \subsubsection{text2pcap}
-In this project text2pcap is used to genereate capture files from ASCII
-hexdumps. Since the customer cannot give us capture files, we have to create
-them ourselves. The capture files are important for testing the generated Lua-scripts.
-The text2pcap tool is included with Wireshark. The input to the tool is a ASCII
-hexdump as a text-file, and the output will be a pcap-file. When running
-text2pcap, it is necessary to specifiy the protocol type. In this project the
-team uses ''-l 147'' as an option to text2pcap, which is a user defined
-link-layer type.
+In this project text2pcap is used to generate capture files from ASCII
+hexdumps. Since the customer cannot provide us with capture files, 
+we have to create them ourselves. The capture files are important for testing
+the generated Lua-scripts. The text2pcap tool is included with Wireshark. 
+The input to the tool is a ASCII hexdump as a text-file, and the output will
+be a pcap-file. When running text2pcap, it is necessary to specifiy the protocol
+type. In this project the team uses ''-l 147'' as an option to text2pcap,
+which is a user defined link-layer type.
 
 \subsubsection{Hex Editor}
-The team are using a hex editor to create input for text2pcap. To make it
+The team is using a hex editor to create input for text2pcap. To make it
 easier to write ASCII hexdumps, it is necessary to write them in a hex editor.
 HxD\footnote{\url{http://mh-nexus.de/en/hxd/}} is the recommended hex editor
 for this project, since it is free and has the necessary functionality. HxD is
@@ -169,10 +175,9 @@ only for Windows.
 	\vspace{-20pt}
 \end{wrapfigure}
 Violet\footnote{\url{http://violet.sourceforge.net/}} is a cross platform,
-lightweight, free and easy to use modeling software for making UML-diagrams,
-authored by Cay S. Horstmann and Alexandre de Pellegrin. The architectural and
-design team will be using violet to create diagrams to ilustrate the workings
-of the utility. As very advanced diagrams were not needed for this
+lightweight, free and easy to use modeling software for making UML-diagrams.
+The architectural and design team will be using violet to create diagrams to illustrate
+the workings of the utility. As very advanced diagrams were not needed for this
 project, violet seemed like a fitting tool.
 
 \subsection{Based on the Planned Effort}

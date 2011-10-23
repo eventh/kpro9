@@ -1,0 +1,8 @@
+Structs:
+  - name: age_test
+    id: 9
+    description: Range rules test
+    ranges:
+      - member: age
+        min: 0
+        max: 100

@@ -48,7 +48,7 @@ class Config:
 
     def create_field(self, proto, name, ctype, size=None):
         """Create a field depending on rules."""
-        type_ = proto.context.map_type(ctype)
+        type_ = proto.platform.map_type(ctype)
 
         # Sort the rules
         types = (Bitstring, Enum, Range, Custom)
@@ -329,6 +329,8 @@ class Options:
         cls.debug = obj.get('verbose', cls.debug)
         cls.strict = obj.get('strict', cls.strict)
         cls.use_cpp = obj.get('use_cpp', cls.use_cpp)
+        cls.output_dir = obj.get('output_dir', cls.output_dir)
+        cls.output_file = obj.get('output_file', cls.output_file)
 
     @classmethod
     def prepare_for_parsing(cls):

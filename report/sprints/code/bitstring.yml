@@ -1,0 +1,9 @@
+Structs:
+  - name: bitstrings
+    id: 13
+    bitstrings:
+      - member: flags
+        32: In use
+        31: [Endian, Big, Little]
+        29-30: [Platform, Win, Linux, Mac, Solaris]
+        28: [Test]

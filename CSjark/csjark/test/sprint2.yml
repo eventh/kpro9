@@ -1,0 +1,77 @@
+Structs:
+  - name: array_test
+    id: 16
+    description: Multidimensional array
+
+  - name: bitstring_test
+    id: 13
+    description: Bit string test
+    bitstrings:
+      - member: flags
+        1: In use
+        2: [Endian, Big, Little]
+        3-4: [Platform, Win, Linux, Mac, Solaris]
+        5: [Test]
+      - type: short
+        1: RED
+        2: Blue
+        3: Green
+
+  - name: cenum_test
+    id: 11
+    description: C Enum test        
+
+  - name: custom_lua
+    id: 74
+    customs:
+      - type: time_t
+        field: relative_time
+      - member: abs
+        field: absolute_time
+      - type: BOOL
+        field: bool
+        size: 4
+        abbr: bool
+        name: A BOOL
+      - member: all
+        field: uint32
+        abbr: all.all
+        name: Something
+        base: base.HEX
+        values: {0: Monday, 1: Tuesday}
+        mask: nil
+        desc: This is something dark side!
+
+  - name: enum_test
+    id: 10
+    description: Enum config test
+    enums:
+      - member: weekday
+        values: {1: MONDAY, 2: TUESDAY, 3: WEDNESDAY, 4: THURSDAY, 5: FRIDAY, 6: SATURDAY, 7: SUNDAY}
+      - type: int
+        values: [Zero, One, Two, Three, Four, Five]
+        strict: True
+
+  - name: range_test
+    id: 9
+    description: Range rules test
+    ranges:
+      - member: age
+        min: 0
+        max: 100
+
+  - name: trailer_test
+    id: 66
+    trailers:
+      - name: ber
+        member: asn1_count
+        size: 6
+      - name: ber
+        count: 1
+        size: 5
+      - name: ber
+        count: 2
+        size: 6
+      - name: ber
+        count: 1
+

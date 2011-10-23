@@ -4,95 +4,14 @@ A module for configuration of our utility.
 Should parse config files and create data structures which the parser can
 use when translating C struct definitions to Wireshark protocols and fields.
 """
+import sys
 import os
 from operator import itemgetter
+
 import yaml
 
-
-# Mapping of c type and their wireshark field type.
-DEFAULT_C_TYPE_MAP = {
-        'bool': 'bool',
-        'char': 'string',
-        'signed char': 'string',
-        'unsigned char': 'string',
-        'short': "int16",
-        'signed short': "int16",
-        'unsigned short': "uint16",
-        'short int': "int16",
-        'signed short int': "int16",
-        'unsigned short int': "uint16",
-        "int": "int32",
-        'signed int': "int32",
-        'unsigned int': "uint32",
-        'signed': "int32",
-        'long': "int64",
-        'signed long': "int64",
-        'unsigned long': "uint64",
-        'long int': "int64",
-        'signed long int': "int64",
-        'unsigned long int': "uint64",
-        'long long': "int64",
-        'signed long long': "int64",
-        'unsigned long long': "uint64",
-        'long long int': "int64",
-        'signed long long int': "int64",
-        'unsigned long long int': "uint64",
-        'float': 'float',
-        'double': 'double',
-        'long double': 'todo',
-        'pointer': 'int32',
-        'enum': 'uint32',
-}
-
-
-# Mapping of c type and their default size in bytes.
-DEFAULT_C_SIZE_MAP = {
-        'bool': 1,
-        'char': 1,
-        'signed char': 1,
-        'unsigned char': 1,
-        'short': 2,
-        'signed short': 2,
-        'unsigned short': 2,
-        'short int': 2,
-        'signed short int': 2,
-        'unsigned short int': 2,
-        'int': 4,
-        'signed int': 4,
-        'unsigned int': 4,
-        'signed': 4,
-        'long': 8,
-        'signed long': 8,
-        'unsigned long': 8,
-        'long int': 8,
-        'signed long int': 8,
-        'unsigned long int': 8,
-        'long long': 8,
-        'signed long long': 8,
-        'unsigned long long': 8,
-        'long long int': 8,
-        'signed long long int': 8,
-        'unsigned long long int': 8,
-        'float': 4,
-        'double': 8,
-        'long double': 16,
-        'pointer': 4,
-        'enum': 4,
-}
-
-
-def map_type(ctype):
-    """Find the wireshark type for a ctype."""
-    return DEFAULT_C_TYPE_MAP.get(ctype, ctype)
-
-
-def size_of(ctype):
-    """Find the size of a c type in bytes."""
-    if ctype in DEFAULT_C_SIZE_MAP.keys():
-        return DEFAULT_C_SIZE_MAP[ctype]
-    else:
-        return 1 # TODO: fix unknown types
-        raise Exception(ctype)
+from platform import Platform
+from dissector import Delegator
 
 
 class ConfigError(Exception):
@@ -100,27 +19,17 @@ class ConfigError(Exception):
     pass
 
 
-class StructConfig:
-    """Holds configuration for a specific struct."""
-    configs = {}
+class Config:
+    """Holds configuration for a specific protocol."""
 
     def __init__(self, name):
-        StructConfig.configs[name] = self
-
         self.name = name
         self.id = None
         self.description = None
-        self.members = {} # Rules for members in the struct
-        self.types = {} # Rules for types in the struct
-        self.trailers = [] # Rules for struct trailers
-        self.lua_file = None # Custom lua file for the struct
-
-    @classmethod
-    def find(cls, name):
-        if name not in cls.configs.keys():
-            return cls(name)
-        else:
-            return cls.configs[name]
+        self.cnf = None # Conformance File, for custom lua code
+        self.members = {} # Rules for struct members
+        self.types = {} # Rules for struct member types
+        self.trailers = [] # Rules for protocol trailers
 
     def add_member_rule(self, member, rule):
         if member not in self.members.keys():
@@ -137,35 +46,43 @@ class StructConfig:
         rules.extend(self.types.get(type, []))
         return rules
 
-    def create_field(self, proto, name, ctype, size):
+    def create_field(self, proto, name, ctype, size=None):
         """Create a field depending on rules."""
-        type_ = map_type(ctype)
+        type_ = proto.platform.map_type(ctype)
 
         # Sort the rules
-        types = (Trailer, Bitstring, Enum, Range, Custom, Luafile)
-        values = [[], [], [], [], [], []]
+        types = (Bitstring, Enum, Range, Custom)
+        values = [[], [], [], []]
         for rule in self.get_rules(name, ctype):
             for i, tmp in enumerate(types):
                 if isinstance(rule, tmp):
                     values[i].append(rule)
-        trailers, bits, enums, ranges, customs, luafiles = values
+        bits, enums, ranges, customs = values
 
+        # Custom field rules
+        if customs:
+            return customs[0].create(proto, name, type_, size, ctype)
+
+        # If size is None and not customs rule, we are in trouble.
+        if size is None:
+            raise ConfigError('Unknown field size for %s' % name)
+
+        # Bitstring rules
+        if bits:
+            return proto.add_bit(name, type_, size, bits[0].bits)
+
+        # Enum rules
         if enums:
             rule = enums[0]
             return proto.add_enum(name, type_, size, rule.values, rule.strict)
-        if customs:
-            return customs[0].create(proto, name, type_, size, ctype)
-        if bits:
-            return proto.add_bit(name, type_, size, bits[0].bits)
+
+        # Range rules
         if ranges:
             rule = ranges[0]
             return proto.add_range(name, type_, size, rule.min, rule.max)
-        if luafiles:
-            return proto.add_custom(name, type_, size, luafiles[0])
-        if trailers:
-            return proto.add_trailer(name, type_, size, trailers)
 
-        proto.add_field(name, type_, size)
+        # Create basic Field if no rules fired
+        return proto.add_field(name, type_, size)
 
 
 class BaseRule:
@@ -187,7 +104,7 @@ class BaseRule:
 
 
 class Range(BaseRule):
-    """Rule for specifying a valid range for a struct member or type."""
+    """Rule for specifying a valid range for a member or type."""
 
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
@@ -203,7 +120,7 @@ class Range(BaseRule):
 
 
 class Enum(BaseRule):
-    """Rule for emulating enum with int-like types in structs."""
+    """Rule for emulating enum with int-like types."""
 
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
@@ -218,7 +135,7 @@ class Enum(BaseRule):
 
 
 class Bitstring(BaseRule):
-    """Rule for representing bit strings in structs."""
+    """Rule for representing ints which are bit strings."""
 
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
@@ -266,18 +183,14 @@ class Trailer(BaseRule):
         conf.trailers.append(self)
 
         # Count or member, which holds the amount of trailers
-        self.member = None
-        self.count = obj['count']
-        try:
-            self.count = int(self.count)
-        except ValueError:
-            self.member = str(self.count)
-            self.count = None
-        if self.member:
-            conf.add_member_rule(self.member, self)
-            self._field = None # Used to link TrailerField to this rule
-        if not self.count and not self.member:
-            raise ConfigError('No count in trailer rule for %s' % conf.name)
+        self.count = self.member = None
+        if 'count' in obj:
+            self.count = int(obj['count'])
+        if 'member' in obj:
+            self.member = str(obj['member'])
+        if ((self.count is None and not self.member) or
+                (self.count is not None and self.member is not None)):
+            raise ConfigError('Invalid trailer rule for %s' % conf.name)
 
         # Optional size a single trailing protocol
         self.size = None
@@ -293,7 +206,11 @@ class Custom(BaseRule):
 
     def __init__(self, conf, obj):
         super().__init__(conf, obj)
-        self.field = str(obj['field'])
+        self.field = str(obj.get('field', ''))
+        if not self.field:
+            raise ConfigError('No field in Custom rule for %s' % conf.name)
+
+        # TODO: validate that the parameters are valid for the field type
         self.size = obj.get('size', None)
         self.abbr = obj.get('abbr', None)
         self.name = obj.get('name', None)
@@ -301,13 +218,13 @@ class Custom(BaseRule):
         self.values = obj.get('values', None)
         self.mask = obj.get('mask', None)
         self.desc = obj.get('desc', None)
-        if not self.field:
-            raise ConfigError('No field for Custom rule for %s' % conf.name)
 
     def create(self, proto, name, type_, size, ctype):
         if self.size is not None:
             size = self.size
-        field = proto.add_custom(name, self.field, size, rule)
+        if size is None:
+            raise ConfigError('Missing size for field %s' % name)
+        field = proto.add_field(name, self.field, size)
         field.abbr = self.abbr
         field.base = self.base
         if self.values:
@@ -317,56 +234,155 @@ class Custom(BaseRule):
         return field
 
 
-class Luafile(BaseRule):
-    """Rule for specifying using custom lua files."""
+class ConformanceFile:
+    # Tokens for different sections
+    t_hdr = 'FN_HDR' # Lua code to be inserted before a field code
+    t_body = 'FN_BODY' # Lua code to replace a field code
+    t_end = 'END' # End of a section
+    t_end_cnf = 'END_OF_CNF' # End of the conformance file
 
-    def __init__(self, conf, obj):
-        # Find the lua file
-        self.file = str(obj['file'])
+    tokens = [t_hdr, t_body, t_end, t_end_cnf]
+
+    def __init__(self, conf, file, rule=None):
+        # Find the specified file
+        self.file = str(file)
         if not os.path.isfile(self.file):
             self.file = os.path.join(os.path.dirname(__file__), self.file)
         if not os.path.isfile(self.file):
-            raise ConfigError('Unknown file: %s' % str(obj['file']))
-
-        # Member or Type or Struct?
-        if 'member' in obj or 'type' in obj:
-            super().__init__(conf, obj)
-        elif conf.lua_file is None:
-            conf.lua_file = self
-        else:
-            raise ConfigError('To many luafiles for struct: %s' %self.name)
+            raise ConfigError('Unknown file: %s' % file)
 
         # Read content of the specified file
         with open(self.file, 'r') as f:
-            self.contents = f.read()
+            self._lines = f.readlines()
+
+        self.rules = {}
+        self.parse()
+
+    def _get_token(self, line):
+        values = line[2:].strip().split(' ') + [None]
+        return values[0], values[1]
+
+    def parse(self):
+        """Parse the conformance file's sections and content."""
+        token = None # Current section beeing parsed
+        field = None # Field the section refers to
+        content = '' # Current content for the section parsed so far
+
+        # Go through all lines and assign content
+        for line in self._lines:
+            if not line.startswith('#.'):
+                content += line.strip()
+                continue
+
+            # Store current content when new token is found
+            if token is not None:
+                if field not in self.rules:
+                    self.rules[field] = {}
+                self.rules[field][token] = content
+
+            content = ''
+            token, field = self._get_token(line)
+
+            if token == self.t_end_cnf:
+                break # End of cnf file
+            if token == self.t_end:
+                continue # End token
+
+        # Reached end of file without an end token
+        if token not in (self.t_end, self.t_end_cnf):
+            if token in mapping:
+                mapping[token](content)
 
 
-def handle_struct(obj):
-    """Handle rules and configuration for a struct."""
-    conf = StructConfig.find(obj['name'])
+class Options:
+    """Holds options for the whole utility.
 
-    # Structs optional id
-    if 'id' in obj:
-        conf.id = int(obj['id'])
-        if conf.id < 0 or conf.id > 65535:
-            raise ConfigError('Invalid dissector ID %s: %i (0 - 65535)' % (
-                    conf.name, conf.id))
+    These options are set by either command line interface or
+    one or more configuration yaml files.
+    """
+    # Parser options, can also be set by command line arguments
+    verbose = False
+    debug = False
+    strict = True
+    use_cpp = True
+    output_dir = None
+    output_file = None
 
-    # Structs optional description
-    if 'description' in obj:
-        conf.description = obj['description']
+    # Utility options
+    platforms = set() # Set of platforms to support in dissectors
+    delegator = None # Used to create a delegator dissector
+    configs = {} # Configuration for specific protocols
 
-    # Handle rules
-    types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,
-             'trailers': Trailer, 'customs': Custom, 'luafiles': Luafile}
-    for name, type_ in types.items():
-        if name in obj:
-            for rule in obj[name]:
-                type_(conf, rule)
+    @classmethod
+    def update(cls, obj):
+        """Update the options from a config yaml file."""
+        # Handle platform options
+        if 'platforms' in obj:
+            for name in obj['platforms']:
+                if name in Platform.mappings:
+                    cls.platforms.add(Platform.mappings[name])
+                else:
+                    raise ConfigError('Unknown platform %s' % name)
 
+        # Handle boolean options
+        cls.verbose = obj.get('verbose', cls.verbose)
+        cls.debug = obj.get('verbose', cls.debug)
+        cls.strict = obj.get('strict', cls.strict)
+        cls.use_cpp = obj.get('use_cpp', cls.use_cpp)
+        cls.output_dir = obj.get('output_dir', cls.output_dir)
+        cls.output_file = obj.get('output_file', cls.output_file)
 
-def handle_options(obj):
-    pass
+    @classmethod
+    def prepare_for_parsing(cls):
+        """Prepare options before parsing starts.."""
+        # Map current platform to a platform configuration
+        if not cls.platforms:
+            mapping = {'win': 'win32', 'darwin': 'macos', 'linux': 'linux'}
+            for key, value in mapping.items():
+                if sys.platform.startswith(key):
+                    cls.platforms.add(Platform.mappings[value])
+
+        # Add the default platform, as we failed the previous step
+        if not cls.platforms:
+            cls.platforms.add(Platform.mappings[''])
+
+        # Delegator creates lua file which delegates messages to dissectors
+        cls.delegator = Delegator(cls.platforms)
+
+    @classmethod
+    def handle_protocol_config(cls, obj, filename=''):
+        """Handle rules and configuration for a protocol."""
+        # Handle the name of the protocol
+        name = str(obj.get('name', ''))
+        if not name:
+            raise ConfigError('Protocol in %s not named' % filename)
+
+        if name not in cls.configs:
+            cls.configs[name] = Config(name)
+        conf = cls.configs[name]
+
+        # Protocol's optional id
+        if 'id' in obj:
+            conf.id = int(obj['id'])
+            if conf.id < 0 or conf.id > 65535:
+                raise ConfigError('Invalid dissector ID %s: %i (0 - 65535)' % (
+                        conf.name, conf.id))
+
+        # Protocol's optional description
+        if 'description' in obj:
+            conf.description = obj['description']
+
+        # Protocol's optional conformance file
+        if 'cnf' in obj:
+            conf.cnf = ConformanceFile(conf, obj['cnf'])
+
+        # Handle rules
+        types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,
+                 'trailers': Trailer, 'customs': Custom}
+        for name, type_ in types.items():
+            if name in obj:
+                for rule in obj[name]:
+                    type_(conf, rule)
 
 
 def parse_file(filename, only_text=None):
@@ -377,12 +393,17 @@ def parse_file(filename, only_text=None):
         with open(filename, 'r') as f:
             obj = yaml.safe_load(f)
 
-    # Deal with options
-    if 'Options' in obj:
-        handle_options(obj['Options'])
+    # Deal with utility options
+    options = obj.get('Options', None)
+    if options:
+        Options.update(options)
 
-    # Deal with struct rules
-    if 'Structs' in obj:
-        for struct in obj['Structs']:
-            handle_struct(struct)
+    # Deal with protocol configuration
+    protocols = obj.get('Structs', None)
+    if protocols:
+        for proto in protocols:
+            Options.handle_protocol_config(proto, filename)
+
+    if Options.verbose:
+        print("Parsed config file '%s' successfully." % filename)
 

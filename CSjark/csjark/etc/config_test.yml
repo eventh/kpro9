@@ -54,8 +54,8 @@ Structs:
         6: White
         7: Orange
         8: Pink
-        63: Brown
-        64: OrangePink
+        31: Brown
+        32: OrangePink
     ranges:
       - member: age
         min: 15

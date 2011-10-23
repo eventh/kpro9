@@ -12,6 +12,11 @@ f.flags   = ProtoField.uint8 ("luastructs.flags", "Flags")
 f.message = ProtoField.uint16 ("luastructs.message", "Message")
 f.length  = ProtoField.uint32 ("luastructs.length", "Message length")
 
+local flags
+function get_flags ()
+   return flags
+end
+
 function LUASTRUCTS.dissector (buffer, pinfo, tree)
    local subtree = tree:add (LUASTRUCTS, buffer())
    pinfo.cols.protocol = LUASTRUCTS.name

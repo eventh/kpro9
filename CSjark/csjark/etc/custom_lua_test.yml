@@ -1,10 +1,22 @@
 Structs:
   - name: custom_lua
-    id: 99
-#    luafiles:
-#      - file: etc/custom_lua_test.lua
-#        member: normal
-#      - file: etc/custom_lua_test.lua
-#        type: long long
-#      - file: etc/custom_lua.lua
-
+    cnf: etc/custom_lua.cnf
+    id: 74
+    customs:
+      - type: time_t
+        field: relative_time
+      - member: abs
+        field: absolute_time
+      - type: BOOL
+        field: bool
+        size: 4
+        abbr: bool
+        name: A BOOL
+      - member: all
+        field: uint32
+        abbr: all.all
+        name: Something
+        base: base.HEX
+        values: {0: Monday, 1: Tuesday}
+        mask: nil
+        desc: This is something dark side!

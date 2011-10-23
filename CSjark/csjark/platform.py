@@ -1,0 +1,194 @@
+"""
+A module which holds platform specific configuration.
+
+It holds the Platform class which holds specific configuration
+for one platform, and a list of all supported platforms.
+
+It is used when creating dissectors for messages which can originate
+from various platforms.
+"""
+
+
+class Platform:
+    """Represents specific attributes of an OS and/or hardware."""
+    big = 'big'
+    little = 'little'
+
+    mappings = {} # Map platform name to instance
+
+    def __init__(self, name, flag, endian, macros=None, sizes=None):
+        """Create a configuration for a specific platform.
+
+        'name' is the name of the platform
+        'flag' is an unique integer value representing this platform
+        'endian' is either Platform.big or Platform.little
+        'macros' is C preprocessor platform-specific macros like _WIN32
+        'sizes' is a dict which maps C types to their size in bytes
+        """
+        if macros is None:
+            macros = []
+        if sizes is None:
+            sizes = {}
+        Platform.mappings[name] = self
+        self.name = name
+        self.flag = flag
+        self.endian = endian
+        self.macros = macros
+        self.types = dict(DEFAULT_C_TYPE_MAP)
+
+        # Extend sizes with missing types from default size map
+        self.sizes = dict(DEFAULT_C_SIZE_MAP)
+        for key, value in sizes.items():
+            self.sizes[key] = value
+
+    def map_type(self, ctype):
+        """Find the Wireshark type for a ctype."""
+        return self.types.get(ctype, ctype)
+
+    def size_of(self, ctype):
+        """Find the size of a C type in bytes."""
+        if ctype in self.sizes.keys():
+            return self.sizes[ctype]
+        else:
+            raise ValueError('No known size for type %s' % ctype)
+
+
+# Default mapping of C type and their wireshark field type.
+DEFAULT_C_TYPE_MAP = {
+        'bool': 'bool',
+        '_Bool': 'bool',
+        'char': 'string',
+        'signed char': 'string',
+        'unsigned char': 'string',
+        'short': "int16",
+        'signed short': "int16",
+        'unsigned short': "uint16",
+        'short int': "int16",
+        'signed short int': "int16",
+        'unsigned short int': "uint16",
+        "int": "int32",
+        'signed int': "int32",
+        'unsigned int': "uint32",
+        'signed': "int32",
+        'long': "int64",
+        'signed long': "int64",
+        'unsigned long': "uint64",
+        'long int': "int64",
+        'signed long int': "int64",
+        'unsigned long int': "uint64",
+        'long long': "int64",
+        'signed long long': "int64",
+        'unsigned long long': "uint64",
+        'long long int': "int64",
+        'signed long long int': "int64",
+        'unsigned long long int': "uint64",
+        'float': 'float',
+        'double': 'double',
+        'pointer': 'int32',
+        'enum': 'uint32',
+        'time_t': 'relative_time',
+}
+
+
+# Default mapping of C type and their default size in bytes.
+DEFAULT_C_SIZE_MAP = {
+        'bool': 1,
+        '_Bool': 1,
+        'char': 1,
+        'signed char': 1,
+        'unsigned char': 1,
+        'short': 2,
+        'short int': 2,
+        'signed short': 2,
+        'signed short int': 2,
+        'unsigned short': 2,
+        'unsigned short int': 2,
+        'int': 4,
+        'signed': 4,
+        'signed int': 4,
+        'unsigned': 4,
+        'unsigned int': 4,
+        'long': 4,
+        'long int': 4,
+        'signed long': 4,
+        'signed long int': 4,
+        'unsigned long': 4,
+        'unsigned long int': 4,
+        'long long': 8,
+        'long long int': 8,
+        'signed long long': 8,
+        'signed long long int': 8,
+        'unsigned long long': 8,
+        'unsigned long long int': 8,
+        'float': 4,
+        'double': 8,
+        'long double': 8,
+        'pointer': 4,
+        'enum': 4,
+        'time_t': 4,
+        'union': 0, # Tmp hack
+}
+
+
+# Mapping of C sizes for unix like platforms
+UNIX_C_SIZE_MAP = {
+        'long': 8,
+        'long int': 8,
+        'signed long': 8,
+        'signed long int': 8,
+        'unsigned long': 8,
+        'unsigned long int': 8,
+}
+
+
+# Platform-specific C preprocessor macros
+WIN32_MACROS = ['WIN32', '_WIN32', '__WIN32__', '__TOS_WIN__', '__WINDOWS__']
+SOLARIS_MACROS = ['sun', '__sun']
+MACOS_MACROS = ['macintosh', 'Macintosh', '__APPLE__ & __MACH__']
+
+X86_MACROS = [
+    'i386', '__i386__', '__i386', '__IA32__', '_M_IX86', '__X86__',
+    '_X86_', '__THW_INTEL__', '__I86__', '__INTEL__',
+]
+
+X64_MACROS = [
+    '__amd64__', '__amd64', '__x86_64', '__x86_64__', '_M_X64',
+    '__ia64__', '_IA64', '__IA64__', '__ia64', '_M_IA64', '_M_IA64',
+    '__itanium__', '__x86_64', '__x86_64__',
+]
+
+SPARC_MACROS = ['__sparc__', '__sparc', '__sparcv8', '__sparcv9']
+
+
+# Register different platforms
+
+# Default platform
+Platform('', 0, Platform.big)
+
+# Windows 32 bit
+Platform('win32', 1, Platform.little, macros=WIN32_MACROS+X86_MACROS)
+
+# Windows 64 bit
+Platform('win64', 2, Platform.little,
+         macros=WIN32_MACROS+X64_MACROS+['_WIN64'])
+
+# Solaris 32 bit
+Platform('solaris32', 3, Platform.little,
+         macros=SOLARIS_MACROS+X86_MACROS, sizes=UNIX_C_SIZE_MAP)
+
+# Solaris 64 bit
+Platform('solaris64', 4, Platform.little,
+         macros=SOLARIS_MACROS+X64_MACROS, sizes=UNIX_C_SIZE_MAP)
+
+# Solaris SPARC 64 bit
+Platform('sparc', 5, Platform.big,
+         macros=SOLARIS_MACROS+SPARC_MACROS, sizes=UNIX_C_SIZE_MAP)
+
+# MacOS
+Platform('macos', 6, Platform.little,
+         macros=MACOS_MACROS, sizes=UNIX_C_SIZE_MAP)
+
+# Linux
+Platform('linux', 7, Platform.little,
+         macros=['__linux__'], sizes=UNIX_C_SIZE_MAP)
+

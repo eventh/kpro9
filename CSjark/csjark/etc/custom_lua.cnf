@@ -1,0 +1,10 @@
+#.FN_HDR truth
+--magic!!
+
+#.FN_BODY str
+%(DEFAULT_BODY)s
+-- More Magic!!
+#.END
+
+#.END_OF_CNF
+

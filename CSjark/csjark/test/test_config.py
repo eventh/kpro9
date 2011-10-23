@@ -5,6 +5,7 @@ import sys, os
 from attest import Tests, assert_hook
 
 import config
+from config import Options
 
 
 # Test that configuration support range rules.
@@ -24,8 +25,8 @@ def create_ranges():
             max: 15.5
     '''
     config.parse_file('test', only_text=text)
-    yield config.StructConfig.configs['test']
-    del config.StructConfig.configs['test']
+    yield Options.configs['test']
+    Options.configs = {}
 
 @range_rule.test
 def range_rule_member(conf):
@@ -57,9 +58,8 @@ def create_structs():
         id: 11
     '''
     config.parse_file('test', only_text=text)
-    yield config.StructConfig.find('one'), config.StructConfig.find('two')
-    del config.StructConfig.configs['one']
-    del config.StructConfig.configs['two']
+    yield Options.configs['one'], Options.configs['two']
+    Options.configs = {}
 
 @struct_rule.test
 def struct_rule_id(one, two):
@@ -73,6 +73,39 @@ def struct_rule_description(one, two):
     assert one and two
     assert one.description == 'a struct' and two.description is None
 
+# Test that configuration support enums
+enum = Tests()
+
+@enum.context
+def create_enum():
+    """Create struct config with enum rules."""
+    text = '''
+    Structs:
+        - name: enum
+          id: 10
+          description: Enum config test
+          enums:
+            - member: weekday
+              values: {1: MONDAY, 2: TUESDAY, 3: WEDNESDAY, 4: THURSDAY, 5: FRIDAY, 6: SATURDAY, 7: SUNDAY}
+            - type: int
+              values: [Zero, One, Two, Three, Four, Five]
+              strict: True # Disable warning if not a valid value
+    '''
+    config.parse_file('test', only_text=text)
+    yield Options.configs['enum']
+    Options.configs = {}
+
+@enum.test
+def enum_rule(conf):
+    """Test that config support rules for enums."""
+    member, type = conf.get_rules('weekday', 'int')
+    assert member and type
+    assert len(member.values) == 7
+    assert member.values[3] == 'WEDNESDAY'
+    assert member.strict == True
+    assert len(type.values) == 6
+    assert type.values[0] == 'Zero'
+    assert type.strict == True
 
 # Test that configuration support bit strings
 bitstring = Tests()
@@ -92,8 +125,8 @@ def create_bitstring():
             4: [Nih]
     '''
     config.parse_file('test', only_text=text)
-    yield config.StructConfig.find('bitstring')
-    del config.StructConfig.configs['bitstring']
+    yield Options.configs['bitstring']
+    Options.configs = {}
 
 @bitstring.test
 def bitstring_rule(conf):
@@ -131,8 +164,8 @@ def create_fields():
             name: A BOOL
     '''
     config.parse_file('test', only_text=text)
-    yield config.StructConfig.find('test')
-    del config.StructConfig.configs['test']
+    yield Options.configs['test']
+    Options.configs = {}
 
 @fields.test
 def fields_rule(conf):
@@ -162,20 +195,20 @@ def create_trailers():
             count: 3
             size: 8
           - name: ber
-            count: asn1_count
+            member: asn1_count
             size: 12
           - name: ber
             count: 1
     '''
     config.parse_file('test', only_text=text)
-    yield config.StructConfig.find('test')
-    del config.StructConfig.configs['test']
+    yield Options.configs['test']
+    Options.configs = {}
 
 @trailers.test
 def trailers_rule(conf):
     """Test that config support rules for trailers."""
-    one, = conf.get_rules('asn1_count', None)
-    assert one
+    rules = conf.get_rules('asn1_count', None)
+    assert len(rules) == 0
     one, two, three = conf.trailers
     assert one.name == 'ber' and three.name == 'ber'
     assert one.count == 3 and two.count is None and three.count == 1

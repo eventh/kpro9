@@ -23,6 +23,8 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{textcomp}
+\usepackage[style=treenoname,subentrycounter,numberedsection, 
+        section=chapter, acronym]{glossaries}
 
 \definecolor{listinggray}{gray}{0.9}
 \definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
@@ -69,6 +71,10 @@
 		and Jaroslav Fibichr}
 \date{\today}
 
+\makeglossaries
+\include{./appendices/glossaryDB}
+\include{./appendices/acronymDB}
+
 \begin{document}
 
 %============
@@ -80,12 +86,18 @@
 % Abstract
 %==========
 \begin{abstract}
-Wireshark is a program used to analyze packet data sent between network nodes.
-The purpose of this project was to allow the use of Wireshark to also
-decode inter-process communication, which is important, but was difficult to accomplish before.
-The project resulted in a stand-alone utility, written in Python, which act as a supporting tool for Wireshark. 
-The utility automates the process of generating dissectors for Wireshark from C header files. 
-This functionality makes debugging and testing some programs a lot easier.
+\Gls{wireshark} is a program used to analyze packet data sent between network
+nodes. The purpose of this project was to allow the use of Wireshark to also
+decode inter-process communication, which is important for debugging and
+ensuring such programs behave correctly. The process of decoding packages
+manually is often time-consuming and in some cases impossible.
+
+The project resulted in a stand-alone utility which acts as a supporting tool
+for Wireshark. Our utility is written in Python, and uses open source libraries
+like pycparser and ply to achieve this. The utility automates the process of
+generating dissectors for Wireshark from C header files. This functionality
+makes debugging and testing some programs a lot easier.
+
 \end{abstract}
 
 %=========
@@ -95,7 +107,7 @@ This functionality makes debugging and testing some programs a lot easier.
 \chapter*{Preface}
 \addcontentsline{toc}{chapter}{Preface}
 This report was written for a project in the course TDT4290 Customer Driven
-Project at NTNU, Norwegian University of Technology and Science. The project
+Project at \ACRfull{ntnu}. The project
 was executed on behalf of Thales Norway AS between the 30th of August and the
 24th of November.
 

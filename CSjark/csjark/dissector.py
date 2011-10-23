@@ -1,49 +1,42 @@
 """
-A module for generating LUA dissectors for Wireshark.
+A module for generating Lua dissectors for Wireshark.
+
+Contains classes for creating dissectors for a specific protocol, which
+holds a list of fields which are instances of Field or its subclasses.
+
+Also contains the class which generates a dissector for delegating
+dissecting of messages to the specific protocol dissectors.
 """
 import string
 
-INT_TYPES = ["uint8", "uint16", "uint24", "uint32", "uint64", "framenum"]
-OTHER_TYPES = ["float", "double", "string", "stringz", "bytes",
-                "bool", "ipv4", "ipv6", "ether", "oid", "guid"]
-VALID_PROTOFIELD_TYPES = INT_TYPES + OTHER_TYPES
+from platform import Platform
 
 
-def create_lua_var(var, length=None):
-    """Return a valid lua variable name."""
-    valid = string.ascii_letters + string.digits + '_'
-    if length is None:
-        length = len(var)
-    var.replace(' ', '_')
-
-    i = 0
-    while i < len(var) and i < length:
-        if var[i] not in valid:
-            var = var[:i] + var[i+1:]
-        elif i == 0 and var[i] in string.digits:
-            var = var[:i] + var[i+1:]
-        else:
-            i += 1
-    return var
+# Not used yet, maybe remove it?
+#INT_TYPES = ["uint8", "uint16", "uint24", "uint32", "uint64", "framenum"]
+#OTHER_TYPES = ["float", "double", "string", "stringz", "bytes",
+#                "bool", "ipv4", "ipv6", "ether", "oid", "guid"]
+#VALID_PROTOFIELD_TYPES = INT_TYPES + OTHER_TYPES
 
 
 class Field:
-    def __init__(self, name, type, size):
+    """Represents Wireshark's ProtoFields which stores a specific value."""
+
+    def __init__(self, proto, name, type, size):
+        self.proto = proto
         self.name = name
         self.type = type
         self.size = size
 
-        self.abbr = None
+        self.add_var = self.proto._get_tree_add() # For adding fields to tree
+        self.var = '%s.%s' % (self.proto.field_var, self.name)
+        self.abbr = '%s.%s' % (self.proto.name, self.name)
+
         self.base = None # One of 'base.DEC', 'base.HEX' or 'base.OCT'
         self.values = None # Dict with the text that corresponds to the values
         self.mask = None # Integer mask of this field
         self.desc = None # Description of the field
-
-    def set_protocol(self, proto):
-        self.proto = proto
-        self.var = '%s.%s' % (self.proto.field_var, self.name)
-        if self.abbr is None:
-            self.abbr = '%s.%s' % (self.proto.name, self.name)
+        self.offset = None # Useful for others to access buffer(offset, size)
 
     def create_field(self, var, type_, abbr, name,
             base=None, values=None, mask=None, desc=None):
@@ -77,36 +70,64 @@ class Field:
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
-        t = '\tsubtree:add({var}, buffer({offset}, {size}))'
-        return t.format(var=self.var, offset=offset, size=self.size)
+        self.offset = offset
+        t = '\tsubtree:{add}({var}, buffer({offset}, {size}))'
+        return t.format(add=self.add_var, var=self.var,
+                        offset=offset, size=self.size)
 
-    def _get_func_type(self, type):
+    def _get_func_type(self):
         """Get the lua function to read values from buffers."""
-        if type[-2:] in ('8', '16', '32'):
-            return type[:-2]
-        return type
+        func_type = self.type
+        if func_type[-2:] in ('8', '16', '32'):
+            func_type = func_type[:-2]
+
+        # Endian handling
+        if func_type not in ('bytes', 'string', 'stringz', 'ether'):
+            if self.proto.platform is not None:
+                if self.proto.platform.endian == Platform.little:
+                    func_type = 'le_%s' % func_type
+
+        return func_type
 
     def _dict_to_table(self, pydict):
         """Convert a python dictionary to lua table."""
         return '{%s}' % ', '.join('[%i]="%s"' %
                     (i, j) for i, j in pydict.items())
 
+    def _create_lua_var(self, var, length=None):
+        """Return a valid lua variable name."""
+        valid = string.ascii_letters + string.digits + '_'
+        if length is None:
+            length = len(var)
+        var.replace(' ', '_')
+
+        i = 0
+        while i < len(var) and i < length:
+            if var[i] not in valid:
+                var = var[:i] + var[i+1:]
+            elif i == 0 and var[i] in string.digits:
+                var = var[:i] + var[i+1:]
+            else:
+                i += 1
+        return var
+
+
 
 class EnumField(Field):
-    def __init__(self, name, type, size, values, strict=True):
-        super().__init__(name, type, size)
+    def __init__(self, proto, name, type, size, values, strict=True):
+        super().__init__(proto, name, type, size)
         self.values = self._dict_to_table(values)
         self.strict = strict
         self.keys = ', '.join(str(i) for i in sorted(values.keys()))
-        self.func_type = self._get_func_type(type)
+        self.func_type = self._get_func_type()
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
         data = []
 
         # Local var definitions
-        t = '\tlocal {name} = subtree:add({var}, buffer({offset}, {size}))'
-        data.append(t.format(name=self.name, var=self.var,
+        t = '\tlocal {name} = subtree:{add}({var}, buffer({offset}, {size}))'
+        data.append(t.format(name=self.name, add=self.add_var, var=self.var,
                              offset=offset, size=self.size))
 
         # Add a test which validates the enum value
@@ -122,15 +143,15 @@ class EnumField(Field):
 
 
 class ArrayField(Field):
-    def __init__(self, name, type, base_size, depth):
+    def __init__(self, proto, name, type, base_size, depth):
         self.base_size = base_size
         self.depth = depth
         self.elements = 1 # Number of total elements in the array
         for size in self.depth:
             self.elements *= size
 
-        super().__init__(name, type, self.elements * self.base_size)
-        self.func_type = self._get_func_type(type)
+        super().__init__(proto, name, type, self.elements * self.base_size)
+        self.func_type = self._get_func_type()
 
     def get_definition(self):
         data = ['-- Array definition for %s' % self.name]
@@ -140,6 +161,12 @@ class ArrayField(Field):
         type_ = self.type
         if type_ not in ('string', 'stringz'):
             type_ = 'bytes'
+
+        # Top-level subtree
+        data.append(self.create_field('%s_%i' % (
+                    self.var, i), type_, self.abbr, self.name))
+        i += 1
+
         for k, size in enumerate(self.depth):
             if len(self.depth) > 1 and k == len(self.depth) - 1:
                 continue # Multi-dim array, no subtree last depth level
@@ -166,9 +193,9 @@ class ArrayField(Field):
 
             # Create the subtree
             size = elem * self.base_size
-            t = '\tlocal {tree} = {old}:add({var}_{i}, buffer({off}, {size}))'
-            data.append(t.format(tree=tree,
-                    old=parent, var=self.var, i=subtree, off=offset, size=size))
+            t = '\tlocal {tree} = {old}:{add}({var}_{i}, buffer({off}, {size}))'
+            data.append(t.format(tree=tree, old=parent, add=self.add_var,
+                        var=self.var, i=subtree, off=offset, size=size))
 
             # Set a more usefull text to the subtree
             if name:
@@ -182,8 +209,8 @@ class ArrayField(Field):
         def addfield(tree):
             """Add value from buffer to the elements field."""
             nonlocal element, offset
-            t = '\t{tree}:add({var}__{i}, buffer({offset}, {size}))'
-            data.append(t.format(tree=tree, offset=offset,
+            t = '\t{tree}:{add}({var}__{i}, buffer({offset}, {size}))'
+            data.append(t.format(tree=tree, offset=offset, add=self.add_var,
                     size=self.base_size, var=self.var, i=element))
             element += 1
             offset += self.base_size
@@ -213,45 +240,29 @@ class ArrayField(Field):
         return '\n'.join(data)
 
 
-class TrailerField(Field):
-    """Simply used to store the offset for any field used by trailers."""
-
-    def __init__(self, name, type, size, rules):
-        super().__init__(name, type, size)
-        self.func_type = self._get_func_type(type)
-        self.offset = None # Needed when finding nr of trailers
-        for rule in rules:
-            if rule.member is not None and rule.member == name:
-                rule._field = self
-
-    def get_code(self, offset):
-        self.offset = offset
-        return super().get_code(offset)
-
-
 class ProtocolField(Field):
-    def __init__(self, name, id, size, type_name):
-        super().__init__(name, type_name, size)
+    def __init__(self, proto, name, id, size, type_name):
+        super().__init__(proto, name, type_name, size)
         self.id = id
 
     def get_definition(self):
         pass
 
     def get_code(self, offset):
-        t = '\tlocal subsubtree = subtree:add("{name}:")\n' \
+        t = '\tlocal subsubtree = subtree:{add}("{name}:")\n' \
             '\tluastructs_dt:try({id}, buffer({offset},' \
             '{size}):tvb(), pinfo, subsubtree)'
-        return t.format(name=self.name, id=self.id,
-                        offset=offset, size=self.size)
+        return t.format(add=self.add_var, name=self.name,
+                        id=self.id, offset=offset, size=self.size)
 
 
 class BitField(Field):
-    def __init__(self, name, type, size, bits):
-        super().__init__(name, type, size)
+    def __init__(self, proto, name, type, size, bits):
+        super().__init__(proto, name, type, size)
         self.bits = bits
 
     def _bit_var(self, name):
-        return '%s_%s' % (self.var, create_lua_var(name))
+        return '%s_%s' % (self.var, self._create_lua_var(name))
 
     def _bit_abbr(self, name):
         return '%s.%s' % (self.abbr, name.replace(' ', '_'))
@@ -288,32 +299,32 @@ class BitField(Field):
         data = ['\t-- Bitstring handling for %s' % self.name]
 
         buff = 'buffer({off}, {size})'.format(off=offset, size=self.size)
-        t = '\tlocal bittree = subtree:add({var}, {buff})'
-        data.append(t.format(var=self.var, buff=buff))
+        t = '\tlocal bittree = subtree:{add}({var}, {buff})'
+        data.append(t.format(add=self.add_var, var=self.var, buff=buff))
 
         for i, j, name, values in self.bits:
-            data.append('\tbittree:add({var}, {buff})'.format(
-                                var=self._bit_var(name), buff=buff))
+            data.append('\tbittree:{add}({var}, {buff})'.format(
+                        add=self.add_var, var=self._bit_var(name), buff=buff))
 
         data.append('')
         return '\n'.join(data)
 
 
 class RangeField(Field):
-    def __init__(self, name, type, size, min, max):
-        super().__init__(name, type, size)
+    def __init__(self, proto, name, type, size, min, max):
+        super().__init__(proto, name, type, size)
         self.min = min
         self.max = max
-        self.func_type = self._get_func_type(type)
+        self.func_type = self._get_func_type()
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
         data = []
 
         # Local var definitions
-        t = '\tlocal {name} = subtree:add({var}, buffer({off}, {size}))'
+        t = '\tlocal {name} = subtree:{add}({var}, buffer({off}, {size}))'
         data.append(t.format(var=self.var, name=self.name,
-                             off=offset, size=self.size))
+                             add=self.add_var, off=offset, size=self.size))
 
         # Test the value
         def create_test(value, test, warn):
@@ -331,20 +342,6 @@ class RangeField(Field):
         return '\n'.join(data)
 
 
-class CustomField(Field):
-    """A Field defined by a Custom rule."""
-
-    def __init__(self, name, type, size, rule):
-        super().__init__(name, type, size)
-        self.rule = rule
-
-    def get_definition(self):
-        return super().get_definition()
-
-    def get_code(self, offset):
-        return super().get_code(offset)
-
-
 class Protocol:
     """A Protocol is a collection of fields and code.
 
@@ -353,16 +350,16 @@ class Protocol:
     """
     counter = 0 # Used to give protocols unique IDs if needed
 
-    def __init__(self, name, coord=None, conf=None):
+    def __init__(self, name, conf=None, platform=None):
         """Create a Protocol, for generating a dissector.
 
-        'name' is the name of the Protocol to dissect.
-        'coord' is the source location (file and line).
-        'conf' is the configuration for this Protocol.
+        'name' is the name of the Protocol to dissect
+        'conf' is the configuration for this Protocol
+        'platform' is the platform the dissector should run on
         """
         self.name = name
-        self.coord = coord
         self.conf = conf
+        self.platform = platform
 
         # Dissector ID
         if self.conf and self.conf.id is not None:
@@ -384,47 +381,52 @@ class Protocol:
         self.dissector = 'luastructs.message'
         self.dissector_table = 'luastructs_dt'
 
+    def create(self):
+        """Returns all the code for dissecting this protocol."""
+        # Create dissector content
+        self._header_defintion()
+        self._fields_definition()
+        self._dissector_func()
+
+        # Add code for registering the protocol
+        end = 'luastructs_dt:add({id}, {var})\n'
+        self.data.append(end.format(id=self.id, var=self.var))
+        self.data.append('')
+
+        return '\n'.join(self.data)
+
     def get_size(self):
         """Find the size of the fields in the protocol."""
         return sum(field.size for field in self.fields if field)
 
     def _add(self, field):
-        """Add a field to the protocol, updates the fields proto reference."""
-        field.set_protocol(self)
+        """Add a field to the protocol, returns the field."""
         self.fields.append(field)
         return field
 
     def add_field(self, *args, **vargs):
         """Create and add a new Field to the protocol."""
-        return self._add(Field(*args, **vargs))
+        return self._add(Field(self, *args, **vargs))
 
     def add_array(self, *args, **vargs):
         """Create and add a new ArrayField to the protocol."""
-        return self._add(ArrayField(*args, **vargs))
+        return self._add(ArrayField(self, *args, **vargs))
 
     def add_enum(self, *args, **vargs):
         """Create and add a new EnumField to the protocol."""
-        return self._add(EnumField(*args, **vargs))
+        return self._add(EnumField(self, *args, **vargs))
 
     def add_range(self, *args, **vargs):
         """Create and add a new RangeField to the protocol."""
-        return self._add(RangeField(*args, **vargs))
+        return self._add(RangeField(self, *args, **vargs))
 
     def add_bit(self, *args, **vargs):
         """Create and add a new BitField to the protocol."""
-        return self._add(BitField(*args, **vargs))
-
-    def add_custom(self, *args, **vargs):
-        """Create and add a new CustomField to the protocol."""
-        return self._add(CustomField(*args, **vargs))
+        return self._add(BitField(self, *args, **vargs))
 
     def add_protocol(self, *args, **vargs):
         """Create and add a new ProtocolField to the protocol."""
-        return self._add(ProtocolField(*args, **vargs))
-
-    def add_trailer(self, *args, **vargs):
-        """Create and add a new TrailerField to the protocol."""
-        return self._add(TrailerField(*args, **vargs))
+        return self._add(ProtocolField(self, *args, **vargs))
 
     def _legal_header(self):
         """Add the legal header with license info."""
@@ -461,18 +463,21 @@ class Protocol:
         """Add the code for the dissector function for the protocol."""
         self.data.append('-- Dissector function for struct: %s' % self.name)
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
-        sub_tree = '\tlocal subtree = tree:add({var}, buffer())'
+        sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
         desc = '\tpinfo.cols.info:append(" (" .. {var}.description .. ")")'
 
         self.data.append(func_diss.format(var=self.var))
-        self.data.append(sub_tree.format(var=self.var))
+        self.data.append(sub_tree.format(add=self._get_tree_add(),
+                                         var=self.var))
         self.data.append(desc.format(var=self.var))
         self.data.append('')
 
         offset = 0
         for field in self.fields:
             code = field.get_code(offset)
-            if code is not None:
+            if self.conf and self.conf.cnf:
+                code = self._cnf_field_code(field, code)
+            if code:
                 self.data.append(code)
             if field.size is not None:
                 offset += field.size
@@ -488,71 +493,120 @@ class Protocol:
         """Add code for handling of trailers to the protocol."""
         self.data.append('\n\t-- Trailers handling for struct: %s' % self.name)
 
-        for rule in rules:
-            # The simple special case
-            if rule.count == 1 or rule.size is None:
-                trail = '\tlocal trailer = Dissector.get("{name}")'
-                call = '\ttrailer:call(buffer({offset}):tvb(), pinfo, tree)'
-                self.data.append(trail.format(name=rule.name))
-                self.data.append(call.format(offset=offset))
-                if rule.size is not None:
-                    offset += rule.size
-                continue
+        # Offset variable and variable declaration
+        off_var = 'trail_offset'
+        t_offset = '\tlocal {var} = {offset}'
+        self.data.append(t_offset.format(offset=offset, var=off_var))
 
+        for i, rule in enumerate(rules):
             # Find the count
-            if rule.member is not None and rule._field is not None:
+            if rule.member is not None:
+                # Find offset, size and func_type
+                fields = [i for i in self.fields if i.name == rule.member]
+                if not fields:
+                    continue # rule.member don't exists in the struct
+                func = fields[0]._get_func_type()
+
                 count = 'trail_count'
-                t = '\tlocal {var} = buffer({off}, {size}):{type}()'
-                self.data.append(t.format(off=rule._field.offset, var=count,
-                        size=rule._field.size, type=rule._field.func_type))
-            elif rule.count:
-                count = rule.count
+                t = '\tlocal {var} = buffer({off}, {size}):{func}()'
+                self.data.append(t.format(off=fields[0].offset,
+                                 var=count, size=fields[0].size, func=func))
             else:
-                continue # rule.member don't exists in the struct
+                count = rule.count
+
+            size_str = ''
+            if rule.size is not None:
+                size_str = ', %i' % rule.size
+
 
             # Call trailers 'count' times
-            self.data.append('\tfor i = 0, {count} do'.format(count=count))
+            tabs = '\t'
+            if rule.member is not None or count > 1:
+                self.data.append('\tfor i = 1, {count} do'.format(count=count))
+                tabs += '\t'
 
-            trail = '\t\tlocal trailer = Dissector.get("{name}")'
-            call = '\t\ttrailer:call(buffer({offset}+(i*{size}),' \
-                        '{size}):tvb(), pinfo, tree)'
-            self.data.append(trail.format(name=rule.name))
-            self.data.append(call.format(offset=offset, size=rule.size))
-            self.data.append('\tend')
-            self.data.append('')
+            t1 = '{tabs}local trailer = Dissector.get("{name}")'
+            t2 = '{tabs}trailer:call(buffer({off}{size}):tvb(), pinfo, tree)'
+            t3 = '{tabs}{var} = {var} + {size}'
+            self.data.append(t1.format(tabs=tabs, name=rule.name))
+            self.data.append(t2.format(tabs=tabs, off=off_var, size=size_str))
 
-            if rule.count:
-                offset += rule.size * rule.count
-            else:
-                offset += rule.size
+            # Update offset after all but last trailer
+            if i < len(rules)-1:
+                self.data.append(t3.format(tabs=tabs,
+                                           var=off_var, size=rule.size))
 
-    def _custom_lua_file(self, rule):
-        """Handle custom lua file for this protocol."""
-        text = '-- Custom lua file %s for struct %s' % (rule.file, self.name)
-        text = '%s\n%s' % (text, rule.contents)
+            if rule.member is not None or count > 1:
+                self.data.append('\tend') # End for loop
 
-        # Interpolate dissector func
-        if '{DEFAULT_BODY}' in text:
-            self.data = []
-            self._dissector_func()
-            text = text.format(DEFAULT_BODY='\n'.join(self.data))
+    def _cnf_field_code(self, field, code):
+        """Modify fields code if a cnf file demands it."""
+        if field.name in self.conf.cnf.rules:
+            rules = self.conf.cnf.rules[field.name]
 
-        return text
+            # Header rule, insert custom lua before generated code
+            if self.conf.cnf.t_hdr in rules:
+                return '%s\n%s' % (rules[self.conf.cnf.t_hdr], code)
+
+            # Body rules, replace custom lua with generated code
+            elif self.conf.cnf.t_body in rules:
+                content = rules[self.conf.cnf.t_body]
+                if '%(DEFAULT_BODY)s' in content:
+                    content = content.replace('%(DEFAULT_BODY)s', code)
+                if '{DEFAULT_BODY}' in content:
+                    content = content.format(DEFAULT_BODY=code)
+                return content
+
+        return code
+
+    def _get_tree_add(self):
+        """Get the endian specific function for adding a item to a tree."""
+        if self.platform and self.platform.endian == Platform.little:
+            return 'add_le'
+        return 'add'
+
+
+class Delegator:
+    """A class for delegating dissecting to protocols.
+
+    Creates the top-level lua dissector which delegates the task
+    of dissecting specific messages to dissectors generated by
+    Protocol instances.
+
+    This top-level dissector contains code for finding the platform
+    the message originates from, and finds which specific dissector
+    handles that platform and message.
+    """
+
+    def __init__(self, platforms):
+        self.platforms = platforms
 
     def create(self):
-        """Returns all the code for dissecting this protocol."""
-        # Handle custom lua file rules
-        if self.conf and self.conf.lua_file:
-            return self._custom_lua_file(self.conf.lua_file)
+        t = """\
+local delegator = Proto("luastructs", "Lua C Structs")
+local dissector_table = DissectorTable.new("luastructs.message", "LUASTRUCTS")
 
-        # Create dissector content
-        self._header_defintion()
-        self._fields_definition()
-        self._dissector_func()
+local f = delegator.fields
+f.version = ProtoField.uint8("luastructs.version", "Version")
+f.flags = ProtoField.uint8("luastructs.flags", "Flags")
+f.message = ProtoField.uint16("luastructs.message", "Message")
+f.length = ProtoField.uint32("luastructs.length", "Message length")
 
-        # Add code for registering the protocol
-        end = 'luastructs_dt:add({id}, {var})\n'
-        self.data.append(end.format(id=self.id, var=self.var))
+function delegator.dissector(buffer, pinfo, tree)
+   local subtree = tree:add(delegator, buffer())
+   pinfo.cols.protocol = delegator.name
+   pinfo.cols.info = delegator.description
 
-        return '\n'.join(self.data)
+   subtree:add (f.version, buffer(0,1))
+   flags = buffer(1,1):uint()
+   subtree:add (f.flags, buffer(1,1))
+
+   local message = buffer(2,2):uint()
+   local mi = subtree:add(f.message, buffer(2,2))
+   mi:append_text (" (" .. tostring (dissector_table:get_dissector (message)) .. ")")
+
+   subtree:add (f.length, buffer(4):len()):set_generated()
+   dissector_table:try (message, buffer(4):tvb(), pinfo, tree)
+end"""
+        return t
 

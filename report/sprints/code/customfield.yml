@@ -1,7 +1,7 @@
 Structs:
-  - name: field_test
-    id: 67
-    fields:
+  - name: custom_lua
+    id: 74
+    customs:
       - type: time_t
         field: relative_time
       - member: abs
@@ -19,4 +19,3 @@ Structs:
         values: {0: Monday, 1: Tuesday}
         mask: nil
         desc: This is something dark side!
-

@@ -27,4 +27,4 @@ CSjark
 ------------
 
 CSjark can be obtained at https://github.com/eventh/kpro9/.
-CSjark itself requires no installation. After the steps described in the dependencies section is completed. It can be ran by opening a terminal, navigating to the directory containing cshark.py and invoking as described in the "Using CSjark" section.
+CSjark itself requires no installation. After the steps described in the dependencies section is completed. It can be ran by opening a terminal, navigating to the directory containing ``cshark.py`` and invoking as described in section :ref:`use`.

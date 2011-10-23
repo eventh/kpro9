@@ -7,7 +7,7 @@ import sys, os
 from attest import Tests, assert_hook, contexts
 
 import dissector
-from config import StructConfig, Trailer
+from config import Config, Trailer
 
 
 def compare_lua(code, template, write_to_file=''):
@@ -26,7 +26,7 @@ enums = Tests()
 @enums.context
 def create_enum_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
+    proto = dissector.Protocol('test', None)
     proto.add_enum('enum', 'int32', 4, dict(enumerate('ABCDE')))
     yield proto.fields[0]
     del proto
@@ -60,7 +60,7 @@ arrays = Tests()
 @arrays.context
 def create_array_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
+    proto = dissector.Protocol('test', None)
     proto.add_array('arr', 'float', 4, [1, 2, 3])
     proto.add_array('str', 'string', 30, [2])
     yield proto.fields[0], proto.fields[1]
@@ -75,6 +75,7 @@ def arrays_def(one, two):
     f.arr_0 = ProtoField.bytes("test.arr", "arr")
     f.arr_1 = ProtoField.bytes("test.arr", "arr")
     f.arr_2 = ProtoField.bytes("test.arr", "arr")
+    f.arr_3 = ProtoField.bytes("test.arr", "arr")
     f.arr__0 = ProtoField.float("test.arr.0", "[0]")
     f.arr__1 = ProtoField.float("test.arr.1", "[1]")
     f.arr__2 = ProtoField.float("test.arr.2", "[2]")
@@ -86,6 +87,7 @@ def arrays_def(one, two):
     -- Array definition for str
     f.str_0 = ProtoField.string("test.str", "str")
     f.str_1 = ProtoField.string("test.str", "str")
+    f.str_2 = ProtoField.string("test.str", "str")
     f.str__0 = ProtoField.string("test.str.0", "[0]")
     f.str__1 = ProtoField.string("test.str.1", "[1]")
     ''')
@@ -131,7 +133,7 @@ protofields = Tests()
 @protofields.context
 def create_protocol_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
+    proto = dissector.Protocol('test', None)
     proto.add_protocol('test', 8, 32, 'proto_one')
     proto.add_protocol('test2', 9, 64, 'proto_two')
     yield proto.fields[0], proto.fields[1]
@@ -165,7 +167,7 @@ bits = Tests()
 @bits.context
 def create_bit_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
+    proto = dissector.Protocol('test', None)
     bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
             (2, 1, 'B', {0: 'No', 1: 'Yes'}),
             (3, 1, 'G', {0: 'No', 1: 'Yes'})]
@@ -224,7 +226,7 @@ ranges = Tests()
 @ranges.context
 def create_range_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
+    proto = dissector.Protocol('test', None)
     proto.add_range('range', 'float', 4, 0, 10)
     yield proto.fields[0]
     del proto
@@ -251,42 +253,13 @@ def ranges_code(field):
     ''')
 
 
-# Test TrailerField
-trailer = Tests()
-
-@trailer.context
-def create_trailer_field():
-    """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
-    conf = StructConfig('tester')
-    rules = [Trailer(conf, {'name': 'ber', 'count': 3, 'size': 8}),
-             Trailer(conf, {'name': 'ber', 'count': 'count'})]
-    proto.add_trailer('count', 'int32', 4, rules)
-    yield conf, proto.fields[0]
-    del conf, proto
-
-@trailer.test
-def trailer_code(conf, field):
-    """Test that TrailerField generates correct code."""
-    assert len(conf.trailers) == 2
-    assert isinstance(field, dissector.TrailerField)
-    assert conf.trailers[0].member is None
-    assert conf.trailers[1]._field is field
-    assert compare_lua(field.get_code(0), '''
-    subtree:add(f.count, buffer(0, 4))
-    ''')
-    assert compare_lua(field.get_definition(), '''
-    f.count = ProtoField.int32("test.count", "count")
-    ''')
-
-
 # Test Field
 fields = Tests()
 
 @fields.context
 def create_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None, None)
+    proto = dissector.Protocol('test', None)
     proto.add_field('one', 'float', 4)
     proto.add_field('two', 'string', 12)
     yield proto.fields[0], proto.fields[1]
@@ -316,23 +289,23 @@ protos = Tests()
 @protos.context
 def create_protos():
     """Create a Protocol instance with some fields."""
-    conf = StructConfig('tester')
+    conf = Config('tester')
     conf.id = 25
     conf.description = 'This is a test'
 
-    rules = [Trailer(conf, {'name': 'missing', 'count': 'missing', 'size': 0}),
+    rules = [Trailer(conf, {'name': 'missing', 'member': 'missing', 'size': 0}),
              Trailer(conf, {'name': 'simple', 'count': 1, 'size': 4}),
              Trailer(conf, {'name': 'bur', 'count': 3, 'size': 8}),
-             Trailer(conf, {'name': 'ber', 'count': 'count'})]
-    proto = dissector.Protocol('tester', None, conf)
+             Trailer(conf, {'name': 'ber', 'member': 'count'})]
+
+    proto = dissector.Protocol('tester', conf)
 
     proto.add_field('one', 'float', 4)
     proto.add_range('range', 'float', 4, 0, 10)
     proto.add_array('array', 'float', 4, [1, 2, 3])
     proto.add_array('str', 'string', 30, [2])
-    proto.add_trailer('count', 'int32', 4, rules)
+    proto.add_field('count', 'int32', 4)
     yield proto
-    del StructConfig.configs['tester'], proto
 
 @protos.test
 def protos_id(proto):
@@ -351,8 +324,6 @@ def protos_trailer(proto):
     assert len(proto.conf.trailers) == 4
     assert proto.conf.trailers[2].name == 'bur'
     assert proto.conf.trailers[3].count is None
-    assert proto.conf.trailers[3]._field is not None
-    assert proto.conf.trailers[0]._field is None
 
 @protos.test
 def protos_create_dissector(proto):
@@ -370,6 +341,7 @@ def protos_create_dissector(proto):
     f.array_0 = ProtoField.bytes("tester.array", "array")
     f.array_1 = ProtoField.bytes("tester.array", "array")
     f.array_2 = ProtoField.bytes("tester.array", "array")
+    f.array_3 = ProtoField.bytes("tester.array", "array")
     f.array__0 = ProtoField.float("tester.array.0", "[0]")
     f.array__1 = ProtoField.float("tester.array.1", "[1]")
     f.array__2 = ProtoField.float("tester.array.2", "[2]")
@@ -379,6 +351,7 @@ def protos_create_dissector(proto):
     -- Array definition for str
     f.str_0 = ProtoField.string("tester.str", "str")
     f.str_1 = ProtoField.string("tester.str", "str")
+    f.str_2 = ProtoField.string("tester.str", "str")
     f.str__0 = ProtoField.string("tester.str.0", "[0]")
     f.str__1 = ProtoField.string("tester.str.1", "[1]")
     f.count = ProtoField.int32("tester.count", "count")
@@ -416,14 +389,20 @@ def protos_create_dissector(proto):
     arraytree:add(f.str__1, buffer(62, 30))
     subtree:add(f.count, buffer(92, 4))
     -- Trailers handling for struct: tester
+    local trail_offset = 96
     local trailer = Dissector.get("simple")
-    trailer:call(buffer(96):tvb(), pinfo, tree)
-    for i = 0, 3 do
+    trailer:call(buffer(trail_offset, 4):tvb(), pinfo, tree)
+    trail_offset = trail_offset + 4
+    for i = 1, 3 do
     local trailer = Dissector.get("bur")
-    trailer:call(buffer(100+(i*8),8):tvb(), pinfo, tree)
+    trailer:call(buffer(trail_offset, 8):tvb(), pinfo, tree)
+    trail_offset = trail_offset + 8
     end
+    local trail_count = buffer(92, 4):int()
+    for i = 1, trail_count do
     local trailer = Dissector.get("ber")
-    trailer:call(buffer(124):tvb(), pinfo, tree)
+    trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
+    end
     end
     luastructs_dt:add(25, proto_tester)
     ''')

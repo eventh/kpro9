@@ -296,30 +296,99 @@ protocols and fields generated earlier by the cparser module.
 \label{sec:sp1:impl}
 In this sprint we have created a very naive implementation of the utility. It
 supports the most basic types of C structs. In addition the utility supports
-some very basic configuration.
+some very basic configuration. The main reason for the naive implementation, 
+was to find out that the libraries that the team had choosen, was suitable for 
+the utility and that we had understood the task.
 
-We have decided to use YAML as our configuration format. In this sprint we have
+\subsection{CLI Support for Header File}
+%-------------------
+The tool uses a command line interface. The user inputs a C header file to the 
+command line, and the program outputs a Wireshark dissector written in Lua. 
+Below you can see a \autoref{fig:sp1cmd} that illustrates how the program is 
+run. 
+
+\subsection{Support Basic C Data Types}
+%-------------------
+In this first sprint the focus was to generate dissectors from structs with 
+basic datatypes. These datatypes included integers, floats, char, boolean and 
+arrays of chars. All different types of integers and floats was also 
+implemented in the utility, most of the functionallity was included in the 
+pycparser library, and sizes for the different data types was specified in the 
+utility.
+
+\subsection{Display Simple Structs}
+%-------------------
+The dissectors that our utility generates is used to display the packets that 
+are captued by wireshark. \autoref{fig:sp1wsstruct} shows an example of a 
+packet capture. The example include a struct that is used to test different 
+basic data types, for example, signed char, char, short, int, long int, float 
+and double.
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{./sprints/img/wireshark_simple}
+	\caption{Command line\label{fig:sp1wsstruct}}
+\end{figure}
+
+\subsection{Support \#include}
+%-------------------
+The preprocessor in C is the first step of compilation. One of the most used 
+features in the preprocessor is \#include, which include the content of a file 
+in the compilaton. Since the utility reads structs from header-files, it is 
+possible that struct member may have been defined in other header-files, 
+therefore \#include is a important part of the utility. The preprocessor in 
+this utility will replace the line, with the content of the included file.
+
+\subsection{Support \#define and \#if}
+%-------------------
+These two preprocessor directives are important for our utility. \#define is 
+used to define a preprocessor macros, this is used to replace a token with an 
+sequence of characters. This can for example be used to define length of 
+arrays, define values for enumeration or define a platform. \#if and \#ifdef 
+is conditional directives, that the utility will use to check if macros are 
+defined, this will be used when the utility are generating dissectors for 
+different platforms. The functionallity for these preprocessor directives and 
+the other preprocessor directives for C, was implemented by the library we 
+use, which is cpp.exe for windows and gcc for mac and linux. 
+
+\subsection{CLI Support for Configuration File}
+%-------------------
+To be able to parse the configuration file, it is necessary to specify the 
+configuration-file in the CLI. An example of this is shown in 
+\autoref{fig:sp1cmd}, where a header-file and a config-file is input to the 
+utility. The option ''-v'' is specified, which will display the abstract 
+syntax tree when the utility has generated the dissector.
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{./sprints/img/cmd_agetest_run}
+	\caption{Command line\label{fig:sp1cmd}}
+\end{figure}
+
+\subsection{Configuration of Valid Ranges}
+%-------------------
+We decided to use YAML as our configuration format. In this sprint we have
 added support for range specification. A user can specify the ranges of the
-members of a struct, from a minimum to a maximum. In
-\autoref{fig:sp1:rangerule} you can see how Wireshark displays a member that
-has an invalid range. 
+members of a struct, from a minimum to a maximum. \autoref{code:rangesconf} 
+shows an configuration in YAML for the header-file in \autoref{code:ranges}. 
+The configuration specifes that the struct member age, must have a value 
+between 0 and 100.  
+
+\lstset{language=C,caption={Configuration of valid ranges},label=code:rangesconf}
+\lstinputlisting[language=C]{./sprints/code/ranges.yml}
+
+\lstset{language=C,caption={Header-file for age\_test},label=code:ranges}
+\lstinputlisting[language=C]{./sprints/code/ranges.h}
+
+\subsection{Dissector Shall Recognize Invalid Values}
+%-------------------
+In \autoref{fig:sp1rangerule} you can see how Wireshark displays a member that 
+has an invalid range. When a invalid value exist, the dissector will warn the 
+user with a message and description, this make it easier for debugging.
 
 \begin{figure}[htb]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_outofrange}
-	\caption{Wireshark dissector\label{fig:sp1:rangerule}}
+	\caption{Wireshark dissector\label{fig:sp1rangerule}}
 \end{figure}
-
-The tool uses a command line interface. The user inputs a C header file and
-an optional configuration file to the command line, and the program outputs a
-Wireshark dissector written in Lua. Below you can see a \autoref{fig:sp1:cmd}
-that illustrates how the program is run.
-
-\begin{figure}[ht]
-	\includegraphics[width=\textwidth]{./sprints/img/cmd_agetest_run}
-	\caption{Command line\label{fig:sp1:cmd}}
-\end{figure}
-
 
 %-----------------------
 \section{Sprint Testing}

@@ -1,3 +1,5 @@
+Options:
+    platforms: [win32,sparc]
 Structs:
   - name: range_test
     id: 9

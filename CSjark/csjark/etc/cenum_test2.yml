@@ -1,8 +1,0 @@
-Structs:
-  - name: cenum_test2
-    id: 14
-    description: C Enum test number 2
-    ranges:
-      - member: percent
-        min: 0
-        max: 100

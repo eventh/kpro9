@@ -249,10 +249,10 @@ class ProtocolField(Field):
         pass
 
     def get_code(self, offset):
-        t = '\tlocal subsubtree = subtree:{add}("{name}:")\n' \
-            '\tluastructs_dt:try({id}, buffer({offset},' \
-            '{size}):tvb(), pinfo, subsubtree)'
-        return t.format(add=self.add_var, name=self.name,
+        t = '\tpinfo.private.struct_def_name = "{name}"\n' \
+        '\tluastructs_dt:try({id}, buffer({offset},' \
+            '{size}):tvb(), pinfo, subtree)'
+        return t.format(name=self.name,
                         id=self.id, offset=offset, size=self.size)
 
 
@@ -464,11 +464,16 @@ class Protocol:
         self.data.append('-- Dissector function for struct: %s' % self.name)
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
         sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
+        dissector_def_name_check = '\tif pinfo.private.struct_def_name then \n' \
+            '\t\tsubtree:set_text(' \
+            'pinfo.private.struct_def_name .. ": " .. {var}.description)\n' \
+            '\t\tpinfo.private.struct_def_name = nil\n\tend\n'
         desc = '\tpinfo.cols.info:append(" (" .. {var}.description .. ")")'
 
         self.data.append(func_diss.format(var=self.var))
         self.data.append(sub_tree.format(add=self._get_tree_add(),
                                          var=self.var))
+        self.data.append(dissector_def_name_check.format(var=self.var))
         self.data.append(desc.format(var=self.var))
         self.data.append('')
 

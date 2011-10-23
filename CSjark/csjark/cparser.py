@@ -109,6 +109,9 @@ class StructVisitor(c_ast.NodeVisitor):
             else:
                 raise ParseError('Unknown struct member: %s' % repr(child))
 
+    def visit_Union(self, node):
+        """Visit a Union node in the AST."""
+
     def visit_Enum(self, node):
         """Visit a Enum node in the AST."""
         # Visit children

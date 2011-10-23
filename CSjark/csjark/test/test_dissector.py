@@ -152,12 +152,12 @@ def proto_field_code(one, two):
     assert isinstance(one, dissector.ProtocolField)
     assert isinstance(two, dissector.ProtocolField)
     assert compare_lua(one.get_code(0), '''
-    local subsubtree = subtree:add("test:")
-    luastructs_dt:try(8, buffer(0, 32):tvb(), pinfo, subsubtree)
+    pinfo.private.struct_def_name = "test"
+    luastructs_dt:try(8, buffer(0, 32):tvb(), pinfo, subtree)
     ''')
     assert compare_lua(two.get_code(32), '''
-    local subsubtree = subtree:add("test2:")
-    luastructs_dt:try(9, buffer(32, 64):tvb(), pinfo, subsubtree)
+    pinfo.private.struct_def_name = "test2"
+    luastructs_dt:try(9, buffer(32, 64):tvb(), pinfo, subtree)
     ''')
 
 
@@ -358,6 +358,10 @@ def protos_create_dissector(proto):
     -- Dissector function for struct: tester
     function proto_tester.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_tester, buffer())
+    if pinfo.private.struct_def_name then 
+    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_tester.description)
+    pinfo.private.struct_def_name = nil
+    end
     pinfo.cols.info:append(" (" .. proto_tester.description .. ")")
     subtree:add(f.one, buffer(0, 4))
     local range = subtree:add(f.range, buffer(4, 4))

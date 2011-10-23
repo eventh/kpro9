@@ -30,5 +30,5 @@ The arguments here specify the following:
 
 **Example usage:** ::
 
-    python csjark.py -v -nocpp headerfile.h configfile.yml
+    python csjark.py -v headerfile.h configfile.yml
 

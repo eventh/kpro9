@@ -538,10 +538,145 @@ This section introduces the amount of code covered by our unit tests and how it 
 %--------------------------
 \section{Customer Feedback}
 %--------------------------
+\subsection{Requirement changes and feedback}
+In sprint 2 we were able to demonstrate many of the requirements for the customer, and as a result we got some feedback of some changes and refinements that the customer wants. The customer also added some new features they would like to have. The changes and additions are listed bellow.
 
+\subsection*{FR1-E: Support members of type array}
+Arrays should be displayed as a sublevel. Multidimensional arrays should have one sublevel per dimension. The dissector should also display the type of the array and show the different indexes for the sublevels.
+
+\subsection*{FR2-B: struct within structs}
+The customer stated that the inner struct should be displayed as a sublevel of the outer struct.
+When an external dissector is called, it should be called with name, and not id, so that structs that is never used as a base does not need to be assigned an id.
+
+\subsection*{FR4-C Custom handling of specific types}
+The customer stated that they would like certain types to be interpreted in a certain way as default behaviour, but that the user should be able to configure specific behaviour for a specific member of a struct.
+
+\subsection*{FR4-E: Headers/trailers}
+The customer originally stated that this feature included both headers and trailer structs for a given struct. This is now refined to mean that the given struct is the header, and that it can have various trailers (could be one or more c structs, ASN.1, etc.). A configuration file should specify the kind of trailer, and what variable inside the header struct which specify how many trailer items to expect. If the header does not specify the length of the trailer the dissector should just use the rest of the buffer, or the dissector is responsible to return the length used from the buffer, so the caller can give the rest to the next dissector.
+In Wireshark it should be displayed as a sequence of structs.
+
+\subsection*{FR4-F: Support for integers that represents enumerated values and bit strings}
+The customer clarified this by explaining that they wanted integers that represents an enumerated value to be displayed like an enum (member name and the string that represents the integer value) and that the bit strings should be displayed as a list with the name and value (1 / 0 or yes / no) of the different bits in the integer. It should also display the original integer I hex. As a result of this, the requirement was split into two:
+\begin{itemize}
+\item FR4-F	Support enumerated named values
+\item FR4-G	Support for bit strings
+\end{itemize}
+The customer also confirmed that the bit strings are endian specific and that he would like then to start counting from 1 (not zero, as in our first implementation).
+
+\subsection*{FR5-C Endian handling}
+The customer stated that the header part of the packed, which include the platform flag, will always be in big endian (network order).
+
+\subsection*{FR7-C: Batch mode}
+The customer clarified this to mean that the utility should be able to run completely unattended given a set of command line arguments. For example it should not ask the users any questions under this modus. This is to be able to run it as a cron job at night.
+
+\subsection*{NR4: A user without prior knowledge should be able to use the tool within X hours.}
+The customer defined X as 5.
+
+\subsection*{NR5: A user with prior knowledge should be able to use the tool within Y hours.}
+The customer defined Y as 1.
+
+\subsection*{Detecting ambiguous struct definitions (more than one struct definition with the same name)}
+The utility should detect if there are more that one struct with the same name. If found, the utility should exit with a proper error message because 
+
+\subsection*{Data alignment}
+The customer said that we could have some problems with alignment with the current offsets, because the different platforms may pad the data members of a struct to match an integer number of words on that platform.
+
+\subsection*{Testability}
+The customer suggested that we might want to refine some of the requirement to make them more testable. This can be done by adding more measurable goals.
+
+\subsection*{Documentation}
+The documentation should specify what parameters are needed, like what parameters that should be passed to a dissector.
+
+\subsection*{Locating “missing” header files}
+Some of the header files specified in a file might be located in an unknown location. The customer suggested that we should include a way to configure header location.
+
+\subsection*{What headers should the utility be generate dissectors for}
+The customer suggested that we include a way to specify the relevant header files in a configuration file.
+
+\subsection*{Dissector id}
+Only structs explicitly configured with an id should be assigned an id. The rest should be called by their textual name. This is to avoid id collisions and limit configuration needed.
+
+\subsection*{Headers and configuration the utility cannot handle}
+The customer stated that they wanted the tool to continue generating dissectors even if it encounters a file it cannot handle. The tool should just give an appropriate error message and carry on with the next file.
+
+\subsection{Customers feedback on the product}
+The customer is satisfied with the progress of the utility and is so far pleased with its functionality. They also feel that the team are flexible when it comes to feature refinement and additions. 
 
 %--------------------------
 \section{Sprint Evaluation}
 %--------------------------
+This section contains the team evaluation of the second sprint.
+
+\subsection{Review}
+%--------------------------
+The first sprint evaluation resulted in some planned actions for the forthcoming sprints. Looking back at these at this sprint evaluation, we quickly realized that we fell into the same pitfalls again: lack of documentation, bad work distribution and reverse engineering of vital parts.
+The sprint started out very good. We had a four-hour long planning meeting, and ended up with a good backlog and a common understanding of the technical aspects of the sprint. Even though the meeting was significantly better this time, we failed in doing the design early. User stories was postponed till the middle of the sprint and they were written by team members that had no understanding of the code. Doing them in a reverse engineered fashion ended up being more work than expected. So after this sprint we decided that at the next planning meeting, we will use as many hours as it takes to end up with a good plan, documentation and user stories.
+
+The work and implementation of the sprint are as....
+
+
+
+\subsection{Positive Experiences}
+%--------------------------
+\begin{itemize}
+	\item A significantly better sprint planning meeting
+	\item All the team members have raised their effort, working more hours
+	\item Accurate time estimates
+	\item Successful presentation of the utility to the customer
+	\begin {itemize}
+		\item Implementation of features work as intended
+		\item Good feedback from the customer
+	\end{itemize}
+	\item Thriving team atmosphere
+\end{itemize}
+
+
+
+\subsection{Negative Experiences}
+%--------------------------
+\begin{itemize}
+	\item The planning meeting was too short, which resulted in a shortcomming in the documentation.
+	\item Documentation was postponed till the end again
+	\item Lack of feedback to the advisor
+	\item Bad work balance
+	\item Could not complete all the tasks in the backlog
+\end{itemize}
+
+
+\subsection{Planned Actions}
+%--------------------------
+
+
+\subsection{Barriers}
+%--------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

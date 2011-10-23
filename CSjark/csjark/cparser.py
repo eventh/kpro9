@@ -67,6 +67,10 @@ class StructVisitor(c_ast.NodeVisitor):
     all_structs = {} # Map struct names and their protocol
 
     def __init__(self, platform):
+        """Create a new instance to visit all nodes in the AST.
+
+        'platform' is the platform the header was parsed for
+        """
         self.platform = platform
         self.map_type = platform.map_type
         self.size_of = platform.size_of

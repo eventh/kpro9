@@ -408,7 +408,6 @@ class Protocol:
     It's used to generate Wireshark dissectors written in Lua, for
     dissecting a packet into a set of fields with values.
     """
-    counter = 0 # Used to give protocols unique IDs if needed
 
     def __init__(self, name, conf=None, platform=None):
         """Create a Protocol, for generating a dissector.
@@ -422,11 +421,9 @@ class Protocol:
         self.platform = platform
 
         # Dissector ID
+        self.id = None
         if self.conf and self.conf.id is not None:
             self.id = self.conf.id
-        else:
-            Protocol.counter += 1
-            self.id = Protocol.counter
 
         # Dissector description
         if self.conf and self.conf.description is not None:
@@ -438,8 +435,7 @@ class Protocol:
         self.data = []
         self.var = create_lua_var('proto_%s' % self.name)
         self.field_var = 'f'
-        self.dissector = 'luastructs.message'
-        self.dis_table = 'luastructs_dt'
+        self.table_var = create_lua_var('dissector_table')
 
     def create(self):
         """Returns all the code for dissecting this protocol."""
@@ -449,9 +445,9 @@ class Protocol:
         self._dissector_func()
 
         # Add code for registering the protocol
-        end = '{table}:add({id}, {var})\n\n'
-        self.data.append(end.format(table=self.dis_table,
-                         id=self.id, var=self.var))
+        end = '{table}:add("{name}", {var})\n\n'
+        self.data.append(end.format(table=self.table_var,
+                         name=self.name, var=self.var))
 
         return '\n'.join(self.data)
 
@@ -503,10 +499,8 @@ class Protocol:
         self.data.append(proto.format(var=self.var, name=self.name,
                                       description=self.description))
 
-        table = 'local {table} = DissectorTable.get("{dissector}")'
-        self.data.append(table.format(dissector=self.dissector,
-                                      table=self.dis_table))
-        self.data.append('')
+        self.data.append('local {var} = DissectorTable.get("{dt}")\n'.format(
+                         dt=self.platform.dt_name, var=self.table_var))
 
     def _fields_definition(self):
         """Add code for defining the ProtoField's in the protocol."""
@@ -555,8 +549,7 @@ class Protocol:
         if self.conf and self.conf.trailers:
             self._trailers(self.conf.trailers, offset)
 
-        self.data.append('end')
-        self.data.append('')
+        self.data.append('end\n\n')
 
     def _trailers(self, rules, offset):
         """Add code for handling of trailers to the protocol."""
@@ -724,9 +717,9 @@ class Delegator(Protocol):
         tables = {p.flag: p._var for name, p in self.platforms.items()}
         t1 = '\tsubtree:add(f.messagelength, buffer(4):len()):set_generated()'
         t2 = '\tlocal tables = %s' % create_lua_valuestring(tables, wrap=False)
-        t3 = '\ttables[{flag}]:try({msg}, buffer(4):tvb(), pinfo, tree)'
-        self.data.append(t1)
-        self.data.append(t2)
-        self.data.append(t3.format(flag=flags_var, msg=msg_var))
+        t3 = '\ttables[{flag}]:try({values}[{msg}], buffer(4):tvb(), pinfo, tree)'
+        self.data.extend([t1, t2])
+        self.data.append(t3.format(flag=flags_var,
+                values=self._msg_id.values_var, msg=msg_var))
         self.data.append('end')
 

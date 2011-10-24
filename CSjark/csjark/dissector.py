@@ -680,7 +680,6 @@ class Delegator(Protocol):
         self.data.append(self._version.get_code(0))
         self.data.append(self._flags.get_code(1))
         self.data.append(self._msg_id.get_code(2))
-        self.data.append(self._length.get_code(4))
 
         # Store buffer values in variables
         flags_var = create_lua_var('flags')

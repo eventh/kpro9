@@ -109,7 +109,7 @@ def arrays(structs):
     -- Dissector function for struct: array_test
     function proto_array_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_array_test, buffer())
-    if pinfo.private.struct_def_name then 
+    if pinfo.private.struct_def_name then
     subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_array_test.description)
     pinfo.private.struct_def_name = nil
     end
@@ -420,7 +420,7 @@ def ranges(structs):
     -- Dissector function for struct: range_test
     function proto_range_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_range_test, buffer())
-    if pinfo.private.struct_def_name then 
+    if pinfo.private.struct_def_name then
     subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_range_test.description)
     pinfo.private.struct_def_name = nil
     end
@@ -437,6 +437,32 @@ def ranges(structs):
     luastructs_dt:add(9, proto_range_test)
     ''')
 
+@sprint2.test
+def struct_within_struct(structs):
+    """End-to-end test of structs within structs."""
+    assert 'struct_within_struct_test' in structs
+    assert structs['struct_within_struct_test']
+    assert compare_lua(structs['struct_within_struct_test'], '''
+    -- Dissector for struct: struct_within_struct_test: Struct in struct test
+    local proto_struct_within_struct_test = Proto("struct_within_struct_test", "Struct in struct test")
+    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- ProtoField defintions for struct: struct_within_struct_test
+    local f = proto_struct_within_struct_test.fields
+    f.prime = ProtoField.int32("struct_within_struct_test.prime", "prime")
+    -- Dissector function for struct: struct_within_struct_test
+    function proto_struct_within_struct_test.dissector(buffer, pinfo, tree)
+    local subtree = tree:add(proto_struct_within_struct_test, buffer())
+    if pinfo.private.struct_def_name then
+    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_struct_within_struct_test.description)
+    pinfo.private.struct_def_name = nil
+    end
+    pinfo.cols.info:append(" (" .. proto_struct_within_struct_test.description .. ")")
+    subtree:add(f.prime, buffer(0, 4))
+    pinfo.private.struct_def_name = "astruct"
+    luastructs_dt:try(11, buffer(4,8):tvb(), pinfo, subtree)
+    end
+    luastructs_dt:add(12, proto_struct_within_struct_test)
+    ''')
 
 @sprint2.test
 def trailers(structs):
@@ -465,7 +491,7 @@ def trailers(structs):
     -- Dissector function for struct: trailer_test
     function proto_trailer_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_trailer_test, buffer())
-    if pinfo.private.struct_def_name then 
+    if pinfo.private.struct_def_name then
     subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_trailer_test.description)
     pinfo.private.struct_def_name = nil
     end

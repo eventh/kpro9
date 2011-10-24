@@ -1,0 +1,23 @@
+Options:
+    platforms: [sparc]
+Structs:
+  - name: keyword_test
+    id: 255
+    description: testing lua keywords
+    enums:
+      - member: false
+        values: {1: and, 2: elseif, 3: end }
+    ranges:
+      - member: in
+        min: 0
+        max: 10
+    bitstrings:
+      - member: _VERSION
+        1: [G1, yes, no]
+    trailers:
+      - name: ber
+        member: not
+        size: 5
+  - name: local
+    id: 254
+    description: testing lua keywords struct-in-struct

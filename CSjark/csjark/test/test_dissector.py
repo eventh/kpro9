@@ -85,7 +85,7 @@ def luakeywords_code(field1, field2):
     local _elseif = subtree:add(f._elseif, buffer(0, 4))
     local test = {[0]="V", [1]="W", [2]="X", [3]="Y", [4]="Z"}
     if (test[buffer(0, 4):int()] == nil) then
-        elseif:add_expert_info(PI_MALFORMED, PI_WARN,
+        _elseif:add_expert_info(PI_MALFORMED, PI_WARN,
             "Invalid value, not in (0, 1, 2, 3, 4)")
     end
     ''')
@@ -93,7 +93,7 @@ def luakeywords_code(field1, field2):
     subtree:add(f._in, buffer(0, 4))
     ''')
 
-	
+
 # Test ArrayField
 arrays = Tests()
 

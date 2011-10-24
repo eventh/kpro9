@@ -50,6 +50,8 @@ def create_lua_var(var, length=None):
 
 def create_lua_valuestring(dict_):
     """Convert a python dictionary to lua table."""
+    if not dict_:
+        return 'nil'
     return '{%s}' % ', '.join('[%i]="%s"' % (i, j) for i, j in dict_.items())
 
 
@@ -72,7 +74,21 @@ class Field:
         self.desc = None # Description of the field
         self.offset = None # Useful for others to access buffer(offset, size)
 
-    def create_field(self, var, type_, abbr, name,
+    def get_definition(self):
+        """Get the ProtoField definition for this field."""
+        return self._create_field(self.var, self.type, self.abbr,
+                self.name, self.base, self.values, self.mask, self.desc)
+
+    def get_code(self, offset, store=''):
+        """Get the code for dissecting this field."""
+        if store:
+            store = 'local {var} = '.format(var=create_lua_var(store))
+        self.offset = offset
+        t = '\t{store}subtree:{add}({var}, buffer({offset}, {size}))'
+        return t.format(store=store, add=self.add_var,
+                        var=self.var, offset=offset, size=self.size)
+
+    def _create_field(self, var, type_, abbr, name,
             base=None, values=None, mask=None, desc=None):
         """Create a ProtoField definition."""
         template = '{var} = ProtoField.{type}("{abbr}", "{name}"{rest})'
@@ -97,7 +113,7 @@ class Field:
 
         return template.format(**args)
 
-    def create_value_var(self, var, offset=None):
+    def _create_value_var(self, var, offset=None):
         """Create code which stores the field value in 'var'.
 
         If 'offset' is not provided, must be run after get_code().
@@ -107,20 +123,6 @@ class Field:
         store = 'local {var} = buffer({offset}, {size}):{type}()'
         return store.format(var=create_lua_var(var), offset=offset,
                             size=self.size, type=self._get_func_type())
-
-    def get_definition(self):
-        """Get the ProtoField definition for this field."""
-        return self.create_field(self.var, self.type, self.abbr,
-                self.name, self.base, self.values, self.mask, self.desc)
-
-    def get_code(self, offset, store=''):
-        """Get the code for dissecting this field."""
-        if store:
-            store = 'local {var} = '.format(var=create_lua_var(store))
-        self.offset = offset
-        t = '\t{store}subtree:{add}({var}, buffer({offset}, {size}))'
-        return t.format(store=store, add=self.add_var,
-                        var=self.var, offset=offset, size=self.size)
 
     def _get_func_type(self):
         """Get the lua function to read values from buffers."""
@@ -150,9 +152,7 @@ class EnumField(Field):
         data = []
 
         # Local var definitions
-        t = '\tlocal {name} = subtree:{add}({var}, buffer({offset}, {size}))'
-        data.append(t.format(name=create_lua_var(self.name), add=self.add_var, var=self.var,
-                             offset=offset, size=self.size))
+        data.append(super().get_code(offset, store=self.name))
 
         # Add a test which validates the enum value
         if self.strict:
@@ -187,7 +187,7 @@ class ArrayField(Field):
             type_ = 'bytes'
 
         # Top-level subtree
-        data.append(self.create_field('%s_%i' % (
+        data.append(self._create_field('%s_%i' % (
                     self.var, i), type_, self.abbr, self.name))
         i += 1
 
@@ -195,13 +195,13 @@ class ArrayField(Field):
             if len(self.depth) > 1 and k == len(self.depth) - 1:
                 continue # Multi-dim array, no subtree last depth level
             for j in range(size):
-                data.append(self.create_field('%s_%i' % (self.var, i),
+                data.append(self._create_field('%s_%i' % (self.var, i),
                         type_, self.abbr, self.name))
                 i += 1
 
         # Create fields for each element in the array
         for i in range(self.elements):
-            data.append(self.create_field('%s__%i' % (self.var, i),
+            data.append(self._create_field('%s__%i' % (self.var, i),
                     self.type, '%s.%i' % (self.abbr, i), '[%i]' % i))
 
         return '\n'.join(data)
@@ -301,7 +301,7 @@ class BitField(Field):
             type_ = self.type
 
         # Create bitstring tree definition
-        data.append(self.create_field(self.var, type_,
+        data.append(self._create_field(self.var, type_,
                 self.abbr, '%s (bitstring)' % self.name, base='base.HEX'))
 
         # Create definitions for all bits
@@ -314,7 +314,7 @@ class BitField(Field):
             mask = '0x%x' % int(''.join(str(i) for i in tmp), 2)
 
             values = create_lua_valuestring(values)
-            data.append(self.create_field(self._bit_var(name), type_,
+            data.append(self._create_field(self._bit_var(name), type_,
                     self._bit_abbr(name), name, values=values, mask=mask))
 
         return '\n'.join(data)
@@ -494,6 +494,7 @@ class Protocol:
                 self.data.append(code)
             if field.size is not None:
                 offset += field.size
+        return offset
 
     def _dissector_func(self):
         """Add the code for the dissector function for the protocol."""
@@ -513,7 +514,7 @@ class Protocol:
         self.data.append(desc.format(var=self.var))
         self.data.append('')
 
-        self._fields_code()
+        offset = self._fields_code()
 
         # Delegate rest of buffer to any trailing protocols
         if self.conf and self.conf.trailers:
@@ -622,8 +623,8 @@ class Delegator(Protocol):
 
         # Add fields, don't change sizes!
         self.add_field('Version', 'uint8', 1)
-        self.add_field('Flags', 'uint8', 1)
-        self.add_field('Message', 'uint16', 2)
+        self.add_enum('Flags', 'uint8', 1, {})
+        self.add_enum('Message', 'uint16', 2, {})
         self.add_field('Message length', 'uint32', 4)
 
     def create(self):
@@ -664,8 +665,8 @@ class Delegator(Protocol):
         # Store buffer values in variables
         flags_var = create_lua_var('flags')
         msg_var = create_lua_var('message')
-        self.data.append('\t' + self.fields[1].create_value_var(flags_var))
-        self.data.append('\t' + self.fields[2].create_value_var(msg_var))
+        self.data.append('\t' + self.fields[1]._create_value_var(flags_var))
+        self.data.append('\t' + self.fields[2]._create_value_var(msg_var))
 
         # Find message id and call right dissector
         t1 = '\t{tree}:append_text(" (" .. tostring({table}:'\

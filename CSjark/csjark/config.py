@@ -305,6 +305,7 @@ class Options:
     debug = False
     strict = True
     use_cpp = True
+    cpp_includes = []
     output_dir = None
     output_file = None
 
@@ -329,6 +330,7 @@ class Options:
         cls.debug = obj.get('verbose', cls.debug)
         cls.strict = obj.get('strict', cls.strict)
         cls.use_cpp = obj.get('use_cpp', cls.use_cpp)
+        cls.cpp_includes = obj.get('includes', cls.cpp_includes)
         cls.output_dir = obj.get('output_dir', cls.output_dir)
         cls.output_file = obj.get('output_file', cls.output_file)
 

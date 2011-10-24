@@ -28,6 +28,7 @@ def parse_file(filename):
         cpp_args = []
 
         cpp_args.append(r'-I../utils/fake_libc_include')
+        cpp_args.extend(Options.cpp_includes)
 
         if os.path.dirname(filename):
             cpp_args.append(r'-I%s' % os.path.dirname(filename))

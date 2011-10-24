@@ -416,6 +416,8 @@ class Protocol:
         'conf' is the configuration for this Protocol
         'platform' is the platform the dissector should run on
         """
+        if platform is None:
+            platform = Platform.mappings['default']
         self.name = name
         self.conf = conf
         self.platform = platform
@@ -715,11 +717,15 @@ class Delegator(Protocol):
 
         # Find message id and call right dissector
         tables = {p.flag: p._var for name, p in self.platforms.items()}
+        kwargs = {'flag': flags_var, 'msg': msg_var,
+                'values': self._msg_id.values_var}
+
         t1 = '\tsubtree:add(f.messagelength, buffer(4):len()):set_generated()'
         t2 = '\tlocal tables = %s' % create_lua_valuestring(tables, wrap=False)
-        t3 = '\ttables[{flag}]:try({values}[{msg}], buffer(4):tvb(), pinfo, tree)'
+        t3 = '\tif (tables[{flag}] ~= nil and {values}[{msg}] ~= nil) then'
+        t4 = '\t\ttables[{flag}]:try({values}[{msg}], buffer(4):tvb(), pinfo, tree)'
         self.data.extend([t1, t2])
-        self.data.append(t3.format(flag=flags_var,
-                values=self._msg_id.values_var, msg=msg_var))
-        self.data.append('end')
+        self.data.append(t3.format(**kwargs))
+        self.data.append(t4.format(**kwargs))
+        self.data.append('\tend\nend')
 

@@ -11,7 +11,7 @@ from operator import itemgetter
 import yaml
 
 from platform import Platform
-from dissector import Delegator
+from dissector import Delegator, create_lua_valuestring
 
 
 class ConfigError(Exception):
@@ -228,7 +228,7 @@ class Custom(BaseRule):
         field.abbr = self.abbr
         field.base = self.base
         if self.values:
-            field.values = field._dict_to_table(self.values)
+            field.values = create_lua_valuestring(self.values)
         field.mask = self.mask
         field.desc = self.desc
         return field

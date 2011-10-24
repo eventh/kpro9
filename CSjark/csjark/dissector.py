@@ -26,7 +26,7 @@ LUA_KEYWORDS = [
 ]
 
 
-def create_lua_var(self, var, length=None):
+def create_lua_var(var, length=None):
     """Return a valid lua variable name."""
     valid = string.ascii_letters + string.digits + '_'
     if length is None:
@@ -46,6 +46,12 @@ def create_lua_var(self, var, length=None):
         var = '_%s' % var
 
     return var
+
+
+def create_lua_valuestring(py_dict):
+    """Convert a python dictionary to lua table."""
+    return '{%s}' % ', '.join('[%i]="%s"' %
+                (i, j) for i, j in py_dict.items())
 
 
 class Field:
@@ -118,16 +124,11 @@ class Field:
 
         return func_type
 
-    def _dict_to_table(self, pydict):
-        """Convert a python dictionary to lua table."""
-        return '{%s}' % ', '.join('[%i]="%s"' %
-                    (i, j) for i, j in pydict.items())
-
 
 class EnumField(Field):
     def __init__(self, proto, name, type, size, values, strict=True):
         super().__init__(proto, name, type, size)
-        self.values = self._dict_to_table(values)
+        self.values = create_lua_valuestring(values)
         self.strict = strict
         self.keys = ', '.join(str(i) for i in sorted(values.keys()))
         self.func_type = self._get_func_type()
@@ -300,7 +301,7 @@ class BitField(Field):
                 tmp[-(i+k)] = 1
             mask = '0x%x' % int(''.join(str(i) for i in tmp), 2)
 
-            values = self._dict_to_table(values)
+            values = create_lua_valuestring(values)
             data.append(self.create_field(self._bit_var(name), type_,
                     self._bit_abbr(name), name, values=values, mask=mask))
 

@@ -65,7 +65,7 @@ def find_structs(ast, platform=None):
 class StructVisitor(c_ast.NodeVisitor):
     """A class which visit struct nodes in the AST."""
 
-    all_structs = {} # Map struct names and their protocol
+    all_platforms = {}
 
     def __init__(self, platform):
         """Create a new instance to visit all nodes in the AST.
@@ -80,6 +80,9 @@ class StructVisitor(c_ast.NodeVisitor):
         self.enums = {} # All enums encountered in this AST
         self.aliases = {} # Typedefs and their base type
         self.type_decl = [] # Queue of current type declaration
+
+        if self.platform not in self.all_platforms:
+            self.all_platforms[self.platform] = {}
 
     def visit_Struct(self, node):
         """Visit a Struct node in the AST."""
@@ -255,7 +258,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def handle_struct(self, proto, name, protoname):
         """Add an ProtocolField to the protocol."""
-        subproto = self.all_structs[protoname]
+        subproto = self.all_platforms[self.platform][protoname]
         return proto.add_protocol(name,
                     subproto.id, subproto.get_size(), protoname)
 
@@ -287,8 +290,8 @@ class StructVisitor(c_ast.NodeVisitor):
         proto._coord = node.coord
 
         # Disallow structs with same name
-        if node.name in StructVisitor.all_structs:
-            o = StructVisitor.all_structs[node.name]._coord
+        if node.name in StructVisitor.all_platforms[self.platform]:
+            o = StructVisitor.all_platforms[self.platform][node.name]._coord
             if (os.path.normpath(o.file) != os.path.normpath(node.coord.file)
                     or o.line != node.coord.line):
                 raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
@@ -296,7 +299,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Add struct to list of all structs
         self.structs.append(proto)
-        self.all_structs[node.name] = proto
+        self.all_platforms[self.platform][node.name] = proto
 
         return proto
 

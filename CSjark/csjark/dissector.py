@@ -18,11 +18,35 @@ from platform import Platform
 #                "bool", "ipv4", "ipv6", "ether", "oid", "guid"]
 #VALID_PROTOFIELD_TYPES = INT_TYPES + OTHER_TYPES
 
-LUA_KEYWORDS = [ 
+# Reserved keywords in Lua, to avoid using them as variable names
+LUA_KEYWORDS = [
     'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
     'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
     'return', 'then', 'true', 'until', 'while'
 ]
+
+
+def create_lua_var(self, var, length=None):
+    """Return a valid lua variable name."""
+    valid = string.ascii_letters + string.digits + '_'
+    if length is None:
+        length = len(var)
+    var.replace(' ', '_')
+
+    i = 0
+    while i < len(var) and i < length:
+        if var[i] not in valid:
+            var = var[:i] + var[i+1:]
+        elif i == 0 and var[i] in string.digits:
+            var = var[:i] + var[i+1:]
+        else:
+            i += 1
+
+    if var in LUA_KEYWORDS:
+        var = '_%s' % var
+
+    return var
+
 
 class Field:
     """Represents Wireshark's ProtoFields which stores a specific value."""
@@ -34,7 +58,7 @@ class Field:
         self.size = size
 
         self.add_var = self.proto._get_tree_add() # For adding fields to tree
-        self.var = '%s.%s' % (self.proto.field_var, self._create_lua_var(self.name))
+        self.var = '%s.%s' % (self.proto.field_var, create_lua_var(self.name))
         self.abbr = '%s.%s' % (self.proto.name, self.name)
 
         self.base = None # One of 'base.DEC', 'base.HEX' or 'base.OCT'
@@ -98,26 +122,6 @@ class Field:
         """Convert a python dictionary to lua table."""
         return '{%s}' % ', '.join('[%i]="%s"' %
                     (i, j) for i, j in pydict.items())
-
-    def _create_lua_var(self, var, length=None):
-        """Return a valid lua variable name."""
-        valid = string.ascii_letters + string.digits + '_'
-        if length is None:
-            length = len(var)
-        var.replace(' ', '_')
-
-        i = 0
-        while i < len(var) and i < length:
-            if var[i] not in valid:
-                var = var[:i] + var[i+1:]
-            elif i == 0 and var[i] in string.digits:
-                var = var[:i] + var[i+1:]
-            else:
-                i += 1
-        if var in LUA_KEYWORDS:
-            var = '_%s' % (var)
-        return var
-
 
 
 class EnumField(Field):
@@ -269,7 +273,7 @@ class BitField(Field):
         self.bits = bits
 
     def _bit_var(self, name):
-        return '%s_%s' % (self.var, self._create_lua_var(name))
+        return '%s_%s' % (self.var, create_lua_var(name))
 
     def _bit_abbr(self, name):
         return '%s.%s' % (self.abbr, name.replace(' ', '_'))

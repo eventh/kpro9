@@ -127,7 +127,9 @@ class Field:
     def _get_func_type(self):
         """Get the lua function to read values from buffers."""
         func_type = self.type
-        if func_type[-2:] in ('8', '16', '32'):
+        if func_type[-1] == '8':
+            func_type = func_type[:-1]
+        if func_type[-2:] in ('16', '32'):
             func_type = func_type[:-2]
 
         # Endian handling
@@ -146,13 +148,14 @@ class EnumField(Field):
         self.strict = strict
         self.keys = ', '.join(str(i) for i in sorted(values.keys()))
         self.func_type = self._get_func_type()
+        self.tree_var = create_lua_var(self.name)
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
         data = []
 
         # Local var definitions
-        data.append(super().get_code(offset, store=self.name))
+        data.append(super().get_code(offset, store=self.tree_var))
 
         # Add a test which validates the enum value
         if self.strict:
@@ -160,7 +163,7 @@ class EnumField(Field):
             data.append('\tif (test[buffer(%i, %i):%s()] == nil) then' % (
                     offset, self.size, self.func_type))
             data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, "%s")'
-                    % (self.name, 'Invalid value, not in (%s)' % self.keys))
+                    % (self.tree_var, 'Invalid value, not in (%s)' % self.keys))
             data.append('\tend')
 
         return '\n'.join(data)
@@ -621,14 +624,30 @@ class Delegator(Protocol):
         self.id = None
         self.var = create_lua_var('delegator')
 
+        # Should we list all platforms, or only those in self.platforms?
+        #values = {p.flag: p.name for p in self.platforms}
+        values = {p.flag: p.name for name, p in Platform.mappings.items()}
+
         # Add fields, don't change sizes!
         self.add_field('Version', 'uint8', 1)
-        self.add_enum('Flags', 'uint8', 1, {})
+        self.add_enum('Flags', 'uint8', 1, values)
         self.add_enum('Message', 'uint16', 2, {})
         self.add_field('Message length', 'uint32', 4)
+        self._version, self._flags, self._msg_id, self._length = self.fields
 
-    def create(self):
+    def create(self, all_protocols):
         """Returns all the code for dissecting this protocol."""
+        # Update Message id valuestring and keys
+        messages = {}
+        for plat, protocols in all_protocols.items():
+            for name, proto in protocols.items():
+                if proto.id is not None:
+                    messages[proto.id] = name
+
+        self._msg_id.values = create_lua_valuestring(messages)
+        self._msg_id.keys = ', '.join(str(i) for i in sorted(messages.keys()))
+
+        # Create dissector content
         self._header_defintion()
         self._fields_definition()
         self._dissector_func()
@@ -650,6 +669,7 @@ class Delegator(Protocol):
 
     def _dissector_func(self):
         """Add the code for the dissector function for the protocol."""
+        # Add dissector function
         self.data.append('-- Delegator dissector function for %s' % self.name)
         self.data.append('function delegator.dissector(buffer, pinfo, tree)')
         self.data.append('\tlocal subtree = tree:add(delegator, buffer())')
@@ -657,28 +677,22 @@ class Delegator(Protocol):
         self.data.append('\tpinfo.cols.info = delegator.description\n')
 
         # Fields code
-        self.data.append(self.fields[0].get_code(0))
-        self.data.append(self.fields[1].get_code(1))
-        self.data.append(self.fields[2].get_code(2, store='mi'))
-        self.data.append(self.fields[3].get_code(4))
+        self.data.append(self._version.get_code(0))
+        self.data.append(self._flags.get_code(1))
+        self.data.append(self._msg_id.get_code(2))
+        self.data.append(self._length.get_code(4))
 
         # Store buffer values in variables
         flags_var = create_lua_var('flags')
-        msg_var = create_lua_var('message')
-        self.data.append('\t' + self.fields[1]._create_value_var(flags_var))
-        self.data.append('\t' + self.fields[2]._create_value_var(msg_var))
+        msg_var = create_lua_var('message_id')
+        self.data.append('\t' + self._flags._create_value_var(flags_var))
+        self.data.append('\t' + self._msg_id._create_value_var(msg_var))
+        self.data.append('')
 
         # Find message id and call right dissector
-        t1 = '\t{tree}:append_text(" (" .. tostring({table}:'\
-                'get_dissector({msg})) .. ")")'
-        t2 = '\tsubtree:add(f.messagelength, buffer(4):len()):set_generated()'
-        t3 = '\t{table}:try({msg}, buffer(4):tvb(), pinfo, tree)'
-
-        self.data.append(t1.format(tree=create_lua_var('mi'),
-                         table=self.dissector_table, msg=msg_var))
-        self.data.append('')
-        self.data.append(t2)
-        self.data.append(t3.format(table=self.dissector_table, msg=msg_var))
-
+        t1 = '\tsubtree:add(f.messagelength, buffer(4):len()):set_generated()'
+        t2 = '\t{table}:try({msg}, buffer(4):tvb(), pinfo, tree)'
+        self.data.append(t1)
+        self.data.append(t2.format(table=self.dissector_table, msg=msg_var))
         self.data.append('end')
 

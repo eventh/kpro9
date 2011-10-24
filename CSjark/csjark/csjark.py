@@ -215,7 +215,7 @@ def write_delegator_to_file():
         filename = '%s/%s' % (Options.output_dir, filename)
 
     with open(filename, 'w') as f:
-        f.write(Options.delegator.create())
+        f.write(Options.delegator.create(cparser.StructVisitor.all_platforms))
 
 
 def main():

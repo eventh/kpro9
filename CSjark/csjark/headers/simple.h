@@ -18,7 +18,7 @@ struct basic {
     signed int tester;
 
     // Single and double precision
-    float value;
-    double twice;
+    float in;
+    double end;
     //long double car;
 };

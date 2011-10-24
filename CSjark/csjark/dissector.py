@@ -18,6 +18,11 @@ from platform import Platform
 #                "bool", "ipv4", "ipv6", "ether", "oid", "guid"]
 #VALID_PROTOFIELD_TYPES = INT_TYPES + OTHER_TYPES
 
+LUA_KEYWORDS = [ 
+    'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
+    'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
+    'return', 'then', 'true', 'until', 'while'
+]
 
 class Field:
     """Represents Wireshark's ProtoFields which stores a specific value."""
@@ -29,7 +34,7 @@ class Field:
         self.size = size
 
         self.add_var = self.proto._get_tree_add() # For adding fields to tree
-        self.var = '%s.%s' % (self.proto.field_var, self.name)
+        self.var = '%s.%s' % (self.proto.field_var, self._create_lua_var(self.name))
         self.abbr = '%s.%s' % (self.proto.name, self.name)
 
         self.base = None # One of 'base.DEC', 'base.HEX' or 'base.OCT'
@@ -109,6 +114,8 @@ class Field:
                 var = var[:i] + var[i+1:]
             else:
                 i += 1
+        if var in LUA_KEYWORDS:
+            var = '_%s' % (var)
         return var
 
 

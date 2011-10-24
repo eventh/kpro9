@@ -4,9 +4,10 @@ A module for creating Wireshark dissectors from C structs.
 
 Usage:
 ---------
-usage: csjark.py [-h] [-v] [-d] [-n] [-i [header [header ...]]]
-                 [-c [config [config ...]]] [-o [output]]
-                 [header] [config]
+csjark.py [-h] [-v] [-d] [-n] [-I [include [include ...]]]
+          [-i [header [header ...]]] [-c [config [config ...]]]
+          [-o [output]]
+          [header] [config]
 
 Generate Wireshark dissectors from C structs.
 
@@ -19,6 +20,8 @@ optional arguments:
   -v, --verbose         print detailed information
   -d, --debug           print debugging information
   -n, --nocpp           disable C preprocessor
+  -I [include [include ...]], --Include [include [include ...]]
+                        C preprocessor includes
   -i [header [header ...]], --input [header [header ...]]
                         C file(s) to parse
   -c [config [config ...]], --config [config [config ...]]
@@ -64,13 +67,17 @@ def parse_args(args=None):
     parser.add_argument('-n', '--nocpp', action='store_false', dest='nocpp',
             default=Options.use_cpp, help='disable C preprocessor')
 
+    # CPP include arguments
+    parser.add_argument('-I', '--Include', metavar='include',
+            default=[], nargs='*', help='C preprocessor includes')
+
     # A list of C header files
     parser.add_argument('-i', '--input', metavar='header',
             default=[], nargs='*', help='C file(s) to parse')
 
     # Configuration file
     parser.add_argument('-c', '--config', metavar='config', dest='configs',
-             default=[], nargs='*', help='configuration file(s) to parse')
+            default=[], nargs='*', help='configuration file(s) to parse')
 
     # Write output to destination file
     parser.add_argument('-o', '--output', metavar='output',
@@ -86,6 +93,7 @@ def parse_args(args=None):
     Options.verbose = namespace.verbose
     Options.debug = namespace.debug
     Options.use_cpp = namespace.nocpp
+    Options.cpp_includes = namespace.Include
 
     headers = namespace.input
     if namespace.header:

@@ -48,11 +48,16 @@ def create_lua_var(var, length=None):
     return var.lower()
 
 
-def create_lua_valuestring(dict_):
+def create_lua_valuestring(dict_, wrap=True):
     """Convert a python dictionary to lua table."""
     if not dict_:
         return 'nil'
-    return '{%s}' % ', '.join('[%i]="%s"' % (i, j) for i, j in dict_.items())
+
+    items = dict_.items()
+    if wrap:
+        items = [(i, '"%s"' % j) for i, j in items]
+
+    return '{%s}' % ', '.join('[%i]=%s' % (i, j) for i, j in items)
 
 
 class Field:
@@ -431,10 +436,10 @@ class Protocol:
 
         self.fields = []
         self.data = []
-        self.var = 'proto_{name}'.format(name=self.name)
+        self.var = create_lua_var('proto_%s' % self.name)
         self.field_var = 'f'
         self.dissector = 'luastructs.message'
-        self.dissector_table = 'luastructs_dt'
+        self.dis_table = 'luastructs_dt'
 
     def create(self):
         """Returns all the code for dissecting this protocol."""
@@ -444,9 +449,9 @@ class Protocol:
         self._dissector_func()
 
         # Add code for registering the protocol
-        end = 'luastructs_dt:add({id}, {var})\n'
-        self.data.append(end.format(id=self.id, var=self.var))
-        self.data.append('')
+        end = '{table}:add({id}, {var})\n\n'
+        self.data.append(end.format(table=self.dis_table,
+                         id=self.id, var=self.var))
 
         return '\n'.join(self.data)
 
@@ -500,7 +505,7 @@ class Protocol:
 
         table = 'local {table} = DissectorTable.get("{dissector}")'
         self.data.append(table.format(dissector=self.dissector,
-                                      table=self.dissector_table))
+                                      table=self.dis_table))
         self.data.append('')
 
     def _fields_definition(self):
@@ -532,16 +537,15 @@ class Protocol:
         self.data.append('-- Dissector function for struct: %s' % self.name)
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
         sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
-        dissector_def_name_check = '\tif pinfo.private.struct_def_name then\n' \
-            '\t\tsubtree:set_text(' \
-            'pinfo.private.struct_def_name .. ": " .. {var}.description)\n' \
-            '\t\tpinfo.private.struct_def_name = nil\n\tend\n'
+        name_check = '\tif pinfo.private.struct_def_name then\n\t\t'\
+            'subtree:set_text(pinfo.private.struct_def_name .. ": " .. {var}.'\
+            'description)\n\t\tpinfo.private.struct_def_name = nil\n\tend\n'
         desc = '\tpinfo.cols.info:append(" (" .. {var}.description .. ")")'
 
         self.data.append(func_diss.format(var=self.var))
-        self.data.append(sub_tree.format(add=self._get_tree_add(),
-                                         var=self.var))
-        self.data.append(dissector_def_name_check.format(var=self.var))
+        self.data.append(sub_tree.format(
+                add=self._get_tree_add(), var=self.var))
+        self.data.append(name_check.format(var=self.var))
         self.data.append(desc.format(var=self.var))
         self.data.append('')
 
@@ -645,18 +649,14 @@ class Delegator(Protocol):
 
     def __init__(self, platforms):
         self.platforms = platforms
-        self.platform = Platform.mappings[''] # Default is big endian
-        super().__init__('luastructs', None, self.platform)
+        super().__init__('luastructs', None, Platform.mappings['default'])
 
         self.description = 'Lua C Structs'
         self.id = None
         self.var = create_lua_var('delegator')
 
-        # Should we list all platforms, or only those in self.platforms?
-        #values = {p.flag: p.name for p in self.platforms}
-        values = {p.flag: p.name for name, p in Platform.mappings.items()}
-
         # Add fields, don't change sizes!
+        values = {p.flag: p.name for name, p in self.platforms.items()}
         self.add_field('Version', 'uint8', 1)
         self.add_enum('Flags', 'uint8', 1, values)
         self.add_enum('Message', 'uint16', 2, {})
@@ -686,13 +686,17 @@ class Delegator(Protocol):
         """Add the code for the header of the protocol."""
         self.data.append('-- Delegator for %s dissectors' % self.name)
 
+        # Create the different dissector tables
+        for name, p in self.platforms.items():
+            p._var = create_lua_var('dt_%s' % name)
+            t = 'local {var} = DissectorTable.new("{short}", "{name}", FT_STRING)'
+            self.data.append(t.format(var=p._var, short=p.dt_name,
+                                      name='Lua Structs (%s)' % p.name))
+
+        # Create the delegator dissector
         proto = 'local {var} = Proto("{name}", "{description}")'
         self.data.append(proto.format(var=self.var, name=self.name,
                                       description=self.description))
-
-        table = 'local {table} = DissectorTable.new("{dissector}", "LUASTRUCTS")'
-        self.data.append(table.format(dissector=self.dissector,
-                                      table=self.dissector_table))
         self.data.append('')
 
     def _dissector_func(self):
@@ -717,9 +721,12 @@ class Delegator(Protocol):
         self.data.append('')
 
         # Find message id and call right dissector
+        tables = {p.flag: p._var for name, p in self.platforms.items()}
         t1 = '\tsubtree:add(f.messagelength, buffer(4):len()):set_generated()'
-        t2 = '\t{table}:try({msg}, buffer(4):tvb(), pinfo, tree)'
+        t2 = '\tlocal tables = %s' % create_lua_valuestring(tables, wrap=False)
+        t3 = '\ttables[{flag}]:try({msg}, buffer(4):tvb(), pinfo, tree)'
         self.data.append(t1)
-        self.data.append(t2.format(table=self.dissector_table, msg=msg_var))
+        self.data.append(t2)
+        self.data.append(t3.format(flag=flags_var, msg=msg_var))
         self.data.append('end')
 

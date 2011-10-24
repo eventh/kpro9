@@ -35,6 +35,7 @@ class Platform:
         self.endian = endian
         self.macros = macros
         self.types = dict(DEFAULT_C_TYPE_MAP)
+        self.dt_name = 'luastructs.%s' % self.name # Dissector table name
 
         # Extend sizes with missing types from default size map
         self.sizes = dict(DEFAULT_C_SIZE_MAP)
@@ -163,7 +164,7 @@ SPARC_MACROS = ['__sparc__', '__sparc', '__sparcv8', '__sparcv9']
 # Register different platforms
 
 # Default platform
-Platform('', 0, Platform.big)
+Platform('default', 0, Platform.big)
 
 # Windows 32 bit
 Platform('win32', 1, Platform.little, macros=WIN32_MACROS+X86_MACROS)

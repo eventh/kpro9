@@ -56,7 +56,7 @@ def parse(text, filename=''):
 def find_structs(ast, platform=None):
     """Walks the AST nodes to find structs."""
     if platform is None:
-        platform = Platform.mappings[''] # Use default platform
+        platform = Platform.mappings['default']
     visitor = StructVisitor(platform)
     visitor.visit(ast)
     return visitor.structs

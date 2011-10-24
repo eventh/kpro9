@@ -391,7 +391,7 @@ class RangeField(Field):
             data.append('\tif (buffer(%i, %i):%s() %s %s) then' %
                     (offset, self.size, self.func_type, test, value))
             data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, '
-                            '"Should be %s %s")' % (self.name, warn, value))
+                            '"Should be %s %s")' % (create_lua_var(self.name), warn, value))
             data.append('\tend')
 
         if self.min is not None:

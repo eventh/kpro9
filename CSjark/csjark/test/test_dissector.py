@@ -54,6 +54,46 @@ def enum_code(field):
     ''')
 
 
+# Test Lua Keywords
+luakeywords = Tests()
+
+@luakeywords.context
+def create_luakeywords_field():
+    """Create a Protocol instance with some fields."""
+    proto = dissector.Protocol('test', None)
+    proto.add_enum('elseif', 'int32', 4, dict(enumerate('VWXYZ')))
+    proto.add_field('in', 'float', 4)
+    yield proto.fields[0], proto.fields[1]
+    del proto
+
+@luakeywords.test
+def luakeywords_def(field1, field2):
+    """Test that Lua keyword handling generates valid defintion code."""
+    assert field1 and field2
+    assert compare_lua(field1.get_definition(), '''
+    f._elseif = ProtoField.int32("test.elseif", "elseif",
+        nil, {[0]="V", [1]="W", [2]="X", [3]="Y", [4]="Z"})
+    ''')
+    assert compare_lua(field2.get_definition(), '''
+    f._in = ProtoField.float("test.in", "in")
+    ''')
+
+@luakeywords.test
+def luakeywords_code(field1, field2):
+    """Test that the Lua keywords are handled."""
+    assert compare_lua(field1.get_code(0), '''
+    local _elseif = subtree:add(f._elseif, buffer(0, 4))
+    local test = {[0]="V", [1]="W", [2]="X", [3]="Y", [4]="Z"}
+    if (test[buffer(0, 4):int()] == nil) then
+        elseif:add_expert_info(PI_MALFORMED, PI_WARN,
+            "Invalid value, not in (0, 1, 2, 3, 4)")
+    end
+    ''')
+    assert compare_lua(field2.get_code(0), '''
+    subtree:add(f._in, buffer(0, 4))
+    ''')
+
+	
 # Test ArrayField
 arrays = Tests()
 

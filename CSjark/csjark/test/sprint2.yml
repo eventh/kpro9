@@ -60,6 +60,10 @@ Structs:
         min: 0
         max: 100
 
+  - name: struct_within_struct_test
+    id: 12
+    description: Struct in struct test
+
   - name: trailer_test
     id: 66
     trailers:

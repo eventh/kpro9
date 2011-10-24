@@ -56,6 +56,11 @@ struct range_test {
     int age;
 };
 
+struct struct_within_struct_test {
+    int prime;
+    struct cenum_test astruct;
+};
+
 struct trailer_test {
     float tmp[5];
     int asn1_count;

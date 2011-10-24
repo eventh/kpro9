@@ -346,10 +346,10 @@ class Options:
 
         # Add the default platform, as we failed the previous step
         if not cls.platforms:
-            cls.platforms.add(Platform.mappings[''])
+            cls.platforms.add(Platform.mappings['default'])
 
         # Delegator creates lua file which delegates messages to dissectors
-        cls.delegator = Delegator(cls.platforms)
+        cls.delegator = Delegator(Platform.mappings)
 
     @classmethod
     def handle_protocol_config(cls, obj, filename=''):

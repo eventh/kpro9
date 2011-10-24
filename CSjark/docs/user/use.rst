@@ -4,11 +4,11 @@ Using CSjark
 
 CSjark can be invoked by running the ``csjark.py`` script. The arguments must be specified according to: ::
 
-    csjark.py [-h] [-verbose] [-debug] [-nocpp]
-              [-Include [include [include ...]]]
-              [-input [header [header ...]]]
-              [-config [config [config ...]]]
-              [-output [output]]
+    csjark.py [--help] [--verbose] [--debug] [--nocpp]
+              [--Include [include [include ...]]]
+              [--input [header [header ...]]]
+              [--config [config [config ...]]]
+              [--output [output]]
               [header] [config]
 
 The arguments here specify the following:

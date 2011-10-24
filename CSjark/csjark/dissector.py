@@ -151,7 +151,7 @@ class EnumField(Field):
 
         # Local var definitions
         t = '\tlocal {name} = subtree:{add}({var}, buffer({offset}, {size}))'
-        data.append(t.format(name=self.name, add=self.add_var, var=self.var,
+        data.append(t.format(name=create_lua_var(self.name), add=self.add_var, var=self.var,
                              offset=offset, size=self.size))
 
         # Add a test which validates the enum value
@@ -347,7 +347,7 @@ class RangeField(Field):
 
         # Local var definitions
         t = '\tlocal {name} = subtree:{add}({var}, buffer({off}, {size}))'
-        data.append(t.format(var=self.var, name=self.name,
+        data.append(t.format(var=self.var, name=create_lua_var(self.name),
                              add=self.add_var, off=offset, size=self.size))
 
         # Test the value

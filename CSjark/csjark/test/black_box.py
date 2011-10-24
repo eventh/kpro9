@@ -235,20 +235,19 @@ def cenums(structs):
     -- ProtoField defintions for struct: cenum_test
     local f = proto_cenum_test.fields
     f.id = ProtoField.int32("cenum_test.id", "id")
-    f.mnd = ProtoField.uint32("cenum_test.mnd", "mnd", nil, {[1]="JAN", [2]="FEB",
-    [3]="MAR", [4]="APR", [5]="MAY", [6]="JUN", [7]="JUL", [8]="AUG", [9]="SEP", [10]="OCT", [11]="NOV", [20]="DEC"})
+    local mnd_values = {[1]="JAN", [2]="FEB", [3]="MAR", [4]="APR", [5]="MAY", [6]="JUN", [7]="JUL", [8]="AUG", [9]="SEP", [10]="OCT", [11]="NOV", [20]="DEC"}
+    f.mnd = ProtoField.uint32("cenum_test.mnd", "mnd", nil, mnd_values)
     -- Dissector function for struct: cenum_test
     function proto_cenum_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_cenum_test, buffer())
-    if pinfo.private.struct_def_name then 
+    if pinfo.private.struct_def_name then
     subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_cenum_test.description)
     pinfo.private.struct_def_name = nil
     end
     pinfo.cols.info:append(" (" .. proto_cenum_test.description .. ")")
     subtree:add(f.id, buffer(0, 4))
     local mnd = subtree:add(f.mnd, buffer(4, 4))
-    local test = {[1]="JAN", [2]="FEB", [3]="MAR", [4]="APR", [5]="MAY", [6]="JUN", [7]="JUL", [8]="AUG", [9]="SEP", [10]="OCT", [11]="NOV", [20]="DEC"}
-    if (test[buffer(4, 4):uint()] == nil) then
+    if (mnd_values[buffer(4, 4):uint()] == nil) then
     mnd:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20)")
     end
     end
@@ -273,7 +272,8 @@ def custom(structs):
     f.rel = ProtoField.relative_time("None", "rel")
     f.bol = ProtoField.bool("bool", "bol")
     f.all = ProtoField.uint32("all.all", "all", base.HEX, {[0]="Monday", [1]="Tuesday"}, nil, "This is something dark side!")
-    f.truth = ProtoField.uint32("custom_lua.truth", "truth", nil, {[0]="TRUE", [1]="FALSE"})
+    local truth_values = {[0]="TRUE", [1]="FALSE"}
+    f.truth = ProtoField.uint32("custom_lua.truth", "truth", nil, truth_values)
     -- Array definition for five
     f.five_0 = ProtoField.bytes("custom_lua.five", "five")
     f.five_1 = ProtoField.bytes("custom_lua.five", "five")
@@ -308,9 +308,9 @@ def custom(structs):
     -- Dissector function for struct: custom_lua
     function proto_custom_lua.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_custom_lua, buffer())
-    if pinfo.private.struct_def_name then 
-    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_custom_lua.description)
-    pinfo.private.struct_def_name = nil
+    if pinfo.private.struct_def_name then
+        subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_custom_lua.description)
+        pinfo.private.struct_def_name = nil
     end
     pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
     subtree:add(f.normal, buffer(0, 2))
@@ -320,9 +320,8 @@ def custom(structs):
     subtree:add(f.bol, buffer(18, 4))
     subtree:add(f.all, buffer(22, 4))
     local truth = subtree:add(f.truth, buffer(26, 4))
-    local test = {[0]="TRUE", [1]="FALSE"}
-    if (test[buffer(26, 4):uint()] == nil) then
-    truth:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1)")
+    if (truth_values[buffer(26, 4):uint()] == nil) then
+        truth:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1)")
     end
     -- Array handling for five
     local arraytree = subtree:add(f.five_0, buffer(30, 20))
@@ -372,32 +371,32 @@ def enums(structs):
     local luastructs_dt = DissectorTable.get("luastructs.message")
     -- ProtoField defintions for struct: enum_test
     local f = proto_enum_test.fields
-    f.id = ProtoField.int32("enum_test.id", "id", nil, {[0]="Zero", [1]="One", [2]="Two", [3]="Three", [4]="Four", [5]="Five"})
+    local id_values = {[0]="Zero", [1]="One", [2]="Two", [3]="Three", [4]="Four", [5]="Five"}
+    f.id = ProtoField.int32("enum_test.id", "id", nil, id_values)
     f.name = ProtoField.string("enum_test.name", "name")
-    f.weekday = ProtoField.int32("enum_test.weekday", "weekday", nil, {[1]="MONDAY", [2]="TUESDAY", [3]="WEDNESDAY", [4]="THURSDAY", [5]="FRIDAY", [6]="SATURDAY", [7]="SUNDAY"})
-    f.number = ProtoField.int32("enum_test.number", "number", nil, {[0]="Zero", [1]="One", [2]="Two", [3]="Three", [4]="Four", [5]="Five"})
+    local weekday_values = {[1]="MONDAY", [2]="TUESDAY", [3]="WEDNESDAY", [4]="THURSDAY", [5]="FRIDAY", [6]="SATURDAY", [7]="SUNDAY"}
+    f.weekday = ProtoField.int32("enum_test.weekday", "weekday", nil, weekday_values)
+    local number_values = {[0]="Zero", [1]="One", [2]="Two", [3]="Three", [4]="Four", [5]="Five"}
+    f.number = ProtoField.int32("enum_test.number", "number", nil, number_values)
     -- Dissector function for struct: enum_test
     function proto_enum_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_enum_test, buffer())
-    if pinfo.private.struct_def_name then 
+    if pinfo.private.struct_def_name then
     subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_enum_test.description)
     pinfo.private.struct_def_name = nil
     end
     pinfo.cols.info:append(" (" .. proto_enum_test.description .. ")")
     local id = subtree:add(f.id, buffer(0, 4))
-    local test = {[0]="Zero", [1]="One", [2]="Two", [3]="Three", [4]="Four", [5]="Five"}
-    if (test[buffer(0, 4):int()] == nil) then
+    if (id_values[buffer(0, 4):int()] == nil) then
     id:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1, 2, 3, 4, 5)")
     end
     subtree:add(f.name, buffer(4, 10))
     local weekday = subtree:add(f.weekday, buffer(14, 4))
-    local test = {[1]="MONDAY", [2]="TUESDAY", [3]="WEDNESDAY", [4]="THURSDAY", [5]="FRIDAY", [6]="SATURDAY", [7]="SUNDAY"}
-    if (test[buffer(14, 4):int()] == nil) then
+    if (weekday_values[buffer(14, 4):int()] == nil) then
     weekday:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (1, 2, 3, 4, 5, 6, 7)")
     end
     local number = subtree:add(f.number, buffer(18, 4))
-    local test = {[0]="Zero", [1]="One", [2]="Two", [3]="Three", [4]="Four", [5]="Five"}
-    if (test[buffer(18, 4):int()] == nil) then
+    if (number_values[buffer(18, 4):int()] == nil) then
     number:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1, 2, 3, 4, 5)")
     end
     end

@@ -183,21 +183,21 @@ def bitfield_def(one, two):
     assert compare_lua(one.get_definition(), '''
     -- Bitstring definitions for bit1
     f.bit1 = ProtoField.uint32("test.bit1", "bit1 (bitstring)", base.HEX)
-    f.bit1_R = ProtoField.uint32("test.bit1.R",
+    f.bit1_r = ProtoField.uint32("test.bit1.R",
             "R", nil, {[0]="No", [1]="Yes"}, 0x1)
-    f.bit1_B = ProtoField.uint32("test.bit1.B",
+    f.bit1_b = ProtoField.uint32("test.bit1.B",
             "B", nil, {[0]="No", [1]="Yes"}, 0x2)
-    f.bit1_G = ProtoField.uint32("test.bit1.G",
+    f.bit1_g = ProtoField.uint32("test.bit1.G",
             "G", nil, {[0]="No", [1]="Yes"}, 0x4)
     ''')
     assert compare_lua(two.get_definition(), '''
     -- Bitstring definitions for bit2
     f.bit2 = ProtoField.uint16("test.bit2", "bit2 (bitstring)", base.HEX)
-    f.bit2_R = ProtoField.uint16("test.bit2.R",
+    f.bit2_r = ProtoField.uint16("test.bit2.R",
             "R", nil, {[0]="No", [1]="Yes"}, 0x1)
-    f.bit2_B = ProtoField.uint16("test.bit2.B",
+    f.bit2_b = ProtoField.uint16("test.bit2.B",
             "B", nil, {[0]="No", [1]="Yes"}, 0x2)
-    f.bit2_G = ProtoField.uint16("test.bit2.G",
+    f.bit2_g = ProtoField.uint16("test.bit2.G",
             "G", nil, {[0]="No", [1]="Yes"}, 0x4)
     ''')
 
@@ -207,16 +207,16 @@ def bitfield_code(one, two):
     assert compare_lua(one.get_code(0), '''
     -- Bitstring handling for bit1
     local bittree = subtree:add(f.bit1, buffer(0, 4))
-    bittree:add(f.bit1_R, buffer(0, 4))
-    bittree:add(f.bit1_B, buffer(0, 4))
-    bittree:add(f.bit1_G, buffer(0, 4))
+    bittree:add(f.bit1_r, buffer(0, 4))
+    bittree:add(f.bit1_b, buffer(0, 4))
+    bittree:add(f.bit1_g, buffer(0, 4))
     ''')
     assert compare_lua(two.get_code(4), '''
     -- Bitstring handling for bit2
     local bittree = subtree:add(f.bit2, buffer(4, 2))
-    bittree:add(f.bit2_R, buffer(4, 2))
-    bittree:add(f.bit2_B, buffer(4, 2))
-    bittree:add(f.bit2_G, buffer(4, 2))
+    bittree:add(f.bit2_r, buffer(4, 2))
+    bittree:add(f.bit2_b, buffer(4, 2))
+    bittree:add(f.bit2_g, buffer(4, 2))
     ''')
 
 

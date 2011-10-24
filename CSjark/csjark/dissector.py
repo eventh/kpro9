@@ -45,13 +45,12 @@ def create_lua_var(var, length=None):
     if var in LUA_KEYWORDS:
         var = '_%s' % var
 
-    return var
+    return var.lower()
 
 
-def create_lua_valuestring(py_dict):
+def create_lua_valuestring(dict_):
     """Convert a python dictionary to lua table."""
-    return '{%s}' % ', '.join('[%i]="%s"' %
-                (i, j) for i, j in py_dict.items())
+    return '{%s}' % ', '.join('[%i]="%s"' % (i, j) for i, j in dict_.items())
 
 
 class Field:
@@ -65,7 +64,7 @@ class Field:
 
         self.add_var = self.proto._get_tree_add() # For adding fields to tree
         self.var = '%s.%s' % (self.proto.field_var, create_lua_var(self.name))
-        self.abbr = '%s.%s' % (self.proto.name, self.name)
+        self.abbr = '%s.%s' % (self.proto.name, self.name.replace(' ', '_'))
 
         self.base = None # One of 'base.DEC', 'base.HEX' or 'base.OCT'
         self.values = None # Dict with the text that corresponds to the values
@@ -98,17 +97,30 @@ class Field:
 
         return template.format(**args)
 
+    def create_value_var(self, var, offset=None):
+        """Create code which stores the field value in 'var'.
+
+        If 'offset' is not provided, must be run after get_code().
+        """
+        if offset is None:
+            offset = self.offset
+        store = 'local {var} = buffer({offset}, {size}):{type}()'
+        return store.format(var=create_lua_var(var), offset=offset,
+                            size=self.size, type=self._get_func_type())
+
     def get_definition(self):
         """Get the ProtoField definition for this field."""
         return self.create_field(self.var, self.type, self.abbr,
                 self.name, self.base, self.values, self.mask, self.desc)
 
-    def get_code(self, offset):
+    def get_code(self, offset, store=''):
         """Get the code for dissecting this field."""
+        if store:
+            store = 'local {var} = '.format(var=create_lua_var(store))
         self.offset = offset
-        t = '\tsubtree:{add}({var}, buffer({offset}, {size}))'
-        return t.format(add=self.add_var, var=self.var,
-                        offset=offset, size=self.size)
+        t = '\t{store}subtree:{add}({var}, buffer({offset}, {size}))'
+        return t.format(store=store, add=self.add_var,
+                        var=self.var, offset=offset, size=self.size)
 
     def _get_func_type(self):
         """Get the lua function to read values from buffers."""
@@ -403,7 +415,7 @@ class Protocol:
         # Add code for registering the protocol
         end = 'luastructs_dt:add({id}, {var})\n'
         self.data.append(end.format(id=self.id, var=self.var))
-        self.data.append('')
+        self.data.append('\n')
 
         return '\n'.join(self.data)
 
@@ -471,6 +483,18 @@ class Protocol:
                 self.data.append(code)
         self.data.append('')
 
+    def _fields_code(self):
+        """Add the code from each field into dissector function."""
+        offset = 0
+        for field in self.fields:
+            code = field.get_code(offset)
+            if self.conf and self.conf.cnf:
+                code = self._cnf_field_code(field, code)
+            if code:
+                self.data.append(code)
+            if field.size is not None:
+                offset += field.size
+
     def _dissector_func(self):
         """Add the code for the dissector function for the protocol."""
         self.data.append('-- Dissector function for struct: %s' % self.name)
@@ -489,15 +513,7 @@ class Protocol:
         self.data.append(desc.format(var=self.var))
         self.data.append('')
 
-        offset = 0
-        for field in self.fields:
-            code = field.get_code(offset)
-            if self.conf and self.conf.cnf:
-                code = self._cnf_field_code(field, code)
-            if code:
-                self.data.append(code)
-            if field.size is not None:
-                offset += field.size
+        self._fields_code()
 
         # Delegate rest of buffer to any trailing protocols
         if self.conf and self.conf.trailers:
@@ -583,7 +599,7 @@ class Protocol:
         return 'add'
 
 
-class Delegator:
+class Delegator(Protocol):
     """A class for delegating dissecting to protocols.
 
     Creates the top-level lua dissector which delegates the task
@@ -597,33 +613,71 @@ class Delegator:
 
     def __init__(self, platforms):
         self.platforms = platforms
+        self.platform = Platform.mappings[''] # Default is big endian
+        super().__init__('luastructs', None, self.platform)
+
+        self.description = 'Lua C Structs'
+        self.id = None
+        self.var = create_lua_var('delegator')
+
+        # Add fields, don't change sizes!
+        self.add_field('Version', 'uint8', 1)
+        self.add_field('Flags', 'uint8', 1)
+        self.add_field('Message', 'uint16', 2)
+        self.add_field('Message length', 'uint32', 4)
 
     def create(self):
-        t = """\
-local delegator = Proto("luastructs", "Lua C Structs")
-local dissector_table = DissectorTable.new("luastructs.message", "LUASTRUCTS")
+        """Returns all the code for dissecting this protocol."""
+        self._header_defintion()
+        self._fields_definition()
+        self._dissector_func()
+        self.data.append('\n')
+        return '\n'.join(self.data)
 
-local f = delegator.fields
-f.version = ProtoField.uint8("luastructs.version", "Version")
-f.flags = ProtoField.uint8("luastructs.flags", "Flags")
-f.message = ProtoField.uint16("luastructs.message", "Message")
-f.length = ProtoField.uint32("luastructs.length", "Message length")
+    def _header_defintion(self):
+        """Add the code for the header of the protocol."""
+        self.data.append('-- Delegator for %s dissectors' % self.name)
 
-function delegator.dissector(buffer, pinfo, tree)
-   local subtree = tree:add(delegator, buffer())
-   pinfo.cols.protocol = delegator.name
-   pinfo.cols.info = delegator.description
+        proto = 'local {var} = Proto("{name}", "{description}")'
+        self.data.append(proto.format(var=self.var, name=self.name,
+                                      description=self.description))
 
-   subtree:add (f.version, buffer(0,1))
-   flags = buffer(1,1):uint()
-   subtree:add (f.flags, buffer(1,1))
+        table = 'local {table} = DissectorTable.new("{dissector}", "LUASTRUCTS")'
+        self.data.append(table.format(dissector=self.dissector,
+                                      table=self.dissector_table))
+        self.data.append('')
 
-   local message = buffer(2,2):uint()
-   local mi = subtree:add(f.message, buffer(2,2))
-   mi:append_text (" (" .. tostring (dissector_table:get_dissector (message)) .. ")")
+    def _dissector_func(self):
+        """Add the code for the dissector function for the protocol."""
+        self.data.append('-- Delegator dissector function for %s' % self.name)
+        self.data.append('function delegator.dissector(buffer, pinfo, tree)')
+        self.data.append('\tlocal subtree = tree:add(delegator, buffer())')
+        self.data.append('\tpinfo.cols.protocol = delegator.name')
+        self.data.append('\tpinfo.cols.info = delegator.description\n')
 
-   subtree:add (f.length, buffer(4):len()):set_generated()
-   dissector_table:try (message, buffer(4):tvb(), pinfo, tree)
-end"""
-        return t
+        # Fields code
+        self.data.append(self.fields[0].get_code(0))
+        self.data.append(self.fields[1].get_code(1))
+        self.data.append(self.fields[2].get_code(2, store='mi'))
+        self.data.append(self.fields[3].get_code(4))
+
+        # Store buffer values in variables
+        flags_var = create_lua_var('flags')
+        msg_var = create_lua_var('message')
+        self.data.append('\t' + self.fields[1].create_value_var(flags_var))
+        self.data.append('\t' + self.fields[2].create_value_var(msg_var))
+
+        # Find message id and call right dissector
+        t1 = '\t{tree}:append_text(" (" .. tostring({table}:'\
+                'get_dissector({msg})) .. ")")'
+        t2 = '\tsubtree:add(f.messagelength, buffer(4):len()):set_generated()'
+        t3 = '\t{table}:try({msg}, buffer(4):tvb(), pinfo, tree)'
+
+        self.data.append(t1.format(tree=create_lua_var('mi'),
+                         table=self.dissector_table, msg=msg_var))
+        self.data.append('')
+        self.data.append(t2)
+        self.data.append(t3.format(table=self.dissector_table, msg=msg_var))
+
+        self.data.append('end')
 

@@ -179,24 +179,24 @@ def bitstrings(structs):
     f.id = ProtoField.int32("bitstring_test.id", "id")
     -- Bitstring definitions for flags
     f.flags = ProtoField.uint32("bitstring_test.flags", "flags (bitstring)", base.HEX)
-    f.flags_Inuse = ProtoField.uint32("bitstring_test.flags.In_use", "In use", nil, {[0]="No", [1]="Yes"}, 0x1)
-    f.flags_Endian = ProtoField.uint32("bitstring_test.flags.Endian", "Endian", nil, {[0]="Big", [1]="Little"}, 0x2)
-    f.flags_Platform = ProtoField.uint32("bitstring_test.flags.Platform", "Platform", nil, {[0]="Win", [1]="Linux", [2]="Mac", [3]="Solaris"}, 0xc)
-    f.flags_Test = ProtoField.uint32("bitstring_test.flags.Test", "Test", nil, {[0]="No", [1]="Yes"}, 0x10)
+    f.flags_inuse = ProtoField.uint32("bitstring_test.flags.In_use", "In use", nil, {[0]="No", [1]="Yes"}, 0x1)
+    f.flags_endian = ProtoField.uint32("bitstring_test.flags.Endian", "Endian", nil, {[0]="Big", [1]="Little"}, 0x2)
+    f.flags_platform = ProtoField.uint32("bitstring_test.flags.Platform", "Platform", nil, {[0]="Win", [1]="Linux", [2]="Mac", [3]="Solaris"}, 0xc)
+    f.flags_test = ProtoField.uint32("bitstring_test.flags.Test", "Test", nil, {[0]="No", [1]="Yes"}, 0x10)
     -- Bitstring definitions for color1
     f.color1 = ProtoField.uint16("bitstring_test.color1", "color1 (bitstring)", base.HEX)
-    f.color1_RED = ProtoField.uint16("bitstring_test.color1.RED", "RED", nil, {[0]="No", [1]="Yes"}, 0x1)
-    f.color1_Blue = ProtoField.uint16("bitstring_test.color1.Blue", "Blue", nil, {[0]="No", [1]="Yes"}, 0x2)
-    f.color1_Green = ProtoField.uint16("bitstring_test.color1.Green", "Green", nil, {[0]="No", [1]="Yes"}, 0x4)
+    f.color1_red = ProtoField.uint16("bitstring_test.color1.RED", "RED", nil, {[0]="No", [1]="Yes"}, 0x1)
+    f.color1_blue = ProtoField.uint16("bitstring_test.color1.Blue", "Blue", nil, {[0]="No", [1]="Yes"}, 0x2)
+    f.color1_green = ProtoField.uint16("bitstring_test.color1.Green", "Green", nil, {[0]="No", [1]="Yes"}, 0x4)
     -- Bitstring definitions for color2
     f.color2 = ProtoField.uint16("bitstring_test.color2", "color2 (bitstring)", base.HEX)
-    f.color2_RED = ProtoField.uint16("bitstring_test.color2.RED", "RED", nil, {[0]="No", [1]="Yes"}, 0x1)
-    f.color2_Blue = ProtoField.uint16("bitstring_test.color2.Blue", "Blue", nil, {[0]="No", [1]="Yes"}, 0x2)
-    f.color2_Green = ProtoField.uint16("bitstring_test.color2.Green", "Green", nil, {[0]="No", [1]="Yes"}, 0x4)
+    f.color2_red = ProtoField.uint16("bitstring_test.color2.RED", "RED", nil, {[0]="No", [1]="Yes"}, 0x1)
+    f.color2_blue = ProtoField.uint16("bitstring_test.color2.Blue", "Blue", nil, {[0]="No", [1]="Yes"}, 0x2)
+    f.color2_green = ProtoField.uint16("bitstring_test.color2.Green", "Green", nil, {[0]="No", [1]="Yes"}, 0x4)
     -- Dissector function for struct: bitstring_test
     function proto_bitstring_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_bitstring_test, buffer())
-    if pinfo.private.struct_def_name then 
+    if pinfo.private.struct_def_name then
     subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_bitstring_test.description)
     pinfo.private.struct_def_name = nil
     end
@@ -204,20 +204,20 @@ def bitstrings(structs):
     subtree:add(f.id, buffer(0, 4))
     -- Bitstring handling for flags
     local bittree = subtree:add(f.flags, buffer(4, 4))
-    bittree:add(f.flags_Inuse, buffer(4, 4))
-    bittree:add(f.flags_Endian, buffer(4, 4))
-    bittree:add(f.flags_Platform, buffer(4, 4))
-    bittree:add(f.flags_Test, buffer(4, 4))
+    bittree:add(f.flags_inuse, buffer(4, 4))
+    bittree:add(f.flags_endian, buffer(4, 4))
+    bittree:add(f.flags_platform, buffer(4, 4))
+    bittree:add(f.flags_test, buffer(4, 4))
     -- Bitstring handling for color1
     local bittree = subtree:add(f.color1, buffer(8, 2))
-    bittree:add(f.color1_RED, buffer(8, 2))
-    bittree:add(f.color1_Blue, buffer(8, 2))
-    bittree:add(f.color1_Green, buffer(8, 2))
+    bittree:add(f.color1_red, buffer(8, 2))
+    bittree:add(f.color1_blue, buffer(8, 2))
+    bittree:add(f.color1_green, buffer(8, 2))
     -- Bitstring handling for color2
     local bittree = subtree:add(f.color2, buffer(10, 2))
-    bittree:add(f.color2_RED, buffer(10, 2))
-    bittree:add(f.color2_Blue, buffer(10, 2))
-    bittree:add(f.color2_Green, buffer(10, 2))
+    bittree:add(f.color2_red, buffer(10, 2))
+    bittree:add(f.color2_blue, buffer(10, 2))
+    bittree:add(f.color2_green, buffer(10, 2))
     end
     luastructs_dt:add(13, proto_bitstring_test)
     ''')

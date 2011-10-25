@@ -164,24 +164,29 @@ class EnumField(Field):
 
         self.keys = ', '.join(str(i) for i in sorted(values.keys()))
         self.func_type = self._get_func_type()
-        self.values_var = create_lua_var('%s_values' % self.name)
+        if self.strict:
+            self.values_var = create_lua_var('%s_values' % self.name)
+        else:
+            self.values_var = None
         self.tree_var = create_lua_var(self.name)
 
     def get_definition(self):
         """Get the ProtoField definition for this field."""
         data = []
-        data.append('local {var} = {values}'.format(
-                var=self.values_var, values=self.values))
+        if self.strict:
+            data.append('local {var} = {values}'.format(
+                    var=self.values_var, values=self.values))
         data.append(self._create_field(self.var, self.type, self.abbr,
                 self.name, self.base, self.values_var, self.mask, self.desc))
         return '\n'.join(data)
 
-    def get_code(self, offset):
+    def get_code(self, offset, store=None):
         """Get the code for dissecting this field."""
         data = []
 
         # Local var definitions
-        store = None
+        if store is not None:
+            self.tree_var = store
         if self.strict:
             store = self.tree_var
         data.append(super().get_code(offset, store=store))
@@ -655,8 +660,11 @@ class Delegator(Protocol):
         self.longname = name
         self.description = 'Lua C Structs'
         self.id = None
+
         self.var = create_lua_var('delegator')
         self.table_var = create_lua_var('dissector_table')
+        self.id_table = create_lua_var('message_ids')
+        self.msg_var = create_lua_var('msg_node')
 
         # Add fields, don't change sizes!
         values = {p.flag: p.name for name, p in self.platforms.items()}
@@ -687,16 +695,18 @@ class Delegator(Protocol):
         proto = 'local {var} = Proto("{name}", "{description}")'
         self.data.append(proto.format(var=self.var, name=self.name,
                                       description=self.description))
-        self.data.append('')
+
+        # Add the message id table
+        self.data.append('local {var} = {{}}\n'.format(var=self.id_table))
 
     def _register_function(self):
         """Add code for register protocol function."""
         self.data.append('-- Register struct dissectors')
         t = 'function {func}(proto, platform, name, id)\n'\
                 '\t{table}:add(platform .. "." .. name, proto)\n'\
-                '\tif (id ~= nil) then {values}[id] = name end\nend\n'
+                '\tif (id ~= nil) then {ids}[id] = name end\nend\n'
         self.data.append(t.format(func=self.REGISTER_FUNC,
-                table=self.table_var, values=self._msg_id.values_var))
+                         table=self.table_var, ids=self.id_table))
 
     def _dissector_func(self):
         """Add the code for the dissector function for the protocol."""
@@ -710,26 +720,33 @@ class Delegator(Protocol):
         # Fields code
         self.data.append(self._version.get_code(0))
         self.data.append(self._flags.get_code(1))
-        self.data.append(self._msg_id.get_code(2))
+        self.data.append(self._msg_id.get_code(2, store=self.msg_var))
 
         t = '\tsubtree:add(f.messagelength, buffer(4):len()):set_generated()'
         self.data.extend([t, ''])
 
-        # Find message id and call right dissector
+        # Find message id and flag
         flags_var = create_lua_var('flags')
         msg_var = create_lua_var('message_id')
         self.data.append('\t' + self._flags._create_value_var(flags_var))
         self.data.append('\t' + self._msg_id._create_value_var(msg_var))
 
+        # Validate message id
+        t = '\tif ({ids}[{msg}] == nil) then\n\t\t{node}:add_expert_info'\
+            '(PI_MALFORMED, PI_WARN, "Unknown message id")\n\telse\n'\
+            '\t\t{node}:append_text(" (" .. {ids}[{msg}] ..")")\n\tend\n'
+        self.data.append(t.format(
+                ids=self.id_table, msg=msg_var, node=self.msg_var))
+
         # Tmp hack, unknown platform set to default platform
         self.data.append('\t-- Tmp hack: unknown platform set to default platform')
         self.data.append('\tif (flags_values[flags] == nil) then flags = 0 end')
 
-        t = '\tif ({flags}[{flag}] ~= nil and {messages}[{msg}] ~= nil) then'\
-            '\n\t\tlocal name = {flags}[{flag}] .. "." .. {messages}[{msg}]'\
+        # Call the right dissector
+        t = '\tif ({flags}[{flag}] ~= nil and {ids}[{msg}] ~= nil) then'\
+            '\n\t\tlocal name = {flags}[{flag}] .. "." .. {ids}[{msg}]'\
             '\n\t\t{table}:try(name, buffer(4):tvb(), pinfo, tree)'\
             '\n\tend\nend'
-        self.data.append(t.format(flags=self._flags.values_var,
-                flag=flags_var, messages=self._msg_id.values_var,
-                msg=msg_var, table=self.table_var))
+        self.data.append(t.format(flags=self._flags.values_var, msg=msg_var,
+                flag=flags_var, ids=self.id_table, table=self.table_var))
 

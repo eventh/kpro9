@@ -47,6 +47,23 @@ def parse_enum_type():
     assert isinstance(_child(a, 2), c_ast.Enum)
     assert _child(a, 1).declname == 'which'
     assert _child(a, 2).name == 'color'
+    
+@parse.test
+def parse_union_type():
+    """Test enums as struct members."""
+    ast = cparser.parse('''
+    union test_union { short a; long long b, float c };
+    struct struct_with_union { union test_union union_member; int d; };
+    ''')
+    union = ast.children()[0].children()[0]
+    a, b, c = union.children()
+    assert union.name == 'test_union'
+    struct = ast.children()[1].children()[0]
+    a, b = struct.children()
+    assert struct.name == 'struct_with_union'
+    assert isinstance(_child(a, 2), c_ast.Union)
+    assert _child(a, 1).declname == 'union_member'
+    assert _child(a, 2).name == 'test_union'
 
 @parse.test
 def parse_array_type():

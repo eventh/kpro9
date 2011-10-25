@@ -190,14 +190,48 @@ def proto_field_code(one, two):
     assert isinstance(one, dissector.ProtocolField)
     assert isinstance(two, dissector.ProtocolField)
     assert compare_lua(one.get_code(0), '''
-    pinfo.private.struct_def_name = "test"
+    pinfo.private.caller_def_name = "test"
     dissector_table:try("default.proto_one", buffer(0,0):tvb(), pinfo, subtree)
     ''')
     assert compare_lua(two.get_code(32), '''
-    pinfo.private.struct_def_name = "test2"
+    pinfo.private.caller_def_name = "test2"
     dissector_table:try("default.proto_two", buffer(32,0):tvb(), pinfo, subtree)
     ''')
 
+# Test ProtocolField
+unionprotofields = Tests()
+
+@unionprotofields.context
+def create_protocol_field():
+    """Create a Protocol instance with some fields."""
+    proto = dissector.Protocol('test')
+    union_proto_one = dissector.UnionProtocol('union_proto_one')
+    union_proto_two = dissector.UnionProtocol('union_proto_two')
+    proto.add_protocol('test', union_proto_one)
+    proto.add_protocol('test2', union_proto_two)
+    yield proto.fields[0], proto.fields[1]
+    del proto
+
+@protofields.test
+def proto_field_def(one, two):
+    """Test that ProtocolField generates no defintion code."""
+    assert one and two
+    assert one.get_definition() is None
+    assert two.get_definition() is None
+
+@protofields.test
+def proto_field_code(one, two):
+    """Test that ProtocolField generates correct code."""
+    assert isinstance(one, dissector.ProtocolField)
+    assert isinstance(two, dissector.ProtocolField)
+    assert compare_lua(one.get_code(0), '''
+    pinfo.private.caller_def_name = "test"
+    dissector_table:try("default.union_proto_one", buffer(0,0):tvb(), pinfo, subtree)
+    ''')
+    assert compare_lua(two.get_code(32), '''
+    pinfo.private.caller_def_name = "test2"
+    dissector_table:try("default.union_proto_two", buffer(32,0):tvb(), pinfo, subtree)
+    ''')
 
 # Test BitField
 bits = Tests()

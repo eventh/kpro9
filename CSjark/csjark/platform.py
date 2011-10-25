@@ -35,7 +35,6 @@ class Platform:
         self.endian = endian
         self.macros = macros
         self.types = dict(DEFAULT_C_TYPE_MAP)
-        self.dt_name = 'luastructs.%s' % self.name # Dissector table name
 
         # Extend sizes with missing types from default size map
         self.sizes = dict(DEFAULT_C_SIZE_MAP)

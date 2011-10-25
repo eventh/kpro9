@@ -12,12 +12,6 @@ import string
 from platform import Platform
 
 
-# Not used yet, maybe remove it?
-#INT_TYPES = ["uint8", "uint16", "uint24", "uint32", "uint64", "framenum"]
-#OTHER_TYPES = ["float", "double", "string", "stringz", "bytes",
-#                "bool", "ipv4", "ipv6", "ether", "oid", "guid"]
-#VALID_PROTOFIELD_TYPES = INT_TYPES + OTHER_TYPES
-
 # Reserved keywords in Lua, to avoid using them as variable names
 LUA_KEYWORDS = [
     'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
@@ -301,19 +295,18 @@ class ArrayField(Field):
 
 
 class ProtocolField(Field):
-    def __init__(self, proto, name, id, size, type_name):
-        super().__init__(proto, name, type_name, size)
-        self.id = id
+    def __init__(self, proto, name, sub_proto):
+        super().__init__(proto, name, sub_proto.name, sub_proto.get_size())
+        self.proto_name = sub_proto.longname
 
     def get_definition(self):
         pass
 
     def get_code(self, offset):
-        t = '\tpinfo.private.struct_def_name = "{name}"\n' \
-            '\tluastructs_dt:try({id}, buffer({offset},' \
-            '{size}):tvb(), pinfo, subtree)'
-        return t.format(name=self.name, id=self.id,
-                        offset=offset, size=self.size)
+        t = '\tpinfo.private.struct_def_name = "{name}"\n\t{table}'\
+            ':try("{proto}", buffer({offset},{size}):tvb(), pinfo, subtree)'
+        return t.format(name=self.name, proto=self.proto_name,
+                table=self.proto.table_var, offset=offset, size=self.size)
 
 
 class BitField(Field):
@@ -722,6 +715,10 @@ class Delegator(Protocol):
         msg_var = create_lua_var('message_id')
         self.data.append('\t' + self._flags._create_value_var(flags_var))
         self.data.append('\t' + self._msg_id._create_value_var(msg_var))
+
+        # Tmp hack, unknown platform set to default platform
+        self.data.append('\t-- Tmp hack: unknown platform set to default platform')
+        self.data.append('\tif (flags_values[flags] == nil) then flags = 0 end')
 
         t = '\tif ({flags}[{flag}] ~= nil and {messages}[{msg}] ~= nil) then'\
             '\n\t\tlocal name = {flags}[{flag}] .. "." .. {messages}[{msg}]'\

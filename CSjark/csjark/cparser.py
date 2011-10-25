@@ -259,8 +259,7 @@ class StructVisitor(c_ast.NodeVisitor):
     def handle_struct(self, proto, name, protoname):
         """Add an ProtocolField to the protocol."""
         subproto = self.all_platforms[self.platform][protoname]
-        return proto.add_protocol(name,
-                    subproto.id, subproto.get_size(), protoname)
+        return proto.add_protocol(name, subproto)
 
     def handle_enum(self, proto, name, enum):
         """Add an EnumField to the protocol."""

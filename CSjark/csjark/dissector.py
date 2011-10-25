@@ -81,10 +81,12 @@ class Field:
         return self._create_field(self.var, self.type, self.abbr,
                 self.name, self.base, self.values, self.mask, self.desc)
 
-    def get_code(self, offset, store=''):
+    def get_code(self, offset, store=None):
         """Get the code for dissecting this field."""
         if store:
             store = 'local {var} = '.format(var=create_lua_var(store))
+        else:
+            store = ''
         self.offset = offset
         t = '\t{store}subtree:{add}({var}, buffer({offset}, {size}))'
         return t.format(store=store, add=self.add_var,
@@ -179,7 +181,10 @@ class EnumField(Field):
         data = []
 
         # Local var definitions
-        data.append(super().get_code(offset, store=self.tree_var))
+        store = None
+        if self.strict:
+            store = self.tree_var
+        data.append(super().get_code(offset, store=store))
 
         # Add a test which validates the enum value
         if self.strict:
@@ -657,7 +662,7 @@ class Delegator(Protocol):
         values = {p.flag: p.name for name, p in self.platforms.items()}
         self.add_field('Version', 'uint8', 1)
         self.add_enum('Flags', 'uint8', 1, values)
-        self.add_enum('Message', 'uint16', 2, {})
+        self.add_enum('Message', 'uint16', 2, {}, strict=False)
         self.add_field('Message length', 'uint32', 4)
         self._version, self._flags, self._msg_id, self._length = self.fields
 

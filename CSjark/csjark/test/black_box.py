@@ -46,7 +46,7 @@ def create_protocols():
     if True:
         path = os.path.dirname(__file__)
         for name, code in structs.items():
-            with open('%s/%s.lua' % (path, name), 'w') as f:
+            with open('%s/%s.default.lua' % (path, name), 'w') as f:
                 f.write(code)
 
     # Clean up context
@@ -62,9 +62,9 @@ def arrays(structs):
     assert 'array_test' in structs
     assert structs['array_test']
     assert compare_lua(structs['array_test'], '''
-    -- Dissector for struct: array_test: Multidimensional array
-    local proto_array_test = Proto("array_test", "Multidimensional array")
-    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- Dissector for default.array_test: Multidimensional array (default)
+    local proto_array_test = Proto("default.array_test", "Multidimensional array (default)")
+    local dissector_table = DissectorTable.get("luastructs")
     -- ProtoField defintions for struct: array_test
     local f = proto_array_test.fields
     f.chararr1 = ProtoField.string("array_test.chararr1", "chararr1")
@@ -161,7 +161,7 @@ def arrays(structs):
     subarraytree:add(f.floatarr4__4, buffer(102, 4))
     subarraytree:add(f.floatarr4__5, buffer(106, 4))
     end
-    luastructs_dt:add(16, proto_array_test)
+    dissector_table:add("default.array_test", proto_array_test)
     ''')
 
 
@@ -171,9 +171,9 @@ def bitstrings(structs):
     assert 'bitstring_test' in structs
     assert structs['bitstring_test']
     assert compare_lua(structs['bitstring_test'], '''
-    -- Dissector for struct: bitstring_test: Bit string test
-    local proto_bitstring_test = Proto("bitstring_test", "Bit string test")
-    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- Dissector for default.bitstring_test: Bit string test (default)
+    local proto_bitstring_test = Proto("default.bitstring_test", "Bit string test (default)")
+    local dissector_table = DissectorTable.get("luastructs")
     -- ProtoField defintions for struct: bitstring_test
     local f = proto_bitstring_test.fields
     f.id = ProtoField.int32("bitstring_test.id", "id")
@@ -219,7 +219,7 @@ def bitstrings(structs):
     bittree:add(f.color2_blue, buffer(10, 2))
     bittree:add(f.color2_green, buffer(10, 2))
     end
-    luastructs_dt:add(13, proto_bitstring_test)
+    dissector_table:add("default.bitstring_test", proto_bitstring_test)
     ''')
 
 
@@ -229,9 +229,9 @@ def cenums(structs):
     assert 'cenum_test' in structs
     assert structs['cenum_test']
     assert compare_lua(structs['cenum_test'], '''
-    -- Dissector for struct: cenum_test: C Enum test
-    local proto_cenum_test = Proto("cenum_test", "C Enum test")
-    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- Dissector for default.cenum_test: C Enum test (default)
+    local proto_cenum_test = Proto("default.cenum_test", "C Enum test (default)")
+    local dissector_table = DissectorTable.get("luastructs")
     -- ProtoField defintions for struct: cenum_test
     local f = proto_cenum_test.fields
     f.id = ProtoField.int32("cenum_test.id", "id")
@@ -251,7 +251,7 @@ def cenums(structs):
     mnd:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20)")
     end
     end
-    luastructs_dt:add(11, proto_cenum_test)
+    dissector_table:add("default.cenum_test", proto_cenum_test)
     ''')
 
 
@@ -261,9 +261,9 @@ def custom(structs):
     assert 'custom_lua' in structs
     assert structs['custom_lua']
     assert compare_lua(structs['custom_lua'], '''
-    -- Dissector for struct: custom_lua: struct custom_lua
-    local proto_custom_lua = Proto("custom_lua", "struct custom_lua")
-    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- Dissector for default.custom_lua: struct custom_lua (default)
+    local proto_custom_lua = Proto("default.custom_lua", "struct custom_lua (default)")
+    local dissector_table = DissectorTable.get("luastructs")
     -- ProtoField defintions for struct: custom_lua
     local f = proto_custom_lua.fields
     f.normal = ProtoField.int16("custom_lua.normal", "normal")
@@ -309,8 +309,8 @@ def custom(structs):
     function proto_custom_lua.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_custom_lua, buffer())
     if pinfo.private.struct_def_name then
-        subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_custom_lua.description)
-        pinfo.private.struct_def_name = nil
+    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_custom_lua.description)
+    pinfo.private.struct_def_name = nil
     end
     pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
     subtree:add(f.normal, buffer(0, 2))
@@ -321,7 +321,7 @@ def custom(structs):
     subtree:add(f.all, buffer(22, 4))
     local truth = subtree:add(f.truth, buffer(26, 4))
     if (truth_values[buffer(26, 4):uint()] == nil) then
-        truth:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1)")
+    truth:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1)")
     end
     -- Array handling for five
     local arraytree = subtree:add(f.five_0, buffer(30, 20))
@@ -356,7 +356,7 @@ def custom(structs):
     subarraytree:add(f.str__10, buffer(74, 2))
     subarraytree:add(f.str__11, buffer(76, 2))
     end
-    luastructs_dt:add(74, proto_custom_lua)
+    dissector_table:add("default.custom_lua", proto_custom_lua)
     ''')
 
 
@@ -366,9 +366,9 @@ def enums(structs):
     assert 'enum_test' in structs
     assert structs['enum_test']
     assert compare_lua(structs['enum_test'], '''
-    -- Dissector for struct: enum_test: Enum config test
-    local proto_enum_test = Proto("enum_test", "Enum config test")
-    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- Dissector for default.enum_test: Enum config test (default)
+    local proto_enum_test = Proto("default.enum_test", "Enum config test (default)")
+    local dissector_table = DissectorTable.get("luastructs")
     -- ProtoField defintions for struct: enum_test
     local f = proto_enum_test.fields
     local id_values = {[0]="Zero", [1]="One", [2]="Two", [3]="Three", [4]="Four", [5]="Five"}
@@ -400,7 +400,7 @@ def enums(structs):
     number:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1, 2, 3, 4, 5)")
     end
     end
-    luastructs_dt:add(10, proto_enum_test)
+    dissector_table:add("default.enum_test", proto_enum_test)
     ''')
 
 
@@ -410,9 +410,9 @@ def ranges(structs):
     assert 'range_test' in structs
     assert structs['range_test']
     assert compare_lua(structs['range_test'], '''
-    -- Dissector for struct: range_test: Range rules test
-    local proto_range_test = Proto("range_test", "Range rules test")
-    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- Dissector for default.range_test: Range rules test (default)
+    local proto_range_test = Proto("default.range_test", "Range rules test (default)")
+    local dissector_table = DissectorTable.get("luastructs")
     -- ProtoField defintions for struct: range_test
     local f = proto_range_test.fields
     f.name = ProtoField.string("range_test.name", "name")
@@ -434,7 +434,7 @@ def ranges(structs):
     age:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 100.0")
     end
     end
-    luastructs_dt:add(9, proto_range_test)
+    dissector_table:add("default.range_test", proto_range_test)
     ''')
 
 @sprint2.test
@@ -443,9 +443,9 @@ def struct_within_struct(structs):
     assert 'struct_within_struct_test' in structs
     assert structs['struct_within_struct_test']
     assert compare_lua(structs['struct_within_struct_test'], '''
-    -- Dissector for struct: struct_within_struct_test: Struct in struct test
-    local proto_struct_within_struct_test = Proto("struct_within_struct_test", "Struct in struct test")
-    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- Dissector for default.struct_within_struct_test: Struct in struct test (default)
+    local proto_struct_within_struct_test = Proto("default.struct_within_struct_test", "Struct in struct test (default)")
+    local dissector_table = DissectorTable.get("luastructs")
     -- ProtoField defintions for struct: struct_within_struct_test
     local f = proto_struct_within_struct_test.fields
     f.prime = ProtoField.int32("struct_within_struct_test.prime", "prime")
@@ -459,9 +459,9 @@ def struct_within_struct(structs):
     pinfo.cols.info:append(" (" .. proto_struct_within_struct_test.description .. ")")
     subtree:add(f.prime, buffer(0, 4))
     pinfo.private.struct_def_name = "astruct"
-    luastructs_dt:try(11, buffer(4,8):tvb(), pinfo, subtree)
+    dissector_table:try("default.cenum_test", buffer(4,8):tvb(), pinfo, subtree)
     end
-    luastructs_dt:add(12, proto_struct_within_struct_test)
+    dissector_table:add("default.struct_within_struct_test", proto_struct_within_struct_test)
     ''')
 
 @sprint2.test
@@ -470,9 +470,9 @@ def trailers(structs):
     assert 'trailer_test' in structs
     assert structs['trailer_test']
     assert compare_lua(structs['trailer_test'], '''
-    -- Dissector for struct: trailer_test: struct trailer_test
-    local proto_trailer_test = Proto("trailer_test", "struct trailer_test")
-    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- Dissector for default.trailer_test: struct trailer_test (default)
+    local proto_trailer_test = Proto("default.trailer_test", "struct trailer_test (default)")
+    local dissector_table = DissectorTable.get("luastructs")
     -- ProtoField defintions for struct: trailer_test
     local f = proto_trailer_test.fields
     -- Array definition for tmp
@@ -524,6 +524,6 @@ def trailers(structs):
     local trailer = Dissector.get("ber")
     trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
     end
-    luastructs_dt:add(66, proto_trailer_test)
+    dissector_table:add("default.trailer_test", proto_trailer_test)
     ''')
 

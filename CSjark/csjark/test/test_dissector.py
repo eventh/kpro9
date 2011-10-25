@@ -169,9 +169,11 @@ protofields = Tests()
 @protofields.context
 def create_protocol_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None)
-    proto.add_protocol('test', 8, 32, 'proto_one')
-    proto.add_protocol('test2', 9, 64, 'proto_two')
+    proto = dissector.Protocol('test')
+    proto_one = dissector.Protocol('proto_one')
+    proto_two = dissector.Protocol('proto_two')
+    proto.add_protocol('test', proto_one)
+    proto.add_protocol('test2', proto_two)
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -189,11 +191,11 @@ def proto_field_code(one, two):
     assert isinstance(two, dissector.ProtocolField)
     assert compare_lua(one.get_code(0), '''
     pinfo.private.struct_def_name = "test"
-    luastructs_dt:try(8, buffer(0, 32):tvb(), pinfo, subtree)
+    dissector_table:try("default.proto_one", buffer(0,0):tvb(), pinfo, subtree)
     ''')
     assert compare_lua(two.get_code(32), '''
     pinfo.private.struct_def_name = "test2"
-    luastructs_dt:try(9, buffer(32, 64):tvb(), pinfo, subtree)
+    dissector_table:try("default.proto_two", buffer(32,0):tvb(), pinfo, subtree)
     ''')
 
 
@@ -348,7 +350,7 @@ def protos_id(proto):
     """Test that Protocol has id, description and var members."""
     assert proto
     assert proto.id == 25
-    assert proto.description == 'This is a test'
+    assert proto.description.startswith('This is a test')
     assert proto.var == 'proto_tester'
     assert isinstance(proto.fields[0], dissector.Field)
 
@@ -366,9 +368,9 @@ def protos_create_dissector(proto):
     """Test that Protocol generates valid dissector code."""
     assert proto
     assert compare_lua(proto.create(), '''
-    -- Dissector for struct: tester: This is a test
-    local proto_tester = Proto("tester", "This is a test")
-    local luastructs_dt = DissectorTable.get("luastructs.message")
+    -- Dissector for default.tester: This is a test (default)
+    local proto_tester = Proto("default.tester", "This is a test (default)")
+    local dissector_table = DissectorTable.get("luastructs")
     -- ProtoField defintions for struct: tester
     local f = proto_tester.fields
     f.one = ProtoField.float("tester.one", "one")
@@ -394,7 +396,7 @@ def protos_create_dissector(proto):
     -- Dissector function for struct: tester
     function proto_tester.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_tester, buffer())
-    if pinfo.private.struct_def_name then 
+    if pinfo.private.struct_def_name then
     subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_tester.description)
     pinfo.private.struct_def_name = nil
     end
@@ -444,6 +446,6 @@ def protos_create_dissector(proto):
     trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
     end
     end
-    luastructs_dt:add(25, proto_tester)
+    dissector_table:add("default.tester", proto_tester)
     ''')
 

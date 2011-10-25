@@ -529,7 +529,7 @@ class Protocol:
         sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
         name_check = '\tif pinfo.private.struct_def_name then\n\t\t'\
             'subtree:set_text(pinfo.private.struct_def_name .. ": " .. {var}.'\
-            'description)\n\t\tpinfo.private.struct_def_name = nil\n\tend\n'
+            'description)\n\t\tpinfo.private.struct_def_name = nil\n\tend'
         desc = '\tpinfo.cols.info:append(" (" .. {var}.description .. ")")'
 
         self.data.append(func_diss.format(var=self.var))
@@ -545,7 +545,7 @@ class Protocol:
         if self.conf and self.conf.trailers:
             self._trailers(self.conf.trailers, offset)
 
-        self.data.append('end\n\n')
+        self.data.append('end\n')
 
     def _register_dissector(self):
         """Add code for registering the dissector in the dissector table."""

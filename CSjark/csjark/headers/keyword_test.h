@@ -3,22 +3,22 @@
 enum repeat{and=1, elseif, in=412};
 
 struct local {
-	int end;
+    int end;
 };
 
 struct keyword_test {
-	int in;
-	int until[ARRAY_SIZE][ARRAY_SIZE];
-	int _VERSION;
-	
-	enum repeat function;
-	
-	int false;
+    int in;
+    int until[ARRAY_SIZE][ARRAY_SIZE];
+    int _VERSION;
 
-	struct local or;
-	
-	int and; 
-	int _and;
-	
-	int not;
+    enum repeat function;
+
+    int false;
+
+    struct local or;
+
+    int and;
+    int _and;
+
+    int not;
 };

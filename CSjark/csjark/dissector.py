@@ -637,8 +637,26 @@ class Protocol:
         if self.platform and self.platform.endian == Platform.little:
             return 'add_le'
         return 'add'
-
-
+    
+class UnionProtocol(Protocol):
+    def __init__(self, name, conf=None, platform=None):
+        super().__init__(name, conf, platform)
+    
+    def get_size(self):
+        """Find the size of the fields in the protocol."""
+        return max(field.size for field in self.fields if field.size)
+    
+    def _fields_code(self):
+        """Add the code from each field into dissector function."""
+        offset = 0
+        for field in self.fields:
+            code = field.get_code(offset)
+            if self.conf and self.conf.cnf:
+                code = self._cnf_field_code(field, code)
+            if code:
+                self.data.append(code)
+        return self.get_size
+        
 class Delegator(Protocol):
     """A class for delegating dissecting to protocols.
 

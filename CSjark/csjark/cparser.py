@@ -12,7 +12,7 @@ from pycparser import c_ast, c_parser, plyparser
 
 from config import Options
 from platform import Platform
-from dissector import Protocol
+from dissector import Protocol, UnionProtocol
 
 
 class ParseError(plyparser.ParseError):
@@ -115,6 +115,32 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def visit_Union(self, node):
         """Visit a Union node in the AST."""
+        # Visit children
+        c_ast.NodeVisitor.generic_visit(self, node)
+
+        # No children, its a member and not a declaration
+        if not node.children():
+            return
+
+        # Typedef uniton
+        if not node.name:
+            node.name = self.type_decl[-1]
+
+        # Create the protocol for the union
+        union_proto = self._create_union_protocol(node)
+        
+        # Find the member definitions
+        for decl in node.children():
+            child = decl.children()[0]
+
+            if isinstance(child, c_ast.TypeDecl):
+                self.handle_type_decl(child, union_proto)
+            elif isinstance(child, c_ast.ArrayDecl):
+                self.handle_array(union_proto, *self.handle_array_decl(child))
+            elif isinstance(child, c_ast.PtrDecl):
+                self.handle_pointer(child, union_proto)
+            else:
+                raise ParseError('Unknown Union member: %s' % repr(child))
 
     def visit_Enum(self, node):
         """Visit a Enum node in the AST."""
@@ -198,7 +224,7 @@ class StructVisitor(c_ast.NodeVisitor):
             return self.handle_enum(proto, node.declname, child.name)
         # Union member
         elif isinstance(child, c_ast.Union):
-            return self.handle_field(proto, node.declname, 'union')
+            return self.handle_union(proto, node.declname, child.name)
         # Struct member
         elif isinstance(child, c_ast.Struct):
             return self.handle_struct(proto, node.declname, child.name)
@@ -242,9 +268,10 @@ class StructVisitor(c_ast.NodeVisitor):
         """Find the members and size of an union."""
         pass
 
-    def handle_union(self, proto, name, members):
+    def handle_union(self, proto, name, unionprotoname):
         """Add an UnionField to the protocol."""
-        pass
+        unionproto = self.all_platforms[self.platform][unionprotoname]
+        return proto.add_protocol(name, unionproto)
 
     def handle_array(self, proto, name, ctype, size, depth):
         """Add an ArrayField to the protocol."""
@@ -288,6 +315,21 @@ class StructVisitor(c_ast.NodeVisitor):
         proto = Protocol(node.name, conf, self.platform)
         proto._coord = node.coord
 
+        self._add_protocol_to_list_of_protocols(node, proto)
+
+        return proto
+    
+    def _create_union_protocol(self, node):
+        """Create a new union protocol for 'node'."""
+        conf = Options.configs.get(node.name, None)
+        proto = UnionProtocol(node.name, conf, self.platform)
+        proto._coord = node.coord
+
+        self._add_protocol_to_list_of_protocols(node, proto)
+
+        return proto
+
+    def _add_protocol_to_list_of_protocols(self, node, proto):
         # Disallow structs with same name
         if node.name in StructVisitor.all_platforms[self.platform]:
             o = StructVisitor.all_platforms[self.platform][node.name]._coord
@@ -296,11 +338,11 @@ class StructVisitor(c_ast.NodeVisitor):
                 raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
                        node.name, o.file, o.line, node.coord.file, node.coord.line))
 
-        # Add struct to list of all structs
+        # Add protocol to list of all protocols
         self.structs.append(proto)
         self.all_platforms[self.platform][node.name] = proto
+    
 
-        return proto
 
     def _get_type(self, node):
         """Get the C type from a node."""

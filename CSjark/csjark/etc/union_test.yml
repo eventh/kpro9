@@ -1,0 +1,9 @@
+Options:
+    platforms: [default,win32,sparc]
+Structs:
+  - name: union_within_struct
+    id: 160
+    description: Test for union_within_struct
+  - name: union_test
+    id: 161
+    description: Test for union_test

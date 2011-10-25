@@ -1,4 +1,4 @@
-union cunion_test {
+union union_test {
     int int_member;
     float float_member;
     unsigned long long long_long_member;
@@ -6,7 +6,7 @@ union cunion_test {
 
 struct union_within_struct {
     int a;
-    union cunion_test union_member;
+    union union_test union_member;
     float b;
 };
 

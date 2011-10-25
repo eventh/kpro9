@@ -59,7 +59,7 @@ def find_structs(ast, platform=None):
         platform = Platform.mappings['default']
     visitor = StructVisitor(platform)
     visitor.visit(ast)
-    return visitor.structs
+    return visitor.protocols
 
 
 class StructVisitor(c_ast.NodeVisitor):
@@ -76,7 +76,7 @@ class StructVisitor(c_ast.NodeVisitor):
         self.map_type = platform.map_type
         self.size_of = platform.size_of
 
-        self.structs = [] # All structs encountered in this AST
+        self.protocols = [] # All structs encountered in this AST
         self.enums = {} # All enums encountered in this AST
         self.aliases = {} # Typedefs and their base type
         self.type_decl = [] # Queue of current type declaration
@@ -264,14 +264,10 @@ class StructVisitor(c_ast.NodeVisitor):
 
         return child.declname, ctype, self.size_of(ctype), depth
 
-    def handle_union_decl(self, node):
-        """Find the members and size of an union."""
-        pass
-
-    def handle_union(self, proto, name, unionprotoname):
+    def handle_union(self, proto, name, union_name):
         """Add an UnionField to the protocol."""
-        unionproto = self.all_platforms[self.platform][unionprotoname]
-        return proto.add_protocol(name, unionproto)
+        union_proto = self.all_platforms[self.platform][union_name]
+        return proto.add_protocol(name, union_proto)
 
     def handle_array(self, proto, name, ctype, size, depth):
         """Add an ArrayField to the protocol."""
@@ -315,7 +311,7 @@ class StructVisitor(c_ast.NodeVisitor):
         proto = Protocol(node.name, conf, self.platform)
         proto._coord = node.coord
 
-        self._add_protocol_to_list_of_protocols(node, proto)
+        self._store_protocol(node, proto)
 
         return proto
     
@@ -325,11 +321,11 @@ class StructVisitor(c_ast.NodeVisitor):
         proto = UnionProtocol(node.name, conf, self.platform)
         proto._coord = node.coord
 
-        self._add_protocol_to_list_of_protocols(node, proto)
+        self._store_protocol(node, proto)
 
         return proto
 
-    def _add_protocol_to_list_of_protocols(self, node, proto):
+    def _store_protocol(self, node, proto):
         # Disallow structs with same name
         if node.name in StructVisitor.all_platforms[self.platform]:
             o = StructVisitor.all_platforms[self.platform][node.name]._coord
@@ -339,7 +335,7 @@ class StructVisitor(c_ast.NodeVisitor):
                        node.name, o.file, o.line, node.coord.file, node.coord.line))
 
         # Add protocol to list of all protocols
-        self.structs.append(proto)
+        self.protocols.append(proto)
         self.all_platforms[self.platform][node.name] = proto
     
 

@@ -309,7 +309,7 @@ class ProtocolField(Field):
         pass
 
     def get_code(self, offset):
-        t = '\tpinfo.private.struct_def_name = "{name}"\n'\
+        t = '\tpinfo.private.caller_def_name = "{name}"\n'\
             '\tDissectorTable.get("{dt}"):try("{proto}", '\
             'buffer({offset},{size}):tvb(), pinfo, subtree)'
         return t.format(name=self.name, proto=self.proto_name,
@@ -435,7 +435,7 @@ class Protocol:
         if self.conf and self.conf.description is not None:
             self.description = self.conf.description
         else:
-            self.description = 'struct %s' % name
+            self.description = name
         self.description = '%s (%s)' % (self.description, self.platform.name)
 
         self.fields = [] # List of all fields in this protocol
@@ -504,7 +504,7 @@ class Protocol:
 
     def _fields_definition(self):
         """Add code for defining the ProtoField's in the protocol."""
-        self.data.append('-- ProtoField defintions for struct: %s' % self.name)
+        self.data.append('-- ProtoField defintions for: %s' % self.name)
         decl = 'local {field_var} = {var}.fields'
         self.data.append(decl.format(field_var=self.field_var, var=self.var))
         for field in self.fields:
@@ -528,12 +528,12 @@ class Protocol:
 
     def _dissector_func(self):
         """Add the code for the dissector function for the protocol."""
-        self.data.append('-- Dissector function for struct: %s' % self.name)
+        self.data.append('-- Dissector function for: %s' % self.name)
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
         sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
-        name_check = '\tif pinfo.private.struct_def_name then\n\t\t'\
-            'subtree:set_text(pinfo.private.struct_def_name .. ": " .. {var}.'\
-            'description)\n\t\tpinfo.private.struct_def_name = nil\n\tend'
+        name_check = '\tif pinfo.private.caller_def_name then\n\t\t'\
+            'subtree:set_text(pinfo.private.caller_def_name .. ": " .. {var}.'\
+            'description)\n\t\tpinfo.private.caller_def_name = nil\n\tend'
         desc = '\tpinfo.cols.info:append(" (" .. {var}.description .. ")")'
 
         self.data.append(func_diss.format(var=self.var))

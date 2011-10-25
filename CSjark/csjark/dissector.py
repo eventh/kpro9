@@ -299,10 +299,11 @@ class ProtocolField(Field):
         pass
 
     def get_code(self, offset):
-        t = '\tpinfo.private.struct_def_name = "{name}"\n\t{table}'\
-            ':try("{proto}", buffer({offset},{size}):tvb(), pinfo, subtree)'
+        t = '\tpinfo.private.struct_def_name = "{name}"\n'\
+            '\tDissectorTable.get("{dt}"):try("{proto}", '\
+            'buffer({offset},{size}):tvb(), pinfo, subtree)'
         return t.format(name=self.name, proto=self.proto_name,
-                table=self.proto.table_var, offset=offset, size=self.size)
+                dt=self.proto.DISSECTOR_TABLE, offset=offset, size=self.size)
 
 
 class BitField(Field):
@@ -432,7 +433,6 @@ class Protocol:
 
         # Different lua variables
         self.var = create_lua_var('proto_%s' % name)
-        self.table_var = create_lua_var('dissector_table')
         self.field_var = 'f'
 
     def create(self):
@@ -488,12 +488,9 @@ class Protocol:
             comment = '%s: %s' % (comment, self.description)
         self.data.append(comment)
 
-        proto = 'local {var} = Proto("{name}", "{description}")'
+        proto = 'local {var} = Proto("{name}", "{description}")\n'
         self.data.append(proto.format(var=self.var, name=self.longname,
                                       description=self.description))
-
-        self.data.append('local {var} = DissectorTable.get("{dt}")\n'.format(
-                         dt=self.DISSECTOR_TABLE, var=self.table_var))
 
     def _fields_definition(self):
         """Add code for defining the ProtoField's in the protocol."""

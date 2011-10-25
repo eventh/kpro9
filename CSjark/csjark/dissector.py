@@ -44,13 +44,9 @@ def create_lua_var(var, length=None):
 
 def create_lua_valuestring(dict_, wrap=True):
     """Convert a python dictionary to lua table."""
-    if not dict_:
-        return 'nil'
-
     items = dict_.items()
     if wrap:
         items = [(i, '"%s"' % j) for i, j in items]
-
     return '{%s}' % ', '.join('[%i]=%s' % (i, j) for i, j in items)
 
 
@@ -402,6 +398,7 @@ class Protocol:
     dissecting a packet into a set of fields with values.
     """
     DISSECTOR_TABLE = 'luastructs'
+    REGISTER_FUNC = 'delegator_register_proto'
 
     def __init__(self, name, conf=None, platform=None):
         """Create a Protocol, for generating a dissector.
@@ -549,8 +546,14 @@ class Protocol:
 
     def _register_dissector(self):
         """Add code for registering the dissector in the dissector table."""
-        self.data.append('{table}:add("{name}", {var})\n\n'.format(
-                table=self.table_var, name=self.longname, var=self.var))
+        if self.id is None:
+            id = 'nil'
+        else:
+            id = self.id
+        self.data.append('{func}({var}, "{platform}", "{name}", {id})'.format(
+                func=self.REGISTER_FUNC, var=self.var, name=self.name,
+                platform=self.platform.name, id=id))
+        self.data.append('')
 
     def _trailers(self, rules, offset):
         """Add code for handling of trailers to the protocol."""
@@ -651,6 +654,7 @@ class Delegator(Protocol):
         self.description = 'Lua C Structs'
         self.id = None
         self.var = create_lua_var('delegator')
+        self.table_var = create_lua_var('dissector_table')
 
         # Add fields, don't change sizes!
         values = {p.flag: p.name for name, p in self.platforms.items()}
@@ -662,19 +666,9 @@ class Delegator(Protocol):
 
     def create(self, all_protocols):
         """Returns all the code for dissecting this protocol."""
-        # Update Message id valuestring and keys
-        messages = {}
-        for plat, protocols in all_protocols.items():
-            for name, proto in protocols.items():
-                if proto.id is not None:
-                    messages[proto.id] = name
-
-        self._msg_id.values = create_lua_valuestring(messages)
-        self._msg_id.keys = ', '.join(str(i) for i in sorted(messages.keys()))
-
-        # Create dissector content
         self._header_defintion()
         self._fields_definition()
+        self._register_function()
         self._dissector_func()
         self.data.append('\n')
         return '\n'.join(self.data)
@@ -692,6 +686,15 @@ class Delegator(Protocol):
         self.data.append(proto.format(var=self.var, name=self.name,
                                       description=self.description))
         self.data.append('')
+
+    def _register_function(self):
+        """Add code for register protocol function."""
+        self.data.append('-- Register struct dissectors')
+        t = 'function {func}(proto, platform, name, id)\n'\
+                '\t{table}:add(platform .. "." .. name, proto)\n'\
+                '\tif (id ~= nil) then {values}[id] = name end\nend\n'
+        self.data.append(t.format(func=self.REGISTER_FUNC,
+                table=self.table_var, values=self._msg_id.values_var))
 
     def _dissector_func(self):
         """Add the code for the dissector function for the protocol."""

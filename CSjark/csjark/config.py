@@ -24,7 +24,7 @@ class Config:
 
     def __init__(self, name):
         self.name = name
-        self.id = None
+        self.id = None # Message id
         self.description = None
         self.cnf = None # Conformance File, for custom lua code
         self.members = {} # Rules for struct members
@@ -179,7 +179,10 @@ class Trailer(BaseRule):
     """Rule for specifying one or more trailer protocol(s)."""
 
     def __init__(self, conf, obj):
+        # Name of the dissector to call for the trailer
         self.name = str(obj['name'])
+        if not self.name:
+            raise ConfigError('Invalid trailer rule for %s' % conf.name)
         conf.trailers.append(self)
 
         # Count or member, which holds the amount of trailers
@@ -196,9 +199,6 @@ class Trailer(BaseRule):
         self.size = None
         if 'size' in obj:
             self.size = int(obj['size'])
-
-        if not self.name:
-            raise ConfigError('Invalid trailer rule for %s' % conf.name)
 
 
 class Custom(BaseRule):

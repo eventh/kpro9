@@ -207,6 +207,8 @@ class StructVisitor(c_ast.NodeVisitor):
                     return self.handle_enum(proto, node.declname, base)
                 elif token == 'struct':
                     return self.handle_struct(proto, node.declname, base)
+                elif token == 'union':
+                    return self.handle_union(proto, node.declname, base)
                 elif token == 'array':
                     tmp, ctype, size, depth = base
                     return self.handle_array(proto, node.declname,

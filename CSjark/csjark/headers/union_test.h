@@ -9,6 +9,3 @@ struct union_within_struct {
     union union_test union_member;
     float b;
 };
-
-    
-    

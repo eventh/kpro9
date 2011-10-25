@@ -33,29 +33,29 @@ Structs:
         20-23: [Numbers, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Eleven, Twelve, Thirteen, Fourteen, Fifthteen, Zero]
         31: Group7
         32: Group8
-      - member: longbitstring
-        1: Group1
-        2: [Group2, True, False]
-        3-4: [Platform, Win, Linux, Mac, Solaris]
-        5-8: Group4
-        9-16: Group5
-        20-23: [Numbers, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Eleven, Twelve, Thirteen, Fourteen, Fifthteen, Zero]
-        31: Group7
-        32: Group8
-        47: [Group9, Sant, Usant]
-        48-50: [Day, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, Holiday]
-        64: [LastOne, YES, NO]
-      - type: unsigned long int
-        1: Red
-        2: Blue
-        3: Green
-        4: Yellow
-        5: Black
-        6: White
-        7: Orange
-        8: Pink
-        31: Brown
-        32: OrangePink
+      #- member: longbitstring
+        #1: Group1
+        #2: [Group2, True, False]
+        #3-4: [Platform, Win, Linux, Mac, Solaris]
+        #5-8: Group4
+        #9-16: Group5
+        #20-23: [Numbers, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Eleven, Twelve, Thirteen, Fourteen, Fifthteen, Zero]
+        #31: Group7
+        #32: Group8
+        #47: [Group9, Sant, Usant]
+        #48-50: [Day, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, Holiday]
+        #64: [LastOne, YES, NO]
+      #- type: unsigned long int
+      #  1: Red
+      #  2: Blue
+      #  3: Green
+      #  4: Yellow
+      #  5: Black
+      #  6: White
+      #  7: Orange
+      #  8: Pink
+      #  31: Brown
+      #  32: OrangePink
     ranges:
       - member: age
         min: 15

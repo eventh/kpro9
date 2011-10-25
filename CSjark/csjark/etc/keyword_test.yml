@@ -1,5 +1,3 @@
-Options:
-    platforms: [sparc]
 Structs:
   - name: keyword_test
     id: 255

@@ -138,6 +138,17 @@ TODO
 
 \subsection{Support Union Type}
 %-----------------------
+\autoref{fig:wsunion}
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/wireshark_union}
+	\caption{Union type support\label{fig:wsunion}}
+\end{figure}
+
+%\lstset{language=C,caption={Struct for custom handling},label=code:customstruct}
+%\lstinputlisting[language=C]{./sprints/code/customfield.h}
+
 TODO
 
 \subsection{Display Types Wireshark Do Not Support}
@@ -154,7 +165,10 @@ TODO
 
 \subsection{Handle Lua Reserved Keywords}
 %-----------------------
-TODO
+Lua has a list of reserved keywords, and some of these keywords are allowed in 
+the C language. The utility is able to support this under generation of Lua 
+code, when an identifier is a lua keyword, an underscore(\_) is added, so the 
+identifier start with ''\_''.
 
 %-----------------------
 \section{Sprint Testing}

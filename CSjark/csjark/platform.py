@@ -34,6 +34,7 @@ class Platform:
         self.flag = flag
         self.endian = endian
         self.macros = macros
+        self.header = None
         self.types = dict(DEFAULT_C_TYPE_MAP)
 
         # Extend sizes with missing types from default size map
@@ -51,6 +52,20 @@ class Platform:
             return self.sizes[ctype]
         else:
             raise ValueError('No known size for type %s' % ctype)
+
+    @classmethod
+    def create_all_headers(cls):
+        platforms = cls.mappings.values()
+        undefs = cls._generate_undefines(platforms)
+        for p in platforms:
+            p.header = '%s\n%s' % (undefs, p._generate_defines())
+
+    @classmethod
+    def _generate_undefines(cls, platforms):
+        return ''
+
+    def _generate_defines(self):
+        return ''
 
 
 # Default mapping of C type and their wireshark field type.

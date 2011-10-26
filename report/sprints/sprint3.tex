@@ -97,7 +97,16 @@ TODO
 
 \subsection{Support Union Type}
 %-----------------------
-\autoref{fig:wsunion}
+The union type is a variabel that can contain different data types with 
+different sizes. The union will allocated memory for the largest type defined 
+in the union. \autoref{code:union} shows an example on a header-file with an 
+union type. The compiler is responisble for keeping track of size and 
+alignment requirements\cite[p.147]{Kerninghan1988} . Since there is not 
+possible to find out which data type that is used in Wireshark, the utility 
+has to genereate a dissector that display the values for each data type. 
+\autoref{fig:wsunion} displays the dissector generated from the struct in 
+\autoref{code:union}, this shows the union with three members, all of them are 
+listed with their values, in this case the float value is the correct one.
 
 \begin{figure}[ht]
 	\center
@@ -105,10 +114,8 @@ TODO
 	\caption{Union type support\label{fig:wsunion}}
 \end{figure}
 
-%\lstset{language=C,caption={Struct for custom handling},label=code:customstruct}
-%\lstinputlisting[language=C]{./sprints/code/customfield.h}
-
-TODO
+\lstset{language=C,caption={Union type},label=code:union}
+\lstinputlisting[language=C]{./sprints/code/union.h}
 
 \subsection{Display Types Wireshark Do Not Support}
 %-----------------------

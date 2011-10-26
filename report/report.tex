@@ -87,15 +87,15 @@
 %==========
 \begin{abstract}
 \Gls{wireshark} is a program used to analyze packet data sent between network
-nodes. The purpose of this project was to allow the use of Wireshark to also
+nodes. The purpose of this project was to allow the use of \Gls{wireshark} to also
 decode inter-process communication, which is important for debugging and
 ensuring such programs behave correctly. The process of decoding packages
 manually is often time-consuming and in some cases impossible.
 
 The project resulted in a stand-alone utility which acts as a supporting tool
-for Wireshark. Our utility is written in Python, and uses open source libraries
-like pycparser and ply to achieve this. The utility automates the process of
-generating dissectors for Wireshark from C header files. This functionality
+for \Gls{wireshark}. Our utility is written in \Gls{python}, and uses open source libraries
+like \gls{pycparser} and \gls{ply} to achieve this. The utility automates the process of
+generating \glspl{dissector} for \Gls{wireshark} from \Gls{c} header files. This functionality
 makes debugging and testing some programs a lot easier.
 
 \end{abstract}
@@ -112,9 +112,9 @@ was executed on behalf of Thales Norway AS between the 30th of August and the
 24th of November.
 
 The project team consisted of seven students from the department of computer
-and information science at NTNU. Our task was to develop a tool for Wireshark
+and information science at NTNU. Our task was to develop a tool for \Gls{wireshark}
 that could automatically dissect C structs. The utility creates Lua scripts 
-which act as package dissectors in Wireshark. 
+which act as package \glspl{dissector} in \Gls{wireshark}. 
 
 The team would like to thank our main supervisor Daniela Soares Cruzes
 and her assistant Maria Carolina Passos for their continuous input and

@@ -33,31 +33,32 @@ The most important function that is going to be implemented in this sprint is be
 
 \subsection{Back Log}
 %--------------------
-The work items concering features for this sprint are covered by the user stories in the requirement section. <Make reference>
-\\
+The work items concering features for this sprint are listed in Table \ref{tab:sprint3req}. This is only the 
+
 See the timetable for sprint 3 in Table \ref{tab:sprint3time}.
 
 \begin{table}[!htb] \small \center
 \caption{Sprint 3 Requirements \label{tab:sprint3req}}
-\begin{tabularx}{\textwidth}{l l X c c}
+\begin{tabularx}{\textwidth}{l X c c}
 	\toprule
-	& & & \multicolumn{2}{c}{Hours} \\
-	\cmidrule(r){4-5}
-	User story & Req. & Description & Est. & Act. \\
+	& & \multicolumn{2}{c}{Hours} \\
+	\cmidrule(r){3-4}
+	User story & Req. and Description & Est. & Act. \\
 	\midrule
-	\ref{tab:req:stories7} & FR5-A & Flags specified for each platform & \underline{ 5 } & - \\
-	\addlinespace
-	\ref{tab:req:stories7} & FR5-C & Dissector support both little and big endian & \underline{ 5 } & - \\
-	\addlinespace
-	10 & FR5-D &  Dissector support different sizes from flags & \underline{ 11 } & 0.5 \\
-	\addlinespace
-	 & FR6-C & & \underline{ 7 } & 4.5 \\
-	\addlinespace
-	 & FR4-C &  & \underline{ 5 } & 3 \\
-	\addlinespace
-	 &  &  & \underline{ 26 } & 25.5 \\
+	US29 \ref{tab:req:stories7} & FR5-A: Flags specified for each platform &  5  & - \\
+	US?\ref{tab:req:stories7} & FR5-C: Dissector support both little and big endian & 5  & - \\
+	10 & FR5-D: Dissector support different sizes from flags & 12  & - \\
+	 & FR3-C: Support WIN32, WIN64,sparc etc &  5  & - \\
+	 & FR4-B: Configuration supports custom Lua files & 6 & -\\
+	 & FR2-C: Support Wireshark filter and search on attributes &  3 & -\\
+	 & FR5-B: Dissectors support memory alignement & 4 & -\\
+	 & FR1-D: Support members of type union & 5  & -\\
+	 & FR2-A: add Display a wildcard type for valid c types that Wireshark has no support for & 3  & - \\
+	 & FR4-D: mod Support specifying the ID of dissectors (name and function) & 3  & - \\
+	 & FR6-D: Don’t regenerate dissectors & 2 & - \\
+	 & FR2: Handle Lua reserved definition names & 3 & - \\
 	\midrule
-	& & Total: & 134 & 115.5 \\
+	& Total: & 56 &  -\\
 	\bottomrule
 \end{tabularx}
 \end{table}
@@ -193,7 +194,12 @@ TODO
 
 \subsection{Support Specifying ID of Dissectors}
 %-----------------------
-TODO
+Specifying dissector ID has been modified from sprint 2. The dissector will 
+still use the ID given in the configuration for a struct, if the struct is not 
+given an ID in the configuration, then the ID for the struct will be set to 
+\emph{NONE}. This is done to ensure that structs have an unique ID for their 
+dissector. Structs-in-structs member do not need an ID since they are called 
+from the struct' by the dissector name.
 
 \subsection{Do Not Regenerate dissectors}
 %-----------------------

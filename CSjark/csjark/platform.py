@@ -55,17 +55,27 @@ class Platform:
 
     @classmethod
     def create_all_headers(cls):
+        """Create all header macros for all platforms."""
         platforms = cls.mappings.values()
         undefs = cls._generate_undefines(platforms)
         for p in platforms:
-            p.header = '%s\n%s' % (undefs, p._generate_defines())
+            p.header = '%s\n%s\n' % (undefs, p._generate_defines())
 
     @classmethod
     def _generate_undefines(cls, platforms):
-        return ''
+        """Create macros which undefines platform specific macros."""
+        def generate(macro):
+            return '#ifdef %s\n\t#undef %s\n#endif' % (macro, macro)
+
+        data = ['/* Undefine all platform macros */']
+        for p in platforms:
+            data.extend(generate(i) for i in p.macros)
+        return '\n'.join(data)
 
     def _generate_defines(self):
-        return ''
+        """Create macros which defines platform specific macros."""
+        t = '/* Define platform-specific macros for %s' % self.name
+        return '\n'.join([t] + ['#define %s' % i for i in self.macros])
 
 
 # Default mapping of C type and their wireshark field type.
@@ -159,7 +169,7 @@ UNIX_C_SIZE_MAP = {
 # Platform-specific C preprocessor macros
 WIN32_MACROS = ['WIN32', '_WIN32', '__WIN32__', '__TOS_WIN__', '__WINDOWS__']
 SOLARIS_MACROS = ['sun', '__sun']
-MACOS_MACROS = ['macintosh', 'Macintosh', '__APPLE__ & __MACH__']
+MACOS_MACROS = ['macintosh', 'Macintosh', '__APPLE__&__MACH__']
 
 X86_MACROS = [
     'i386', '__i386__', '__i386', '__IA32__', '_M_IX86', '__X86__',

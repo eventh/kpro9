@@ -351,6 +351,9 @@ class Options:
         # Delegator creates lua file which delegates messages to dissectors
         cls.delegator = Delegator(Platform.mappings)
 
+        # Create platform specific header include files
+        Platform.create_all_headers()
+
     @classmethod
     def handle_protocol_config(cls, obj, filename=''):
         """Handle rules and configuration for a protocol."""

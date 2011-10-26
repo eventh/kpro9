@@ -64,8 +64,7 @@ def arrays(structs):
     assert compare_lua(structs['array_test'], '''
     -- Dissector for default.array_test: Multidimensional array (default)
     local proto_array_test = Proto("default.array_test", "Multidimensional array (default)")
-    local dissector_table = DissectorTable.get("luastructs")
-    -- ProtoField defintions for struct: array_test
+    -- ProtoField defintions for: array_test
     local f = proto_array_test.fields
     f.chararr1 = ProtoField.string("array_test.chararr1", "chararr1")
     -- Array definition for intarr2
@@ -106,14 +105,15 @@ def arrays(structs):
     f.floatarr4__3 = ProtoField.float("array_test.floatarr4.3", "[3]")
     f.floatarr4__4 = ProtoField.float("array_test.floatarr4.4", "[4]")
     f.floatarr4__5 = ProtoField.float("array_test.floatarr4.5", "[5]")
-    -- Dissector function for struct: array_test
+    -- Dissector function for: array_test
     function proto_array_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_array_test, buffer())
-    if pinfo.private.struct_def_name then
-    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_array_test.description)
-    pinfo.private.struct_def_name = nil
-    end
+    if pinfo.private.caller_def_name then
+    subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_array_test.description)
+    pinfo.private.caller_def_name = nil
+    else
     pinfo.cols.info:append(" (" .. proto_array_test.description .. ")")
+    end
     subtree:add(f.chararr1, buffer(0, 16))
     -- Array handling for intarr2
     local arraytree = subtree:add(f.intarr2_0, buffer(16, 64))
@@ -161,7 +161,7 @@ def arrays(structs):
     subarraytree:add(f.floatarr4__4, buffer(102, 4))
     subarraytree:add(f.floatarr4__5, buffer(106, 4))
     end
-    dissector_table:add("default.array_test", proto_array_test)
+    delegator_register_proto(proto_array_test, "default", "array_test", 16)
     ''')
 
 
@@ -261,10 +261,9 @@ def custom(structs):
     assert 'custom_lua' in structs
     assert structs['custom_lua']
     assert compare_lua(structs['custom_lua'], '''
-    -- Dissector for default.custom_lua: struct custom_lua (default)
-    local proto_custom_lua = Proto("default.custom_lua", "struct custom_lua (default)")
-    local dissector_table = DissectorTable.get("luastructs")
-    -- ProtoField defintions for struct: custom_lua
+    -- Dissector for default.custom_lua: custom_lua (default)
+    local proto_custom_lua = Proto("default.custom_lua", "custom_lua (default)")
+    -- ProtoField defintions for: custom_lua
     local f = proto_custom_lua.fields
     f.normal = ProtoField.int16("custom_lua.normal", "normal")
     f.special = ProtoField.int64("custom_lua.special", "special")
@@ -305,14 +304,15 @@ def custom(structs):
     f.str__9 = ProtoField.string("custom_lua.str.9", "[9]")
     f.str__10 = ProtoField.string("custom_lua.str.10", "[10]")
     f.str__11 = ProtoField.string("custom_lua.str.11", "[11]")
-    -- Dissector function for struct: custom_lua
+    -- Dissector function for: custom_lua
     function proto_custom_lua.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_custom_lua, buffer())
-    if pinfo.private.struct_def_name then
-    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_custom_lua.description)
-    pinfo.private.struct_def_name = nil
-    end
+    if pinfo.private.caller_def_name then
+    subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_custom_lua.description)
+    pinfo.private.caller_def_name = nil
+    else
     pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
+    end
     subtree:add(f.normal, buffer(0, 2))
     subtree:add(f.special, buffer(2, 8))
     subtree:add(f.abs, buffer(10, 4))
@@ -356,7 +356,7 @@ def custom(structs):
     subarraytree:add(f.str__10, buffer(74, 2))
     subarraytree:add(f.str__11, buffer(76, 2))
     end
-    dissector_table:add("default.custom_lua", proto_custom_lua)
+    delegator_register_proto(proto_custom_lua, "default", "custom_lua", 74)
     ''')
 
 

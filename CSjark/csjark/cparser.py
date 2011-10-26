@@ -40,9 +40,10 @@ def parse_file(filename, platform=None):
             cpp_args.append('-E')
 
         # Create temporary header with platform-specific macros
-        with open('tmp.h', 'w') as fp:
-            fp.write('%s#include "%s"\n\n' % (platform.header, filename))
-            filename = fp.name
+        if platform is not None:
+            with open('tmp.h', 'w') as fp:
+                fp.write('%s#include "%s"\n\n' % (platform.header, filename))
+                filename = fp.name
     else:
         cpp_args = None
 

@@ -193,7 +193,12 @@ TODO
 
 \subsection{Support Specifying ID of Dissectors}
 %-----------------------
-TODO
+Specifying dissector ID has been modified from sprint 2. The dissector will 
+still use the ID given in the configuration for a struct, if the struct is not 
+given an ID in the configuration, then the ID for the struct will be set to 
+\emph{NONE}. This is done to ensure that structs have an unique ID for their 
+dissector. Structs-in-structs member do not need an ID since they are called 
+from the struct' by the dissector name.
 
 \subsection{Do Not Regenerate dissectors}
 %-----------------------

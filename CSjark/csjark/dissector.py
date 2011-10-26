@@ -531,16 +531,16 @@ class Protocol:
         self.data.append('-- Dissector function for: %s' % self.name)
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
         sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
-        name_check = '\tif pinfo.private.caller_def_name then\n\t\t'\
+        check = '\tif pinfo.private.caller_def_name then\n\t\t'\
             'subtree:set_text(pinfo.private.caller_def_name .. ": " .. {var}.'\
-            'description)\n\t\tpinfo.private.caller_def_name = nil\n\tend'
-        desc = '\tpinfo.cols.info:append(" (" .. {var}.description .. ")")'
+            'description)\n\t\tpinfo.private.caller_def_name = nil\n\telse\n'\
+            '\t\tpinfo.cols.info:append(" (" .. {var}.description .. ")")\n'\
+            '\tend\n'
 
         self.data.append(func_diss.format(var=self.var))
         self.data.append(sub_tree.format(
                 add=self._get_tree_add(), var=self.var))
-        self.data.append(name_check.format(var=self.var))
-        self.data.append(desc.format(var=self.var))
+        self.data.append(check.format(var=self.var))
         self.data.append('')
 
         offset = self._fields_code()
@@ -637,15 +637,16 @@ class Protocol:
         if self.platform and self.platform.endian == Platform.little:
             return 'add_le'
         return 'add'
-    
+
+
 class UnionProtocol(Protocol):
     def __init__(self, name, conf=None, platform=None):
         super().__init__(name, conf, platform)
-    
+
     def get_size(self):
         """Find the size of the fields in the protocol."""
         return max(field.size for field in self.fields if field.size)
-    
+
     def _fields_code(self):
         """Add the code from each field into dissector function."""
         offset = 0
@@ -656,7 +657,8 @@ class UnionProtocol(Protocol):
             if code:
                 self.data.append(code)
         return self.get_size
-        
+
+
 class Delegator(Protocol):
     """A class for delegating dissecting to protocols.
 

@@ -74,8 +74,8 @@ class Platform:
 
     def _generate_defines(self):
         """Create macros which defines platform specific macros."""
-        t = '/* Define platform-specific macros for %s' % self.name
-        return '\n'.join([t] + ['#define %s' % i for i in self.macros])
+        t = '\n/* Define platform-specific macros for %s */\n' % self.name
+        return t + '\n'.join(['#define %s 1' % i for i in self.macros])
 
 
 # Default mapping of C type and their wireshark field type.
@@ -169,7 +169,7 @@ UNIX_C_SIZE_MAP = {
 # Platform-specific C preprocessor macros
 WIN32_MACROS = ['WIN32', '_WIN32', '__WIN32__', '__TOS_WIN__', '__WINDOWS__']
 SOLARIS_MACROS = ['sun', '__sun']
-MACOS_MACROS = ['macintosh', 'Macintosh', '__APPLE__&__MACH__']
+MACOS_MACROS = ['macintosh', 'Macintosh', '__APPLE__', '__MACH__']
 
 X86_MACROS = [
     'i386', '__i386__', '__i386', '__IA32__', '_M_IX86', '__X86__',

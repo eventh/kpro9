@@ -20,7 +20,7 @@ class ParseError(plyparser.ParseError):
     pass
 
 
-def parse_file(filename):
+def parse_file(filename, platform=None):
     """Parse a C file, returns abstract syntax tree."""
     cpp_path = 'cpp'
 
@@ -38,6 +38,11 @@ def parse_file(filename):
         elif sys.platform == 'darwin':
             cpp_path = 'gcc' # Fix for a bug in Mac GCC 4.2.1
             cpp_args.append('-E')
+
+        # Create temporary header with platform-specific macros
+        with open('tmp.h', 'w') as fp:
+            fp.write('%s#include "%s"\n\n' % (platform.header, filename))
+            filename = fp.name
     else:
         cpp_args = None
 
@@ -128,7 +133,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Create the protocol for the union
         union_proto = self._create_union_protocol(node)
-        
+
         # Find the member definitions
         for decl in node.children():
             child = decl.children()[0]

@@ -310,7 +310,7 @@ class ProtocolField(Field):
 
     def get_code(self, offset):
         t = '\tpinfo.private.caller_def_name = "{name}"\n'\
-            '\tDissectorTable.get("{dt}"):try("{proto}", '\
+            '\tDissector.get("{proto}"):call('\
             'buffer({offset},{size}):tvb(), pinfo, subtree)'
         return t.format(name=self.name, proto=self.proto_name,
                 dt=self.proto.DISSECTOR_TABLE, offset=offset, size=self.size)

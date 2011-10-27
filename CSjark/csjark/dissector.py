@@ -541,7 +541,6 @@ class Protocol:
         self.data.append(sub_tree.format(
                 add=self._get_tree_add(), var=self.var))
         self.data.append(check.format(var=self.var))
-        self.data.append('')
 
         offset = self._fields_code()
 
@@ -757,10 +756,6 @@ class Delegator(Protocol):
             '\t\t{node}:append_text(" (" .. {ids}[{msg}] ..")")\n\tend\n'
         self.data.append(t.format(
                 ids=self.id_table, msg=msg_var, node=self.msg_var))
-
-        # Tmp hack, unknown platform set to default platform
-        self.data.append('\t-- Tmp hack: unknown platform set to default platform')
-        self.data.append('\tif (flags_values[flags] == nil) then flags = 0 end')
 
         # Call the right dissector
         t = '\tif ({flags}[{flag}] ~= nil and {ids}[{msg}] ~= nil) then'\

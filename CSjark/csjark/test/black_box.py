@@ -64,8 +64,7 @@ def arrays(structs):
     assert compare_lua(structs['array_test'], '''
     -- Dissector for default.array_test: Multidimensional array (default)
     local proto_array_test = Proto("default.array_test", "Multidimensional array (default)")
-    local dissector_table = DissectorTable.get("luastructs")
-    -- ProtoField defintions for struct: array_test
+    -- ProtoField defintions for: array_test
     local f = proto_array_test.fields
     f.chararr1 = ProtoField.string("array_test.chararr1", "chararr1")
     -- Array definition for intarr2
@@ -106,14 +105,15 @@ def arrays(structs):
     f.floatarr4__3 = ProtoField.float("array_test.floatarr4.3", "[3]")
     f.floatarr4__4 = ProtoField.float("array_test.floatarr4.4", "[4]")
     f.floatarr4__5 = ProtoField.float("array_test.floatarr4.5", "[5]")
-    -- Dissector function for struct: array_test
+    -- Dissector function for: array_test
     function proto_array_test.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_array_test, buffer())
-    if pinfo.private.struct_def_name then
-    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_array_test.description)
-    pinfo.private.struct_def_name = nil
-    end
+    if pinfo.private.caller_def_name then
+    subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_array_test.description)
+    pinfo.private.caller_def_name = nil
+    else
     pinfo.cols.info:append(" (" .. proto_array_test.description .. ")")
+    end
     subtree:add(f.chararr1, buffer(0, 16))
     -- Array handling for intarr2
     local arraytree = subtree:add(f.intarr2_0, buffer(16, 64))
@@ -161,7 +161,7 @@ def arrays(structs):
     subarraytree:add(f.floatarr4__4, buffer(102, 4))
     subarraytree:add(f.floatarr4__5, buffer(106, 4))
     end
-    dissector_table:add("default.array_test", proto_array_test)
+    delegator_register_proto(proto_array_test, "default", "array_test", 16)
     ''')
 
 
@@ -261,10 +261,9 @@ def custom(structs):
     assert 'custom_lua' in structs
     assert structs['custom_lua']
     assert compare_lua(structs['custom_lua'], '''
-    -- Dissector for default.custom_lua: struct custom_lua (default)
-    local proto_custom_lua = Proto("default.custom_lua", "struct custom_lua (default)")
-    local dissector_table = DissectorTable.get("luastructs")
-    -- ProtoField defintions for struct: custom_lua
+    -- Dissector for default.custom_lua: custom_lua (default)
+    local proto_custom_lua = Proto("default.custom_lua", "custom_lua (default)")
+    -- ProtoField defintions for: custom_lua
     local f = proto_custom_lua.fields
     f.normal = ProtoField.int16("custom_lua.normal", "normal")
     f.special = ProtoField.int64("custom_lua.special", "special")
@@ -305,14 +304,15 @@ def custom(structs):
     f.str__9 = ProtoField.string("custom_lua.str.9", "[9]")
     f.str__10 = ProtoField.string("custom_lua.str.10", "[10]")
     f.str__11 = ProtoField.string("custom_lua.str.11", "[11]")
-    -- Dissector function for struct: custom_lua
+    -- Dissector function for: custom_lua
     function proto_custom_lua.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_custom_lua, buffer())
-    if pinfo.private.struct_def_name then
-    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_custom_lua.description)
-    pinfo.private.struct_def_name = nil
-    end
+    if pinfo.private.caller_def_name then
+    subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_custom_lua.description)
+    pinfo.private.caller_def_name = nil
+    else
     pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
+    end
     subtree:add(f.normal, buffer(0, 2))
     subtree:add(f.special, buffer(2, 8))
     subtree:add(f.abs, buffer(10, 4))
@@ -356,7 +356,7 @@ def custom(structs):
     subarraytree:add(f.str__10, buffer(74, 2))
     subarraytree:add(f.str__11, buffer(76, 2))
     end
-    dissector_table:add("default.custom_lua", proto_custom_lua)
+    delegator_register_proto(proto_custom_lua, "default", "custom_lua", 74)
     ''')
 
 
@@ -410,32 +410,32 @@ def ranges(structs):
     assert 'range_test' in structs
     assert structs['range_test']
     assert compare_lua(structs['range_test'], '''
-    -- Dissector for default.range_test: Range rules test (default)
-    local proto_range_test = Proto("default.range_test", "Range rules test (default)")
-    local dissector_table = DissectorTable.get("luastructs")
-    -- ProtoField defintions for struct: range_test
-    local f = proto_range_test.fields
-    f.name = ProtoField.string("range_test.name", "name")
-    f.age = ProtoField.int32("range_test.age", "age")
-    -- Dissector function for struct: range_test
-    function proto_range_test.dissector(buffer, pinfo, tree)
-    local subtree = tree:add(proto_range_test, buffer())
-    if pinfo.private.struct_def_name then
-    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_range_test.description)
-    pinfo.private.struct_def_name = nil
-    end
-    pinfo.cols.info:append(" (" .. proto_range_test.description .. ")")
-    subtree:add(f.name, buffer(0, 10))
-    local age = subtree:add(f.age, buffer(10, 4))
-    if (buffer(10, 4):int() < 0.0) then
-    age:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0.0")
-    end
-    if (buffer(10, 4):int() > 100.0) then
-    age:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 100.0")
-    end
-    end
-    dissector_table:add("default.range_test", proto_range_test)
-    ''')
+-- Dissector for default.range_test: Range rules test (default)
+local proto_range_test = Proto("default.range_test", "Range rules test (default)")
+-- ProtoField defintions for: range_test
+local f = proto_range_test.fields
+f.name = ProtoField.string("range_test.name", "name")
+f.age = ProtoField.int32("range_test.age", "age")
+-- Dissector function for: range_test
+function proto_range_test.dissector(buffer, pinfo, tree)
+local subtree = tree:add(proto_range_test, buffer())
+if pinfo.private.caller_def_name then
+subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_range_test.description)
+pinfo.private.caller_def_name = nil
+else
+pinfo.cols.info:append(" (" .. proto_range_test.description .. ")")
+end
+subtree:add(f.name, buffer(0, 10))
+local age = subtree:add(f.age, buffer(10, 4))
+if (buffer(10, 4):int() < 0.0) then
+age:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0.0")
+end
+if (buffer(10, 4):int() > 100.0) then
+age:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 100.0")
+end
+end
+delegator_register_proto(proto_range_test, "default", "range_test", 9)
+''')
 
 @sprint2.test
 def struct_within_struct(structs):
@@ -443,26 +443,26 @@ def struct_within_struct(structs):
     assert 'struct_within_struct_test' in structs
     assert structs['struct_within_struct_test']
     assert compare_lua(structs['struct_within_struct_test'], '''
-    -- Dissector for default.struct_within_struct_test: Struct in struct test (default)
-    local proto_struct_within_struct_test = Proto("default.struct_within_struct_test", "Struct in struct test (default)")
-    local dissector_table = DissectorTable.get("luastructs")
-    -- ProtoField defintions for struct: struct_within_struct_test
-    local f = proto_struct_within_struct_test.fields
-    f.prime = ProtoField.int32("struct_within_struct_test.prime", "prime")
-    -- Dissector function for struct: struct_within_struct_test
-    function proto_struct_within_struct_test.dissector(buffer, pinfo, tree)
-    local subtree = tree:add(proto_struct_within_struct_test, buffer())
-    if pinfo.private.struct_def_name then
-    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_struct_within_struct_test.description)
-    pinfo.private.struct_def_name = nil
-    end
-    pinfo.cols.info:append(" (" .. proto_struct_within_struct_test.description .. ")")
-    subtree:add(f.prime, buffer(0, 4))
-    pinfo.private.struct_def_name = "astruct"
-    dissector_table:try("default.cenum_test", buffer(4,8):tvb(), pinfo, subtree)
-    end
-    dissector_table:add("default.struct_within_struct_test", proto_struct_within_struct_test)
-    ''')
+-- Dissector for default.struct_within_struct_test: Struct in struct test (default)
+local proto_struct_within_struct_test = Proto("default.struct_within_struct_test", "Struct in struct test (default)")
+-- ProtoField defintions for: struct_within_struct_test
+local f = proto_struct_within_struct_test.fields
+f.prime = ProtoField.int32("struct_within_struct_test.prime", "prime")
+-- Dissector function for: struct_within_struct_test
+function proto_struct_within_struct_test.dissector(buffer, pinfo, tree)
+local subtree = tree:add(proto_struct_within_struct_test, buffer())
+if pinfo.private.caller_def_name then
+subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_struct_within_struct_test.description)
+pinfo.private.caller_def_name = nil
+else
+pinfo.cols.info:append(" (" .. proto_struct_within_struct_test.description .. ")")
+end
+subtree:add(f.prime, buffer(0, 4))
+pinfo.private.caller_def_name = "astruct"
+Dissector.get("default.cenum_test"):call(buffer(4,8):tvb(), pinfo, subtree)
+end
+delegator_register_proto(proto_struct_within_struct_test, "default", "struct_within_struct_test", 12)
+''')
 
 @sprint2.test
 def trailers(structs):
@@ -470,60 +470,60 @@ def trailers(structs):
     assert 'trailer_test' in structs
     assert structs['trailer_test']
     assert compare_lua(structs['trailer_test'], '''
-    -- Dissector for default.trailer_test: struct trailer_test (default)
-    local proto_trailer_test = Proto("default.trailer_test", "struct trailer_test (default)")
-    local dissector_table = DissectorTable.get("luastructs")
-    -- ProtoField defintions for struct: trailer_test
-    local f = proto_trailer_test.fields
-    -- Array definition for tmp
-    f.tmp_0 = ProtoField.bytes("trailer_test.tmp", "tmp")
-    f.tmp_1 = ProtoField.bytes("trailer_test.tmp", "tmp")
-    f.tmp_2 = ProtoField.bytes("trailer_test.tmp", "tmp")
-    f.tmp_3 = ProtoField.bytes("trailer_test.tmp", "tmp")
-    f.tmp_4 = ProtoField.bytes("trailer_test.tmp", "tmp")
-    f.tmp_5 = ProtoField.bytes("trailer_test.tmp", "tmp")
-    f.tmp__0 = ProtoField.float("trailer_test.tmp.0", "[0]")
-    f.tmp__1 = ProtoField.float("trailer_test.tmp.1", "[1]")
-    f.tmp__2 = ProtoField.float("trailer_test.tmp.2", "[2]")
-    f.tmp__3 = ProtoField.float("trailer_test.tmp.3", "[3]")
-    f.tmp__4 = ProtoField.float("trailer_test.tmp.4", "[4]")
-    f.asn1_count = ProtoField.int32("trailer_test.asn1_count", "asn1_count")
-    -- Dissector function for struct: trailer_test
-    function proto_trailer_test.dissector(buffer, pinfo, tree)
-    local subtree = tree:add(proto_trailer_test, buffer())
-    if pinfo.private.struct_def_name then
-    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_trailer_test.description)
-    pinfo.private.struct_def_name = nil
-    end
-    pinfo.cols.info:append(" (" .. proto_trailer_test.description .. ")")
-    -- Array handling for tmp
-    local arraytree = subtree:add(f.tmp_0, buffer(0, 20))
-    arraytree:set_text("tmp (array: 5 x float)")
-    arraytree:add(f.tmp__0, buffer(0, 4))
-    arraytree:add(f.tmp__1, buffer(4, 4))
-    arraytree:add(f.tmp__2, buffer(8, 4))
-    arraytree:add(f.tmp__3, buffer(12, 4))
-    arraytree:add(f.tmp__4, buffer(16, 4))
-    subtree:add(f.asn1_count, buffer(20, 4))
-    -- Trailers handling for struct: trailer_test
-    local trail_offset = 24
-    local trail_count = buffer(20, 4):int()
-    for i = 1, trail_count do
-    local trailer = Dissector.get("ber")
-    trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
-    trail_offset = trail_offset + 6
-    end
-    local trailer = Dissector.get("ber")
-    trailer:call(buffer(trail_offset, 5):tvb(), pinfo, tree)
-    trail_offset = trail_offset + 5
-    for i = 1, 2 do
-    local trailer = Dissector.get("ber")
-    trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
-    trail_offset = trail_offset + 6
-    end
-    local trailer = Dissector.get("ber")
-    trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
-    end
-    dissector_table:add("default.trailer_test", proto_trailer_test)
-    ''')
+-- Dissector for default.trailer_test: trailer_test (default)
+local proto_trailer_test = Proto("default.trailer_test", "trailer_test (default)")
+-- ProtoField defintions for: trailer_test
+local f = proto_trailer_test.fields
+-- Array definition for tmp
+f.tmp_0 = ProtoField.bytes("trailer_test.tmp", "tmp")
+f.tmp_1 = ProtoField.bytes("trailer_test.tmp", "tmp")
+f.tmp_2 = ProtoField.bytes("trailer_test.tmp", "tmp")
+f.tmp_3 = ProtoField.bytes("trailer_test.tmp", "tmp")
+f.tmp_4 = ProtoField.bytes("trailer_test.tmp", "tmp")
+f.tmp_5 = ProtoField.bytes("trailer_test.tmp", "tmp")
+f.tmp__0 = ProtoField.float("trailer_test.tmp.0", "[0]")
+f.tmp__1 = ProtoField.float("trailer_test.tmp.1", "[1]")
+f.tmp__2 = ProtoField.float("trailer_test.tmp.2", "[2]")
+f.tmp__3 = ProtoField.float("trailer_test.tmp.3", "[3]")
+f.tmp__4 = ProtoField.float("trailer_test.tmp.4", "[4]")
+f.asn1_count = ProtoField.int32("trailer_test.asn1_count", "asn1_count")
+-- Dissector function for: trailer_test
+function proto_trailer_test.dissector(buffer, pinfo, tree)
+local subtree = tree:add(proto_trailer_test, buffer())
+if pinfo.private.caller_def_name then
+subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_trailer_test.description)
+pinfo.private.caller_def_name = nil
+else
+pinfo.cols.info:append(" (" .. proto_trailer_test.description .. ")")
+end
+-- Array handling for tmp
+local arraytree = subtree:add(f.tmp_0, buffer(0, 20))
+arraytree:set_text("tmp (array: 5 x float)")
+arraytree:add(f.tmp__0, buffer(0, 4))
+arraytree:add(f.tmp__1, buffer(4, 4))
+arraytree:add(f.tmp__2, buffer(8, 4))
+arraytree:add(f.tmp__3, buffer(12, 4))
+arraytree:add(f.tmp__4, buffer(16, 4))
+subtree:add(f.asn1_count, buffer(20, 4))
+-- Trailers handling for struct: trailer_test
+local trail_offset = 24
+local trail_count = buffer(20, 4):int()
+for i = 1, trail_count do
+local trailer = Dissector.get("ber")
+trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
+trail_offset = trail_offset + 6
+end
+local trailer = Dissector.get("ber")
+trailer:call(buffer(trail_offset, 5):tvb(), pinfo, tree)
+trail_offset = trail_offset + 5
+for i = 1, 2 do
+local trailer = Dissector.get("ber")
+trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
+trail_offset = trail_offset + 6
+end
+local trailer = Dissector.get("ber")
+trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
+end
+delegator_register_proto(proto_trailer_test, "default", "trailer_test", 66)
+''')
 

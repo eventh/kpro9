@@ -8,6 +8,7 @@ from attest import Tests, assert_hook, contexts
 from pycparser import c_ast
 
 import cparser
+from platform import Platform
 
 
 def _child(node, depth=1):
@@ -47,12 +48,12 @@ def parse_enum_type():
     assert isinstance(_child(a, 2), c_ast.Enum)
     assert _child(a, 1).declname == 'which'
     assert _child(a, 2).name == 'color'
-    
+
 @parse.test
 def parse_union_type():
     """Test enums as struct members."""
     ast = cparser.parse('''
-    union test_union { short a; long long b, float c };
+    union test_union { short a; long long b; float c; };
     struct struct_with_union { union test_union union_member; int d; };
     ''')
     union = ast.children()[0].children()[0]
@@ -98,6 +99,7 @@ def create_structs():
         struct inner inner_struct;
         unsigned short oprs[+2][9-7][((5 * 3) + (-5)) / 5];
         weekday_t day;
+        long double bytes;
     };
     '''
     ast = cparser.parse(code, 'test')
@@ -155,6 +157,15 @@ def find_struct_typedef_enum(fields):
     assert enum.func_type == 'uint'
 
 @find_structs.test
+def find_sturct_wildcard_type(fields):
+    """Test that we create field type bytes for unknown types."""
+    wildcard = fields[9]
+    assert wildcard
+    assert wildcard.name == 'bytes'
+    assert wildcard.type == 'bytes'
+    assert wildcard.size == 8
+
+@find_structs.test
 def parse_error():
     """Test that two structs with the same name raises an error."""
     code = 'struct a {int c;}; \nstruct b { int d; \nstruct a {int d;}; };'
@@ -193,4 +204,9 @@ def cpp_include(ast):
     a, b, c = ast.children()
     assert _child(c, 5).names[0] == 'bool'
     assert int(_child(c, 3).children()[1].value) == 5
+
+@cpp.test
+def cpp_macros(ast):
+    """Test that our C preprocessor support _WIN32 and other macros."""
+    pass # Meh, how do we solve this?
 

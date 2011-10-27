@@ -112,12 +112,12 @@ def arrays_def(one, two):
     f.arr_1 = ProtoField.bytes("test.arr", "arr")
     f.arr_2 = ProtoField.bytes("test.arr", "arr")
     f.arr_3 = ProtoField.bytes("test.arr", "arr")
-    f.arr__0 = ProtoField.float("test.arr.0", "[0]")
-    f.arr__1 = ProtoField.float("test.arr.1", "[1]")
-    f.arr__2 = ProtoField.float("test.arr.2", "[2]")
-    f.arr__3 = ProtoField.float("test.arr.3", "[3]")
-    f.arr__4 = ProtoField.float("test.arr.4", "[4]")
-    f.arr__5 = ProtoField.float("test.arr.5", "[5]")
+    f.arr__0 = ProtoField.float("test.arr.0", "[0, 0, 0]")
+    f.arr__1 = ProtoField.float("test.arr.1", "[0, 0, 1]")
+    f.arr__2 = ProtoField.float("test.arr.2", "[0, 0, 2]")
+    f.arr__3 = ProtoField.float("test.arr.3", "[0, 1, 0]")
+    f.arr__4 = ProtoField.float("test.arr.4", "[0, 1, 1]")
+    f.arr__5 = ProtoField.float("test.arr.5", "[0, 1, 2]")
     ''')
     assert compare_lua(two.get_definition(), '''
     -- Array definition for str
@@ -191,19 +191,19 @@ def proto_field_code(one, two):
     assert isinstance(two, dissector.ProtocolField)
     assert compare_lua(one.get_code(0), '''
     pinfo.private.caller_def_name = "test"
-    dissector_table:try("default.proto_one", buffer(0,0):tvb(), pinfo, subtree)
+    Dissector.get("default.proto_one"):call(buffer(0,0):tvb(), pinfo, subtree)
     ''')
     assert compare_lua(two.get_code(32), '''
     pinfo.private.caller_def_name = "test2"
-    dissector_table:try("default.proto_two", buffer(32,0):tvb(), pinfo, subtree)
+    Dissector.get("default.proto_two"):call(buffer(32,0):tvb(), pinfo, subtree)
     ''')
 
 # Test ProtocolField
-unionprotofields = Tests()
+union_protofields = Tests()
 
-@unionprotofields.context
-def create_protocol_field():
-    """Create a Protocol instance with some fields."""
+@union_protofields.context
+def create_union_protocol_field():
+    """Create a Union Protocol instance with some fields."""
     proto = dissector.Protocol('test')
     union_proto_one = dissector.UnionProtocol('union_proto_one')
     union_proto_two = dissector.UnionProtocol('union_proto_two')
@@ -212,25 +212,25 @@ def create_protocol_field():
     yield proto.fields[0], proto.fields[1]
     del proto
 
-@protofields.test
-def proto_field_def(one, two):
+@union_protofields.test
+def union_proto_field_def(one, two):
     """Test that ProtocolField generates no defintion code."""
     assert one and two
     assert one.get_definition() is None
     assert two.get_definition() is None
 
-@protofields.test
-def proto_field_code(one, two):
+@union_protofields.test
+def union_proto_field_code(one, two):
     """Test that ProtocolField generates correct code."""
     assert isinstance(one, dissector.ProtocolField)
     assert isinstance(two, dissector.ProtocolField)
     assert compare_lua(one.get_code(0), '''
     pinfo.private.caller_def_name = "test"
-    dissector_table:try("default.union_proto_one", buffer(0,0):tvb(), pinfo, subtree)
+    Dissector.get("default.union_proto_one"):call(buffer(0,0):tvb(), pinfo, subtree)
     ''')
     assert compare_lua(two.get_code(32), '''
     pinfo.private.caller_def_name = "test2"
-    dissector_table:try("default.union_proto_two", buffer(32,0):tvb(), pinfo, subtree)
+    Dissector.get("default.union_proto_two"):call(buffer(32,0):tvb(), pinfo, subtree)
     ''')
 
 # Test BitField
@@ -404,8 +404,7 @@ def protos_create_dissector(proto):
     assert compare_lua(proto.create(), '''
     -- Dissector for default.tester: This is a test (default)
     local proto_tester = Proto("default.tester", "This is a test (default)")
-    local dissector_table = DissectorTable.get("luastructs")
-    -- ProtoField defintions for struct: tester
+    -- ProtoField defintions for: tester
     local f = proto_tester.fields
     f.one = ProtoField.float("tester.one", "one")
     f.range = ProtoField.float("tester.range", "range")
@@ -414,12 +413,12 @@ def protos_create_dissector(proto):
     f.array_1 = ProtoField.bytes("tester.array", "array")
     f.array_2 = ProtoField.bytes("tester.array", "array")
     f.array_3 = ProtoField.bytes("tester.array", "array")
-    f.array__0 = ProtoField.float("tester.array.0", "[0]")
-    f.array__1 = ProtoField.float("tester.array.1", "[1]")
-    f.array__2 = ProtoField.float("tester.array.2", "[2]")
-    f.array__3 = ProtoField.float("tester.array.3", "[3]")
-    f.array__4 = ProtoField.float("tester.array.4", "[4]")
-    f.array__5 = ProtoField.float("tester.array.5", "[5]")
+    f.array__0 = ProtoField.float("tester.array.0", "[0, 0, 0]")
+    f.array__1 = ProtoField.float("tester.array.1", "[0, 0, 1]")
+    f.array__2 = ProtoField.float("tester.array.2", "[0, 0, 2]")
+    f.array__3 = ProtoField.float("tester.array.3", "[0, 1, 0]")
+    f.array__4 = ProtoField.float("tester.array.4", "[0, 1, 1]")
+    f.array__5 = ProtoField.float("tester.array.5", "[0, 1, 2]")
     -- Array definition for str
     f.str_0 = ProtoField.string("tester.str", "str")
     f.str_1 = ProtoField.string("tester.str", "str")
@@ -427,14 +426,15 @@ def protos_create_dissector(proto):
     f.str__0 = ProtoField.string("tester.str.0", "[0]")
     f.str__1 = ProtoField.string("tester.str.1", "[1]")
     f.count = ProtoField.int32("tester.count", "count")
-    -- Dissector function for struct: tester
+    -- Dissector function for: tester
     function proto_tester.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_tester, buffer())
-    if pinfo.private.struct_def_name then
-    subtree:set_text(pinfo.private.struct_def_name .. ": " .. proto_tester.description)
-    pinfo.private.struct_def_name = nil
-    end
+    if pinfo.private.caller_def_name then
+    subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_tester.description)
+    pinfo.private.caller_def_name = nil
+    else
     pinfo.cols.info:append(" (" .. proto_tester.description .. ")")
+    end
     subtree:add(f.one, buffer(0, 4))
     local range = subtree:add(f.range, buffer(4, 4))
     if (buffer(4, 4):float() < 0) then
@@ -480,6 +480,6 @@ def protos_create_dissector(proto):
     trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
     end
     end
-    dissector_table:add("default.tester", proto_tester)
+    delegator_register_proto(proto_tester, "default", "tester", 25)
     ''')
 

@@ -153,8 +153,7 @@ def create_dissectors(filename):
 
         # Parse the filename and find all struct definitions
         try:
-            # TODO: create platform specfic macro header file
-            ast = cparser.parse_file(filename)
+            ast = cparser.parse_file(filename, platform)
             protocols[platform.name] = cparser.find_structs(ast, platform)
 
         # Silence errors if not in strict mode

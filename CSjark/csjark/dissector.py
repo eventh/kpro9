@@ -228,17 +228,17 @@ class ArrayField(Field):
     def get_definition(self):
         data = ['-- Array definition for %s' % self.name]
 
-        # Create fields for subtrees in the array
-        i = 0
         type_ = self.type
         if type_ not in ('string', 'stringz'):
             type_ = 'bytes'
 
         # Top-level subtree
+        i = 0
         data.append(self._create_field('%s_%i' % (
                     self.var, i), type_, self.abbr, self.name))
         i += 1
 
+        # Create fields for subtrees in the array
         for k, size in enumerate(self.depth):
             if len(self.depth) > 1 and k == len(self.depth) - 1:
                 continue # Multi-dim array, no subtree last depth level
@@ -248,9 +248,19 @@ class ArrayField(Field):
                 i += 1
 
         # Create fields for each element in the array
-        for i in range(self.elements):
-            data.append(self._create_field('%s__%i' % (self.var, i),
-                    self.type, '%s.%i' % (self.abbr, i), '[%i]' % i))
+        def traverse(depth, name, j):
+            size = depth.pop(0)
+            if len(depth) > 0:
+                for i in range(size):
+                    j = traverse(depth[:], '%s%i, ' % (name, i), j)
+                return j
+            else:
+                for i in range(size):
+                    data.append(self._create_field(
+                            '%s__%i' % (self.var, j+i), self.type,
+                            '%s.%i' % (self.abbr, j+i), '[%s%i]' % (name, i)))
+                return j + size
+        traverse(self.depth[:], '', 0)
 
         return '\n'.join(data)
 
@@ -302,7 +312,7 @@ class ArrayField(Field):
                 tree = 'sub%s' % tree
                 for i in range(size):
                     subdefinition(tree, parent, elements)
-                    array(depth, tree, parent)
+                    array(depth[:], tree, parent)
 
         parent = 'subtree'
         tree = 'arraytree'
@@ -438,7 +448,7 @@ class Protocol:
             platform = Platform.mappings['default']
         self.platform = platform
         self.name = name
-        self.longname = '%s.%s' % (platform.name, self.name)
+        self.longname = '%s.%s' % (platform.name, self.name.lower())
         self.conf = conf
 
         # Dissector ID
@@ -576,7 +586,6 @@ class Protocol:
         self.data.append(sub_tree.format(
                 add=self._get_tree_add(), var=self.var))
         self.data.append(check.format(var=self.var))
-        self.data.append('')
 
         offset = self._fields_code()
 
@@ -680,7 +689,7 @@ class UnionProtocol(Protocol):
 
     def get_size(self):
         """Find the size of the fields in the protocol."""
-        return self.pad_struct_size(max(field.size for field in self.fields if field.size))
+        return self.pad_struct_size(max([0] + field.size for field in self.fields if field.size))
 
     def _fields_code(self):
         """Add the code from each field into dissector function."""
@@ -792,10 +801,6 @@ class Delegator(Protocol):
             '\t\t{node}:append_text(" (" .. {ids}[{msg}] ..")")\n\tend\n'
         self.data.append(t.format(
                 ids=self.id_table, msg=msg_var, node=self.msg_var))
-
-        # Tmp hack, unknown platform set to default platform
-        self.data.append('\t-- Tmp hack: unknown platform set to default platform')
-        self.data.append('\tif (flags_values[flags] == nil) then flags = 0 end')
 
         # Call the right dissector
         t = '\tif ({flags}[{flag}] ~= nil and {ids}[{msg}] ~= nil) then'\

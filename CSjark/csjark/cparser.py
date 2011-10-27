@@ -20,8 +20,9 @@ class ParseError(plyparser.ParseError):
     pass
 
 
-def parse_file(filename):
+def parse_file(filename, platform=None):
     """Parse a C file, returns abstract syntax tree."""
+    file = filename
     cpp_path = 'cpp'
 
     if Options.use_cpp:
@@ -38,12 +39,23 @@ def parse_file(filename):
         elif sys.platform == 'darwin':
             cpp_path = 'gcc' # Fix for a bug in Mac GCC 4.2.1
             cpp_args.append('-E')
+
+        # Create temporary header with platform-specific macros
+        if platform is not None:
+            file = 'temp-%s.tmp.h' % os.path.split(filename)[1]
+            with open(file, 'w') as fp:
+                fp.write('%s#include "%s"\n\n' % (platform.header, filename))
     else:
         cpp_args = None
 
     # Generate an abstract syntax tree
-    ast = pycparser.parse_file(filename, use_cpp=Options.use_cpp,
+    ast = pycparser.parse_file(file, use_cpp=Options.use_cpp,
                                cpp_path=cpp_path, cpp_args=cpp_args)
+
+    # Delete temp file, can't use real tempfile as we call CPP program
+    if file != filename:
+        os.remove(file)
+
     return ast
 
 
@@ -120,7 +132,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Create the protocol for the union
         union_proto = self._create_union_protocol(node)
-        
+
         self._find_member_definitions(node, union_proto)
             
     def _find_member_definitions(self, node, proto):
@@ -291,11 +303,6 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def handle_field(self, proto, name, ctype, size=None, alignment_size = None):
         """Add a field representing the struct member to the protocol."""
-        if size is None:
-            try:
-                size = self.size_of(ctype)
-            except ValueError :
-                size = None # Acceptable if there are rules for the field
         if alignment_size is None:
             try:
                 alignment_size = self.alignment_size_of(ctype)
@@ -304,7 +311,7 @@ class StructVisitor(c_ast.NodeVisitor):
                 
         if proto.conf is None:
             if size is None:
-                raise ParseError('Unknown size for type %s' % ctype)
+                size = self.size_of(ctype)
             if size is None:
                 raise ParseError('Unknown alignment size for type %s' % ctype)
             return proto.add_field(name, self.map_type(ctype), size, alignment_size)
@@ -320,7 +327,7 @@ class StructVisitor(c_ast.NodeVisitor):
         self._store_protocol(node, proto)
 
         return proto
-    
+
     def _create_union_protocol(self, node):
         """Create a new union protocol for 'node'."""
         conf = Options.configs.get(node.name, None)

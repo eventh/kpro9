@@ -268,7 +268,9 @@ class StructVisitor(c_ast.NodeVisitor):
         # Support for typedef
         if ctype in self.aliases:
             token, ctype = self.aliases[ctype]
-            if token is not None:
+            if token == 'array': # Hack I think
+                return child.declname, ctype[1], ctype[2], ctype[3], depth+ctype[4]
+            elif token is not None:
                 print(token, ctype) # TODO
                 raise ParseError('Incomplete support for array of typedefs')
 
@@ -308,7 +310,7 @@ class StructVisitor(c_ast.NodeVisitor):
                 alignment_size = self.alignment_size_of(ctype)
             except ValueError :
                 alignment_size = size # Assume that the alignment is the same as the size.
-                
+
         if proto.conf is None:
             if size is None:
                 size = self.size_of(ctype)

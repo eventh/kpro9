@@ -501,8 +501,8 @@ class Protocol:
 
     def get_alignment_size(self):
         """Find the alignment size of the fields in the protocol."""
-        return max([0] + [field.alignment_size for field in self.fields
-                                    if field.alignment_size is not None])
+        return max([0] + [f.alignment_size
+                        for f in self.fields if f.alignment_size])
 
     def add_field(self, *args, **vargs):
         """Create and add a new Field to the protocol."""

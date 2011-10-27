@@ -53,7 +53,7 @@ def create_lua_valuestring(dict_, wrap=True):
 class Field:
     """Represents Wireshark's ProtoFields which stores a specific value."""
 
-    def __init__(self, proto, name, type, size):
+    def __init__(self, proto, name, type, size, alignment_size):
         """Create a new Field instance.
 
         'proto' is the protocol which owns the field
@@ -65,6 +65,7 @@ class Field:
         self.name = name
         self.type = type
         self.size = size
+        self.alignment_size = alignment_size
 
         self.add_var = self.proto._get_tree_add() # For adding fields to tree
         self.var = '%s.%s' % (self.proto.field_var, create_lua_var(self.name))
@@ -87,10 +88,20 @@ class Field:
             store = 'local {var} = '.format(var=create_lua_var(store))
         else:
             store = ''
+        offset = self._get_padded_offset(offset)
         self.offset = offset
         t = '\t{store}subtree:{add}({var}, buffer({offset}, {size}))'
         return t.format(store=store, add=self.add_var,
                         var=self.var, offset=offset, size=self.size)
+    
+    def _get_padded_offset(self, offset):
+        padding = 0
+        if(self.alignment_size != 0):
+            padding = self.alignment_size - offset % self.alignment_size
+            if padding >= self.alignment_size:
+                padding = 0
+        return offset + padding
+        
 
     def _create_field(self, var, type_, abbr, name,
             base=None, values=None, mask=None, desc=None):
@@ -148,7 +159,7 @@ class Field:
 class EnumField(Field):
     """A field representing an enum."""
 
-    def __init__(self, proto, name, type, size, values, strict=True):
+    def __init__(self, proto, name, type, size, alignment_size, values, strict=True):
         """Create a new EnumField.
 
         'proto' the Protocol which owns the field
@@ -158,7 +169,7 @@ class EnumField(Field):
         'values' is a dict mapping field values to names
         'strict' adds validation of the fields value
         """
-        super().__init__(proto, name, type, size)
+        super().__init__(proto, name, type, size, alignment_size)
         self.values = create_lua_valuestring(values)
         self.strict = strict
 
@@ -182,6 +193,7 @@ class EnumField(Field):
 
     def get_code(self, offset, store=None):
         """Get the code for dissecting this field."""
+        offset = self._get_padded_offset(offset)
         data = []
 
         # Local var definitions
@@ -203,14 +215,14 @@ class EnumField(Field):
 
 
 class ArrayField(Field):
-    def __init__(self, proto, name, type, base_size, depth):
+    def __init__(self, proto, name, type, base_size, alignment_size, depth):
         self.base_size = base_size
         self.depth = depth
         self.elements = 1 # Number of total elements in the array
         for size in self.depth:
             self.elements *= size
 
-        super().__init__(proto, name, type, self.elements * self.base_size)
+        super().__init__(proto, name, type, self.elements * self.base_size, alignment_size)
         self.func_type = self._get_func_type()
 
     def get_definition(self):
@@ -256,6 +268,7 @@ class ArrayField(Field):
         data = ['\t-- Array handling for %s' % self.name]
         element = 0 # Count of which array element we have created
         subtree = 0 # Count of which subtree we have created
+        offset = self._get_padded_offset(offset)
 
         def subdefinition(tree, parent, elem, name=''):
             """Create a subtree of arrays."""
@@ -312,13 +325,14 @@ class ArrayField(Field):
 
 class ProtocolField(Field):
     def __init__(self, proto, name, sub_proto):
-        super().__init__(proto, name, sub_proto.name, sub_proto.get_size())
+        super().__init__(proto, name, sub_proto.name, sub_proto.get_size(), sub_proto.get_alignment_size())
         self.proto_name = sub_proto.longname
 
     def get_definition(self):
         pass
 
     def get_code(self, offset):
+        offset = self._get_padded_offset(offset)
         t = '\tpinfo.private.caller_def_name = "{name}"\n'\
             '\tDissector.get("{proto}"):call('\
             'buffer({offset},{size}):tvb(), pinfo, subtree)'
@@ -327,8 +341,8 @@ class ProtocolField(Field):
 
 
 class BitField(Field):
-    def __init__(self, proto, name, type, size, bits):
-        super().__init__(proto, name, type, size)
+    def __init__(self, proto, name, type, size, alignment_size, bits):
+        super().__init__(proto, name, type, size, alignment_size)
         self.bits = bits
 
     def _bit_var(self, name):
@@ -366,6 +380,7 @@ class BitField(Field):
         return '\n'.join(data)
 
     def get_code(self, offset):
+        offset = self._get_padded_offset(offset)
         data = ['\t-- Bitstring handling for %s' % self.name]
 
         buff = 'buffer({off}, {size})'.format(off=offset, size=self.size)
@@ -381,14 +396,15 @@ class BitField(Field):
 
 
 class RangeField(Field):
-    def __init__(self, proto, name, type, size, min, max):
-        super().__init__(proto, name, type, size)
+    def __init__(self, proto, name, type, size, alignment_size, min, max):
+        super().__init__(proto, name, type, size, alignment_size)
         self.min = min
         self.max = max
         self.func_type = self._get_func_type()
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
+        offset = self._get_padded_offset(offset)
         data = []
 
         # Local var definitions
@@ -466,7 +482,26 @@ class Protocol:
 
     def get_size(self):
         """Find the size of the fields in the protocol."""
-        return sum(field.size for field in self.fields if field.size)
+        size = 0
+        for field in self.fields:
+            if field.size:
+                size = field._get_padded_offset(size)
+                size += field.size
+        
+        return self.pad_struct_size(size)
+    
+    def pad_struct_size(self, original_size):
+        alignment_size = self.get_alignment_size()
+        padding = 0
+        if alignment_size != 0:
+            padding = alignment_size - original_size % alignment_size
+            if padding >= alignment_size:
+                padding = 0
+        return original_size + padding
+    
+    def get_alignment_size(self):
+        """Find the alignment size of the fields in the protocol."""
+        return max(field.alignment_size for field in self.fields if field.alignment_size != None)
 
     def add_field(self, *args, **vargs):
         """Create and add a new Field to the protocol."""
@@ -654,7 +689,7 @@ class UnionProtocol(Protocol):
 
     def get_size(self):
         """Find the size of the fields in the protocol."""
-        return max([0] + [field.size for field in self.fields if field.size])
+        return self.pad_struct_size(max([0] + [field.size for field in self.fields if field.size]))
 
     def _fields_code(self):
         """Add the code from each field into dissector function."""
@@ -697,10 +732,10 @@ class Delegator(Protocol):
 
         # Add fields, don't change sizes!
         values = {p.flag: p.name for name, p in self.platforms.items()}
-        self.add_field('Version', 'uint8', 1)
-        self.add_enum('Flags', 'uint8', 1, values)
-        self.add_enum('Message', 'uint16', 2, {}, strict=False)
-        self.add_field('Message length', 'uint32', 4)
+        self.add_field('Version', 'uint8', 1, 0)
+        self.add_enum('Flags', 'uint8', 1, 0, values)
+        self.add_enum('Message', 'uint16', 2, 0, {}, strict=False)
+        self.add_field('Message length', 'uint32', 4, 0)
         self._version, self._flags, self._msg_id, self._length = self.fields
 
     def create(self, all_protocols):

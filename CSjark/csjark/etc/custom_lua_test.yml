@@ -10,6 +10,7 @@ Structs:
       - type: BOOL
         field: bool
         size: 4
+        alignment_size: 4
         abbr: bool
         name: A BOOL
       - member: all

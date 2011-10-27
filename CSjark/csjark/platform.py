@@ -16,7 +16,7 @@ class Platform:
 
     mappings = {} # Map platform name to instance
 
-    def __init__(self, name, flag, endian, macros=None, sizes=None):
+    def __init__(self, name, flag, endian, macros=None, sizes=None, alignment_sizes=None):
         """Create a configuration for a specific platform.
 
         'name' is the name of the platform
@@ -29,6 +29,8 @@ class Platform:
             macros = []
         if sizes is None:
             sizes = {}
+        if alignment_sizes is None:
+            alignment_sizes = {}
         Platform.mappings[name] = self
         self.name = name
         self.flag = flag
@@ -39,8 +41,15 @@ class Platform:
 
         # Extend sizes with missing types from default size map
         self.sizes = dict(DEFAULT_C_SIZE_MAP)
+        
         for key, value in sizes.items():
             self.sizes[key] = value
+        
+        # Extend alignment sizes with missing types from default alignment size map    
+        self.alignment_sizes = dict(DEFAULT_C_ALIGNEMT_SIZE_MAP)
+        
+        for key, value in alignment_sizes.items():
+            self.alignment_sizes[key] = value
 
     def map_type(self, ctype):
         """Find the Wireshark type for a ctype."""
@@ -55,6 +64,14 @@ class Platform:
         if ctype in self.sizes:
             return self.sizes[ctype]
         raise ValueError('No known wireshark field size for type %s' % ctype)
+        
+    def alignment_size_of(self, ctype):
+        """Find the alignment size of a C type in bytes."""
+        if ctype in self.alignment_sizes.keys():
+            return self.alignment_sizes[ctype]
+        else:
+            raise ValueError('No known alignment size for type %s' % ctype)
+        
 
     @classmethod
     def create_all_headers(cls):
@@ -157,6 +174,43 @@ DEFAULT_C_SIZE_MAP = {
         'time_t': 4,
 }
 
+# Default mapping of C type and their default size in bytes.
+DEFAULT_C_ALIGNEMT_SIZE_MAP = {
+        'bool': 0,
+        '_Bool': 0,
+        'char': 0,
+        'signed char': 0,
+        'unsigned char': 0,
+        'short': 0,
+        'short int': 0,
+        'signed short': 0,
+        'signed short int': 0,
+        'unsigned short': 0,
+        'unsigned short int': 0,
+        'int': 0,
+        'signed': 0,
+        'signed int': 0,
+        'unsigned': 0,
+        'unsigned int': 0,
+        'long': 0,
+        'long int': 0,
+        'signed long': 0,
+        'signed long int': 0,
+        'unsigned long': 0,
+        'unsigned long int': 0,
+        'long long': 0,
+        'long long int': 0,
+        'signed long long': 0,
+        'signed long long int': 0,
+        'unsigned long long': 0,
+        'unsigned long long int': 0,
+        'float': 0,
+        'double': 0,
+        'long double': 0,
+        'pointer': 0,
+        'enum': 0,
+        'time_t': 0,
+}
 
 # Mapping of C sizes for unix like platforms
 UNIX_C_SIZE_MAP = {
@@ -168,6 +222,10 @@ UNIX_C_SIZE_MAP = {
         'unsigned long int': 8,
 }
 
+# Mapping of C sizes for unix like platforms
+UNIX_C_ALIGNMENT_SIZE_MAP = {
+        'double': 0,
+}
 
 # Platform-specific C preprocessor macros
 WIN32_MACROS = ['WIN32', '_WIN32', '__WIN32__', '__TOS_WIN__', '__WINDOWS__']
@@ -202,7 +260,7 @@ Platform('win64', 2, Platform.little,
 
 # Solaris 32 bit
 Platform('solaris32', 3, Platform.little,
-         macros=SOLARIS_MACROS+X86_MACROS, sizes=UNIX_C_SIZE_MAP)
+         macros=SOLARIS_MACROS+X86_MACROS, sizes=UNIX_C_SIZE_MAP, alignment_sizes=UNIX_C_ALIGNMENT_SIZE_MAP)
 
 # Solaris 64 bit
 Platform('solaris64', 4, Platform.little,
@@ -214,9 +272,9 @@ Platform('sparc', 5, Platform.big,
 
 # MacOS
 Platform('macos', 6, Platform.little,
-         macros=MACOS_MACROS, sizes=UNIX_C_SIZE_MAP)
+         macros=MACOS_MACROS, sizes=UNIX_C_SIZE_MAP, alignment_sizes=UNIX_C_ALIGNMENT_SIZE_MAP)
 
 # Linux
 Platform('linux', 7, Platform.little,
-         macros=['__linux__'], sizes=UNIX_C_SIZE_MAP)
+         macros=['__linux__'], sizes=UNIX_C_SIZE_MAP, alignment_sizes=UNIX_C_ALIGNMENT_SIZE_MAP)
 

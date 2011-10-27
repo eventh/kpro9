@@ -158,7 +158,6 @@ def create_dissectors(filename):
 
         # Silence errors if not in strict mode
         except Exception as err:
-            Options.strict = 1
             if Options.strict:
                 raise
             else:

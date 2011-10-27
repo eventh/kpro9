@@ -222,7 +222,7 @@ class Custom(BaseRule):
         self.mask = obj.get('mask', None)
         self.desc = obj.get('desc', None)
 
-    def create(self, proto, name, type_, size, alignment_size):
+    def create(self, proto, name, ctype, size, alignment_size):
         if self.size is not None:
             size = self.size
         else:

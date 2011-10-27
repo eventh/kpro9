@@ -689,7 +689,7 @@ class UnionProtocol(Protocol):
 
     def get_size(self):
         """Find the size of the fields in the protocol."""
-        return self.pad_struct_size(max([0] + field.size for field in self.fields if field.size))
+        return self.pad_struct_size(max([0] + [field.size for field in self.fields if field.size]))
 
     def _fields_code(self):
         """Add the code from each field into dissector function."""

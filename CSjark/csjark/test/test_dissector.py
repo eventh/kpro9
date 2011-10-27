@@ -27,7 +27,7 @@ enums = Tests()
 def create_enum_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None)
-    proto.add_enum('enum', 'int32', 4, dict(enumerate('ABCDE')))
+    proto.add_enum('enum', 'int32', 4, 0, dict(enumerate('ABCDE')))
     yield proto.fields[0]
     del proto
 
@@ -59,8 +59,8 @@ lua_keywords = Tests()
 def create_lua_keywords_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None)
-    proto.add_enum('elseif', 'int32', 4, dict(enumerate('VWXYZ')))
-    proto.add_field('in', 'float', 4)
+    proto.add_enum('elseif', 'int32', 4, 0, dict(enumerate('VWXYZ')))
+    proto.add_field('in', 'float', 4, 0)
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -97,8 +97,8 @@ arrays = Tests()
 def create_array_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None)
-    proto.add_array('arr', 'float', 4, [1, 2, 3])
-    proto.add_array('str', 'string', 30, [2])
+    proto.add_array('arr', 'float', 4, 0, [1, 2, 3])
+    proto.add_array('str', 'string', 30, 0, [2])
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -243,8 +243,8 @@ def create_bit_field():
     bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
             (2, 1, 'B', {0: 'No', 1: 'Yes'}),
             (3, 1, 'G', {0: 'No', 1: 'Yes'})]
-    proto.add_bit('bit1', 'int32', 4, bits)
-    proto.add_bit('bit2', 'uint16', 2, bits)
+    proto.add_bit('bit1', 'int32', 4, 0, bits)
+    proto.add_bit('bit2', 'uint16', 2, 0, bits)
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -299,7 +299,7 @@ ranges = Tests()
 def create_range_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None)
-    proto.add_range('range', 'float', 4, 0, 10)
+    proto.add_range('range', 'float', 4, 0, 0, 10)
     yield proto.fields[0]
     del proto
 
@@ -332,8 +332,8 @@ fields = Tests()
 def create_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None)
-    proto.add_field('one', 'float', 4)
-    proto.add_field('two', 'string', 12)
+    proto.add_field('one', 'float', 4, 0)
+    proto.add_field('two', 'string', 12, 0)
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -372,11 +372,11 @@ def create_protos():
 
     proto = dissector.Protocol('tester', conf)
 
-    proto.add_field('one', 'float', 4)
-    proto.add_range('range', 'float', 4, 0, 10)
-    proto.add_array('array', 'float', 4, [1, 2, 3])
-    proto.add_array('str', 'string', 30, [2])
-    proto.add_field('count', 'int32', 4)
+    proto.add_field('one', 'float', 4, 0)
+    proto.add_range('range', 'float', 4, 0, 0, 10)
+    proto.add_array('array', 'float', 4, 0, [1, 2, 3])
+    proto.add_array('str', 'string', 30, 0, [2])
+    proto.add_field('count', 'int32', 4, 0)
     yield proto
 
 @protos.test

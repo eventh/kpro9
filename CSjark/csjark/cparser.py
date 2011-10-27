@@ -22,6 +22,7 @@ class ParseError(plyparser.ParseError):
 
 def parse_file(filename, platform=None):
     """Parse a C file, returns abstract syntax tree."""
+    file = filename
     cpp_path = 'cpp'
 
     if Options.use_cpp:
@@ -41,15 +42,20 @@ def parse_file(filename, platform=None):
 
         # Create temporary header with platform-specific macros
         if platform is not None:
-            with open('tmp.h', 'w') as fp:
+            file = 'temp-%s.tmp.h' % os.path.split(filename)[1]
+            with open(file, 'w') as fp:
                 fp.write('%s#include "%s"\n\n' % (platform.header, filename))
-                filename = fp.name
     else:
         cpp_args = None
 
     # Generate an abstract syntax tree
-    ast = pycparser.parse_file(filename, use_cpp=Options.use_cpp,
+    ast = pycparser.parse_file(file, use_cpp=Options.use_cpp,
                                cpp_path=cpp_path, cpp_args=cpp_args)
+
+    # Delete temp file, can't use real tempfile as we call CPP program
+    if file != filename:
+        os.remove(file)
+
     return ast
 
 

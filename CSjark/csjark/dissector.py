@@ -487,9 +487,9 @@ class Protocol:
             if field.size:
                 size = field._get_padded_offset(size)
                 size += field.size
-        
+
         return self.pad_struct_size(size)
-    
+
     def pad_struct_size(self, original_size):
         alignment_size = self.get_alignment_size()
         padding = 0
@@ -498,10 +498,11 @@ class Protocol:
             if padding >= alignment_size:
                 padding = 0
         return original_size + padding
-    
+
     def get_alignment_size(self):
         """Find the alignment size of the fields in the protocol."""
-        return max(field.alignment_size for field in self.fields if field.alignment_size != None)
+        return max([0] + [field.alignment_size for field in self.fields
+                                    if field.alignment_size is not None])
 
     def add_field(self, *args, **vargs):
         """Create and add a new Field to the protocol."""

@@ -98,6 +98,7 @@ def create_structs():
         struct inner inner_struct;
         unsigned short oprs[+2][9-7][((5 * 3) + (-5)) / 5];
         weekday_t day;
+        long double bytes;
     };
     '''
     ast = cparser.parse(code, 'test')
@@ -153,6 +154,15 @@ def find_struct_typedef_enum(fields):
     assert enum.type == 'uint32'
     assert enum.values and enum.keys
     assert enum.func_type == 'uint'
+
+@find_structs.test
+def find_sturct_wildcard_type(fields):
+    """Test that we create field type bytes for unknown types."""
+    wildcard = fields[9]
+    assert wildcard
+    assert wildcard.name == 'bytes'
+    assert wildcard.type == 'bytes'
+    assert wildcard.size == 8
 
 @find_structs.test
 def parse_error():

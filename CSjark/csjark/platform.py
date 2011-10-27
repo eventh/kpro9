@@ -44,14 +44,17 @@ class Platform:
 
     def map_type(self, ctype):
         """Find the Wireshark type for a ctype."""
-        return self.types.get(ctype, ctype)
+        if ctype in self.types:
+            return self.types[ctype]
+        if ctype in self.sizes:
+            return 'bytes' # Default to bytes array
+        raise ValueError('No known wireshark field type for ctype %s' % ctype)
 
     def size_of(self, ctype):
         """Find the size of a C type in bytes."""
-        if ctype in self.sizes.keys():
+        if ctype in self.sizes:
             return self.sizes[ctype]
-        else:
-            raise ValueError('No known size for type %s' % ctype)
+        raise ValueError('No known wireshark field size for type %s' % ctype)
 
     @classmethod
     def create_all_headers(cls):
@@ -85,6 +88,7 @@ DEFAULT_C_TYPE_MAP = {
         'char': 'string',
         'signed char': 'string',
         'unsigned char': 'string',
+        'string': 'string',
         'short': "int16",
         'signed short': "int16",
         'unsigned short': "uint16",
@@ -151,7 +155,6 @@ DEFAULT_C_SIZE_MAP = {
         'pointer': 4,
         'enum': 4,
         'time_t': 4,
-        'union': 0, # Tmp hack
 }
 
 

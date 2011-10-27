@@ -307,14 +307,9 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def handle_field(self, proto, name, ctype, size=None):
         """Add a field representing the struct member to the protocol."""
-        if size is None:
-            try:
-                size = self.size_of(ctype)
-            except ValueError :
-                size = None # Acceptable if there are rules for the field
         if proto.conf is None:
             if size is None:
-                raise ParseError('Unknown size for type %s' % ctype)
+                size = self.size_of(ctype)
             return proto.add_field(name, self.map_type(ctype), size)
         else:
             return proto.conf.create_field(proto, name, ctype, size)
@@ -328,7 +323,7 @@ class StructVisitor(c_ast.NodeVisitor):
         self._store_protocol(node, proto)
 
         return proto
-    
+
     def _create_union_protocol(self, node):
         """Create a new union protocol for 'node'."""
         conf = Options.configs.get(node.name, None)
@@ -351,8 +346,6 @@ class StructVisitor(c_ast.NodeVisitor):
         # Add protocol to list of all protocols
         self.protocols.append(proto)
         self.all_platforms[self.platform][node.name] = proto
-    
-
 
     def _get_type(self, node):
         """Get the C type from a node."""

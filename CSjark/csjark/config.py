@@ -48,8 +48,6 @@ class Config:
 
     def create_field(self, proto, name, ctype, size=None):
         """Create a field depending on rules."""
-        type_ = proto.platform.map_type(ctype)
-
         # Sort the rules
         types = (Bitstring, Enum, Range, Custom)
         values = [[], [], [], []]
@@ -61,11 +59,12 @@ class Config:
 
         # Custom field rules
         if customs:
-            return customs[0].create(proto, name, type_, size, ctype)
+            return customs[0].create(proto, name, ctype, size)
 
         # If size is None and not customs rule, we are in trouble.
         if size is None:
-            raise ConfigError('Unknown field size for %s' % name)
+            size = proto.platform.size_of(ctype)
+        type_ = proto.platform.map_type(ctype)
 
         # Bitstring rules
         if bits:
@@ -219,11 +218,13 @@ class Custom(BaseRule):
         self.mask = obj.get('mask', None)
         self.desc = obj.get('desc', None)
 
-    def create(self, proto, name, type_, size, ctype):
+    def create(self, proto, name, ctype, size):
         if self.size is not None:
             size = self.size
-        if size is None:
-            raise ConfigError('Missing size for field %s' % name)
+        else:
+            if ctype not in proto.platform.sizes:
+                raise ConfigError('Missing size for field %s' % name)
+            size = proto.platform.size_of(ctype)
         field = proto.add_field(name, self.field, size)
         field.abbr = self.abbr
         field.base = self.base

@@ -11,17 +11,17 @@ The project plan includes the specified plan on which tool we are using in this 
 
 \subsection{Measurement of Project Effects}
 %------------------------------------------
-Automatic generation of Lua scripts from C header files would bring considerable resource savings in the customer's usual work process. Time and therefore financial resources, will be saved by delivery of the solution every time they need to know the contents of inter-process communication messages that include C structs.
+Automatic generation of \Gls{lua} \glspl{script} from \Gls{c} \gls{header} files would bring considerable resource savings in the customer's usual work process. Time and therefore financial resources, will be saved by delivery of the solution every time they need to know the contents of \gls{ipc} messages that include \Gls{c} \glspl{struct}.
 
-The biggest impact on savings will be caused by enabling filtering of the messages by the specific attribute in the C struct in Wireshark. Once this is made possible, a lot of unnecessary searching can be omitted.
+The biggest impact on savings will be caused by enabling filtering of the messages by the specific attribute in the \Gls{c} \gls{struct} in \Gls{wireshark}. Once this is made possible, a lot of unnecessary searching can be omitted.
 
-Before the project start, C structs were investigated in two ways. The first, manual method, which means counting individual bytes of the binary file that includes data in C structs. This is possible only for small-sized messages. For bigger messages, this method is inapplicable, since the message can consist of several thousands bytes. The second method consists of writing the dissector in Lua manually for the specific C header. Also, this method cannot be used for more complex C structs, i.e. those using nested structs. So far, there has been written about 10 Lua scripts manually.
+Before the project start, \Gls{c} \glspl{struct} were investigated in two ways. The first, manual method, which means counting individual bytes of the \gls{binary} file that includes data in \Gls{c} \glspl{struct}. This is possible only for small-sized messages. For bigger messages, this method is inapplicable, since the message can consist of several thousands bytes. The second method consists of writing the \gls{dissector} in \Gls{lua} manually for the specific \Gls{c} \gls{header}. Also, this method cannot be used for more complex \Gls{c} \glspl{struct}, i.e. those using \glspl{nested struct}. So far, there has been written about 10 \Gls{lua} \glspl{script} manually.
 
-According to the customer, there are approximately 3000 messages that include C structs and those need to be dissected by the solution. Time spent to write a dissector for a message manually depends on the struct’s complexity. For simple structs, this takes 15 minutes. It took about 1 hour for the most complicated dissectors that the customer had developed so far.
+According to the customer, there are approximately 3000 messages that include \Gls{c} \glspl{struct} and those need to be dissected by the solution. Time spent to write a \gls{dissector} for a message manually depends on the \gls{struct}’s complexity. For simple \glspl{struct}, this takes 15 minutes. It took about 1 hour for the most complicated \glspl{dissector} that the customer had developed so far.
 
-If 1 hour is the average time for creating a dissector for 1 message, our solution will save about 3000 hours of work. Due to everyday workload of the customer’s development team, this amount of time could never be used to accomplish such a task.
+If 1 hour is the average time for creating a \gls{dissector} for 1 message, our solution will save about 3000 hours of work. Due to everyday workload of the customer’s development team, this amount of time could never be used to accomplish such a task.
 
-None of the workaround methods mentioned above is capable of processing messages with C structs that are big and complex. Time savings in these cases are not easily estimated.
+None of the workaround methods mentioned above is capable of processing messages with \Gls{c} \glspl{struct} that are big and complex. Time savings in these cases are not easily estimated.
 
 Also, sometimes a representative of Thales Norway AS has to physically move to the their customer’s site to solve a problem. With the delivered solution, in some cases, this will be no longer necessary and the problem will be solved remotely by sending capture files to Thales and solving it in-house. Savings in this case are not only time-based but it will also directly cut the transportation costs and it will increase the satisfaction for the client.
 
@@ -31,16 +31,16 @@ As in all other projects, the project members have to deal with various limitati
 
 \subsubsection{Technical Limitations}
 \begin{description}
-	\item[C preprocessor] To fulfill all the requirements we might need to
-		either modify an existing preprocessor or write our own, which can be
+	\item[\Gls{c} \gls{preprocessor}] To fulfill all the requirements we might need to
+		either modify an existing \gls{preprocessor} or write our own, which can be
 		a huge undertaking.
-	\item[Platforms] SPARC platform that are required for the program are not
+	\item[Platforms] \GLS{sparc} platform that are required for the program are not
 		available to the project group.
 \end{description}
 
 \subsubsection{Non-technical Limitations}
 \begin{description}
-	\item[Experience] None in the group have experience with Lua-scripts,
+	\item[Experience] None in the group have experience with \Gls{lua}-\glspl{script},
 		running a project with a larger team, or has planned a project before.
 	\item[Time] The project group has a limited time of 12 weeks and a project
 		deadline that cannot be changed. Also, the team consists of 7 members
@@ -64,7 +64,7 @@ selected the listed tools for use in this project.
 	\includegraphics[width=3.5cm]{./planning/img/git_logo}
 	\vspace{-20pt}
 \end{wrapfigure}
-The team has selected Git as the version control system, with git repository
+The team has selected Git as the \gls{version control system}, with git \gls{repository}
 hosting provided by Github\footnote{\url{http://github.com/}}.
 
 \begin{wrapfigure}{r}{3cm}
@@ -76,20 +76,20 @@ We had experience with CVS, SVN, Git and Mercurial, and although everyone
 knew SVN and only two knew Git, we selected Git for this project.
 The main reason we didn't choose SVN was because of its lack of hosting capabilities,
 and the other reason was that, unlike Git and Mercurial, SVN does not have any of the
-advantageous features of a modern version control system like branches and a distributed
-repository model.
+advantageous features of a modern \gls{version control system} like \glspl{branch} and a \gls{distributed
+repository model}.
 
-We evaluated free hosting sites of version control systems, which could also 
+We evaluated free hosting sites of \glspl{version control system}, which could also 
 provide us with other collaborative features that we wanted. Github, 
 Bitbucket\footnote{\url{http://bitbucket.org/}} and
 SourceForge\footnote{\url{http://sourceforge.net/}} all provided wiki and
-issue tracker in addition to free version control system hosting. We eliminated 
+issue tracker in addition to free \gls{version control system} hosting. We eliminated 
 SourceForge because their focus is divided between software users and 
 developers, while the other two sites are fully focused on developers. The 
 two remaining sites provides almost identical features, where one focuses on 
 Git and the other on Mercurial.
 
-Github with Git version control system was selected because more team members 
+Github with Git \gls{version control system} was selected because more team members 
 had experience with Git than Mercurial. Since we use different platforms,
 we will also use different git clients, but for Windows most of the group has
 selected tortoisegit.
@@ -119,7 +119,7 @@ to collaborate on document drafts, and to share documents within the team and
 with the team's advisor.
 
 \subsubsection{\LaTeX}
-\LaTeX \,is a document markup language used to
+\LaTeX \,is a document \gls{markup language} used to
 create reports, articles and books. It was chosen by the group for its 
 high quality typesetting which produces professional looking documents, and 
 because it is suitable for larger scientific reports. 
@@ -130,7 +130,7 @@ thinking about how the document looks, he can focus entirely on the content.
 \LaTeX \,also provides automatic numbering of chapters and sections,
 automatic generation of table of contents, cross-referencing and bibliography
 management. Since \LaTeX \,files are plain text files they are suitable for versioning 
-with a version control system like Git. We will use \LaTeX \,to write the final project 
+with a \gls{version control system} like Git. We will use \LaTeX \,to write the final project 
 report, and we have created a few templates for test plans and minutes.
 
 \subsubsection{Mailing List}
@@ -155,18 +155,18 @@ members can include in their own, prevents misunderstandings and duplication
 of work.
 
 \subsubsection{text2pcap}
-In this project text2pcap is used to generate capture files from ASCII
-hexdumps. Since the customer cannot provide us with capture files, 
+In this project text2pcap is used to generate capture files from \GLS{ascii}
+\glspl{hex dump}. Since the customer cannot provide us with capture files, 
 we have to create them ourselves. The capture files are important for testing
-the generated Lua-scripts. The text2pcap tool is included with Wireshark. 
-The input to the tool is a ASCII hexdump as a text-file, and the output will
-be a pcap-file. When running text2pcap, it is necessary to specifiy the protocol
+the generated \Gls{lua}-\glspl{script}. The text2pcap tool is included with \Gls{wireshark}. 
+The input to the tool is a \GLS{ascii} \gls{hex dump} as a text-file, and the output will
+be a \gls{pcap-file}. When running text2pcap, it is necessary to specifiy the \gls{protocol}
 type. In this project the team uses ''-l 147'' as an option to text2pcap,
-which is a user defined link-layer type.
+which is a user defined \gls{link-layer} type.
 
 \subsubsection{Hex Editor}
 The team is using a hex editor to create input for text2pcap. To make it
-easier to write ASCII hexdumps, it is necessary to write them in a hex editor.
+easier to write \GLS{ascii} \glspl{hex dump}, it is necessary to write them in a hex editor.
 HxD\footnote{\url{http://mh-nexus.de/en/hxd/}} is the recommended hex editor
 for this project, since it is free and has the necessary functionality. HxD is
 only for Windows.
@@ -180,7 +180,7 @@ only for Windows.
 Violet\footnote{\url{http://violet.sourceforge.net/}} is a free
 and easy to use modeling software for making UML-diagrams.
 It is also a cross platform solution, which means that all team members can use
-the same application. If we had to use different UML applications we would have problems
+the same application. If we had to use different UML applications we could have problems
 editing the diagrams due to incompatible file formats.
 The architectural and design team will be using violet to create diagrams
 to illustrate the workings of the utility. As very advanced diagrams were not needed for
@@ -311,7 +311,7 @@ Our project organization has a flat structure and the organization chart can be 
 	Customer contact & Responsible for distributing information between the group and the customer. \\ 
 	Technically responsible & Finds good technical solutions and makes sure that the essential tools are operative. \\ 
 	Technology evangelist & Brings in ideas about new technologies and tools. \\ 
-	Scrum master & Responsible for scrum meetings. \\ 
+	Scrum master & Responsible for \Gls{scrum} meetings. \\ 
 	Lead tester & Responsible for good test coverage, both unit and end to end, and to ensure the quality of those tests. \\ 
 	Secretary & Takes note from each meetings and stores it in the cloud. Responsible for preparing minutes for advisor/customer. \\
 	\bottomrule
@@ -463,7 +463,7 @@ We use Github and Google Docs to store the files included in this project. The
 location of a file is dependent on what type the file is. 
 
 \begin{itemize}
-	\item All source code is to be saved in the Github repository under
+	\item All source code is to be saved in the Github \gls{repository} under
 		CSjark/. This ensures that all the team members have the current
 		version of the code. The structure for this folder:
 		\begin{verbatim}
@@ -471,14 +471,14 @@ CSjark/
     csjark/  -- todays source/, for source code
         test/  -- for unit tests
         etc/  -- for configuration files
-        headers/  -- header files used to test the program
+        \glspl{header}/  -- \gls{header} files used to test the program
     bin/  -- file for executing our program
     docs/  -- for CSjark-specific documentation
-    utils/  -- for cpp.exe and fake header files
+    utils/  -- for cpp.exe and fake \gls{header} files
 		\end{verbatim}
 	\item All textual documents that are completed will be put in the
 		docs/ folder.
-	\item All LaTeX documents are stored in the Github repository
+	\item All LaTeX documents are stored in the Github \gls{repository}
 		under report/. The structure for this folder:
 		\begin{verbatim}
 report/
@@ -489,7 +489,7 @@ report/
     evaluation/  --  Evaluation part
     appendices/  --   Appendices part
 		\end{verbatim}
-	\item Examples of header-files and Lua-scripts, packet capture-files and information from customer is stored under wireshark/.
+	\item Examples of \gls{header}-files and \Gls{lua}-\glspl{script}, \gls{packet} capture-files and information from customer is stored under \Gls{wireshark}/.
 \end{itemize}
 
 \subsubsection{File Name Standard}
@@ -506,7 +506,7 @@ PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}
 
 \subsection{Version Control Procedures}
 %--------------------------------------
-Every relevant digital item should be pushed to our repository at github, and be checked out by other participants. Those who work on a given item should commit and push their changes often, so that others can be as up to date as possible. All digital items should be labeled with a version number, starting at version 1. If an item goes under review and is deemed insufficient by the customer, the version number should also be incremented by one for each revision of the document
+Every relevant digital item should be pushed to our \gls{repository} at github, and be checked out by other participants. Those who work on a given item should commit and push their changes often, so that others can be as up to date as possible. All digital items should be labeled with a version number, starting at version 1. If an item goes under review and is deemed insufficient by the customer, the version number should also be incremented by one for each revision of the document
 
 Relevant digital items includes source code, documents, picture files, binary blobs, etc.
 

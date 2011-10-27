@@ -33,13 +33,106 @@ The most important function that is going to be implemented in this sprint is be
 
 \subsection{Back Log}
 %--------------------
-The work items concering features for this sprint are covered by the user stories in the requirement section. <Make reference>
-In addition we have a lot of work items that are concerning other important tasks: report, documentation, mandetory deliveries and meetings. 
+The work items concering features for this sprint are listed in Table \ref{tab:sprint3req}. These are covered by user stories and are about a fourth of the work in this sprint. See the timetable for the other work items.\\
+Timetable for this sprint: Table \ref{tab:sprint3time}.\\
+
+\begin{table}[!htb] \small \center
+\caption{Sprint 3 Requirement Work Items \label{tab:sprint3req}}
+\begin{tabularx}{\textwidth}{l X c c}
+	\toprule
+	& & \multicolumn{2}{c}{Hours} \\
+	\cmidrule(r){3-4}
+	User story & Req. and Description & Est. & Act. \\
+	\midrule
+	\textbf{Impl.} &  & \textbf{56} & \textbf{-} \\
+	\hyperref[tab:req:stories7]{US29} & FR5-A: Flags specified for each platform &  5  & - \\
+	\hyperref[tab:req:stories8]{US31} & FR5-C: Dissector support both little and big endian & 5  & - \\
+	\hyperref[tab:req:stories8]{US32} & FR5-D: Dissector support different sizes from flags & 12  & - \\
+	\hyperref[tab:req:stories8]{US33} & FR3-C: Support WIN32, WIN64,sparc etc &  5  & - \\
+	\hyperref[tab:req:stories7]{US29} & FR4-B: Configuration supports custom Lua files & 6 & -\\
+	\hyperref[tab:req:stories7]{US28} & FR2-C: Support Wireshark filter and search on attributes &  3 & -\\
+	\hyperref[tab:req:stories7]{US29} & FR5-B: Dissectors support memory alignement & 4 & -\\
+	\hyperref[tab:req:stories7]{US26} & FR1-D: Support members of type union & 5  & -\\
+	\hyperref[tab:req:stories7]{US27} & FR2-A add: Display a wildcard type for valid c types that Wireshark has no support for & 3  & - \\
+	\hyperref[tab:req:stories9]{US35} & FR4-D mod: Support specifying the ID of dissectors (name and function) & 3  & - \\
+	\hyperref[tab:req:stories9]{US39} & FR6-D: Don’t regenerate dissectors & 1 & - \\
+	\hyperref[tab:req:stories7]{US29} & FR2: Handle Lua reserved definition names & 2 & - \\
+	\addlinespace
+	\textbf{Testing} &  & \textbf{19} & \textbf{-} \\
+	 & FR4-B: Custom Lua configuration & 2 & - \\
+	 & FR5-C: Dissectors support both little and big endian & 1 & - \\
+	 & FR5-D: Dissectors support different sizes from flags & 2 & - \\
+	 & FR3-C: Support WIN32, WIN64, sparc etc & 4 & - \\
+	 & FR5-B: Dissectors support memory alignement & 8 & - \\
+	 & FR1-D: Support members of type union & 1 & - \\
+	 & FR2: Handle Lua reserved definition names & 1 & - \\
+	\addlinespace
+	\textbf{Doc.} &  & \textbf{11} & \textbf{-} \\
+	 & FR4-B: Custom Lua configuration & 2 & - \\
+	\hyperref[tab:req:stories8]{US34} & FR4-C: Support custom handling of specific data types & 2 & - \\
+	\hyperref[tab:req:stories9]{US36} & FR5: User documentation for what platform that the utility support & 3 & - \\
+	\hyperref[tab:req:stories9]{US37} & FR5: Create developer manual from python docstrings (autodoc plugin) & 4 & - \\
+	\addlinespace
+	\textbf{Fixes} &  & \textbf{16} & \textbf{-} \\
+	\midrule
+	& Total: & 102 &  -\\
+	\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\begin{table}[!htb] \small \center
+\caption{Sprint 3 Timetable\label{tab:sprint3time}}
+\begin{tabularx}{\textwidth}{X c c}
+	\toprule
+	& \multicolumn{2}{c}{Hours} \\
+	\cmidrule(r){2-3}
+	Description & Est. & Act. \\
+	\midrule
+	\textbf{Sprint planning} & \textbf{30} & \textbf{47.5} \\
+	\addlinespace
+	\textbf{Sprint 3 requirements} & \textbf{102} & \textbf{-} \\
+	Implementation & 56 & - \\
+	Testing & 19 & - \\
+	User Documentation & 11 & - \\
+	Fixes & 16 & - \\
+	\addlinespace
+	\textbf{Sprint review} & \textbf{20} & \textbf{-} \\
+	\addlinespace
+	\textbf{Sprint documentation} & \textbf{75} & \textbf{-} \\
+	Sprint 1 document & 10 & -\\
+	Sprint 2 document & 14 & - \\
+	Sprint 3 document & 51 & - \\
+	\addlinespace
+	\textbf{Report work} & \textbf{42} & \textbf{-} \\
+	User stories to LaTeX & 3 & 4\\
+	Architecture update & 8 & -\\
+	Glossaries and acronyms & 16 & -\\
+	Requirement review & 15 & -\\
+	Layout and correction & 15 & -\\
+	\addlinespace
+	\textbf{Lectures} & \textbf{21} & \textbf{14} \\
+	\addlinespace
+	\textbf{Meetings} & \textbf{57} & \textbf{-} \\
+	Advisor meetings & 28 & - \\
+	Customer meetings & 8 & - \\
+	Stand-up meetings & 21 & - \\
+	\midrule
+	Total: & 347 & - \\
+	\bottomrule
+\end{tabularx}
+\end{table}
+
+
 
 %----------------------
 \section{System Design}
 %----------------------
+The system design defines the new modules and architecture that has to be in place to satisfy the specified requirements that we have included in the sprint 3 backlog.\\
 
+Now that the utility has both basic and advanced features, it is time to specialize and make support for environmental variables that can be found in Thales' source code. This basically include various platform specific support, endian handling and minor technicalities. The latter one is vital for the customer in order for the utility to be efficient and adequate.
+
+The platform specific support...
 
 %-----------------------
 \section{Implementation}
@@ -97,7 +190,25 @@ TODO
 
 \subsection{Support Union Type}
 %-----------------------
-TODO
+The union type is a variabel that can contain different data types with 
+different sizes. The union will allocated memory for the largest type defined 
+in the union. \autoref{code:union} shows an example on a header-file with an 
+union type. The compiler is responisble for keeping track of size and 
+alignment requirements\cite[p.147]{Kerninghan1988} . Since there is not 
+possible to find out which data type that is used in Wireshark, the utility 
+has to genereate a dissector that display the values for each data type. 
+\autoref{fig:wsunion} displays the dissector generated from the struct in 
+\autoref{code:union}, this shows the union with three members, all of them are 
+listed with their values, in this case the float value is the correct one.
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/wireshark_union}
+	\caption{Union type support\label{fig:wsunion}}
+\end{figure}
+
+\lstset{language=C,caption={Union type},label=code:union}
+\lstinputlisting[language=C]{./sprints/code/union.h}
 
 \subsection{Display Types Wireshark Do Not Support}
 %-----------------------
@@ -105,7 +216,12 @@ TODO
 
 \subsection{Support Specifying ID of Dissectors}
 %-----------------------
-TODO
+Specifying dissector ID has been modified from sprint 2. The dissector will 
+still use the ID given in the configuration for a struct, if the struct is not 
+given an ID in the configuration, then the ID for the struct will be set to 
+\emph{NONE}. This is done to ensure that structs have an unique ID for their 
+dissector. Structs-in-structs member do not need an ID since they are called 
+from the struct' by the dissector name.
 
 \subsection{Do Not Regenerate dissectors}
 %-----------------------
@@ -113,7 +229,10 @@ TODO
 
 \subsection{Handle Lua Reserved Keywords}
 %-----------------------
-TODO
+Lua has a list of reserved keywords, and some of these keywords are allowed in 
+the C language. The utility is able to support this under generation of Lua 
+code, when an identifier is a lua keyword, an underscore(\_) is added, so the 
+identifier start with ''\_''.
 
 %-----------------------
 \section{Sprint Testing}

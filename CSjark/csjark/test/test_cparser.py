@@ -8,6 +8,7 @@ from attest import Tests, assert_hook, contexts
 from pycparser import c_ast
 
 import cparser
+from platform import Platform
 
 
 def _child(node, depth=1):
@@ -203,4 +204,9 @@ def cpp_include(ast):
     a, b, c = ast.children()
     assert _child(c, 5).names[0] == 'bool'
     assert int(_child(c, 3).children()[1].value) == 5
+
+@cpp.test
+def cpp_macros(ast):
+    """Test that our C preprocessor support _WIN32 and other macros."""
+    pass # Meh, how do we solve this?
 

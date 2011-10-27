@@ -46,7 +46,7 @@ class Config:
         rules.extend(self.types.get(type, []))
         return rules
 
-    def create_field(self, proto, name, ctype, size=None):
+    def create_field(self, proto, name, ctype, size=None, alignment_size = None):
         """Create a field depending on rules."""
         type_ = proto.platform.map_type(ctype)
 
@@ -61,28 +61,31 @@ class Config:
 
         # Custom field rules
         if customs:
-            return customs[0].create(proto, name, type_, size, ctype)
+            return customs[0].create(proto, name, type_, size, alignment_size, ctype)
 
         # If size is None and not customs rule, we are in trouble.
         if size is None:
             raise ConfigError('Unknown field size for %s' % name)
+        
+        if alignment_size is None:
+            raise ConfigError('Unknown field alignment_size for %s' % name)
 
         # Bitstring rules
         if bits:
-            return proto.add_bit(name, type_, size, bits[0].bits)
+            return proto.add_bit(name, type_, size, alignment_size, bits[0].bits)
 
         # Enum rules
         if enums:
             rule = enums[0]
-            return proto.add_enum(name, type_, size, rule.values, rule.strict)
+            return proto.add_enum(name, type_, size, alignment_size, rule.values, rule.strict)
 
         # Range rules
         if ranges:
             rule = ranges[0]
-            return proto.add_range(name, type_, size, rule.min, rule.max)
+            return proto.add_range(name, type_, size, alignment_size, rule.min, rule.max)
 
         # Create basic Field if no rules fired
-        return proto.add_field(name, type_, size)
+        return proto.add_field(name, type_, size, alignment_size)
 
 
 class BaseRule:
@@ -212,6 +215,7 @@ class Custom(BaseRule):
 
         # TODO: validate that the parameters are valid for the field type
         self.size = obj.get('size', None)
+        self.alignment_size = obj.get('alignment_size', None)
         self.abbr = obj.get('abbr', None)
         self.name = obj.get('name', None)
         self.base = obj.get('base', None)
@@ -219,12 +223,16 @@ class Custom(BaseRule):
         self.mask = obj.get('mask', None)
         self.desc = obj.get('desc', None)
 
-    def create(self, proto, name, type_, size, ctype):
+    def create(self, proto, name, type_, size, alignment_size, ctype):
         if self.size is not None:
             size = self.size
         if size is None:
             raise ConfigError('Missing size for field %s' % name)
-        field = proto.add_field(name, self.field, size)
+        if self.alignment_size is not None:
+            alignment_size = self.alignment_size
+        if alignment_size is None:
+            raise ConfigError('Missing alignment_size for field %s' % name)
+        field = proto.add_field(name, self.field, size, alignment_size)
         field.abbr = self.abbr
         field.base = self.base
         if self.values:

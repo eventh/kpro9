@@ -93,7 +93,7 @@ class Field:
         t = '\t{store}subtree:{add}({var}, buffer({offset}, {size}))'
         return t.format(store=store, add=self.add_var,
                         var=self.var, offset=offset, size=self.size)
-    
+
     def _get_padded_offset(self, offset):
         padding = 0
         if(self.alignment_size != 0):
@@ -101,7 +101,6 @@ class Field:
             if padding >= self.alignment_size:
                 padding = 0
         return offset + padding
-        
 
     def _create_field(self, var, type_, abbr, name,
             base=None, values=None, mask=None, desc=None):

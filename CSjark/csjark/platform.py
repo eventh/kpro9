@@ -252,7 +252,7 @@ SPARC_MACROS = ['__sparc__', '__sparc', '__sparcv8', '__sparcv9']
 Platform('default', 0, Platform.big)
 
 # Windows 32 bit
-Platform('win32', 1, Platform.little, macros=WIN32_MACROS+X86_MACROS)
+Platform('win32', 1, Platform.little, macros=WIN32_MACROS+X86_MACROS, alignment_sizes=DEFAULT_C_SIZE_MAP)
 
 # Windows 64 bit
 Platform('win64', 2, Platform.little,

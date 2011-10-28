@@ -99,6 +99,14 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def visit_Struct(self, node):
         """Visit a Struct node in the AST."""
+        self._visit_nodes(node)
+
+    def visit_Union(self, node):
+        """Visit a Union node in the AST."""
+        self._visit_nodes(node, union=True)
+
+    def _visit_nodes(self, node, union=False):
+        """Visit a node in the tree."""
         # Visit children
         c_ast.NodeVisitor.generic_visit(self, node)
 
@@ -111,31 +119,11 @@ class StructVisitor(c_ast.NodeVisitor):
             node.name = self.type_decl[-1]
 
         # Create the protocol for the struct
-        proto = self._create_protocol(node)
+        if union:
+            proto = self._create_union_protocol(node)
+        else:
+            proto = self._create_protocol(node)
 
-        self._find_member_definitions(node, proto)
-
-    
-
-    def visit_Union(self, node):
-        """Visit a Union node in the AST."""
-        # Visit children
-        c_ast.NodeVisitor.generic_visit(self, node)
-
-        # No children, its a member and not a declaration
-        if not node.children():
-            return
-
-        # Typedef uniton
-        if not node.name:
-            node.name = self.type_decl[-1]
-
-        # Create the protocol for the union
-        union_proto = self._create_union_protocol(node)
-
-        self._find_member_definitions(node, union_proto)
-            
-    def _find_member_definitions(self, node, proto):
         # Find the member definitions
         for decl in node.children():
             child = decl.children()[0]

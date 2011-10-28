@@ -180,12 +180,18 @@ def write_dissectors_to_file(all_protocols):
     if Options.output_file and os.path.isfile(Options.output_file):
         os.remove(Options.output_file)
 
-    # Generate and write lua dissectors
+    # Sort the protocols on name
+    sorted_protos = {}
     for key, proto in all_protocols.items():
-        dissector = proto.create()
-        platform = proto.platform.name
+        if proto.name not in sorted_protos:
+            sorted_protos[proto.name] = []
+        sorted_protos[proto.name].append(proto)
 
-        path = '%s.%s.lua' % (proto.name, platform)
+    # Generate and write lua dissectors
+    for name, protos in sorted_protos.items():
+        dissectors = [p.create() for p in protos]
+
+        path = '%s.lua' % name
         flag = 'w'
         if Options.output_dir:
             path = '%s/%s' % (Options.output_dir, path)
@@ -194,10 +200,10 @@ def write_dissectors_to_file(all_protocols):
             flag = 'a'
 
         with open(path, flag) as f:
-            f.write(dissector)
+            f.write('\n\n'.join(dissectors))
 
         if Options.verbose:
-            print('Wrote %s:%s to %s' % (platform, proto.name, path))
+            print('Wrote %s to %s (%i platforms)' % (name, path, len(protos)))
 
 
 def write_delegator_to_file():

@@ -19,6 +19,9 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{textcomp}
+\usepackage[style=treenoname,subentrycounter,numberedsection, 
+        section=chapter, acronym]{glossaries}
+
 
 \definecolor{listinggray}{gray}{0.9}
 \definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
@@ -59,8 +62,9 @@
 \begin{document}
 %\maketitle
 %\tableofcontents
-
+\makeglossaries
+\include{./appendices/glossaryDB}
+\include{./appendices/acronymDB}
 \include{./sprints/sprint3}
-
 \end{document}
 

@@ -103,13 +103,15 @@ def create_structs():
     };
     '''
     ast = cparser.parse(code, 'test')
-    yield cparser.find_structs(ast)[1].fields
+    structs = {i.name: i for i in cparser.find_structs(ast)}
+    yield structs['find'].fields
     cparser.StructVisitor.all_protocols = {}
 
 @find_structs.test
 def find_basic_types(fields):
     """Test that we find structs which has members of basic types."""
     a, b, c = fields[:3]
+    assert a and b and c
     assert a.name == 'a' and b.name == 'b' and c.name == 'c'
     assert a.type == 'int32' and b.type == 'float' and c.type == 'string'
     assert a.size == 4 and b.size == 4 and c.size == 1

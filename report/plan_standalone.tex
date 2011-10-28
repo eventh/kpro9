@@ -17,6 +17,11 @@
 \usepackage{wrapfig} % Wrap text around figures
 \usepackage{array}
 \usepackage{longtable}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+\usepackage[style=treenoname,subentrycounter,numberedsection, 
+        section=chapter, acronym]{glossaries}
 
 % Configure links in pdfs
 \hypersetup{
@@ -29,6 +34,9 @@
 \date{\today}
 
 \begin{document}
+\makeglossaries
+\include{./appendices/glossaryDB}
+\include{./appendices/acronymDB}
 %\maketitle
 %\tableofcontents
 \include{./planning/project_directive}

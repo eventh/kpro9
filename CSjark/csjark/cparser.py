@@ -120,6 +120,8 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Create the protocol for the struct
         proto = self._create_protocol(node, union)
+        if proto is None:
+            return # We have already created this protocol
 
         # Find the member definitions
         for decl in node.children():
@@ -314,22 +316,28 @@ class StructVisitor(c_ast.NodeVisitor):
             proto = Protocol(node.name, conf, self.platform)
         proto._coord = node.coord
 
-        self._store_protocol(node, proto)
-
-        return proto
+        return self._store_protocol(node, proto)
 
     def _store_protocol(self, node, proto):
-        # Disallow structs with same name
-        if node.name in StructVisitor.all_platforms[self.platform]:
-            o = StructVisitor.all_platforms[self.platform][node.name]._coord
-            if (os.path.normpath(o.file) != os.path.normpath(node.coord.file)
-                    or o.line != node.coord.line):
-                raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
-                       node.name, o.file, o.line, node.coord.file, node.coord.line))
-
+        """Store the protocol, unless it already exists."""
         # Add protocol to list of all protocols
-        self.protocols.append(proto)
-        self.all_platforms[self.platform][node.name] = proto
+        if node.name not in self.all_platforms[self.platform]:
+            self.protocols.append(proto)
+            self.all_platforms[self.platform][node.name] = proto
+            return proto
+
+        old_proto = self.all_platforms[self.platform][node.name]
+
+        # Don't re-create already created protocols
+        o, norm = old_proto._coord, os.path.normpath
+        if norm(o.file) == norm(node.coord.file) and o.line == node.coord.line:
+            self.protocols.append(old_proto) #TODO: Remove
+            del proto
+            return None
+
+        # Disallow structs with same name
+        raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
+               node.name, o.file, o.line, node.coord.file, node.coord.line))
 
     def _get_type(self, node):
         """Get the C type from a node."""

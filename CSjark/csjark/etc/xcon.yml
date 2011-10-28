@@ -1,4 +1,35 @@
 Structs:
-  - name: xcon
+  - name: xcon # From xcon.h
     id: 666
     description: xcon example
+    enums:
+      - member: agent_type # Defined in agent.h
+        values: {1: AAA, 2: BBB, 3: CCC, 4: DDD, 5: EEE, 6: FFF}
+
+  - name: _SAP_old # From sap.h
+    enums:
+      - member: afi
+        values: [AFI_OLD, AFI_A, AFI_B, AFI_C]
+
+  - name: _SAP_a # From sap.h
+    enums:
+      - member: s_afi
+        values: [AFI_OLD, AFI_A, AFI_B, AFI_C]
+    customs: # Special case
+      - member: s_port
+        field: int16
+        size: 2
+        abbr: _SAP_a.s_port
+
+  - name: _SAP_b # From sap.h
+    enums:
+      - member: s_afi
+        values: [AFI_OLD, AFI_A, AFI_B, AFI_C]
+
+  - name: _SAP_c # From sap.h
+    enums:
+      - member: s_afi
+        values: [AFI_OLD, AFI_A, AFI_B, AFI_C]
+
+  - name: rst_p # TODO
+

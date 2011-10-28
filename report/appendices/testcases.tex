@@ -340,7 +340,7 @@
 	\multirow{2}{*}{Execution} & 1. Feed the utility the name of the two folders with header-files and configuration-files. \\
 	& 2. Read output from the utility \\
 	\midrule
-	Expected result  & 2. The utility should provide the user with the amount of header files processed and the number of dissectors created,  or a error if there is error either in the header-files or config-files. \\
+	Expected result  & 2. The utility should provide the user with the amount of header files processed and the number of dissectors created. It should also provide the user with error messages for the header and configuration files it was unable to run  \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -471,7 +471,7 @@
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Suppurt platforms with different endian  \\
+	Description & Supporting platforms with different endian  \\
 	Tester & Erik Bergersen \\
 	Prerequisites & There have to exist a header-file, config-file and pcap-file to do the test. \\
 	Feature & Generate dissectors which support both little and big endian platforms \\
@@ -495,7 +495,7 @@
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Suppurt alignments  \\
+	Description & Supporting alignments  \\
 	Tester & Erik Bergersen \\
 	Prerequisites & There have to exist a header-file, config-file and pcap-file to do the test. \\
 	Feature & Genereate dissectors on platforms with different alignment \\
@@ -519,7 +519,7 @@
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Handle Lua keywords  \\
+	Description & Handling Lua keywords  \\
 	Tester & Erik Bergersen \\
 	Prerequisites & There have to exist a header-file, config-file and pcap-file to do the test. \\
 	Feature & The utility should support struct members, that have equal names as keywords in Lua \\

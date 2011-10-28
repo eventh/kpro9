@@ -119,10 +119,7 @@ class StructVisitor(c_ast.NodeVisitor):
             node.name = self.type_decl[-1]
 
         # Create the protocol for the struct
-        if union:
-            proto = self._create_union_protocol(node)
-        else:
-            proto = self._create_protocol(node)
+        proto = self._create_protocol(node, union)
 
         # Find the member definitions
         for decl in node.children():
@@ -308,20 +305,13 @@ class StructVisitor(c_ast.NodeVisitor):
         else:
             return proto.conf.create_field(proto, name, ctype, size, alignment_size)
 
-    def _create_protocol(self, node):
+    def _create_protocol(self, node, union=False):
         """Create a new protocol for 'node'."""
         conf = Options.configs.get(node.name, None)
-        proto = Protocol(node.name, conf, self.platform)
-        proto._coord = node.coord
-
-        self._store_protocol(node, proto)
-
-        return proto
-
-    def _create_union_protocol(self, node):
-        """Create a new union protocol for 'node'."""
-        conf = Options.configs.get(node.name, None)
-        proto = UnionProtocol(node.name, conf, self.platform)
+        if union:
+            proto = UnionProtocol(node.name, conf, self.platform)
+        else:
+            proto = Protocol(node.name, conf, self.platform)
         proto._coord = node.coord
 
         self._store_protocol(node, proto)

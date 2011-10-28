@@ -16,6 +16,12 @@
 \usepackage{multirow} % Row spanning
 \usepackage{wrapfig} % Wrap text around figures
 \usepackage{array} 
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+\usepackage[style=treenoname,subentrycounter,numberedsection, 
+        section=chapter, acronym]{glossaries}
 
 % Configure links in pdfs
 \hypersetup{
@@ -31,6 +37,9 @@
 
 \begin{document}
 %\maketitle
+\makeglossaries
+\include{./appendices/glossaryDB}
+\include{./appendices/acronymDB}
 \tableofcontents
 \include{./planning/prestudy}
 \end{document}

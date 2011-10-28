@@ -99,6 +99,14 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def visit_Struct(self, node):
         """Visit a Struct node in the AST."""
+        self._visit_nodes(node)
+
+    def visit_Union(self, node):
+        """Visit a Union node in the AST."""
+        self._visit_nodes(node, union=True)
+
+    def _visit_nodes(self, node, union=False):
+        """Visit a node in the tree."""
         # Visit children
         c_ast.NodeVisitor.generic_visit(self, node)
 
@@ -111,31 +119,8 @@ class StructVisitor(c_ast.NodeVisitor):
             node.name = self.type_decl[-1]
 
         # Create the protocol for the struct
-        proto = self._create_protocol(node)
+        proto = self._create_protocol(node, union)
 
-        self._find_member_definitions(node, proto)
-
-    
-
-    def visit_Union(self, node):
-        """Visit a Union node in the AST."""
-        # Visit children
-        c_ast.NodeVisitor.generic_visit(self, node)
-
-        # No children, its a member and not a declaration
-        if not node.children():
-            return
-
-        # Typedef uniton
-        if not node.name:
-            node.name = self.type_decl[-1]
-
-        # Create the protocol for the union
-        union_proto = self._create_union_protocol(node)
-
-        self._find_member_definitions(node, union_proto)
-            
-    def _find_member_definitions(self, node, proto):
         # Find the member definitions
         for decl in node.children():
             child = decl.children()[0]
@@ -320,20 +305,13 @@ class StructVisitor(c_ast.NodeVisitor):
         else:
             return proto.conf.create_field(proto, name, ctype, size, alignment_size)
 
-    def _create_protocol(self, node):
+    def _create_protocol(self, node, union=False):
         """Create a new protocol for 'node'."""
         conf = Options.configs.get(node.name, None)
-        proto = Protocol(node.name, conf, self.platform)
-        proto._coord = node.coord
-
-        self._store_protocol(node, proto)
-
-        return proto
-
-    def _create_union_protocol(self, node):
-        """Create a new union protocol for 'node'."""
-        conf = Options.configs.get(node.name, None)
-        proto = UnionProtocol(node.name, conf, self.platform)
+        if union:
+            proto = UnionProtocol(node.name, conf, self.platform)
+        else:
+            proto = Protocol(node.name, conf, self.platform)
         proto._coord = node.coord
 
         self._store_protocol(node, proto)

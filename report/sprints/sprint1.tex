@@ -9,7 +9,7 @@
 In our first sprint we will implement basic and fundamental parts of the
 utility. Based on our preliminary studies, we have decided what preprocessor
 and parser to use, so the task is to make this work together and achieve the
-desired functionality.  
+desired functionality.
 
 \subsection{Duration}
 %--------------------
@@ -244,6 +244,8 @@ arguments like verbose, debug, nocpp and output options. If its provided with
 invalid arguments, it should print a message explaining the correct usage.
 
 \paragraph{Configuration}
+The configuration module parses configuration files  
+
 Configuration should parse config files and feed information to the other
 parts, or they should request informations when they need it. Need to consider
 the scope of configuration, does it refer to a specific struct, a specific
@@ -253,7 +255,7 @@ input file, all structs or all instances of a specific type?
 Front-end C parser should parse C files and look for struct definitions,
 which they will fill into some data-structures that the back-end will use.
 
-Should se pycparser and PLY libraries for parsing of C files. For C
+Should use pycparser and PLY libraries for parsing of C files. For C
 preprocessor use native programs on different platforms, or cpp.exe from
 pycparser for Windows. Also use fake libc include files, which comes with
 pycparser, to avoid having to import system header files. Should accept C

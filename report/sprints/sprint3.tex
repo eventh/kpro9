@@ -117,8 +117,9 @@ Timetable for this sprint: Table \ref{tab:sprint3time}.\\
 	Advisor meetings & 28 & - \\
 	Customer meetings & 8 & - \\
 	Stand-up meetings & 21 & - \\
+	\textbf{Project management} & \textbf{20} & \textbf{-} \\
 	\midrule
-	Total: & 347 & - \\
+	Total: & 367 & - \\
 	\bottomrule
 \end{tabularx}
 \end{table}
@@ -132,7 +133,7 @@ The system design defines the new modules and architecture that has to be in pla
 
 Now that the utility has both basic and advanced features, it is time to specialize and make support for environmental variables that can be found in Thales' source code. This basically include various platform specific support, endian handling and minor technicalities. The latter one is vital for the customer in order for the utility to be efficient and adequate.
 
-The platform specific support...
+The platform specific support 
 
 %-----------------------
 \section{Implementation}
@@ -237,18 +238,148 @@ identifier start with ''\_''.
 %-----------------------
 \section{Sprint Testing}
 %-----------------------
-During sprint 3 the team executed a total of 9 tests were run. Tests executed:
+During sprint 3 the team executed a total of 9 tests were run, but no additional testingfeatures were added during the sprint. Tests executed:
 
 \begin{itemize}
-	\item TID15 - Supporting batch mode of C header and configuration files \autoref{tab:TID15}
-	\item TID16 - Supporting custom Lua configuration \autoref{tab:TID16}
-	\item TID17 - Supporting unions \autoref{tab:TID17}
-	\item TID18 - Supporting filter and search in wireshark \autoref{tab:TID18}
-	\item TID19 - Supporting WIN32, \_WIN64, \_SPARC etc \autoref{tab:TID19}
-	\item TID20 -  Supporting the use of flags specifying platforms to display member values correctly \autoref{tab:TID20}
-	\item TID21 - Supporting platforms with different endians \autoref{tab:TID21}
-	\item TID22 - Supporting alignments \autoref{tab:TID22}
+	\item TID15 - Supporting batch mode of C header and configuration files \autoref{tab:sp3TID15}
+	\item TID16 - Supporting custom Lua configuration \autoref{tab:sp3TID16}
+	\item TID17 - Supporting unions \autoref{tab:sp3TID17}
+	\item TID18 - Supporting filter and search in wireshark \autoref{tab:sp3TID18}
+	\item TID19 - Supporting WIN32, \_WIN64, \_SPARC etc \autoref{tab:sp3TID19}
+	\item TID20 -  Supporting the use of flags specifying platforms to display member values correctly \autoref{tab:sp3TID20}
+	\item TID21 - Supporting platforms with different endians \autoref{tab:sp3TID21}
+	\item TID22 - Supporting alignments \autoref{tab:sp3TID22}
 \end{itemize}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Supporting batch mode of C-headers and configuration files\label{tab:sp3TID15}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting batch mode of C header and configuration files \\
+	Tester & Lars Solvoll Tønder \\
+	Date & 28.10.2011 \\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Supporting custom Lua configuration\label{tab:sp3TID16}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting custom LUA configuration\\
+	Tester & YOUR NAME HERE \\
+	Date & DATE HERE \\
+	Result & TYPE THE RESULT HERE\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Supporting unions\label{tab:sp3TID17}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting unions\\
+	Tester & YOUR NAME HERE\\
+	Date & DATE HERE\\
+	Result & TYPE THE RESULT HERE\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Supporting filter and search in wireshark\label{tab:sp3TID18}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting filter and search in wireshark\\
+	Tester & YOUR NAME HERE \\
+	Date & DATE HERE\\
+	Result & TYPE THE RESULT HERE\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Supporting WIN32, \_WIN64, \_sparc \label{tab:sp3TID19}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting WIN32, \_WIN64, \_sparc \\
+	Tester & YOUR NAME HERE\\
+	Date & DATE HERE\\
+	Result & TYPE THE RESULT HERE\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Supporting the use of flags specifying platforms to display member values correctly \label{tab:sp3TID20}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting the use of flags specifying platforms to display member values correctly \\
+	Tester & YOUR NAME HERE\\
+	Date & DATE HERE\\
+	Result & TYPE THE RESULT HERE\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Supporting platforms with different endian \label{tab:sp3TID21}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting platforms with different endian \\
+	Tester & YOUR NAME HERE\\
+	Date & DATE HERE\\
+	Result & TYPE THE RESULT HERE\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Supporting alignments \label{tab:sp3TID22}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting alignments \\
+	Tester & YOUR NAME HERE\\
+	Date & DATE HERE\\
+	Result & TYPE THE RESULT HERE\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Handling Lua keywords \label{tab:sp3TID22}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Handling Lua keywords \\
+	Tester & YOUR NAME HERE\\
+	Date & DATE HERE\\
+	Result & TYPE THE RESULT HERE\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Test Evaluation}
+
+\subsubsection{Test Coverage}
 
 %--------------------------
 \section{Customer Feedback}

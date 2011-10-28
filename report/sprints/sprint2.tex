@@ -5,9 +5,9 @@
 %-------------------
 \section{Pre-sprint}
 %-------------------
-Sprint 1 gave the desired result, but the team was not satisfied with the way the Scrum process was conducted, especially the sprint planning. In sprint 1 retrospect we decided to conform more to, in our mind, proper Scrum. Applying experience and advice from the first sprint, to get a better process. 
+Sprint 1 gave the desired result, but the team was not satisfied with the way the Scrum process was conducted, especially the sprint planning. In sprint 1 retrospect we decided to conform more to, in our mind, proper Scrum. We will apply experience and advice from the first sprint, to get a better process. 
 
-This planning meeting we will try to have more descriptive work items in the sprint backlog. This will ease the process of design, implementation, testing and documentation of the utility, and we do not have to redo any parts that will end up in the report in order to assist the reader. We focus on good user stories to ensure that the elements are low enough level.
+In this planning meeting we will try to have more descriptive work items in the sprint backlog. This will ease the process of design, implementation, testing and documentation of the utility, and we do not have to redo any parts that will end up in the report in order to assist the reader. We focus on good user stories to ensure that the elements are of a low enough level.
 
 
 %------------------------
@@ -184,11 +184,12 @@ The second sprint we will implement thirteen requirements. These are listed in T
 %----------------------
 \section{System Design}
 %----------------------
-For sprint 2 the team decided to refactor some of the code in order to make it easier to read and to split the functionalities of the utility in such a way that it reduces coupling within the system.Some new functionality was also added on the parser side in order to get the utility to recognize the datatypes mentioned in the sprint 2 backlog. This new functionality is represented in the by the addition of new classes in the dissector and config modules. These classes include the BitField, ArrayField,EnumField and ProtocolField classes, which contain the functionality required to handle Bitstrings, arrays, enums and structs within structs respectively. The classes added to the config module include the Trailer, Bitstring, Custom and Enum classes which handles the configuration needs for structs with trailers, bitstrings, custom handling of data types and enums respectively. Other than that, there were no other changes or additions made to the design during sprint 2.
+For sprint 2 the team decided to refactor some of the code in order to make it easier to read and to split the functionalities of the utility in such a way that it reduces coupling within the system. Some new functionality was also added on the parser side in order to get the utility to recognize the datatypes mentioned in the sprint 2 backlog. This new functionality is represented by the addition of new classes in the dissector and config modules. These classes include the BitField, ArrayField, EnumField and ProtocolField classes, which contain the functionality required to handle Bitstrings, arrays, enums and structs within structs respectively. The classes added to the config module include the Trailer, Bitstring, Custom and Enum classes which handles the configuration needs for structs with trailers, bitstrings, custom handling of data types and enums respectively. Other than that, there were no other changes or additions made to the design during sprint 2.
 
 \subsection{Utility}
 %--------------------
-\autoref{fig:sp2:class} shows the class diagram the team made for sprint 2. The main differences from sprint 1 are the additions of new classes, extending the functionality of the utility so that the utility can handle more complex header files than it could before. The developers also generalized some of the modules and used inheritance to support the re-use of code 
+\autoref{fig:sp2:class} shows the class diagram the team made for sprint 2. The main differences from sprint 1 are the additions of new classes, extending the functionality of the utility so that the utility can handle more complex header files than it could before. The developers also generalized some of the modules and used inheritance to support the re-use of code.
+ 
 \begin{figure}[!htb]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s2}
@@ -203,9 +204,13 @@ In the previous sprint we focused on creating a naive implementation of the
 utility. In this sprint the focus was on implementing data types for the 
 C programming language and making it possible to configure more options on how 
 the dissector will function. This section will cover the requirements 
-implemented, how they were implemented and what the ''output'' looks like.
+implemented, what the header and config files looks like, and what the ''output'' looks like.
+
+To get a better understanding of how the different requirements were implemented,
+look at the user stories for sprint 2 in \autoref{sec:req:stories2}.
 
 \subsection{Support Members of Type enum}
+
 %----------------------
 \label{sec:supportenum}
 Enum is a type declaration in C, which specifies enumeration constants.  Enum 

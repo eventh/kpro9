@@ -44,6 +44,7 @@ def req_1a():
 @parse_structs.test
 def req_1b():
     """Test requirement FR1-B: Support enums."""
+    cparser.StructVisitor.all_protocols = {}
     ast = cparser.parse('enum c {a, b=3}; struct req { enum c test; };')
     assert isinstance(_child(ast.children()[1], 4), c_ast.Enum)
     enum = cparser.find_structs(ast)[0].fields[0]
@@ -73,6 +74,7 @@ def req_1d():
 @parse_structs.test
 def req_1e():
     """Test requirement FR1-E: Support arrays."""
+    cparser.StructVisitor.all_protocols = {}
     ast = cparser.parse('struct req1e {int a[8][7]; char b[9]; float c[5];};')
     a, b, c = [_child(i, 1) for i in _child(ast, 2).children()]
     assert isinstance(b, c_ast.ArrayDecl) and isinstance(c, c_ast.ArrayDecl)
@@ -89,11 +91,13 @@ def req_1e():
 @parse_structs.test
 def req_1f():
     """Test requirement FR1-F: Detect same name structs."""
+    cparser.StructVisitor.all_protocols = {}
     code = 'struct a {int c;};\nstruct b { int d;\nstruct a {int d;}; };'
     ast = cparser.parse(code, 'test')
     with contexts.raises(cparser.ParseError) as error:
         cparser.find_structs(ast)
     assert str(error).startswith('Two structs with same name a')
+    cparser.StructVisitor.all_protocols = {}
 
 
 # Tests for the second requirement, generate dissectors in lua

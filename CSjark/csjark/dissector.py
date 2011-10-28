@@ -738,7 +738,7 @@ class Delegator(Protocol):
         self.add_field('Message length', 'uint32', 4, 0)
         self._version, self._flags, self._msg_id, self._length = self.fields
 
-    def create(self, all_protocols):
+    def create(self):
         """Returns all the code for dissecting this protocol."""
         self._header_defintion()
         self._fields_definition()

@@ -148,13 +148,12 @@ def parse_args(args=None):
 def create_dissectors(filename):
     """Parse 'filename' to create a Wireshark protocol dissector."""
     # Handle different platforms
-    protocols = {}
     for platform in Options.platforms:
 
         # Parse the filename and find all struct definitions
         try:
             ast = cparser.parse_file(filename, platform)
-            protocols[platform.name] = cparser.find_structs(ast, platform)
+            cparser.find_structs(ast, platform)
 
         # Silence errors if not in strict mode
         except Exception as err:
@@ -174,37 +173,31 @@ def create_dissectors(filename):
     if Options.verbose:
         print("Parsed header file '%s' successfully." % filename)
 
-    return protocols
 
-
-def write_dissectors_to_file(protocols):
+def write_dissectors_to_file(all_protocols):
     """Write lua dissectors to file(s)."""
     # Delete output_file if it already exists
     if Options.output_file and os.path.isfile(Options.output_file):
         os.remove(Options.output_file)
 
     # Generate and write lua dissectors
-    count = 0
-    for platform_name, protos in protocols.items():
-        for proto in protos:
-            count += 1
-            code = proto.create()
+    for key, proto in all_protocols.items():
+        dissector = proto.create()
+        platform = proto.platform.name
 
-            path = '%s.%s.lua' % (proto.name, platform_name)
-            flag = 'w'
-            if Options.output_dir:
-                path = '%s/%s' % (Options.output_dir, path)
-            elif Options.output_file:
-                path = Options.output_file
-                flag = 'a'
+        path = '%s.%s.lua' % (proto.name, platform)
+        flag = 'w'
+        if Options.output_dir:
+            path = '%s/%s' % (Options.output_dir, path)
+        elif Options.output_file:
+            path = Options.output_file
+            flag = 'a'
 
-            with open(path, flag) as f:
-                f.write(code)
+        with open(path, flag) as f:
+            f.write(dissector)
 
-            if Options.verbose:
-                print('Wrote %s:%s to %s' % (platform_name, proto.name, path))
-
-    return count
+        if Options.verbose:
+            print('Wrote %s:%s to %s' % (platform, proto.name, path))
 
 
 def write_delegator_to_file():
@@ -214,7 +207,7 @@ def write_delegator_to_file():
         filename = '%s/%s' % (Options.output_dir, filename)
 
     with open(filename, 'w') as f:
-        f.write(Options.delegator.create(cparser.StructVisitor.all_platforms))
+        f.write(Options.delegator.create())
 
 
 def main():
@@ -226,15 +219,17 @@ def main():
         config.parse_file(filename)
     Options.prepare_for_parsing()
 
-    # Create dissectors
-    count = 0
+    # Create protocols
     for filename in headers:
-        protocols = create_dissectors(filename)
-        count += write_dissectors_to_file(protocols)
+        create_dissectors(filename)
+
+    # Write dissectors to disk
+    protocols = cparser.StructVisitor.all_protocols
+    write_dissectors_to_file(protocols)
     write_delegator_to_file()
 
     print("Successfully parsed %i file(s), created %i dissector(s)." % (
-            len(headers), count))
+            len(headers), len(protocols)))
 
 
 if __name__ == "__main__":

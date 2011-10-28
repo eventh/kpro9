@@ -69,15 +69,16 @@ def find_structs(ast, platform=None):
     """Walks the AST nodes to find structs."""
     if platform is None:
         platform = Platform.mappings['default']
+
     visitor = StructVisitor(platform)
     visitor.visit(ast)
-    return visitor.protocols
+    return list(StructVisitor.all_protocols.values())
 
 
 class StructVisitor(c_ast.NodeVisitor):
     """A class which visit struct nodes in the AST."""
 
-    all_platforms = {}
+    all_protocols = {}
 
     def __init__(self, platform):
         """Create a new instance to visit all nodes in the AST.
@@ -87,15 +88,11 @@ class StructVisitor(c_ast.NodeVisitor):
         self.platform = platform
         self.map_type = platform.map_type
         self.size_of = platform.size_of
-        self.alignment_size_of = platform.alignment_size_of
+        self.alignment = platform.alignment_size_of
 
-        self.protocols = [] # All structs encountered in this AST
         self.enums = {} # All enums encountered in this AST
         self.aliases = {} # Typedefs and their base type
         self.type_decl = [] # Queue of current type declaration
-
-        if self.platform not in self.all_platforms:
-            self.all_platforms[self.platform] = {}
 
     def visit_Struct(self, node):
         """Visit a Struct node in the AST."""
@@ -197,16 +194,14 @@ class StructVisitor(c_ast.NodeVisitor):
             # Typedef type, which is an alias for another type
             if ctype in self.aliases:
                 token, base = self.aliases[ctype]
-                if token == 'enum':
+                if token in ('struct', 'union'):
+                    return self.handle_protocol(proto, node.declname, base)
+                elif token == 'enum':
                     return self.handle_enum(proto, node.declname, base)
-                elif token == 'struct':
-                    return self.handle_struct(proto, node.declname, base)
-                elif token == 'union':
-                    return self.handle_union(proto, node.declname, base)
                 elif token == 'array':
-                    tmp, ctype, size, alignment_size, depth = base
+                    tmp, ctype, size, alignment, depth = base
                     return self.handle_array(proto, node.declname,
-                                             ctype, size, alignment_size, depth)
+                                             ctype, size, alignment, depth)
                 else:
                     # If any rules exists, use new type and not base
                     if proto.conf and proto.conf.get_rules(None, ctype):
@@ -220,10 +215,10 @@ class StructVisitor(c_ast.NodeVisitor):
             return self.handle_enum(proto, node.declname, child.name)
         # Union member
         elif isinstance(child, c_ast.Union):
-            return self.handle_union(proto, node.declname, child.name)
+            return self.handle_protocol(proto, node.declname, child.name)
         # Struct member
         elif isinstance(child, c_ast.Struct):
-            return self.handle_struct(proto, node.declname, child.name)
+            return self.handle_protocol(proto, node.declname, child.name)
         # Error
         else:
             raise ParseError('Unknown type declaration: %s' % repr(child))
@@ -239,8 +234,7 @@ class StructVisitor(c_ast.NodeVisitor):
         if (isinstance(child, c_ast.TypeDecl) and
                 child.children()[0].names[0] == 'char'):
             size *= self.size_of('char')
-            alignment_size = self.alignment_size_of('char')
-            return child.declname, 'string', size, alignment_size, depth
+            return child.declname, 'string', size, self.alignment('char'), depth
 
         # Multidimensional, handle recursively
         if isinstance(child, c_ast.ArrayDecl):
@@ -261,51 +255,50 @@ class StructVisitor(c_ast.NodeVisitor):
                 print(token, ctype) # TODO
                 raise ParseError('Incomplete support for array of typedefs')
 
-        return child.declname, ctype, self.size_of(ctype), self.alignment_size_of(ctype), depth
+        return child.declname, ctype, self.size_of(ctype), self.alignment(ctype), depth
 
-    def handle_union(self, proto, name, union_name):
-        """Add an UnionField to the protocol."""
-        union_proto = self.all_platforms[self.platform][union_name]
-        return proto.add_protocol(name, union_proto)
+    def handle_protocol(self, proto, name, proto_name):
+        """Add an protocol field or union field to the protocol."""
+        sub_proto = StructVisitor.all_protocols[(proto_name, self.platform)]
+        return proto.add_protocol(name, sub_proto)
 
-    def handle_array(self, proto, name, ctype, size, alignment_size, depth):
+    def handle_array(self, proto, name, ctype, size, alignment, depth):
         """Add an ArrayField to the protocol."""
         if not depth:
-            return self.handle_field(proto, name, ctype, size, alignment_size)
-        return proto.add_array(name, self.map_type(ctype), size, alignment_size, depth)
+            return self.handle_field(proto, name, ctype, size, alignment)
+        return proto.add_array(name, self.map_type(ctype), size, alignment, depth)
 
     def handle_pointer(self, node, proto):
         """Find member details in a pointer declaration."""
         return self.handle_field(proto, node.children()[0].declname, 'pointer')
 
-    def handle_struct(self, proto, name, protoname):
-        """Add an ProtocolField to the protocol."""
-        subproto = self.all_platforms[self.platform][protoname]
-        return proto.add_protocol(name, subproto)
-
     def handle_enum(self, proto, name, enum):
         """Add an EnumField to the protocol."""
         if enum not in self.enums.keys():
             raise ParseError('Unknown enum: %s' % enum)
-        type, size, alignment_size = self.map_type('enum'), self.size_of('enum'), self.alignment_size_of('enum')
-        return proto.add_enum(name, type, size, alignment_size, self.enums[enum])
 
-    def handle_field(self, proto, name, ctype, size=None, alignment_size = None):
+        type = self.map_type('enum')
+        size = self.size_of('enum')
+        alignment = self.alignment('enum')
+
+        return proto.add_enum(name, type, size, alignment, self.enums[enum])
+
+    def handle_field(self, proto, name, ctype, size=None, alignment=None):
         """Add a field representing the struct member to the protocol."""
-        if alignment_size is None:
+        if alignment is None:
             try:
-                alignment_size = self.alignment_size_of(ctype)
+                alignment = self.alignment(ctype)
             except ValueError :
-                alignment_size = size # Assume that the alignment is the same as the size.
+                alignment = size # Assume that the alignment is the same as the size
 
         if proto.conf is None:
             if size is None:
                 size = self.size_of(ctype)
             if size is None:
-                raise ParseError('Unknown alignment size for type %s' % ctype)
-            return proto.add_field(name, self.map_type(ctype), size, alignment_size)
+                raise ParseError('Unknown alignment for type %s' % ctype)
+            return proto.add_field(name, self.map_type(ctype), size, alignment)
         else:
-            return proto.conf.create_field(proto, name, ctype, size, alignment_size)
+            return proto.conf.create_field(proto, name, ctype, size, alignment)
 
     def _create_protocol(self, node, union=False):
         """Create a new protocol for 'node'."""
@@ -321,17 +314,15 @@ class StructVisitor(c_ast.NodeVisitor):
     def _store_protocol(self, node, proto):
         """Store the protocol, unless it already exists."""
         # Add protocol to list of all protocols
-        if node.name not in self.all_platforms[self.platform]:
-            self.protocols.append(proto)
-            self.all_platforms[self.platform][node.name] = proto
+        if (node.name, self.platform) not in StructVisitor.all_protocols:
+            StructVisitor.all_protocols[(node.name, self.platform)] = proto
             return proto
 
-        old_proto = self.all_platforms[self.platform][node.name]
+        old_proto = StructVisitor.all_protocols[(node.name, self.platform)]
 
         # Don't re-create already created protocols
         o, norm = old_proto._coord, os.path.normpath
         if norm(o.file) == norm(node.coord.file) and o.line == node.coord.line:
-            self.protocols.append(old_proto) #TODO: Remove
             del proto
             return None
 

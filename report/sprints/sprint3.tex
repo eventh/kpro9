@@ -144,8 +144,18 @@ The platform definition will be a subpart of a flag-field in the structs header.
 \item Length of fields
 \item Memory alignment
 \end{itemize}
+All these three fields have to be combined to generate a dissector that will dissect the struct correctly.\\
 
-All these three fields have to be combined to generate a dissector that will dissect the struct correctly. 
+\subsection{Dicitonary lookup}
+Deciding how to implement handling of different platforms ended in a design draft seen in Figure \autoref{fig:platformhandling}. The dissector module will make a dictionary lookup in the table of supported platforms. This table conatins all platforms that the utility can make dissectors for, and their information of how the dissector shall be encoded to achieve correct handling of endianness, length of fields and memory alignment.
+
+We will start out by hardcoding this into the source code, but in the end we want to have this feed to the utility through a configuration-file. This is the way the customer has envisioned it.  
+
+\begin{figure}[!htb]
+	\includegraphics[width=\textwidth]{./sprints/img/platformhandling}
+	\caption{Platform handling\label{fig:platformhandling}}
+\end{figure}
+
 
 \paragraph{Endianness}
 

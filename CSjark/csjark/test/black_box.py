@@ -38,7 +38,6 @@ def create_protocols():
     for filename in headers:
         csjark.create_dissectors(filename)
 
-
     protocols = cparser.StructVisitor.all_protocols
 
     # Sort the protocols on name
@@ -49,12 +48,8 @@ def create_protocols():
     yield structs
 
     # Write out dissectors for manual testing
-    #write_dissectors_to_file(protocols)
-    #if True:
-    #    path = os.path.dirname(__file__)
-    #    for name, code in structs.items():
-    #        with open('%s/%s.default.lua' % (path, name), 'w') as f:
-    #            f.write(code)
+    Options.output_dir = os.path.dirname(__file__)
+    csjark.write_dissectors_to_file(protocols)
 
     # Clean up context
     del structs

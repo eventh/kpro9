@@ -1,3 +1,6 @@
+Options:
+    platforms: [default]
+
 Structs:
   - name: array_test
     id: 16

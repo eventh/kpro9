@@ -557,13 +557,16 @@ class Protocol:
             code = field.get_definition()
 
             if self.conf and self.conf.cnf: # Conformance file code
-                code = self._cnf_field_code(field, code, defintion=True)
+                code = self.conf.cnf.match(field.name, code, defintion=True)
             if code is not None:
                 self.data.append(code)
 
         # Conformance file defintion code extra
         if self.conf and self.conf.cnf:
-            self._cnf_field_code(None, None, defintion=True)
+            code = self.conf.cnf.match(None, None, defintion=True)
+            if code:
+                self.data.append(code)
+
         self.data.append('')
 
     def _fields_code(self, union=False):
@@ -573,7 +576,7 @@ class Protocol:
             code = field.get_code(offset)
 
             if self.conf and self.conf.cnf: # Conformance file code
-                code = self._cnf_field_code(field, code, defintion=False)
+                code = self.conf.cnf.match(field.name, code, defintion=False)
             if code:
                 self.data.append(code)
             if not union and field.size is not None:
@@ -581,7 +584,10 @@ class Protocol:
 
         # Conformance file dissection function code extra
         if self.conf and self.conf.cnf:
-            self._cnf_field_code(None, None, defintion=False)
+            code = self.conf.cnf.match(None, None, defintion=False)
+            if code:
+                self.data.append(code)
+
         return offset
 
     def _dissector_func(self):
@@ -648,7 +654,6 @@ class Protocol:
             if rule.size is not None:
                 size_str = ', %i' % rule.size
 
-
             # Call trailers 'count' times
             tabs = '\t'
             if rule.member is not None or count > 1:
@@ -668,27 +673,6 @@ class Protocol:
 
             if rule.member is not None or count > 1:
                 self.data.append('\tend') # End for loop
-
-    def _cnf_field_code(self, field, code, defintion=False):
-        """Modify fields code if a cnf file demands it."""
-        return code
-        if field.name in self.conf.cnf.rules:
-            rules = self.conf.cnf.rules[field.name]
-
-            # Header rule, insert custom lua before generated code
-            if self.conf.cnf.t_hdr in rules:
-                return '%s\n%s' % (rules[self.conf.cnf.t_hdr], code)
-
-            # Body rules, replace custom lua with generated code
-            elif self.conf.cnf.t_body in rules:
-                content = rules[self.conf.cnf.t_body]
-                if '%(DEFAULT_BODY)s' in content:
-                    content = content.replace('%(DEFAULT_BODY)s', code)
-                if '{DEFAULT_BODY}' in content:
-                    content = content.format(DEFAULT_BODY=code)
-                return content
-
-        return code
 
     def _get_tree_add(self):
         """Get the endian specific function for adding a item to a tree."""

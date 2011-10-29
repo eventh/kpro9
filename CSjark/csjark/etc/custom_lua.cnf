@@ -6,7 +6,7 @@
 #.COMMENT five
 	DEF_HEADER places code on top of the Field definition.
 #.DEF_HEADER
-	-- Above the 'five' field def
+-- Above the 'five' field def
 #.END
 
 
@@ -14,16 +14,24 @@
 	DEF_BODY replaces the Field definition.
 	Use %(DEFAULT_BODY)s or {DEFAULT_BODY} to use generated code.
 #.DEF_BODY truth
-	-- This is above 'truth'
-	%(DEFAULT_BODY)s
-	-- This is below
+-- This is above 'truth'
+%(DEFAULT_BODY)s
+-- This is below
 #.END
 
 
 #.COMMENT
 	DEF_FOOTER places code below the Field defintion.
 #.DEF_FOOTER pointer
-	-- This is below 'pointer'
+-- This is below 'pointer'
+#.END
+
+
+#.COMMENT
+	DEF_EXTRA places extra code at the end of
+	the field definition section.
+#.DEF_EXTRA
+-- This was all the field defintions
 #.END
 
 
@@ -49,14 +57,6 @@
 	FUNC_FOOTER places code below in the dissector function
 #.FUNC_FOOTER five
 	-- This is below 'five' inside dissector function
-#.END
-
-
-#.COMMENT
-	DEF_EXTRA places extra code at the end of
-	the field definition section.
-#.DEF_EXTRA
-	-- This was all the field defintions
 #.END
 
 

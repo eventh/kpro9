@@ -269,10 +269,9 @@ class ConformanceFile:
     t_end_cnf = 'END_OF_CNF'    # End of the conformance file
 
     # List of all valid tokens and tokens which should store content
-    store_tokens = [
-            t_def_hdr, t_def_body, t_def_ftr, t_def_extra,
-            t_func_hdr, t_func_body, t_func_ftr, t_func_extra,
-    ]
+    def_tokens = [t_def_hdr, t_def_body, t_def_ftr]
+    func_tokens = [t_func_hdr, t_func_body, t_func_ftr]
+    store_tokens = def_tokens + func_tokens + [t_def_extra, t_func_extra]
     valid_tokens = store_tokens + [t_comment, t_end, t_end_cnf]
 
     def __init__(self, conf, file, rule=None):
@@ -300,19 +299,19 @@ class ConformanceFile:
         """Parse the conformance file's sections and content."""
         token = None # Current section beeing parsed
         field = None # Field the section refers to
-        content = '' # Current content for the section parsed so far
+        content = [] # Current content for the section parsed so far
 
         # Go through all lines and assign content
         for line in self._lines:
             if not line.startswith('#.'):
-                content += line.strip()
+                content.append(line.rstrip())
                 continue
 
             # Store current content when new token is found
             if token in self.store_tokens:
-                self.rules[(field, token)] = content
+                self.rules[(field, token)] = '\n'.join(content)
 
-            content = ''
+            content = []
             token, field = self._get_token(line)
 
             if token == self.t_end_cnf:
@@ -320,7 +319,38 @@ class ConformanceFile:
 
         # Reached end of file without an end token
         if content and token in self.store_tokens:
-            self.rules[(field, token)] = content
+            self.rules[(field, token)] = '\n'.join(content)
+
+    def match(self, name, code, defintion=False):
+        """Modify fields code if a cnf file demands it."""
+        # Handle extra code rules
+        if name is None and code is None:
+            if defintion:
+                token = self.t_def_extra
+            else:
+                token = self.t_func_extra
+            return self.rules.get((name, token), '')
+
+        if defintion:
+            tokens = self.def_tokens
+        else:
+            tokens = self.func_tokens
+
+        # Modify code if field match any rules, body first
+        for token in sorted(tokens):
+            content = self.rules.get((name, token), '')
+            if not content:
+                continue
+            if token.endswith('_HEADER'):
+                code = '%s\n%s' % (content, code)
+            elif token.endswith('_FOOTER'):
+                code = '%s\n%s' % (code, content)
+            elif token.endswith('_BODY'):
+                content = content.replace('%(DEFAULT_BODY)s', code)
+                content = content.replace('{DEFAULT_BODY}', code)
+                code = content
+
+        return code
 
 
 class Options:

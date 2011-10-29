@@ -1,5 +1,3 @@
-Options:
-    platforms: [default,win32,sparc]
 Structs:
   - name: union_within_struct
     id: 160

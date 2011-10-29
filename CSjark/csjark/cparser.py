@@ -44,7 +44,7 @@ def parse_file(filename, platform=None):
         if platform is not None:
             file = 'temp-%s.tmp.h' % os.path.split(filename)[1]
             with open(file, 'w') as fp:
-                fp.write('%s#include "%s"\n\n' % (platform.header, filename))
+                fp.write('%s\n#include "%s"\n\n' % (platform.header, filename))
     else:
         cpp_args = None
 

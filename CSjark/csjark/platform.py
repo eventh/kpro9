@@ -240,7 +240,7 @@ X86_MACROS = [
 X64_MACROS = [
     '__amd64__', '__amd64', '__x86_64', '__x86_64__', '_M_X64',
     '__ia64__', '_IA64', '__IA64__', '__ia64', '_M_IA64', '_M_IA64',
-    '__itanium__', '__x86_64', '__x86_64__',
+    '__itanium__', '__x86_64', '__x86_64__', '_M_AMD64',
 ]
 
 SPARC_MACROS = ['__sparc__', '__sparc', '__sparcv8', '__sparcv9']
@@ -252,7 +252,8 @@ SPARC_MACROS = ['__sparc__', '__sparc', '__sparcv8', '__sparcv9']
 Platform('default', 0, Platform.big)
 
 # Windows 32 bit
-Platform('win32', 1, Platform.little, macros=WIN32_MACROS+X86_MACROS, alignment_sizes=DEFAULT_C_SIZE_MAP)
+Platform('win32', 1, Platform.little, macros=WIN32_MACROS+X86_MACROS,
+         alignment_sizes=DEFAULT_C_SIZE_MAP)
 
 # Windows 64 bit
 Platform('win64', 2, Platform.little,

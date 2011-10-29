@@ -29,7 +29,7 @@ struct platform_test {
 
     // Test that correct sizes are used
     long int deff;
-#if __INTEL__
+#if _M_IX86
     long int intel;
 #endif
 #if __sparc

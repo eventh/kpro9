@@ -129,9 +129,17 @@ Timetable for this sprint: Table \ref{tab:sprint3time}.\\
 %----------------------
 \section{System Design}
 %----------------------
-The system design defines the new modules and architecture that has to be in place to satisfy the specified requirements that we have included in the sprint 3 backlog.\\
+The system design defines the new modules and architecture that has to be in place to satisfy the specified requirements that we have included in the sprint 3 backlog.
+
+\subsection{System overview}
+%----------------------
 Now that the utility has both basic and advanced features, it is time to specialize and make support for environmental variables that can be found in Thales' source code. This basically include various platform specific support, endian handling and minor technicalities. The latter one is vital for the customer in order for the utility to be efficient and adequate.
-We know that the various platforms handle things differently.
+
+\subsubsection{Platform specific support}
+We know that the various platforms behave differently, and this must be supported by our utility. The customer has mentioned at least 3 platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. We will try to make the set-up for support easily understandable.\\
+
+
+\subsubsection{Technicalities}
 
 
 

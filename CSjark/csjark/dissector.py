@@ -447,7 +447,7 @@ class Protocol:
             platform = Platform.mappings['default']
         self.platform = platform
         self.name = name
-        self.longname = '%s.%s' % (platform.name, self.name.lower())
+        self.longname = '%s.%s' % (platform.name.lower(), self.name.lower())
         self.conf = conf
 
         # Dissector ID

@@ -136,10 +136,21 @@ The system design defines the new modules and architecture that has to be in pla
 Now that the utility has both basic and advanced features, it is time to specialize and make support for environmental variables that can be found in Thales' source code. This basically include various platform specific support, endian handling and minor technicalities. The latter one is vital for the customer in order for the utility to be efficient and adequate.
 
 \subsubsection{Platform specific support}
-We know that the various platforms behave differently, and this must be supported by our utility. The customer has mentioned at least 3 platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. We will try to make the set-up for support easily understandable.\\
+We know that the various platforms behave differently, and this must be supported by our utility. The customer has mentioned at least 3 platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. We will try to make the set-up for support easily understandable.
+
+The platform definition will be a subpart of a flag-field in the structs header. To ensure modifiability we have assigned a 16 bit field for this, giving the developers possibility to have 65536 unique platforms. The platform flag will give the following information about the platform:
+\begin{itemize}
+\item Endianness
+\item Length of fields
+\item Memory alignment
+\end{itemize}
+
+All these three fields have to be combined to generate a dissector that will dissect the struct correctly. 
+
+\paragraph{Endianness}
 
 
-\subsubsection{Technicalities}
+
 
 
 

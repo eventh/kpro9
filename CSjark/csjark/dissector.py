@@ -552,23 +552,36 @@ class Protocol:
         self.data.append('-- ProtoField defintions for: %s' % self.name)
         decl = 'local {field_var} = {var}.fields'
         self.data.append(decl.format(field_var=self.field_var, var=self.var))
+
         for field in self.fields:
             code = field.get_definition()
+
+            if self.conf and self.conf.cnf: # Conformance file code
+                code = self._cnf_field_code(field, code, defintion=True)
             if code is not None:
                 self.data.append(code)
+
+        # Conformance file defintion code extra
+        if self.conf and self.conf.cnf:
+            self._cnf_field_code(None, None, defintion=True)
         self.data.append('')
 
-    def _fields_code(self):
+    def _fields_code(self, union=False):
         """Add the code from each field into dissector function."""
         offset = 0
         for field in self.fields:
             code = field.get_code(offset)
-            if self.conf and self.conf.cnf:
-                code = self._cnf_field_code(field, code)
+
+            if self.conf and self.conf.cnf: # Conformance file code
+                code = self._cnf_field_code(field, code, defintion=False)
             if code:
                 self.data.append(code)
-            if field.size is not None:
+            if not union and field.size is not None:
                 offset += field.size
+
+        # Conformance file dissection function code extra
+        if self.conf and self.conf.cnf:
+            self._cnf_field_code(None, None, defintion=False)
         return offset
 
     def _dissector_func(self):
@@ -656,8 +669,9 @@ class Protocol:
             if rule.member is not None or count > 1:
                 self.data.append('\tend') # End for loop
 
-    def _cnf_field_code(self, field, code):
+    def _cnf_field_code(self, field, code, defintion=False):
         """Modify fields code if a cnf file demands it."""
+        return code
         if field.name in self.conf.cnf.rules:
             rules = self.conf.cnf.rules[field.name]
 
@@ -693,14 +707,8 @@ class UnionProtocol(Protocol):
 
     def _fields_code(self):
         """Add the code from each field into dissector function."""
-        offset = 0
-        for field in self.fields:
-            code = field.get_code(offset)
-            if self.conf and self.conf.cnf:
-                code = self._cnf_field_code(field, code)
-            if code:
-                self.data.append(code)
-        return self.get_size
+        super()._fields_code(union=True)
+        return self.get_size()
 
 
 class Delegator(Protocol):

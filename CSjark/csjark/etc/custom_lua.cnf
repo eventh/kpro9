@@ -1,10 +1,68 @@
-#.FN_HDR truth
---magic!!
-
-#.FN_BODY str
-%(DEFAULT_BODY)s
--- More Magic!!
+#.COMMENT
+	This is a .cnf file comment section
 #.END
 
+
+#.COMMENT five
+	DEF_HEADER places code on top of the Field definition.
+#.DEF_HEADER
+	-- Above the 'five' field def
+#.END
+
+
+#.COMMENT
+	DEF_BODY replaces the Field definition.
+	Use %(DEFAULT_BODY)s or {DEFAULT_BODY} to use generated code.
+#.DEF_BODY truth
+	-- This is above 'truth'
+	%(DEFAULT_BODY)s
+	-- This is below
+#.END
+
+
+#.COMMENT
+	DEF_FOOTER places code below the Field defintion.
+#.DEF_FOOTER pointer
+	-- This is below 'pointer'
+#.END
+
+
+#.COMMENT
+	FUNC_HEADER places code above the field's generated code
+	inside the dissector function.
+#.FUNC_HEADER truth
+	-- This is above 'truth' inside the dissector function.
+#.END
+
+
+#.COMMENT
+	FUNC_BODY replaces code inside the dissector function.
+	Use %(DEFAULT_BODY)s or {DEFAULT_BODY} to use generated code.
+#.FUNC_BODY str
+	--[[ This comments out the str array code
+	{DEFAULT_BODY}
+	]]--
+#.END
+
+
+#.COMMENT
+	FUNC_FOOTER places code below in the dissector function
+#.FUNC_FOOTER five
+	-- This is below 'five' inside dissector function
+#.END
+
+
+#.COMMENT
+	DEF_EXTRA places extra code at the end of
+	the field definition section.
+#.DEF_EXTRA
+	-- This was all the field defintions
+#.END
+
+
+#.COMMENT
+	FUNC_EXTRA places extra code at the end of the dissector function.
+#.FUNC_EXTRA
+	-- This is the last line of the dissector function
 #.END_OF_CNF
 

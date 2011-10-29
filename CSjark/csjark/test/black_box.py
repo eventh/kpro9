@@ -15,9 +15,9 @@ from .test_dissector import compare_lua
 
 
 # End-to-end tests for sprint 2 features
-sprint2 = Tests()
+#sprint2 = Tests()
 
-@sprint2.context
+#@sprint2.context
 def create_protocols():
     """Create protocols for all structs in sprint2.h"""
     o = config.Options
@@ -59,7 +59,7 @@ def create_protocols():
             o.output_file, o.platforms, o.delegator) = defaults
 
 
-@sprint2.test
+#@sprint2.test
 def arrays(structs):
     """End-to-end test headers with arrays in them."""
     assert 'array_test' in structs
@@ -168,7 +168,7 @@ def arrays(structs):
     ''')
 
 
-@sprint2.test
+#@sprint2.test
 def bitstrings(structs):
     """End-to-end test headers with bitstrings in them."""
     assert 'bitstring_test' in structs
@@ -226,7 +226,7 @@ def bitstrings(structs):
     ''')
 
 
-@sprint2.test
+#@sprint2.test
 def cenums(structs):
     """End-to-end test headers with C enums in them."""
     assert 'cenum_test' in structs
@@ -258,7 +258,7 @@ def cenums(structs):
     ''')
 
 
-@sprint2.test
+#@sprint2.test
 def custom(structs):
     """End-to-end test headers with custom field rules."""
     assert 'custom_lua' in structs
@@ -363,7 +363,7 @@ delegator_register_proto(proto_custom_lua, "default", "custom_lua", 74)
 ''')
 
 
-@sprint2.test
+#@sprint2.test
 def enums(structs):
     """End-to-end test headers with enums in them."""
     assert 'enum_test' in structs
@@ -407,7 +407,7 @@ def enums(structs):
     ''')
 
 
-@sprint2.test
+#@sprint2.test
 def ranges(structs):
     """End-to-end test headers with ranges in them."""
     assert 'range_test' in structs
@@ -440,7 +440,8 @@ end
 delegator_register_proto(proto_range_test, "default", "range_test", 9)
 ''')
 
-@sprint2.test
+
+#@sprint2.test
 def struct_within_struct(structs):
     """End-to-end test of structs within structs."""
     assert 'struct_within_struct_test' in structs
@@ -467,7 +468,8 @@ end
 delegator_register_proto(proto_struct_within_struct_test, "default", "struct_within_struct_test", 12)
 ''')
 
-@sprint2.test
+
+#@sprint2.test
 def trailers(structs):
     """End-to-end test headers with trailers in them."""
     assert 'trailer_test' in structs

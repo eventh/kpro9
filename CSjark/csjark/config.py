@@ -234,7 +234,8 @@ class Custom(BaseRule):
         if alignment is None:
             alignment = size
         field = proto.add_field(name, self.field, size, alignment)
-        field.abbr = self.abbr
+        if self.abbr is not None:
+            field.abbr = self.abbr
         field.base = self.base
         if self.values:
             field.values = create_lua_valuestring(self.values)

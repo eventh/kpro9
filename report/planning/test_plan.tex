@@ -31,7 +31,7 @@ Black box testing is a method of software testing where you test the functionali
 %------------------------------
 \section{Templates for Testing}
 %------------------------------
-\autoref{tab:testcase} and \autoref{tab:testreport} are templates we'll be
+\autoref{tab:testcase} , \autoref{tab:testreport} and \autoref{tab:testCoverageReport} are templates we'll be
 using for testing purposes.
 
 In order to standarize the testing process, the team decided on making templates for both the tests themselves and for reporting their results. The ones responsible for testing were given the task of filling out these tables to make sure they got filled out and stored properly.
@@ -68,6 +68,23 @@ The following table shows the template for reporting the result of each test cas
 	Result & The success or failure of the test, and a comment on the result if needed \\
 	\bottomrule
 \end{tabular}
+\end{table}
+
+The following table shows the template for reporting code coverage.
+
+\begin{table}[!htb]\footnotesize\center
+	\caption{Code Coverage Report Template\label{tab:TestCoverageReport}}
+	\begin{tabular}{l l l l l}
+		\toprule
+		Module & Statements & Missing & Excluded & Coverage\\
+		\midrule
+		module 1 & Statements ran & Statements not ran  & Excluded statements & Percent code coverage\ \\
+		... & ... & ... & ... & ... \\
+		module n & Statements ran & Statements not ran & Excluded statements  & Percent code coverage \\
+		\bottomrule
+		Total & Statements ran & Statements not ran & Excluded statements & Percent code coverage \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 

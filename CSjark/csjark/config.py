@@ -85,7 +85,17 @@ class Config:
 
         # Create basic Field if no rules fired
         return proto.add_field(name, type_, size, alignment_size)
-
+    
+    def get_field_attributes(self, name, ctype):
+        """Create a field depending on rules."""
+        # Sort the rules
+        types = (Bitstring, Enum, Range, Custom)
+        values = [[], [], [], []]
+        for rule in self.get_rules(name, ctype):
+            for i, tmp in enumerate(types):
+                if isinstance(rule, tmp):
+                    values[i].append(rule)
+        return values
 
 class BaseRule:
     """A base class for rules referring to protocol fields."""

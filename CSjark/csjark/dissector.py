@@ -77,22 +77,37 @@ class Field:
         self.desc = None # Description of the field
         self.offset = None # Useful for others to access buffer(offset, size)
 
-    def get_definition(self):
+    def get_definition(self, sequence = None):
         """Get the ProtoField definition for this field."""
-        return self._create_field(self.var, self.type, self.abbr,
+        variable_name = self.var
+        if sequence != None:
+            postfix = '';
+            for index in sequence:
+                postfix = '%s_%i' % (postfix, index)
+            variable_name = "%s%s" % (self.var, postfix)
+        
+        return self._create_field(variable_name, self.type, self.abbr,
                 self.name, self.base, self.values, self.mask, self.desc)
 
-    def get_code(self, offset, store=None):
+    def get_code(self, offset, store=None, sequence = None, tree = 'subtree'):
         """Get the code for dissecting this field."""
+        variable_name = self.var
+        
+        if sequence != None:
+            postfix = '';
+            for index in sequence:
+                postfix = '%s_%i' % (postfix, index)
+            variable_name = self.var + postfix
+            
         if store:
             store = 'local {var} = '.format(var=create_lua_var(store))
         else:
             store = ''
-        offset = self._get_padded_offset(offset)
+            
         self.offset = offset
-        t = '\t{store}subtree:{add}({var}, buffer({offset}, {size}))'
-        return t.format(store=store, add=self.add_var,
-                        var=self.var, offset=offset, size=self.size)
+        t = '\t{store}{tree}:{add}({var}, buffer({offset}, {size}))'
+        return t.format(store=store, tree=tree, add=self.add_var,
+                        var=variable_name, offset=offset, size=self.size)
 
     def _get_padded_offset(self, offset):
         padding = 0
@@ -180,163 +195,176 @@ class EnumField(Field):
             self.values_var = None
         self.tree_var = create_lua_var(self.name)
 
-    def get_definition(self):
+    def get_definition(self, sequence = None):
         """Get the ProtoField definition for this field."""
+        variable_name = self.var
+        if sequence != None:
+            postfix = '';
+            for index in sequence:
+                postfix = '%s_%i' % (postfix, index)
+            variable_name = "%s%s" % (self.var, postfix)
         data = []
-        if self.strict:
+        if self.strict and (sequence == None or sequence[len(sequence) - 1] == 0):
             data.append('local {var} = {values}'.format(
                     var=self.values_var, values=self.values))
-        data.append(self._create_field(self.var, self.type, self.abbr,
+        data.append(self._create_field(variable_name, self.type, self.abbr,
                 self.name, self.base, self.values_var, self.mask, self.desc))
         return '\n'.join(data)
 
-    def get_code(self, offset, store=None):
+    def get_code(self, offset, store=None, sequence = None, tree = 'subtree'):
         """Get the code for dissecting this field."""
-        offset = self._get_padded_offset(offset)
         data = []
+        postfix = ''
+        if sequence != None:
+            for index in sequence:
+                postfix = '%s_%i' % (postfix, index)
 
         # Local var definitions
         if store is not None:
             self.tree_var = store
         if self.strict:
-            store = self.tree_var
-        data.append(super().get_code(offset, store=store))
+            store = self.tree_var + postfix
+        data.append(super().get_code(offset, store, sequence, tree))
 
         # Add a test which validates the enum value
         if self.strict:
             data.append('\tif (%s[buffer(%i, %i):%s()] == nil) then' % (
                     self.values_var, offset, self.size, self.func_type))
             data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, "%s")'
-                    % (self.tree_var, 'Invalid value, not in (%s)' % self.keys))
+                    % (create_lua_var(self.tree_var + postfix), 'Invalid value, not in (%s)' % self.keys))
             data.append('\tend')
 
         return '\n'.join(data)
-
-
+    
 class ArrayField(Field):
-    def __init__(self, proto, name, type, base_size, alignment_size, depth):
+    def __init__(self, proto, name, type, base_size, alignment_size, depth, enum_members = None):
         self.base_size = base_size
         self.depth = depth
-        self.elements = 1 # Number of total elements in the array
+        array_size = 1
         for size in self.depth:
-            self.elements *= size
+            array_size *= size
+            
+        self.elements = depth.pop()
+        if not depth:
+            self.field = self._make_field(proto, name, type, base_size, alignment_size, enum_members)
+        else:
+            self.field = ArrayField(proto, name, type, base_size, alignment_size, depth)
+        
+        super().__init__(proto, name, type, array_size * base_size, alignment_size)
+        
+    def _make_field(self, proto, name, type, size, alignment_size, enum_members):
+        if isinstance(type, Protocol) or isinstance(type, UnionProtocol):
+            return ProtocolField(proto, name, type)
+        
+        ctype = proto.platform.map_type(type)
+        if enum_members != None:
+            return EnumField(proto, name, ctype, size, alignment_size, enum_members)
+        
+        if proto.conf:
+            bits, enums, ranges, customs = proto.conf.get_field_attributes(name, type)
+        
+            ctype = proto.platform.map_type(type)        
+        
+            # Custom field rules
+            if customs:
+                custom = customs[0]
+                if(custom.size != size or custom.alignment_size != alignment_size):
+                    raise "Error: todo"
+                field = Field(proto, name, custom.field, size, alignment_size)
+                field.abbr = custom.abbr
+                field.base = custom.base
+                if custom.values:
+                    field.values = create_lua_valuestring(custom.values)
+                    field.mask = custom.mask
+                    field.desc = custom.desc
+                    return field
 
-        super().__init__(proto, name, type, self.elements * self.base_size, alignment_size)
-        self.func_type = self._get_func_type()
+                # Bitstring rules
+                if bits:
+                    return BitField(proto, name, ctype, size, alignment_size, bits[0].bits)
 
-    def get_definition(self):
-        data = ['-- Array definition for %s' % self.name]
+                # Enum rules
+                if enums:
+                    rule = enums[0]
+                    return EnumField(proto, name, ctype, size, alignment_size, rule.values, rule.strict)
+                # Range 
+                if ranges:
+                    rule = ranges[0]
+                    return RangeField(proto, name, ctype, size, alignment_size, rule.min, rule.max)
+        
+        return Field(proto, name, ctype, size, alignment_size)
+    
+    def get_definition(self, sequence = []):
+        data = ['']
+        if sequence == []:
+            data = ['-- Array definition for %s' % self.name]
 
         type_ = self.type
         if type_ not in ('string', 'stringz'):
             type_ = 'bytes'
+        
+        postfix = '';
+        for index in sequence:
+            postfix = '%s_%i' % (postfix, index)
 
-        # Top-level subtree
-        i = 0
-        data.append(self._create_field('%s_%i' % (
-                    self.var, i), type_, self.abbr, self.name))
-        i += 1
-
-        # Create fields for subtrees in the array
-        for k, size in enumerate(self.depth):
-            if len(self.depth) > 1 and k == len(self.depth) - 1:
-                continue # Multi-dim array, no subtree last depth level
-            for j in range(size):
-                data.append(self._create_field('%s_%i' % (self.var, i),
-                        type_, self.abbr, self.name))
-                i += 1
-
-        # Create fields for each element in the array
-        def traverse(depth, name, j):
-            size = depth.pop(0)
-            if len(depth) > 0:
-                for i in range(size):
-                    j = traverse(depth[:], '%s%i, ' % (name, i), j)
-                return j
-            else:
-                for i in range(size):
-                    data.append(self._create_field(
-                            '%s__%i' % (self.var, j+i), self.type,
-                            '%s.%i' % (self.abbr, j+i), '[%s%i]' % (name, i)))
-                return j + size
-        traverse(self.depth[:], '', 0)
+        # This subtree definition
+        data.append(self._create_field('%s%s' % (
+                    self.var, postfix), type_, self.abbr, self.name))
+        
+        for i in range(0, self.elements):
+            definition = self.field.get_definition(sequence + [i])
+            if definition:
+                data.append(definition)
 
         return '\n'.join(data)
 
-    def get_code(self, offset):
-        data = ['\t-- Array handling for %s' % self.name]
-        element = 0 # Count of which array element we have created
-        subtree = 0 # Count of which subtree we have created
-        offset = self._get_padded_offset(offset)
-
-        def subdefinition(tree, parent, elem, name=''):
-            """Create a subtree of arrays."""
-            nonlocal element, offset, subtree
-
-            # Create the subtree
-            size = elem * self.base_size
-            t = '\tlocal {tree} = {old}:{add}({var}_{i}, buffer({off}, {size}))'
-            data.append(t.format(tree=tree, old=parent, add=self.add_var,
-                        var=self.var, i=subtree, off=offset, size=size))
-
-            # Set a more usefull text to the subtree
-            if name:
-                name += ' '
-            t = '\t{tree}:set_text("{name}(array: {size} x {type})")'
-            data.append(t.format(tree=tree,
-                    name=name, size=elem, type=self.type))
-
-            subtree += 1
-
-        def addfield(tree):
-            """Add value from buffer to the elements field."""
-            nonlocal element, offset
-            t = '\t{tree}:{add}({var}__{i}, buffer({offset}, {size}))'
-            data.append(t.format(tree=tree, offset=offset, add=self.add_var,
-                    size=self.base_size, var=self.var, i=element))
-            element += 1
-            offset += self.base_size
-
-        def array(depth, tree, parent):
-            """Recursively add elements to array tree."""
-            if len(depth) == 1:
-                for i in range(depth[0]):
-                    addfield(tree)
+    def get_code(self, offset, tree = 'arraytree', parent = 'subtree', name='', sequence=[]):
+        data = [] 
+        if sequence == []:
+            data = ['\t-- Array handling for %s' % self.name]
+        
+        postfix = '';
+        for index in sequence:
+            postfix = '%s_%i' % (postfix, index)
+        
+        t = '\tlocal {tree} = {parent}:{add}({var}{postfix}, buffer({off}, {size}))'
+        data.append(t.format(tree=tree, parent=parent, add=self.add_var,
+                             var=self.var, postfix = postfix, off=offset, size=self.size))
+        
+        t = '\t{tree}:set_text("{type} array: index{index})")'
+        data.append(t.format(tree=tree, type=self.type, index = postfix))
+        for i in range(0, self.elements):
+            if  isinstance(self.field, ArrayField):
+                data.append(self.field.get_code(offset, 'sub' + tree, tree, name, sequence + [i]))
+                offset += self.field.size
             else:
-                size = depth.pop(0)
-                elements = 1
-                for k in depth:
-                    elements *= k
-                parent = tree
-                tree = 'sub%s' % tree
-                for i in range(size):
-                    subdefinition(tree, parent, elements)
-                    array(depth[:], tree, parent)
-
-        parent = 'subtree'
-        tree = 'arraytree'
-        subdefinition(tree, parent, self.elements, self.name)
-        array(self.depth[:], tree, parent)
+                data.append(self.field.get_code(offset, None, sequence + [i], tree))
+                offset += self.field.size
 
         data.append('')
         return '\n'.join(data)
-
 
 class ProtocolField(Field):
     def __init__(self, proto, name, sub_proto):
         super().__init__(proto, name, sub_proto.name, sub_proto.get_size(), sub_proto.get_alignment_size())
         self.proto_name = sub_proto.longname
 
-    def get_definition(self):
+    def get_definition(self, sequence = None):
         pass
 
-    def get_code(self, offset):
-        offset = self._get_padded_offset(offset)
+    def get_code(self, offset, store = None, sequence = None, tree = 'subtree'):
+        variable_name = self.name
+        if sequence != None:
+            postfix = '';
+            for index in sequence:
+                postfix = '%s_%i' % (postfix, index)
+            variable_name = self.var + postfix
+            
         t = '\tpinfo.private.caller_def_name = "{name}"\n'\
             '\tDissector.get("{proto}"):call('\
-            'buffer({offset},{size}):tvb(), pinfo, subtree)'
-        return t.format(name=self.name, proto=self.proto_name,
-                dt=self.proto.DISSECTOR_TABLE, offset=offset, size=self.size)
+            'buffer({offset},{size}):tvb(), pinfo, {tree})'
+        return t.format(name=variable_name, proto=self.proto_name,
+                dt=self.proto.DISSECTOR_TABLE, offset=offset, size=self.size, tree=tree)
 
 
 class BitField(Field):
@@ -350,9 +378,14 @@ class BitField(Field):
     def _bit_abbr(self, name):
         return '%s.%s' % (self.abbr, name.replace(' ', '_'))
 
-    def get_definition(self):
+    def get_definition(self, sequence = None):
         data = ['-- Bitstring definitions for %s' % self.name]
-
+        
+        postfix = ''
+        if sequence != None:
+            for index in sequence:
+                postfix = '%s_%i' % (postfix, index)
+        
         # Bitstrings need to be unsigned for HEX?? Research needed!
         if 'int' in self.type and not self.type.startswith('u'):
             type_ = 'u%s' % self.type
@@ -360,7 +393,7 @@ class BitField(Field):
             type_ = self.type
 
         # Create bitstring tree definition
-        data.append(self._create_field(self.var, type_,
+        data.append(self._create_field(self.var + postfix, type_,
                 self.abbr, '%s (bitstring)' % self.name, base='base.HEX'))
 
         # Create definitions for all bits
@@ -373,22 +406,26 @@ class BitField(Field):
             mask = '0x%x' % int(''.join(str(i) for i in tmp), 2)
 
             values = create_lua_valuestring(values)
-            data.append(self._create_field(self._bit_var(name), type_,
+            data.append(self._create_field(self._bit_var(name) + postfix, type_,
                     self._bit_abbr(name), name, values=values, mask=mask))
 
         return '\n'.join(data)
 
-    def get_code(self, offset):
-        offset = self._get_padded_offset(offset)
+    def get_code(self, offset, store = None, sequence = None, tree = 'subtree'):
         data = ['\t-- Bitstring handling for %s' % self.name]
+        
+        postfix = ''
+        if sequence != None:
+            for index in sequence:
+                postfix = '%s_%i' % (postfix, index)
 
         buff = 'buffer({off}, {size})'.format(off=offset, size=self.size)
-        t = '\tlocal bittree = subtree:{add}({var}, {buff})'
-        data.append(t.format(add=self.add_var, var=self.var, buff=buff))
+        t = '\tlocal bittree = {tree}:{add}({var}, {buff})'
+        data.append(t.format(tree = tree, add=self.add_var, var=self.var + postfix, buff=buff))
 
         for i, j, name, values in self.bits:
             data.append('\tbittree:{add}({var}, {buff})'.format(
-                        add=self.add_var, var=self._bit_var(name), buff=buff))
+                        add=self.add_var, var=self._bit_var(name) + postfix, buff=buff))
 
         data.append('')
         return '\n'.join(data)
@@ -401,15 +438,19 @@ class RangeField(Field):
         self.max = max
         self.func_type = self._get_func_type()
 
-    def get_code(self, offset):
+    def get_code(self, offset, sequence = None, tree = 'subtree'):
         """Get the code for dissecting this field."""
-        offset = self._get_padded_offset(offset)
         data = []
+        
+        postfix = ''
+        if sequence != None:
+            for index in sequence:
+                postfix = '%s_%i' % (postfix, index)
 
         # Local var definitions
-        t = '\tlocal {name} = subtree:{add}({var}, buffer({off}, {size}))'
-        data.append(t.format(var=self.var, name=create_lua_var(self.name),
-                             add=self.add_var, off=offset, size=self.size))
+        t = '\tlocal {name} = {tree}:{add}({var}, buffer({off}, {size}))'
+        data.append(t.format(var=self.var + postfix, name=create_lua_var(self.name),
+                             tree=tree, add=self.add_var, off=offset, size=self.size))
 
         # Test the value
         def create_test(value, test, warn):
@@ -562,6 +603,7 @@ class Protocol:
         """Add the code from each field into dissector function."""
         offset = 0
         for field in self.fields:
+            offset = field._get_padded_offset(offset)
             code = field.get_code(offset)
             if self.conf and self.conf.cnf:
                 code = self._cnf_field_code(field, code)
@@ -695,6 +737,7 @@ class UnionProtocol(Protocol):
         """Add the code from each field into dissector function."""
         offset = 0
         for field in self.fields:
+            offset = field._get_padded_offset(offset)
             code = field.get_code(offset)
             if self.conf and self.conf.cnf:
                 code = self._cnf_field_code(field, code)

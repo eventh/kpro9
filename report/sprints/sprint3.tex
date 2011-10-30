@@ -146,7 +146,7 @@ The platform definition will be a subpart of a flag-field in the structs header.
 \end{itemize}
 All these three fields have to be combined to generate a dissector that will dissect the struct correctly.\\
 
-\subsection{Dicitonary lookup}
+\subsubsection{Dicitonary lookup}
 Deciding how to implement handling of different platforms ended in a design draft seen in Figure \autoref{fig:platformhandling}. The dissector module will make a dictionary lookup in the table of supported platforms. This table conatins all platforms that the utility can make dissectors for, and their information of how the dissector shall be encoded to achieve correct handling of endianness, length of fields and memory alignment.
 
 We will start out by hardcoding this into the source code, but in the end we want to have this feed to the utility through a configuration-file. This is the way the customer has envisioned it.  
@@ -157,7 +157,12 @@ We will start out by hardcoding this into the source code, but in the end we wan
 %\end{figure}
 
 
-\paragraph{Endianness}
+\subsubsection{Endianness}
+
+\subsubsection{Filter and search in Wireshark}
+The amount of data that are collected and dissected can be very large. The need for a filter and search mechanism is apparent. Wireshark has this built-in, and the customer want the utility to support it. To do that, we need to have pass specific fields  
+
+
 
 
 

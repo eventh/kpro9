@@ -533,9 +533,45 @@ During the sprint the team executed a total of 6 tests with names as seen below.
 %-------------------------------
 For the second sprint the developers focused a lot more on testing during implementation. The team also decided that the testers should check how much of the code was covered in the unit tests. This made the group focus more on making proper unit tests that tests as much functionality as possible This had a very positive effect on the tests ran at the end of the sprint where not a single test failed, except for one test which ended up exposing a bug in Wireshark
 
-\subsubsection{Test Coverage}
+\subsection{Test Coverage}
 This section introduces the amount of code covered by our unit tests and how it relates to the test coverage from the previous sprints.
- MAKE A GRAPH OF THE CODE COVERAGE AND PUT IT HERE
+
+\subsubsection{Sprint 1}
+As the team had not started measuring code coverage in sprint 1, the testing team had to revert the project to an earlier version and retroactively check the code coverage from the first sprint. The following list contains the unit tests used in the sprint, and the coverage is shown in \autoref{tab:sp1CoverageReport}
+
+\begin {itemize}
+\item requirements.py
+\item test\_cparser.py
+\item test\_csjark.py
+\item test\_config.py
+\end{itemize}
+
+\begin{table}[!htb]\footnotesize\center
+	\caption{Sprint 1 Coverage Report\label{tab:sp1CoverageReport}}
+	\begin{tabular}{l l l l l}
+		\toprule
+		Module & Statements & Missing & Excluded & Coverage\\
+		\midrule
+		config & 298 & 125 & 0 & 87\%\ \\
+		cparser & 215 & 50 & 0 & 74\%\ \\
+		csjark & 113 & 57 & 0 & 59\%\ \\
+		dissector & 460 & 79 & 0 & 38\%\ \\
+		Total & 1086 & 311 & 0 & 64\%\ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsubsection{Sprint 2}
+The following list contains the unit tests used in the second sprint and the code coverage can be seen in \autoref{tab:sp2CoverageReport}. We also ran a comparizon from the previous sprint and created a chart that we would use to monitor the progress of the code coverage. As can be seen in \autoref{fig:sp2CoverageChart} there was not a tremendous ammount of progress from the previous sprint when it came to code coverage. This is mostly due to the amount of new features that were added this sprint and the fact that using code coverage got implemented very late in the sprint, giving the developers and testers little time to use the metrics to improve the tests.
+
+\begin{itemize}
+\item black\_box.py
+\item requirements.py
+\item test\_config.py
+\item test\_csjark.py
+\item test\_dissector.py
+\item test\_cparser.py
+\end {itemize}
 
 \begin{table}[!htb]\footnotesize\center
 	\caption{Sprint 2 Coverage Report\label{tab:sp2CoverageReport}}
@@ -547,11 +583,18 @@ This section introduces the amount of code covered by our unit tests and how it 
 		cparser & 215 & 50 & 0 & 77\%\ \\
 		csjark & 113 & 57 & 0 & 50\%\ \\
 		dissector & 460 & 79 & 0 & 83\%\ \\
-		\bottomrule
 		Total & 1086 & 311 & 0 & 67\%\ \\
 		\bottomrule
 	\end{tabular}
 \end{table}
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/sprint2_code_coverage_chart}
+	\caption{Code coverage progress from previous sprints\label{fig:sp2CoverageChart}}
+\end{figure}
+
+
  
 
 

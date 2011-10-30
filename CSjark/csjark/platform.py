@@ -214,7 +214,6 @@ DEFAULT_C_ALIGNEMT_SIZE_MAP = {
         'time_t': 4,
 }
 
-
 # Mapping of C sizes for unix like platforms
 UNIX_C_SIZE_MAP = {
         'long': 8,
@@ -225,12 +224,15 @@ UNIX_C_SIZE_MAP = {
         'unsigned long int': 8,
 }
 
+# Mapping of C sizes for sparc platform
+SPARC_C_SIZE_MAP = {
+        'long double': 16,
+}
 
 # Mapping of C sizes for unix like platforms
 UNIX_C_ALIGNMENT_SIZE_MAP = {
         'double': 0,
 }
-
 
 # Platform-specific C preprocessor macros
 WIN32_MACROS = {
@@ -295,7 +297,8 @@ Platform('Solaris-x86-64', 4, Platform.little,
 
 # Solaris SPARC 64 bit
 Platform('Solaris-sparc', 5, Platform.big,
-         macros=merge(SOLARIS_MACROS, SPARC_MACROS), sizes=UNIX_C_SIZE_MAP)
+         macros=merge(SOLARIS_MACROS, SPARC_MACROS), sizes=SPARC_C_SIZE_MAP,
+         alignment=SPARC_C_SIZE_MAP)
 
 # MacOS
 Platform('Macos', 6, Platform.little,

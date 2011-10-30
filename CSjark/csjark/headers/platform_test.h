@@ -11,8 +11,8 @@ struct platform_test {
     _Bool plat;
 #endif
     char b;
-#if __ia64
-    unsigned intel64;
+#if _M_X64
+    unsigned int intel64;
 #endif
 
     // Test union

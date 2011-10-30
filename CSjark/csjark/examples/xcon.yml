@@ -1,5 +1,5 @@
 Options:
-    platforms: [default, Win32, Win64, Solaris-x86, Solaris-x86-64, Solaris-sparc]
+    platforms: [Win32, Win64, Solaris-x86, Solaris-x86-64, Solaris-sparc]
 
 Structs:
   - name: xcon # From xcon.h

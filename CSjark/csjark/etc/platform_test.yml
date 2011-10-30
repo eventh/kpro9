@@ -1,5 +1,5 @@
 Options:
-    platforms: [default, Win32, Solaris-sparc]
+    platforms: [default, Win32, Win64, Solaris-sparc]
     #verbose: True
     #debug: True
     #use_cpp: True

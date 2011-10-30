@@ -31,8 +31,11 @@ def parse_file(filename, platform=None):
         cpp_args.append(r'-I../utils/fake_libc_include')
         cpp_args.extend(Options.cpp_includes)
 
+        # Add as include the folder the files are located in
+        # Need to use absolute paths to avoid a pycparser #line bug
         if os.path.dirname(filename):
-            cpp_args.append(r'-I%s' % os.path.dirname(filename))
+            cpp_args.append(r'-I%s' %
+                    os.path.abspath(os.path.dirname(filename)))
 
         if sys.platform == 'win32' and cpp_path == 'cpp':
             cpp_path = '../utils/cpp.exe' # Windows don't come with a CPP
@@ -44,7 +47,8 @@ def parse_file(filename, platform=None):
         if platform is not None:
             file = 'temp-%s.tmp.h' % os.path.split(filename)[1]
             with open(file, 'w') as fp:
-                fp.write('%s\n#include "%s"\n\n' % (platform.header, filename))
+                fp.write('%s\n#include "%s"\n\n' % (
+                        platform.header, os.path.basename(filename)))
     else:
         cpp_args = None
 

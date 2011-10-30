@@ -353,8 +353,6 @@ class StructVisitor(c_ast.NodeVisitor):
             left = self._get_array_size(node.left)
             right = self._get_array_size(node.right)
             size = mapping[node.op](left, right)
-        elif isinstance(node, c_ast.ID):
-            size = 0 # TODO: PATH_MAX?
         else:
             raise ParseError('This type of array not supported: %s' % node)
 

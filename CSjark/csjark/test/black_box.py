@@ -15,13 +15,14 @@ from .test_dissector import compare_lua
 
 
 # End-to-end tests for sprint 2 features
-sprint2 = Tests()
+#sprint2 = Tests()
 
-@sprint2.context
+#@sprint2.context
 def create_protocols():
     """Create protocols for all structs in sprint2.h"""
-    c = config.Options
-    defaults = c.verbose, c.debug, c.use_cpp, c.output_dir, c.output_file
+    o = config.Options
+    defaults = (o.verbose, o.debug, o.strict, o.use_cpp,
+                o.output_dir, o.output_file, o.platforms, o.delegator)
 
     # Parse command line arguments
     header = os.path.join(os.path.dirname(__file__), 'sprint2.h')
@@ -31,32 +32,34 @@ def create_protocols():
     # Parse config files
     for filename in configs:
         config.parse_file(filename)
+    config.Options.prepare_for_parsing()
 
-    # Create dissectors
+    # Create protocols
+    for filename in headers:
+        csjark.create_dissectors(filename)
+
+    protocols = cparser.StructVisitor.all_protocols
+
+    # Sort the protocols on name
     structs = {}
-    for header in headers:
-        ast = cparser.parse_file(header)
-        protocols = cparser.find_structs(ast)
-        for proto in protocols:
-            structs[proto.name] = proto.create()
+    for key, proto in protocols.items():
+        structs[proto.name] = proto.create()
 
     yield structs
 
     # Write out dissectors for manual testing
-    if True:
-        path = os.path.dirname(__file__)
-        for name, code in structs.items():
-            with open('%s/%s.default.lua' % (path, name), 'w') as f:
-                f.write(code)
+    Options.output_dir = os.path.dirname(__file__)
+    csjark.write_dissectors_to_file(protocols)
 
     # Clean up context
     del structs
-    cparser.StructVisitor.all_structs = {}
+    cparser.StructVisitor.all_protocols = {}
     config.Options.configs = {}
-    c.verbose, c.debug, c.use_cpp, c.output_dir, c.output_file = defaults
+    (o.verbose, o.debug, o.strict, o.use_cpp, o.output_dir,
+            o.output_file, o.platforms, o.delegator) = defaults
 
 
-@sprint2.test
+#@sprint2.test
 def arrays(structs):
     """End-to-end test headers with arrays in them."""
     assert 'array_test' in structs
@@ -165,7 +168,7 @@ def arrays(structs):
     ''')
 
 
-@sprint2.test
+#@sprint2.test
 def bitstrings(structs):
     """End-to-end test headers with bitstrings in them."""
     assert 'bitstring_test' in structs
@@ -223,7 +226,7 @@ def bitstrings(structs):
     ''')
 
 
-@sprint2.test
+#@sprint2.test
 def cenums(structs):
     """End-to-end test headers with C enums in them."""
     assert 'cenum_test' in structs
@@ -255,112 +258,112 @@ def cenums(structs):
     ''')
 
 
-@sprint2.test
+#@sprint2.test
 def custom(structs):
     """End-to-end test headers with custom field rules."""
     assert 'custom_lua' in structs
     assert structs['custom_lua']
     assert compare_lua(structs['custom_lua'], '''
-    -- Dissector for default.custom_lua: custom_lua (default)
-    local proto_custom_lua = Proto("default.custom_lua", "custom_lua (default)")
-    -- ProtoField defintions for: custom_lua
-    local f = proto_custom_lua.fields
-    f.normal = ProtoField.int16("custom_lua.normal", "normal")
-    f.special = ProtoField.int64("custom_lua.special", "special")
-    f.abs = ProtoField.absolute_time("None", "abs")
-    f.rel = ProtoField.relative_time("None", "rel")
-    f.bol = ProtoField.bool("bool", "bol")
-    f.all = ProtoField.uint32("all.all", "all", base.HEX, {[0]="Monday", [1]="Tuesday"}, nil, "This is something dark side!")
-    local truth_values = {[0]="TRUE", [1]="FALSE"}
-    f.truth = ProtoField.uint32("custom_lua.truth", "truth", nil, truth_values)
-    -- Array definition for five
-    f.five_0 = ProtoField.bytes("custom_lua.five", "five")
-    f.five_1 = ProtoField.bytes("custom_lua.five", "five")
-    f.five_2 = ProtoField.bytes("custom_lua.five", "five")
-    f.five_3 = ProtoField.bytes("custom_lua.five", "five")
-    f.five_4 = ProtoField.bytes("custom_lua.five", "five")
-    f.five_5 = ProtoField.bytes("custom_lua.five", "five")
-    f.five__0 = ProtoField.int32("custom_lua.five.0", "[0]")
-    f.five__1 = ProtoField.int32("custom_lua.five.1", "[1]")
-    f.five__2 = ProtoField.int32("custom_lua.five.2", "[2]")
-    f.five__3 = ProtoField.int32("custom_lua.five.3", "[3]")
-    f.five__4 = ProtoField.int32("custom_lua.five.4", "[4]")
-    f.pointer = ProtoField.int32("custom_lua.pointer", "pointer")
-    -- Array definition for str
-    f.str_0 = ProtoField.string("custom_lua.str", "str")
-    f.str_1 = ProtoField.string("custom_lua.str", "str")
-    f.str_2 = ProtoField.string("custom_lua.str", "str")
-    f.str_3 = ProtoField.string("custom_lua.str", "str")
-    f.str_4 = ProtoField.string("custom_lua.str", "str")
-    f.str__0 = ProtoField.string("custom_lua.str.0", "[0]")
-    f.str__1 = ProtoField.string("custom_lua.str.1", "[1]")
-    f.str__2 = ProtoField.string("custom_lua.str.2", "[2]")
-    f.str__3 = ProtoField.string("custom_lua.str.3", "[3]")
-    f.str__4 = ProtoField.string("custom_lua.str.4", "[4]")
-    f.str__5 = ProtoField.string("custom_lua.str.5", "[5]")
-    f.str__6 = ProtoField.string("custom_lua.str.6", "[6]")
-    f.str__7 = ProtoField.string("custom_lua.str.7", "[7]")
-    f.str__8 = ProtoField.string("custom_lua.str.8", "[8]")
-    f.str__9 = ProtoField.string("custom_lua.str.9", "[9]")
-    f.str__10 = ProtoField.string("custom_lua.str.10", "[10]")
-    f.str__11 = ProtoField.string("custom_lua.str.11", "[11]")
-    -- Dissector function for: custom_lua
-    function proto_custom_lua.dissector(buffer, pinfo, tree)
-    local subtree = tree:add(proto_custom_lua, buffer())
-    if pinfo.private.caller_def_name then
-    subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_custom_lua.description)
-    pinfo.private.caller_def_name = nil
-    else
-    pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
-    end
-    subtree:add(f.normal, buffer(0, 2))
-    subtree:add(f.special, buffer(2, 8))
-    subtree:add(f.abs, buffer(10, 4))
-    subtree:add(f.rel, buffer(14, 4))
-    subtree:add(f.bol, buffer(18, 4))
-    subtree:add(f.all, buffer(22, 4))
-    local truth = subtree:add(f.truth, buffer(26, 4))
-    if (truth_values[buffer(26, 4):uint()] == nil) then
-    truth:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1)")
-    end
-    -- Array handling for five
-    local arraytree = subtree:add(f.five_0, buffer(30, 20))
-    arraytree:set_text("five (array: 5 x int32)")
-    arraytree:add(f.five__0, buffer(30, 4))
-    arraytree:add(f.five__1, buffer(34, 4))
-    arraytree:add(f.five__2, buffer(38, 4))
-    arraytree:add(f.five__3, buffer(42, 4))
-    arraytree:add(f.five__4, buffer(46, 4))
-    subtree:add(f.pointer, buffer(50, 4))
-    -- Array handling for str
-    local arraytree = subtree:add(f.str_0, buffer(54, 24))
-    arraytree:set_text("str (array: 12 x string)")
-    local subarraytree = arraytree:add(f.str_1, buffer(54, 6))
-    subarraytree:set_text("(array: 3 x string)")
-    subarraytree:add(f.str__0, buffer(54, 2))
-    subarraytree:add(f.str__1, buffer(56, 2))
-    subarraytree:add(f.str__2, buffer(58, 2))
-    local subarraytree = arraytree:add(f.str_2, buffer(60, 6))
-    subarraytree:set_text("(array: 3 x string)")
-    subarraytree:add(f.str__3, buffer(60, 2))
-    subarraytree:add(f.str__4, buffer(62, 2))
-    subarraytree:add(f.str__5, buffer(64, 2))
-    local subarraytree = arraytree:add(f.str_3, buffer(66, 6))
-    subarraytree:set_text("(array: 3 x string)")
-    subarraytree:add(f.str__6, buffer(66, 2))
-    subarraytree:add(f.str__7, buffer(68, 2))
-    subarraytree:add(f.str__8, buffer(70, 2))
-    local subarraytree = arraytree:add(f.str_4, buffer(72, 6))
-    subarraytree:set_text("(array: 3 x string)")
-    subarraytree:add(f.str__9, buffer(72, 2))
-    subarraytree:add(f.str__10, buffer(74, 2))
-    subarraytree:add(f.str__11, buffer(76, 2))
-    end
-    delegator_register_proto(proto_custom_lua, "default", "custom_lua", 74)
-    ''')
+-- Dissector for default.custom_lua: custom_lua (default)
+local proto_custom_lua = Proto("default.custom_lua", "custom_lua (default)")
+-- ProtoField defintions for: custom_lua
+local f = proto_custom_lua.fields
+f.normal = ProtoField.int16("custom_lua.normal", "normal")
+f.special = ProtoField.int64("custom_lua.special", "special")
+f.abs = ProtoField.absolute_time("None", "abs")
+f.rel = ProtoField.relative_time("None", "rel")
+f.bol = ProtoField.bool("bool", "bol")
+f.all = ProtoField.uint32("all.all", "all", base.HEX, {[0]="Monday", [1]="Tuesday"}, nil, "This is something dark side!")
+local truth_values = {[0]="TRUE", [1]="FALSE"}
+f.truth = ProtoField.uint32("custom_lua.truth", "truth", nil, truth_values)
+-- Array definition for five
+f.five_0 = ProtoField.bytes("custom_lua.five", "five")
+f.five_1 = ProtoField.bytes("custom_lua.five", "five")
+f.five_2 = ProtoField.bytes("custom_lua.five", "five")
+f.five_3 = ProtoField.bytes("custom_lua.five", "five")
+f.five_4 = ProtoField.bytes("custom_lua.five", "five")
+f.five_5 = ProtoField.bytes("custom_lua.five", "five")
+f.five__0 = ProtoField.int32("custom_lua.five.0", "[0]")
+f.five__1 = ProtoField.int32("custom_lua.five.1", "[1]")
+f.five__2 = ProtoField.int32("custom_lua.five.2", "[2]")
+f.five__3 = ProtoField.int32("custom_lua.five.3", "[3]")
+f.five__4 = ProtoField.int32("custom_lua.five.4", "[4]")
+f.pointer = ProtoField.int32("custom_lua.pointer", "pointer")
+-- Array definition for str
+f.str_0 = ProtoField.string("custom_lua.str", "str")
+f.str_1 = ProtoField.string("custom_lua.str", "str")
+f.str_2 = ProtoField.string("custom_lua.str", "str")
+f.str_3 = ProtoField.string("custom_lua.str", "str")
+f.str_4 = ProtoField.string("custom_lua.str", "str")
+f.str__0 = ProtoField.string("custom_lua.str.0", "[0, 0]")
+f.str__1 = ProtoField.string("custom_lua.str.1", "[0, 1]")
+f.str__2 = ProtoField.string("custom_lua.str.2", "[0, 2]")
+f.str__3 = ProtoField.string("custom_lua.str.3", "[1, 0]")
+f.str__4 = ProtoField.string("custom_lua.str.4", "[1, 1]")
+f.str__5 = ProtoField.string("custom_lua.str.5", "[1, 2]")
+f.str__6 = ProtoField.string("custom_lua.str.6", "[2, 0]")
+f.str__7 = ProtoField.string("custom_lua.str.7", "[2, 1]")
+f.str__8 = ProtoField.string("custom_lua.str.8", "[2, 2]")
+f.str__9 = ProtoField.string("custom_lua.str.9", "[3, 0]")
+f.str__10 = ProtoField.string("custom_lua.str.10", "[3, 1]")
+f.str__11 = ProtoField.string("custom_lua.str.11", "[3, 2]")
+-- Dissector function for: custom_lua
+function proto_custom_lua.dissector(buffer, pinfo, tree)
+local subtree = tree:add(proto_custom_lua, buffer())
+if pinfo.private.caller_def_name then
+subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_custom_lua.description)
+pinfo.private.caller_def_name = nil
+else
+pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
+end
+subtree:add(f.normal, buffer(0, 2))
+subtree:add(f.special, buffer(2, 8))
+subtree:add(f.abs, buffer(10, 4))
+subtree:add(f.rel, buffer(14, 4))
+subtree:add(f.bol, buffer(20, 4))
+subtree:add(f.all, buffer(22, 4))
+local truth = subtree:add(f.truth, buffer(26, 4))
+if (truth_values[buffer(26, 4):uint()] == nil) then
+truth:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1)")
+end
+-- Array handling for five
+local arraytree = subtree:add(f.five_0, buffer(30, 20))
+arraytree:set_text("five (array: 5 x int32)")
+arraytree:add(f.five__0, buffer(30, 4))
+arraytree:add(f.five__1, buffer(34, 4))
+arraytree:add(f.five__2, buffer(38, 4))
+arraytree:add(f.five__3, buffer(42, 4))
+arraytree:add(f.five__4, buffer(46, 4))
+subtree:add(f.pointer, buffer(50, 4))
+-- Array handling for str
+local arraytree = subtree:add(f.str_0, buffer(54, 24))
+arraytree:set_text("str (array: 12 x string)")
+local subarraytree = arraytree:add(f.str_1, buffer(54, 6))
+subarraytree:set_text("(array: 3 x string)")
+subarraytree:add(f.str__0, buffer(54, 2))
+subarraytree:add(f.str__1, buffer(56, 2))
+subarraytree:add(f.str__2, buffer(58, 2))
+local subarraytree = arraytree:add(f.str_2, buffer(60, 6))
+subarraytree:set_text("(array: 3 x string)")
+subarraytree:add(f.str__3, buffer(60, 2))
+subarraytree:add(f.str__4, buffer(62, 2))
+subarraytree:add(f.str__5, buffer(64, 2))
+local subarraytree = arraytree:add(f.str_3, buffer(66, 6))
+subarraytree:set_text("(array: 3 x string)")
+subarraytree:add(f.str__6, buffer(66, 2))
+subarraytree:add(f.str__7, buffer(68, 2))
+subarraytree:add(f.str__8, buffer(70, 2))
+local subarraytree = arraytree:add(f.str_4, buffer(72, 6))
+subarraytree:set_text("(array: 3 x string)")
+subarraytree:add(f.str__9, buffer(72, 2))
+subarraytree:add(f.str__10, buffer(74, 2))
+subarraytree:add(f.str__11, buffer(76, 2))
+end
+delegator_register_proto(proto_custom_lua, "default", "custom_lua", 74)
+''')
 
 
-@sprint2.test
+#@sprint2.test
 def enums(structs):
     """End-to-end test headers with enums in them."""
     assert 'enum_test' in structs
@@ -404,7 +407,7 @@ def enums(structs):
     ''')
 
 
-@sprint2.test
+#@sprint2.test
 def ranges(structs):
     """End-to-end test headers with ranges in them."""
     assert 'range_test' in structs
@@ -437,7 +440,8 @@ end
 delegator_register_proto(proto_range_test, "default", "range_test", 9)
 ''')
 
-@sprint2.test
+
+#@sprint2.test
 def struct_within_struct(structs):
     """End-to-end test of structs within structs."""
     assert 'struct_within_struct_test' in structs
@@ -464,7 +468,8 @@ end
 delegator_register_proto(proto_struct_within_struct_test, "default", "struct_within_struct_test", 12)
 ''')
 
-@sprint2.test
+
+#@sprint2.test
 def trailers(structs):
     """End-to-end test headers with trailers in them."""
     assert 'trailer_test' in structs

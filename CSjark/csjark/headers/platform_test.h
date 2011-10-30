@@ -11,8 +11,8 @@ struct platform_test {
     _Bool plat;
 #endif
     char b;
-#if __ia64
-    unsigned intel64;
+#if _M_X64
+    unsigned int intel64;
 #endif
 
     // Test union
@@ -29,7 +29,7 @@ struct platform_test {
 
     // Test that correct sizes are used
     long int deff;
-#if __INTEL__
+#if _M_IX86
     long int intel;
 #endif
 #if __sparc

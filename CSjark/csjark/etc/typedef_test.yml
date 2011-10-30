@@ -1,0 +1,4 @@
+Structs:
+  - name: typedef_test
+    id: 8
+    description: testing typedefs

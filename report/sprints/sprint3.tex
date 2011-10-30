@@ -129,9 +129,43 @@ Timetable for this sprint: Table \ref{tab:sprint3time}.\\
 %----------------------
 \section{System Design}
 %----------------------
-The system design defines the new modules and architecture that has to be in place to satisfy the specified requirements that we have included in the sprint 3 backlog.\\
+The system design defines the new modules and architecture that has to be in place to satisfy the specified requirements that we have included in the sprint 3 backlog.
+
+\subsection{System overview}
+%----------------------
 Now that the utility has both basic and advanced features, it is time to specialize and make support for environmental variables that can be found in Thales' source code. This basically include various platform specific support, endian handling and minor technicalities. The latter one is vital for the customer in order for the utility to be efficient and adequate.
-We know that the various platforms handle things differently.
+
+\subsubsection{Platform specific support}
+We know that the various platforms behave differently, and this must be supported by our utility. The customer has mentioned at least 3 platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. We will try to make the set-up for support easily understandable.
+
+The platform definition will be a subpart of a flag-field in the structs header. To ensure modifiability we have assigned a 16 bit field for this, giving the developers possibility to have 65536 unique platforms. The platform flag will give the following information about the platform:
+\begin{itemize}
+\item Endianness
+\item Length of fields
+\item Memory alignment
+\end{itemize}
+All these three fields have to be combined to generate a dissector that will dissect the struct correctly.\\
+
+\subsubsection{Dicitonary lookup}
+Deciding how to implement handling of different platforms ended in a design draft seen in Figure \autoref{fig:platformhandling}. The dissector module will make a dictionary lookup in the table of supported platforms. This table conatins all platforms that the utility can make dissectors for, and their information of how the dissector shall be encoded to achieve correct handling of endianness, length of fields and memory alignment.
+
+We will start out by hardcoding this into the source code, but in the end we want to have this feed to the utility through a configuration-file. This is the way the customer has envisioned it.  
+
+%\begin{figure}[!htb]
+%	\includegraphics[width=\textwidth]{./sprints/img/platformhandling}
+%	\caption{Platform handling\label{fig:platformhandling}}
+%\end{figure}
+
+
+\subsubsection{Endianness}
+
+\subsubsection{Filter and search in Wireshark}
+The amount of data that are collected and dissected can be very large. The need for a filter and search mechanism is apparent. Wireshark has this built-in, and the customer want the utility to support it. To do that, we need to have pass specific fields  
+
+
+
+
+
 
 
 
@@ -272,9 +306,9 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Supporting custom LUA configuration\\
-	Tester & YOUR NAME HERE \\
-	Date & DATE HERE \\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll Tønder \\
+	Date & 30.10.2011\\
+	Result & success\\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -286,9 +320,9 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Supporting unions\\
-	Tester & YOUR NAME HERE\\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 30.10.2011\\
+	Result & success\\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -300,9 +334,9 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Supporting filter and search in wireshark\\
-	Tester & YOUR NAME HERE \\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll Tønder \\
+	Date & 30.10.2011\\
+	Result &success\\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -314,9 +348,9 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Supporting WIN32, \_WIN64, \_sparc \\
-	Tester & YOUR NAME HERE\\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll tønder\\
+	Date & 30.10.2011\\
+	Result & Failure. Most values were displayed correctly, but there were cases where the members and their values were different. Most notably in package 2 and 3 in the win64 and win32 pcap files \\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -328,9 +362,9 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Supporting the use of flags specifying platforms to display member values correctly \\
-	Tester & YOUR NAME HERE\\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 30.10.2011\\
+	Result & Success\\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -342,9 +376,9 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Supporting platforms with different endian \\
-	Tester & YOUR NAME HERE\\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 30.10.2011\\
+	Result & Failure. There were no pcap files associated with this test\\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -356,9 +390,9 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Supporting alignments \\
-	Tester & YOUR NAME HERE\\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 30.10.2011\\
+	Result & Failure. All of the platforms that were used for testing were the same\\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -370,9 +404,9 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Handling Lua keywords \\
-	Tester & YOUR NAME HERE\\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 30.10.2011\\
+	Result & Success\\
 	\bottomrule
 \end{tabular}
 \end{table}

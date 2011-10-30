@@ -103,13 +103,12 @@ class Field:
             store = 'local {var} = '.format(var=create_lua_var(store))
         else:
             store = ''
-            
         self.offset = offset
         t = '\t{store}{tree}:{add}({var}, buffer({offset}, {size}))'
         return t.format(store=store, tree=tree, add=self.add_var,
                         var=variable_name, offset=offset, size=self.size)
 
-    def _get_padded_offset(self, offset):
+    def get_padded_offset(self, offset):
         padding = 0
         if(self.alignment_size != 0):
             padding = self.alignment_size - offset % self.alignment_size
@@ -488,7 +487,7 @@ class Protocol:
             platform = Platform.mappings['default']
         self.platform = platform
         self.name = name
-        self.longname = '%s.%s' % (platform.name, self.name.lower())
+        self.longname = '%s.%s' % (platform.name.lower(), self.name.lower())
         self.conf = conf
 
         # Dissector ID
@@ -525,7 +524,7 @@ class Protocol:
         size = 0
         for field in self.fields:
             if field.size:
-                size = field._get_padded_offset(size)
+                size = field.get_padded_offset(size)
                 size += field.size
 
         return self.pad_struct_size(size)
@@ -593,24 +592,43 @@ class Protocol:
         self.data.append('-- ProtoField defintions for: %s' % self.name)
         decl = 'local {field_var} = {var}.fields'
         self.data.append(decl.format(field_var=self.field_var, var=self.var))
+
         for field in self.fields:
             code = field.get_definition()
+
+            if self.conf and self.conf.cnf: # Conformance file code
+                code = self.conf.cnf.match(field.name, code, defintion=True)
             if code is not None:
                 self.data.append(code)
+
+        # Conformance file defintion code extra
+        if self.conf and self.conf.cnf:
+            code = self.conf.cnf.match(None, None, defintion=True)
+            if code:
+                self.data.append(code)
+
         self.data.append('')
 
-    def _fields_code(self):
+    def _fields_code(self, union=False):
         """Add the code from each field into dissector function."""
         offset = 0
         for field in self.fields:
-            offset = field._get_padded_offset(offset)
+            offset = field.get_padded_offset(offset)
             code = field.get_code(offset)
-            if self.conf and self.conf.cnf:
-                code = self._cnf_field_code(field, code)
+
+            if self.conf and self.conf.cnf: # Conformance file code
+                code = self.conf.cnf.match(field.name, code, defintion=False)
             if code:
                 self.data.append(code)
-            if field.size is not None:
+            if not union and field.size is not None:
                 offset += field.size
+
+        # Conformance file dissection function code extra
+        if self.conf and self.conf.cnf:
+            code = self.conf.cnf.match(None, None, defintion=False)
+            if code:
+                self.data.append(code)
+
         return offset
 
     def _dissector_func(self):
@@ -677,7 +695,6 @@ class Protocol:
             if rule.size is not None:
                 size_str = ', %i' % rule.size
 
-
             # Call trailers 'count' times
             tabs = '\t'
             if rule.member is not None or count > 1:
@@ -698,26 +715,6 @@ class Protocol:
             if rule.member is not None or count > 1:
                 self.data.append('\tend') # End for loop
 
-    def _cnf_field_code(self, field, code):
-        """Modify fields code if a cnf file demands it."""
-        if field.name in self.conf.cnf.rules:
-            rules = self.conf.cnf.rules[field.name]
-
-            # Header rule, insert custom lua before generated code
-            if self.conf.cnf.t_hdr in rules:
-                return '%s\n%s' % (rules[self.conf.cnf.t_hdr], code)
-
-            # Body rules, replace custom lua with generated code
-            elif self.conf.cnf.t_body in rules:
-                content = rules[self.conf.cnf.t_body]
-                if '%(DEFAULT_BODY)s' in content:
-                    content = content.replace('%(DEFAULT_BODY)s', code)
-                if '{DEFAULT_BODY}' in content:
-                    content = content.format(DEFAULT_BODY=code)
-                return content
-
-        return code
-
     def _get_tree_add(self):
         """Get the endian specific function for adding a item to a tree."""
         if self.platform and self.platform.endian == Platform.little:
@@ -735,16 +732,8 @@ class UnionProtocol(Protocol):
 
     def _fields_code(self):
         """Add the code from each field into dissector function."""
-        offset = 0
-        for field in self.fields:
-            offset = field._get_padded_offset(offset)
-            code = field.get_code(offset)
-            if self.conf and self.conf.cnf:
-                code = self._cnf_field_code(field, code)
-            if code:
-                self.data.append(code)
-        return self.get_size
-
+        super()._fields_code(union=True)
+        return self.get_size()
 
 class Delegator(Protocol):
     """A class for delegating dissecting to protocols.

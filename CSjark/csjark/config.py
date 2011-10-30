@@ -46,7 +46,7 @@ class Config:
         rules.extend(self.types.get(type, []))
         return rules
 
-    def create_field(self, proto, name, ctype, size=None, alignment_size = None):
+    def create_field(self, proto, name, ctype, size=None, alignment=None):
         """Create a field depending on rules."""
         # Sort the rules
         types = (Bitstring, Enum, Range, Custom)
@@ -59,32 +59,32 @@ class Config:
 
         # Custom field rules
         if customs:
-            return customs[0].create(proto, name, ctype, size, alignment_size)
+            return customs[0].create(proto, name, ctype, size, alignment)
 
         # If size is None and not customs rule, we are in trouble.
         if size is None:
             size = proto.platform.size_of(ctype)
         type_ = proto.platform.map_type(ctype)
-        
-        if alignment_size is None:
-            raise ConfigError('Unknown field alignment_size for %s' % name)
+
+        if alignment is None:
+            raise ConfigError('Unknown field alignment for %s' % name)
 
         # Bitstring rules
         if bits:
-            return proto.add_bit(name, type_, size, alignment_size, bits[0].bits)
+            return proto.add_bit(name, type_, size, alignment, bits[0].bits)
 
         # Enum rules
         if enums:
             rule = enums[0]
-            return proto.add_enum(name, type_, size, alignment_size, rule.values, rule.strict)
+            return proto.add_enum(name, type_, size, alignment, rule.values, rule.strict)
 
         # Range rules
         if ranges:
             rule = ranges[0]
-            return proto.add_range(name, type_, size, alignment_size, rule.min, rule.max)
+            return proto.add_range(name, type_, size, alignment, rule.min, rule.max)
 
         # Create basic Field if no rules fired
-        return proto.add_field(name, type_, size, alignment_size)
+        return proto.add_field(name, type_, size, alignment)
     
     def get_field_attributes(self, name, ctype):
         """Create a field depending on rules."""
@@ -224,7 +224,7 @@ class Custom(BaseRule):
 
         # TODO: validate that the parameters are valid for the field type
         self.size = obj.get('size', None)
-        self.alignment_size = obj.get('alignment_size', None)
+        self.alignment = obj.get('alignment_size', None)
         self.abbr = obj.get('abbr', None)
         self.name = obj.get('name', None)
         self.base = obj.get('base', None)
@@ -232,19 +232,20 @@ class Custom(BaseRule):
         self.mask = obj.get('mask', None)
         self.desc = obj.get('desc', None)
 
-    def create(self, proto, name, ctype, size, alignment_size):
+    def create(self, proto, name, ctype, size, alignment):
         if self.size is not None:
             size = self.size
         else:
             if ctype not in proto.platform.sizes:
                 raise ConfigError('Missing size for field %s' % name)
             size = proto.platform.size_of(ctype)
-        if self.alignment_size is not None:
-            alignment_size = self.alignment_size
-        if alignment_size is None:
-            raise ConfigError('Missing alignment_size for field %s' % name)
-        field = proto.add_field(name, self.field, size, alignment_size)
-        field.abbr = self.abbr
+        if self.alignment is not None:
+            alignment = self.alignment
+        if alignment is None:
+            alignment = size
+        field = proto.add_field(name, self.field, size, alignment)
+        if self.abbr is not None:
+            field.abbr = self.abbr
         field.base = self.base
         if self.values:
             field.values = create_lua_valuestring(self.values)
@@ -254,15 +255,38 @@ class Custom(BaseRule):
 
 
 class ConformanceFile:
-    # Tokens for different sections
-    t_hdr = 'FN_HDR' # Lua code to be inserted before a field code
-    t_body = 'FN_BODY' # Lua code to replace a field code
-    t_end = 'END' # End of a section
-    t_end_cnf = 'END_OF_CNF' # End of the conformance file
+    """A class for parsing a conformance file.
 
-    tokens = [t_hdr, t_body, t_end, t_end_cnf]
+    A conformance file specifies custom lua code for fields.
+    It can give custom code for the defintion, and inside the dissector
+    function. For these two cases, it supports header, body, footer and
+    extra sections which places code above, instead of, below, or at the
+    end of the section.
+
+    Each section starts with #.<SECTION> for example #.COMMENT.
+    Unknown sections are ignore, to be compatible with Asn2wrs .cnf files.
+    """
+    # Tokens for different sections
+    t_def_hdr = 'DEF_HEADER'    # Lua code added before a field defintion
+    t_def_body = 'DEF_BODY'     # Lua code to replace a field defintion
+    t_def_ftr = 'DEF_FOOTER'    # Lua code added after a field defintion
+    t_def_extra = 'DEF_EXTRA'   # Lua code added after all defintions
+    t_func_hdr = 'FUNC_HEADER'  # Lua code added before a field function code
+    t_func_body = 'FUNC_BODY'   # Lua code to replace a field function code
+    t_func_ftr = 'FUNC_FOOTER'  # Lua code added after a field function code
+    t_func_extra = 'FUNC_EXTRA' # Lua code added at end of dissector function
+    t_comment = 'COMMENT'       # A multiline comment section
+    t_end = 'END'               # End of a section
+    t_end_cnf = 'END_OF_CNF'    # End of the conformance file
+
+    # List of all valid tokens and tokens which should store content
+    def_tokens = [t_def_hdr, t_def_body, t_def_ftr]
+    func_tokens = [t_func_hdr, t_func_body, t_func_ftr]
+    store_tokens = def_tokens + func_tokens + [t_def_extra, t_func_extra]
+    valid_tokens = store_tokens + [t_comment, t_end, t_end_cnf]
 
     def __init__(self, conf, file, rule=None):
+        """Parse a conformance file and create rules for it."""
         # Find the specified file
         self.file = str(file)
         if not os.path.isfile(self.file):
@@ -278,6 +302,7 @@ class ConformanceFile:
         self.parse()
 
     def _get_token(self, line):
+        """Find the token and the field it refers to."""
         values = line[2:].strip().split(' ') + [None]
         return values[0], values[1]
 
@@ -285,32 +310,58 @@ class ConformanceFile:
         """Parse the conformance file's sections and content."""
         token = None # Current section beeing parsed
         field = None # Field the section refers to
-        content = '' # Current content for the section parsed so far
+        content = [] # Current content for the section parsed so far
 
         # Go through all lines and assign content
         for line in self._lines:
             if not line.startswith('#.'):
-                content += line.strip()
+                content.append(line.rstrip())
                 continue
 
             # Store current content when new token is found
-            if token is not None:
-                if field not in self.rules:
-                    self.rules[field] = {}
-                self.rules[field][token] = content
+            if token in self.store_tokens:
+                self.rules[(field, token)] = '\n'.join(content)
 
-            content = ''
+            content = []
             token, field = self._get_token(line)
 
             if token == self.t_end_cnf:
                 break # End of cnf file
-            if token == self.t_end:
-                continue # End token
 
         # Reached end of file without an end token
-        if token not in (self.t_end, self.t_end_cnf):
-            if token in mapping:
-                mapping[token](content)
+        if content and token in self.store_tokens:
+            self.rules[(field, token)] = '\n'.join(content)
+
+    def match(self, name, code, defintion=False):
+        """Modify fields code if a cnf file demands it."""
+        # Handle extra code rules
+        if name is None and code is None:
+            if defintion:
+                token = self.t_def_extra
+            else:
+                token = self.t_func_extra
+            return self.rules.get((name, token), '')
+
+        if defintion:
+            tokens = self.def_tokens
+        else:
+            tokens = self.func_tokens
+
+        # Modify code if field match any rules, body first
+        for token in sorted(tokens):
+            content = self.rules.get((name, token), '')
+            if not content:
+                continue
+            if token.endswith('_HEADER'):
+                code = '%s\n%s' % (content, code)
+            elif token.endswith('_FOOTER'):
+                code = '%s\n%s' % (code, content)
+            elif token.endswith('_BODY'):
+                content = content.replace('%(DEFAULT_BODY)s', code)
+                content = content.replace('{DEFAULT_BODY}', code)
+                code = content
+
+        return code
 
 
 class Options:
@@ -358,7 +409,7 @@ class Options:
         """Prepare options before parsing starts.."""
         # Map current platform to a platform configuration
         if not cls.platforms:
-            mapping = {'win': 'win32', 'darwin': 'macos', 'linux': 'linux'}
+            mapping = {'win': 'Win32', 'darwin': 'Macos', 'linux': 'Linux-x86'}
             for key, value in mapping.items():
                 if sys.platform.startswith(key):
                     cls.platforms.add(Platform.mappings[value])

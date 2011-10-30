@@ -16,7 +16,8 @@ class Platform:
 
     mappings = {} # Map platform name to instance
 
-    def __init__(self, name, flag, endian, macros=None, sizes=None, alignment_sizes=None):
+    def __init__(self, name, flag, endian,
+                macros=None, sizes=None, alignment=None):
         """Create a configuration for a specific platform.
 
         'name' is the name of the platform
@@ -26,11 +27,11 @@ class Platform:
         'sizes' is a dict which maps C types to their size in bytes
         """
         if macros is None:
-            macros = []
+            macros = {}
         if sizes is None:
             sizes = {}
-        if alignment_sizes is None:
-            alignment_sizes = {}
+        if alignment is None:
+            alignment = {}
         Platform.mappings[name] = self
         self.name = name
         self.flag = flag
@@ -41,14 +42,14 @@ class Platform:
 
         # Extend sizes with missing types from default size map
         self.sizes = dict(DEFAULT_C_SIZE_MAP)
-        
+
         for key, value in sizes.items():
             self.sizes[key] = value
-        
-        # Extend alignment sizes with missing types from default alignment size map    
+
+        # Extend alignment sizes with missing types from default alignment size map
         self.alignment_sizes = dict(DEFAULT_C_ALIGNEMT_SIZE_MAP)
-        
-        for key, value in alignment_sizes.items():
+
+        for key, value in alignment.items():
             self.alignment_sizes[key] = value
 
     def map_type(self, ctype):
@@ -64,14 +65,13 @@ class Platform:
         if ctype in self.sizes:
             return self.sizes[ctype]
         raise ValueError('No known wireshark field size for type %s' % ctype)
-        
+
     def alignment_size_of(self, ctype):
         """Find the alignment size of a C type in bytes."""
         if ctype in self.alignment_sizes.keys():
             return self.alignment_sizes[ctype]
         else:
             raise ValueError('No known alignment size for type %s' % ctype)
-        
 
     @classmethod
     def create_all_headers(cls):
@@ -89,13 +89,14 @@ class Platform:
 
         data = ['/* Undefine all platform macros */']
         for p in platforms:
-            data.extend(generate(i) for i in p.macros)
+            data.extend(generate(i) for i, j in p.macros.items())
         return '\n'.join(data)
 
     def _generate_defines(self):
         """Create macros which defines platform specific macros."""
         t = '\n/* Define platform-specific macros for %s */\n' % self.name
-        return t + '\n'.join(['#define %s 1' % i for i in self.macros])
+        macros = ['#define %s %s' % (i, j) for i, j in self.macros.items()]
+        return t + '\n'.join(macros)
 
 
 # Default mapping of C type and their wireshark field type.
@@ -174,42 +175,43 @@ DEFAULT_C_SIZE_MAP = {
         'time_t': 4,
 }
 
+
 # Default mapping of C type and their default size in bytes.
 DEFAULT_C_ALIGNEMT_SIZE_MAP = {
-        'bool': 0,
-        '_Bool': 0,
-        'char': 0,
-        'signed char': 0,
-        'unsigned char': 0,
-        'short': 0,
-        'short int': 0,
-        'signed short': 0,
-        'signed short int': 0,
-        'unsigned short': 0,
-        'unsigned short int': 0,
-        'int': 0,
-        'signed': 0,
-        'signed int': 0,
-        'unsigned': 0,
-        'unsigned int': 0,
-        'long': 0,
-        'long int': 0,
-        'signed long': 0,
-        'signed long int': 0,
-        'unsigned long': 0,
-        'unsigned long int': 0,
-        'long long': 0,
-        'long long int': 0,
-        'signed long long': 0,
-        'signed long long int': 0,
-        'unsigned long long': 0,
-        'unsigned long long int': 0,
-        'float': 0,
-        'double': 0,
-        'long double': 0,
-        'pointer': 0,
-        'enum': 0,
-        'time_t': 0,
+        'bool': 1,
+        '_Bool': 1,
+        'char': 1,
+        'signed char': 1,
+        'unsigned char': 1,
+        'short': 2,
+        'short int': 2,
+        'signed short': 2,
+        'signed short int': 2,
+        'unsigned short': 2,
+        'unsigned short int': 2,
+        'int': 4,
+        'signed': 4,
+        'signed int': 4,
+        'unsigned': 4,
+        'unsigned int': 4,
+        'long': 4,
+        'long int': 4,
+        'signed long': 4,
+        'signed long int': 4,
+        'unsigned long': 4,
+        'unsigned long int': 4,
+        'long long': 8,
+        'long long int': 8,
+        'signed long long': 8,
+        'signed long long int': 8,
+        'unsigned long long': 8,
+        'unsigned long long int': 8,
+        'float': 4,
+        'double': 8,
+        'long double': 8,
+        'pointer': 4,
+        'enum': 4,
+        'time_t': 4,
 }
 
 # Mapping of C sizes for unix like platforms
@@ -220,61 +222,99 @@ UNIX_C_SIZE_MAP = {
         'signed long int': 8,
         'unsigned long': 8,
         'unsigned long int': 8,
+        'long double': 16,
+}
+
+# Mapping of C sizes for sparc platform
+SPARC_C_SIZE_MAP = {
+        'long double': 16,
 }
 
 # Mapping of C sizes for unix like platforms
 UNIX_C_ALIGNMENT_SIZE_MAP = {
-        'double': 0,
+        'long': 8,
+        'long int': 8,
+        'signed long': 8,
+        'signed long int': 8,
+        'unsigned long': 8,
+        'unsigned long int': 8,
+        'long double': 16,
 }
 
 # Platform-specific C preprocessor macros
-WIN32_MACROS = ['WIN32', '_WIN32', '__WIN32__', '__TOS_WIN__', '__WINDOWS__']
-SOLARIS_MACROS = ['sun', '__sun']
-MACOS_MACROS = ['macintosh', 'Macintosh', '__APPLE__', '__MACH__']
+WIN32_MACROS = {
+        '_WIN32': 1, '__WIN32__': 1, '__TOS_WIN__': 1,
+        '__WINDOWS__': 1, 'MAX_PATH': 260,
+}
 
-X86_MACROS = [
-    'i386', '__i386__', '__i386', '__IA32__', '_M_IX86', '__X86__',
-    '_X86_', '__THW_INTEL__', '__I86__', '__INTEL__',
-]
+SOLARIS_MACROS = {'sun': 1, '__sun': 1, 'PATH_MAX': 4096}
 
-X64_MACROS = [
-    '__amd64__', '__amd64', '__x86_64', '__x86_64__', '_M_X64',
-    '__ia64__', '_IA64', '__IA64__', '__ia64', '_M_IA64', '_M_IA64',
-    '__itanium__', '__x86_64', '__x86_64__',
-]
+MACOS_MACROS = {
+    'macintosh': 1, 'Macintosh': 1,
+    '__APPLE__': 1, '__MACH__': 1, 'PATH_MAX': 4096,
+}
 
-SPARC_MACROS = ['__sparc__', '__sparc', '__sparcv8', '__sparcv9']
+X86_MACROS = {
+        'i386': 1, '__i386__': 1, '__i386': 1, '__IA32__': 1,
+        '_M_IX86': 1, '__X86__': 1, '_X86_': 1, '__THW_INTEL__': 1,
+        '__I86__': 1, '__INTEL__': 1,
+}
+
+X64_MACROS = {
+        '__amd64__': 1, '__amd64': 1, '__x86_64': 1, '__x86_64__': 1,
+        '_M_X64': 1, '__ia64__': 1, '_IA64': 1, '__IA64__': 1,
+        '__ia64': 1, '_M_IA64': 1, '_M_IA64': 1, '__itanium__': 1,
+        '__x86_64': 1, '__x86_64__': 1, '_M_AMD64': 1,
+}
+
+SPARC_MACROS = {
+        '__sparc__': 1, '__sparc': 1, '__sparcv8': 1,
+        '__sparcv9': 1, 'PATH_MAX': 1024,
+}
 
 
 # Register different platforms
+def merge(a, *dicts):
+    new = dict(a)
+    for d in dicts:
+        new.update(d)
+    return new
 
 # Default platform
-Platform('default', 0, Platform.big)
+Platform('default', 0, Platform.big,
+         macros={'PATH_MAX': 4096, 'MAX_PATH': 260})
 
 # Windows 32 bit
-Platform('win32', 1, Platform.little, macros=WIN32_MACROS+X86_MACROS, alignment_sizes=DEFAULT_C_SIZE_MAP)
+Platform('Win32', 1, Platform.little,
+         macros=merge(WIN32_MACROS, X86_MACROS),
+         alignment=DEFAULT_C_ALIGNEMT_SIZE_MAP)
 
 # Windows 64 bit
-Platform('win64', 2, Platform.little,
-         macros=WIN32_MACROS+X64_MACROS+['_WIN64'])
+Platform('Win64', 2, Platform.little,
+         macros=merge(WIN32_MACROS, X64_MACROS, {'_WIN64':1}))
 
 # Solaris 32 bit
-Platform('solaris32', 3, Platform.little,
-         macros=SOLARIS_MACROS+X86_MACROS, sizes=UNIX_C_SIZE_MAP, alignment_sizes=UNIX_C_ALIGNMENT_SIZE_MAP)
+Platform('Solaris-x86', 3, Platform.little,
+         macros=merge(SOLARIS_MACROS, X86_MACROS), sizes=UNIX_C_SIZE_MAP,
+         alignment=UNIX_C_ALIGNMENT_SIZE_MAP)
 
 # Solaris 64 bit
-Platform('solaris64', 4, Platform.little,
-         macros=SOLARIS_MACROS+X64_MACROS, sizes=UNIX_C_SIZE_MAP)
+Platform('Solaris-x86-64', 4, Platform.little,
+         macros=merge(SOLARIS_MACROS, X64_MACROS), sizes=UNIX_C_SIZE_MAP)
 
 # Solaris SPARC 64 bit
-Platform('sparc', 5, Platform.big,
-         macros=SOLARIS_MACROS+SPARC_MACROS, sizes=UNIX_C_SIZE_MAP)
+Platform('Solaris-sparc', 5, Platform.big,
+         macros=merge(SOLARIS_MACROS, SPARC_MACROS), sizes=SPARC_C_SIZE_MAP,
+         alignment=SPARC_C_SIZE_MAP)
 
 # MacOS
-Platform('macos', 6, Platform.little,
-         macros=MACOS_MACROS, sizes=UNIX_C_SIZE_MAP, alignment_sizes=UNIX_C_ALIGNMENT_SIZE_MAP)
+Platform('Macos', 6, Platform.little,
+         macros=MACOS_MACROS, sizes=UNIX_C_SIZE_MAP,
+         alignment=UNIX_C_ALIGNMENT_SIZE_MAP)
 
 # Linux
-Platform('linux', 7, Platform.little,
-         macros=['__linux__'], sizes=UNIX_C_SIZE_MAP, alignment_sizes=UNIX_C_ALIGNMENT_SIZE_MAP)
+Platform('Linux-x86', 7, Platform.little,
+         macros={'__linux__': 1, 'PATH_MAX': 4096},
+         sizes=UNIX_C_SIZE_MAP,
+         alignment=UNIX_C_ALIGNMENT_SIZE_MAP)
 

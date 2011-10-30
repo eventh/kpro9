@@ -88,13 +88,12 @@ class Field:
             store = 'local {var} = '.format(var=create_lua_var(store))
         else:
             store = ''
-        offset = self._get_padded_offset(offset)
         self.offset = offset
         t = '\t{store}subtree:{add}({var}, buffer({offset}, {size}))'
         return t.format(store=store, add=self.add_var,
                         var=self.var, offset=offset, size=self.size)
 
-    def _get_padded_offset(self, offset):
+    def get_padded_offset(self, offset):
         padding = 0
         if(self.alignment_size != 0):
             padding = self.alignment_size - offset % self.alignment_size
@@ -192,7 +191,6 @@ class EnumField(Field):
 
     def get_code(self, offset, store=None):
         """Get the code for dissecting this field."""
-        offset = self._get_padded_offset(offset)
         data = []
 
         # Local var definitions
@@ -267,7 +265,6 @@ class ArrayField(Field):
         data = ['\t-- Array handling for %s' % self.name]
         element = 0 # Count of which array element we have created
         subtree = 0 # Count of which subtree we have created
-        offset = self._get_padded_offset(offset)
 
         def subdefinition(tree, parent, elem, name=''):
             """Create a subtree of arrays."""
@@ -331,7 +328,6 @@ class ProtocolField(Field):
         pass
 
     def get_code(self, offset):
-        offset = self._get_padded_offset(offset)
         t = '\tpinfo.private.caller_def_name = "{name}"\n'\
             '\tDissector.get("{proto}"):call('\
             'buffer({offset},{size}):tvb(), pinfo, subtree)'
@@ -379,7 +375,6 @@ class BitField(Field):
         return '\n'.join(data)
 
     def get_code(self, offset):
-        offset = self._get_padded_offset(offset)
         data = ['\t-- Bitstring handling for %s' % self.name]
 
         buff = 'buffer({off}, {size})'.format(off=offset, size=self.size)
@@ -403,7 +398,6 @@ class RangeField(Field):
 
     def get_code(self, offset):
         """Get the code for dissecting this field."""
-        offset = self._get_padded_offset(offset)
         data = []
 
         # Local var definitions
@@ -484,7 +478,7 @@ class Protocol:
         size = 0
         for field in self.fields:
             if field.size:
-                size = field._get_padded_offset(size)
+                size = field.get_padded_offset(size)
                 size += field.size
 
         return self.pad_struct_size(size)
@@ -573,6 +567,7 @@ class Protocol:
         """Add the code from each field into dissector function."""
         offset = 0
         for field in self.fields:
+            offset = field.get_padded_offset(offset)
             code = field.get_code(offset)
 
             if self.conf and self.conf.cnf: # Conformance file code

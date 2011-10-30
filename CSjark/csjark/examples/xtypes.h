@@ -33,11 +33,11 @@
 #include "errno.h"
 #endif
 
+#ifndef NDEBUG
+   /* Disable STL-warnings.... */
 // TODO: Don't work yet!!
-//#ifndef NDEBUG
-//   /* Disable STL-warnings.... */
 //#pragma warning(disable : 4786)
-//#endif
+#endif
 
 #endif /* WIN32 */
 
@@ -47,12 +47,12 @@
 #define PATH_MAX MAX_PATH
 #endif
 
+#if defined(WIN32) || defined(LINUX) || defined(__APPLE__)
 // TODO: Already defined!
-//#if defined(WIN32) || defined(LINUX) || defined(__APPLE__)
 //typedef unsigned long long  uint64_t;
 //typedef unsigned int  uint32_t;
 //typedef unsigned char uint8_t;
-//#endif
+#endif
 
 #ifdef WIN32
 typedef int BOOL;

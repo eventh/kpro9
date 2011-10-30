@@ -231,7 +231,7 @@ UNIX_C_ALIGNMENT_SIZE_MAP = {
 
 
 # Platform-specific C preprocessor macros
-WIN32_MACROS = ['WIN32', '_WIN32', '__WIN32__', '__TOS_WIN__', '__WINDOWS__']
+WIN32_MACROS = ['_WIN32', '__WIN32__', '__TOS_WIN__', '__WINDOWS__']
 SOLARIS_MACROS = ['sun', '__sun']
 MACOS_MACROS = ['macintosh', 'Macintosh', '__APPLE__', '__MACH__']
 

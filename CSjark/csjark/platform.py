@@ -238,9 +238,12 @@ WIN32_MACROS = {
         '__WINDOWS__': 1, 'MAX_PATH': 260,
 }
 
-SOLARIS_MACROS = {'sun': 1, '__sun': 1}
+SOLARIS_MACROS = {'sun': 1, '__sun': 1, 'PATH_MAX': 4096}
 
-MACOS_MACROS = {'macintosh': 1, 'Macintosh': 1, '__APPLE__': 1, '__MACH__': 1}
+MACOS_MACROS = {
+    'macintosh': 1, 'Macintosh': 1,
+    '__APPLE__': 1, '__MACH__': 1, 'PATH_MAX': 4096,
+}
 
 X86_MACROS = {
         'i386': 1, '__i386__': 1, '__i386': 1, '__IA32__': 1,
@@ -269,7 +272,8 @@ def merge(a, *dicts):
     return new
 
 # Default platform
-Platform('default', 0, Platform.big)
+Platform('default', 0, Platform.big,
+         macros={'PATH_MAX': 4096, 'MAX_PATH': 260})
 
 # Windows 32 bit
 Platform('Win32', 1, Platform.little,

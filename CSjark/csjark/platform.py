@@ -222,6 +222,7 @@ UNIX_C_SIZE_MAP = {
         'signed long int': 8,
         'unsigned long': 8,
         'unsigned long int': 8,
+        'long double': 16,
 }
 
 # Mapping of C sizes for sparc platform
@@ -231,7 +232,13 @@ SPARC_C_SIZE_MAP = {
 
 # Mapping of C sizes for unix like platforms
 UNIX_C_ALIGNMENT_SIZE_MAP = {
-        'double': 0,
+        'long': 8,
+        'long int': 8,
+        'signed long': 8,
+        'signed long int': 8,
+        'unsigned long': 8,
+        'unsigned long int': 8,
+        'double': 16,
 }
 
 # Platform-specific C preprocessor macros

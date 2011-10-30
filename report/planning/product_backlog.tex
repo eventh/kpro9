@@ -11,54 +11,61 @@
 	\cmidrule(r){3-4}
 	Req. & Description & Est. & Act. \\
 	\midrule
-	FR1 & Read basic C struct definitions & & \\
-	FR1-A & Support data types: int, float, char and boolean & 24 & 21 \\
-	FR1-B & Support members of type enum & 6 & 5 \\
-	FR1-C & Support members of type struct & 7 & 3.5 \\
-	FR1-D & Support members of type union & 5 & - \\
-	FR1-E & Support members of type array & 7 & 12 \\
-	FR1-F & Detect structs with same name & 3 & 3.5 \\
+	FR1 & Read basic \Gls{c} \gls{struct} definitions & & \\
+	FR1-A & Support data types: \gls{int}, \gls{float}, \gls{char} and \gls{boolean} & 24 & 21 \\
+	FR1-B & Support \glspl{member} of type \gls{enum} & 6 & 5 \\
+	FR1-C & Support \glspl{member} of type \gls{struct} & 7 & 3.5 \\
+	FR1-D & Support \glspl{member} of type \gls{union}& 5 & - \\
+	FR1-E & Support \glspl{member} of type \gls{array} & 7 & 12 \\
+	FR1-F & Detect \glspl{struct} with same name & 3 & 3.5 \\
 	\addlinespace
-	FR2 & Generate Wireshark dissectors in Lua & & \\
-	FR2-A & Display simple structs & 28 & 25 \\
-	FR2-B & Support display of structs within structs & 11 & 15 \\
-	FR2-C & Support Wireshark filter and search on attributes & 3 & - \\
-	FR2-D & Recognize invalid values for a struct member & 22 & 15 \\
+	FR2 & Generate \Gls{wireshark} \glspl{dissector} in \Gls{lua} & & \\
+	FR2-A & Display simple \glspl{struct} & 28 & 25 \\
+	FR2-B & Support display of \glspl{struct} within \glspl{struct} & 11 & 15 \\
+	FR2-C & Support \Gls{wireshark} filter and search on attributes & 3 & - \\
+	FR2-D & Recognize invalid values for a \gls{struct} \gls{member} & 22 & 15 \\
 	\addlinespace
-	FR3 & Support C preprocessor directives and macros & & \\
-	FR3-A & Support \#include & 8 & 2 \\
-	FR3-B & Support \#define and \#if & 11 & 3 \\
+	FR3 & Support \Gls{c} \gls{preprocessor} directives and macros & & \\
+	FR3-A & Support \gls{include} & 8 & 2 \\
+	FR3-B & Support \gls{define} and \gls{if} & 11 & 3 \\
 	FR3-C & Support \verb+WIN32+, \verb+_WIN64+, \verb+__sparc+ etc & 9 & - \\
 	\addlinespace
 	FR4 & Support user configuration & & \\
-	FR4-A & Support valid ranges for struct members & 30 & 15 \\
-	FR4-B & Support custom Lua files for specific protocols & - & - \\
+	FR4-A & Support valid ranges for \gls{struct} \glspl{member} & 30 & 15 \\
+	FR4-B & Support custom \Gls{lua} files for specific protocols & - & - \\
 	FR4-C & Support custom handling of specific data types & 6 & 5 \\
-	FR4-D & Support specifying the ID of dissectors & 7 & - \\
-	FR4-E & Support various trailers (other registered protocols) & 18 & 15 \\
-	FR4-F & Support enumerated named values  & 5 & 6.5 \\
+	FR4-D & Support specifying the ID of \glspl{dissector} & 7 & - \\
+	FR4-E & Support various \gls{trailers} (other registered protocols) & 18 & 15 \\
+	FR4-F & Support \glspl{enumerated named value}  & 5 & 6.5 \\
 	FR4-G & Support bit strings & 10 & 11.5 \\
 	\addlinespace
-	FR5 & Handle input which size and endian depends on platform & & \\
+	FR5 & Handle input which size and \gls{endian} depends on platform & & \\
 	FR5-A & Flags specified for each platform & 8 & - \\
-	FR5-B & Dissectors support memory alignement & 12 & - \\
-	FR5-C & Dissectors support both little and big endian & 6 & - \\
-	FR5-D & Dissectors support different sizes from flags & 14 & - \\	
+	FR5-B & \Glspl{dissector} support memory alignment & 12 & - \\
+	FR5-C & \Glspl{dissector} support both little and big \gls{endian} & 6 & - \\
+	FR5-D & \Glspl{dissector} support different sizes from flags & 14 & - \\	
 	\addlinespace
 	FR6 & Support parameters from command line & & \\
-	FR6-A & Support parameter for C header file & 9 & 9 \\
+	FR6-A & Support parameter for \Gls{c} \gls{header} file & 9 & 9 \\
 	FR6-B & Support parameter for configuration file & 28 & 8 \\
-	FR6-C & Support batch processing of C header and configuration & 7 & 4.5 \\
-	FR6-D & Don't regenerate dissectors & 2 & - \\
+	FR6-C & Support batch processing of \Gls{c} \gls{header} and configuration & 7 & 4.5 \\
+	FR6-D & Don't regenerate \glspl{dissector} & 2 & - \\
 	\addlinespace
-	NR1 & Run on latest Windows \& Solaris OS & & \\
-	NR2 & Dissector run on Windows \& Solaris, Intel \& Sparc & & \\
+	NR1 & Run on latest \Gls{Windows} \& \Gls{Solaris} OS & & \\
+	NR2 & \Gls{dissector} run on \Gls{Windows} \& \Gls{Solaris}, Intel \& \GLS{sparc} & & \\
 	NR3 & User interface shall be command line & & \\
-	NR4 & Sufficient documentation for generating Lua dissectors & & \\
+	NR4 & Sufficient documentation for generating \Gls{lua} \glspl{dissector} & & \\
 	NR5 & Sufficient documentation for extending functionality & & \\
 	NR6 & Code should follow PEP8 and PEP20 & & \\
 	NR7 & Code should be documented by docstrings & & \\
 	\bottomrule
 \end{tabularx}
 \end{table}
+
+
+
+
+
+
+
 

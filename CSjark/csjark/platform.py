@@ -238,7 +238,7 @@ UNIX_C_ALIGNMENT_SIZE_MAP = {
         'signed long int': 8,
         'unsigned long': 8,
         'unsigned long int': 8,
-        'double': 16,
+        'long double': 16,
 }
 
 # Platform-specific C preprocessor macros

@@ -1,6 +1,3 @@
-..  CSjark documentation file
-    name: user\config.rst
-    header underlining syntax significance order (from top) :  = - ~ #
 
 .. toctree::  
    :maxdepth: 2  

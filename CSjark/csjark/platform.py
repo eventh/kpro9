@@ -103,9 +103,9 @@ class Platform:
 DEFAULT_C_TYPE_MAP = {
         'bool': 'bool',
         '_Bool': 'bool',
-        'char': 'string',
-        'signed char': 'string',
-        'unsigned char': 'string',
+        'char': 'int8',
+        'signed char': 'int8',
+        'unsigned char': 'uint8',
         'string': 'string',
         'short': "int16",
         'signed short': "int16",
@@ -225,6 +225,18 @@ UNIX_C_SIZE_MAP = {
         'long double': 16,
 }
 
+# Mapping of C sizes for Solaris-x86 platform
+SOLARIS_X86_C_SIZE_MAP = {
+        'long': 4,
+        'long int': 4,
+        'signed long': 4,
+        'signed long int': 4,
+        'unsigned long': 4,
+        'unsigned long int': 4,
+        'long double': 16,
+}
+
+
 # Mapping of C sizes for sparc platform
 SPARC_C_SIZE_MAP = {
         'long double': 16,
@@ -240,6 +252,8 @@ UNIX_C_ALIGNMENT_SIZE_MAP = {
         'unsigned long int': 8,
         'long double': 16,
 }
+
+
 
 # Platform-specific C preprocessor macros
 WIN32_MACROS = {
@@ -268,7 +282,7 @@ X64_MACROS = {
 }
 
 SPARC_MACROS = {
-        '__sparc__': 1, '__sparc': 1, '__sparcv8': 1,
+        '__sparc__': 1, '__sparc': 1,
         '__sparcv9': 1, 'PATH_MAX': 1024,
 }
 
@@ -295,16 +309,19 @@ Platform('Win64', 2, Platform.little,
 
 # Solaris 32 bit
 Platform('Solaris-x86', 3, Platform.little,
-         macros=merge(SOLARIS_MACROS, X86_MACROS), sizes=UNIX_C_SIZE_MAP,
+         macros=merge(SOLARIS_MACROS, X86_MACROS),
+         sizes=SOLARIS_X86_C_SIZE_MAP,
          alignment=UNIX_C_ALIGNMENT_SIZE_MAP)
 
 # Solaris 64 bit
 Platform('Solaris-x86-64', 4, Platform.little,
-         macros=merge(SOLARIS_MACROS, X64_MACROS), sizes=UNIX_C_SIZE_MAP)
+         macros=merge(SOLARIS_MACROS, X64_MACROS),
+         sizes=UNIX_C_SIZE_MAP)
 
 # Solaris SPARC 64 bit
 Platform('Solaris-sparc', 5, Platform.big,
-         macros=merge(SOLARIS_MACROS, SPARC_MACROS), sizes=SPARC_C_SIZE_MAP,
+         macros=merge(SOLARIS_MACROS, SPARC_MACROS),
+         sizes=SPARC_C_SIZE_MAP,
          alignment=SPARC_C_SIZE_MAP)
 
 # MacOS

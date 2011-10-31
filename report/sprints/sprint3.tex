@@ -188,7 +188,7 @@ done in this sprint.
 It is necessary to specify flags for each platform to make it possible to 
 correctly detect and display packages that wireshark captures. In wireshark 
 the flags are used to tell which platform the \gls{packet} is sent from, so that 
-the right \gls{dissector} is used to display the p in \Gls{wireshark}. In the 
+the right \gls{dissector} is used to display the packets in \Gls{wireshark}. In the 
 \gls{utility} the flag points to what kind of \gls{endianness}, how memory is aligned and 
 the different sizes that is used for data types on the platform. These data 
 are used to genereate a \gls{dissector} for the specific platform.
@@ -205,11 +205,22 @@ functionallity to display data in both little and big \gls{endian}. Therefore th
 
 \subsection{Support Different Sizes from Flags}
 %-----------------------
-TODO
+On different platforms, there can be different sizes on the data types. For example on windows a \emph{long double} is 8 bytes, and on sparc it is 16 bytes.
+TODO: Not finished
 
 \subsection{Support Platform Specific Macros}
 %-----------------------
-TODO
+All c complilers have predefined macros for different operating systems and 
+processors. These macros are much used in code that need to be portabel for 
+different platforms. When using these macros it is possible to create 
+different struct members for each operating system, as shown in 
+\autoref{code:predefmacro}, which will use different data types on each 
+operating system. All platform specific macros are specified for each 
+platform, so the dissector is generated correctly for each of the platforms. 
+Currently all the platform specifications is done in python code.
+
+\lstset{language=C,caption={Macros in C},label=code:predefmacro}
+\lstinputlisting[language=C]{./sprints/code/predefmacro.h}
 
 \subsection{Support Custom \Gls{lua} Files}
 %-----------------------
@@ -287,9 +298,13 @@ identifier start with ''\_''.
 \subsection{Support for Complex Arrays}
 %-----------------------
 Support for typedef was implemented in the previous sprint, in this sprint it 
-has been improved to also support typedefs of more complex arrays.
-TODO: Not finished
+has been improved to also support type definitions of complex arrays. Support 
+for type definition of array is implemented, an example of such type 
+definition in c is shown in \autoref{code:typedefarray}. Also support for 
+arrays of enums, arrays, structs and pointers has been added.
 
+\lstset{language=C,caption={Typedef of arrays},label=code:typedefarray}
+\lstinputlisting[language=C]{./sprints/code/typedefarray.h}
 
 %-----------------------
 \section{Sprint Testing}
@@ -398,9 +413,9 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Supporting platforms with different \gls{endian} \\
-	Tester & Lars Solvoll Tønder\\
-	Date & 30.10.2011\\
-	Result & Failure. There were no \glspl{pcap-file} associated with this test\\
+	Tester & Erik Bergersen\\
+	Date & 31.10.2011\\
+	Result & Success\\
 	\bottomrule
 \end{tabular}
 \end{table}

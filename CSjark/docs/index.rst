@@ -26,6 +26,8 @@ Developer Documentation
 
 .. toctree::
    :maxdepth: 2
+   
+   devel/devel
 
 Other Information
 -----------------

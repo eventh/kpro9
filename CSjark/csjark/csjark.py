@@ -3,7 +3,7 @@
 A module for creating Wireshark dissectors from C structs.
 
 Usage:
----------
+
 csjark.py [-h] [-v] [-d] [-n] [-I [include [include ...]]]
           [-i [header [header ...]]] [-c [config [config ...]]]
           [-o [output]]
@@ -20,14 +20,7 @@ optional arguments:
   -v, --verbose         print detailed information
   -d, --debug           print debugging information
   -n, --nocpp           disable C preprocessor
-  -I [include [include ...]], --Include [include [include ...]]
-                        C preprocessor includes
-  -i [header [header ...]], --input [header [header ...]]
-                        C file(s) to parse
-  -c [config [config ...]], --config [config [config ...]]
-                        configuration file(s) to parse
-  -o [output], --output [output]
-                        write output to directory/file
+
 
 Example:
 "python csjark.py -v -nocpp headerfile.h configfile.yml"

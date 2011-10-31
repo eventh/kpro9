@@ -21,10 +21,12 @@ There are three 3. party dependencies to get CSjark working:
 3:  pyYAML
     pyYAML is a parser for YAML. YAML is the language used to specify configurations to CSjark. To get PYparser, please visit http://pyyaml.org/wiki/PyYAML. The webside includes both a way to download the software and a short desciption on how to install it.
 
-To get the proper lua integration to so that the lua dissectors that CShark generates can work, the latest development version of Wireshark (version 1.7 dev) is required. It can be obtained from this webside: http://www.wireshark.org/download/automated/ . Browse to the proper folder for the platform that you are on, and download the latest.
+To get the proper lua integration to so that the lua dissectors that CShark generates can work, the latest development version of Wireshark (version 1.7 dev) is required. It can be obtained from this website: http://www.wireshark.org/download/automated/ . Browse to the proper folder for the platform that you are on, and download the latest.
+
 
 CSjark
-------------
+------
 
 CSjark can be obtained at https://github.com/eventh/kpro9/.
 CSjark itself requires no installation. After the steps described in the dependencies section is completed. It can be ran by opening a terminal, navigating to the directory containing ``cshark.py`` and invoking as described in section :ref:`use`.
+

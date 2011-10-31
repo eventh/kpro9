@@ -215,8 +215,11 @@ functionallity to display data in both little and big \gls{endian}. Therefore th
 
 \subsection{Support Different Sizes from Flags}
 %-----------------------
-On different platforms, there can be different sizes on the data types. For example on windows a \emph{long double} is 8 bytes, and on sparc it is 16 bytes.
-TODO: Not finished
+On different platforms, there can be different sizes on the data types. For 
+example on windows a \emph{long double} is 8 bytes, and on sparc it is 16 
+bytes. It is possible to specify sizes for data types for each platform. All 
+these specifications is written in python code, and are easy to modify for the 
+user of the system.
 
 \subsection{Support Platform Specific Macros}
 %-----------------------
@@ -234,7 +237,25 @@ Currently all the platform specifications is done in python code.
 
 \subsection{Support Custom \Gls{lua} Files}
 %-----------------------
-TODO
+Implementation of this feature started in sprint 2, and support for using 
+conformance file to add lua code to correct places in the lua dissector was 
+finished in this sprint. With the conformance file it is possible to add code 
+before and after an member in both the definition and function part of the 
+dissector. It also possible to replace the code for a member in both of these 
+sections. In the example below there is written custom lua for a 
+struct(temperature) with on integer member(celsius). In the conformance file 
+in \autoref{code:customcnf} there added three lines of comments as a custom 
+Lua code, that are going to be added to the Lua dissector. In 
+\autoref{code:customlua} it is possible to see the custom Lua code that was 
+added to the Lua dissector. The first comment is added after the member 
+definition. The two other comments are added above and below the member in the 
+function part of the Lua dissector.
+
+\lstset{language=C,caption={Custom Lua conformance file},label=code:customcnf}
+\lstinputlisting[language=C]{./sprints/code/custom.cnf}
+
+\lstset{language=C,caption={Custom Lua dissector code},label=code:customlua}
+\lstinputlisting[language=C]{./sprints/code/custom.lua}
 
 \subsection{Support \Gls{wireshark} Filter and Search}
 %-----------------------

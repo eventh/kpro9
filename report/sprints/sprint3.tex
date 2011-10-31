@@ -6,9 +6,9 @@
 %------------------------
 \section{Sprint Planning}
 %------------------------
-For the third sprint we intend to implement the remanding requirements in the product backlog. We feel that the first and second sprint has resulted in a satisfying utility, but it is still missing important functionality.
+For the third sprint we intend to implement the remanding requirements in the product backlog. We feel that the first and second sprint has resulted in a satisfying \gls{utility}, but it is still missing important functionality.
 
-After two sprint iterations, we are still trying to improve our approach to Scrum. Each sprint results in new ideas and better ways to do the process, and in this sprint we want everything to be correct and in the right order.\\
+After two sprint iterations, we are still trying to improve our approach to \Gls{scrum}. Each sprint results in new ideas and better ways to do the process, and in this sprint we want everything to be correct and in the right order.\\
 \\
 There will be two major changes this sprint:
 \begin {itemize}
@@ -27,9 +27,9 @@ The sprint started with the planning meeting the 19th of October and our work st
 
 \subsection{Sprint Goal}
 %-----------------------
-For the third sprint the team will update CSjark to version 0.3 which will extend the utility so that it contains the complete functionality requested by the customer at this phase of the project. In this sprint we will pick all of the current requirements from the product backlog as all of the underlying functionality needed for them are already in place from the previous sprints. This means that we will also aim to create a draft of the final design of the system during the sprint.
+For the third sprint the team will update CSjark to version 0.3 which will extend the \gls{utility} so that it contains the complete functionality requested by the customer at this phase of the project. In this sprint we will pick all of the current requirements from the product backlog as all of the underlying functionality needed for them are already in place from the previous sprints. This means that we will also aim to create a draft of the final design of the system during the sprint.
 
-The most important function that is going to be implemented in this sprint is being able to display packets from different originating platforms properly. This will be implemented by having every packet contain a flag specifying their originating platform, and by having our dissectors use this flag value to influence how it handles the data in the packet.
+The most important function that is going to be implemented in this sprint is being able to display packets from different originating platforms properly. This will be implemented by having every \gls{packet} contain a flag specifying their originating platform, and by having our \glspl{dissector} use this flag value to influence how it handles the data in the \gls{packet}.
 
 \subsection{Back Log}
 %--------------------
@@ -46,31 +46,31 @@ Timetable for this sprint: Table \ref{tab:sprint3time}.\\
 	\midrule
 	\textbf{Impl.} &  & \textbf{56} & \textbf{-} \\
 	\hyperref[tab:req:stories7]{US29} & FR5-A: Flags specified for each platform &  5  & - \\
-	\hyperref[tab:req:stories8]{US31} & FR5-C: Dissector support both little and big endian & 5  & - \\
-	\hyperref[tab:req:stories8]{US32} & FR5-D: Dissector support different sizes from flags & 12  & - \\
-	\hyperref[tab:req:stories8]{US33} & FR3-C: Support WIN32, WIN64,sparc etc &  5  & - \\
-	\hyperref[tab:req:stories7]{US29} & FR4-B: Configuration supports custom Lua files & 6 & -\\
-	\hyperref[tab:req:stories7]{US28} & FR2-C: Support Wireshark filter and search on attributes &  3 & -\\
-	\hyperref[tab:req:stories7]{US29} & FR5-B: Dissectors support memory alignement & 4 & -\\
-	\hyperref[tab:req:stories7]{US26} & FR1-D: Support members of type union & 5  & -\\
-	\hyperref[tab:req:stories7]{US27} & FR2-A add: Display a wildcard type for valid c types that Wireshark has no support for & 3  & - \\
-	\hyperref[tab:req:stories9]{US35} & FR4-D mod: Support specifying the ID of dissectors (name and function) & 3  & - \\
-	\hyperref[tab:req:stories9]{US39} & FR6-D: Don’t regenerate dissectors & 1 & - \\
-	\hyperref[tab:req:stories7]{US29} & FR2: Handle Lua reserved definition names & 2 & - \\
+	\hyperref[tab:req:stories8]{US31} & FR5-C: \Gls{dissector} support both little and big \gls{endian} & 5  & - \\
+	\hyperref[tab:req:stories8]{US32} & FR5-D: \Gls{dissector} support different sizes from flags & 12  & - \\
+	\hyperref[tab:req:stories8]{US33} & FR3-C: Support WIN32, WIN64,\GLS{sparc} etc &  5  & - \\
+	\hyperref[tab:req:stories7]{US29} & FR4-B: Configuration supports custom \Gls{lua} files & 6 & -\\
+	\hyperref[tab:req:stories7]{US28} & FR2-C: Support \Gls{wireshark} filter and search on attributes &  3 & -\\
+	\hyperref[tab:req:stories7]{US29} & FR5-B: \Glspl{dissector} support memory alignement & 4 & -\\
+	\hyperref[tab:req:stories7]{US26} & FR1-D: Support members of type \gls{union} & 5  & -\\
+	\hyperref[tab:req:stories7]{US27} & FR2-A add: Display a wildcard type for valid c types that \Gls{wireshark} has no support for & 3  & - \\
+	\hyperref[tab:req:stories9]{US35} & FR4-D mod: Support specifying the ID of \glspl{dissector} (name and function) & 3  & - \\
+	\hyperref[tab:req:stories9]{US39} & FR6-D: Don’t regenerate \glspl{dissector} & 1 & - \\
+	\hyperref[tab:req:stories7]{US29} & FR2: Handle \Gls{lua} reserved definition names & 2 & - \\
 	\addlinespace
 	\textbf{Testing} &  & \textbf{19} & \textbf{-} \\
-	 & FR4-B: Custom Lua configuration & 2 & - \\
-	 & FR5-C: Dissectors support both little and big endian & 1 & - \\
-	 & FR5-D: Dissectors support different sizes from flags & 2 & - \\
-	 & FR3-C: Support WIN32, WIN64, sparc etc & 4 & - \\
-	 & FR5-B: Dissectors support memory alignement & 8 & - \\
-	 & FR1-D: Support members of type union & 1 & - \\
-	 & FR2: Handle Lua reserved definition names & 1 & - \\
+	 & FR4-B: Custom \Gls{lua} configuration & 2 & - \\
+	 & FR5-C: \Glspl{dissector} support both little and big \gls{endian} & 1 & - \\
+	 & FR5-D: \Glspl{dissector} support different sizes from flags & 2 & - \\
+	 & FR3-C: Support WIN32, WIN64, \GLS{sparc} etc & 4 & - \\
+	 & FR5-B: \Glspl{dissector} support memory alignement & 8 & - \\
+	 & FR1-D: Support members of type \gls{union} & 1 & - \\
+	 & FR2: Handle \Gls{lua} reserved definition names & 1 & - \\
 	\addlinespace
 	\textbf{Doc.} &  & \textbf{11} & \textbf{-} \\
-	 & FR4-B: Custom Lua configuration & 2 & - \\
+	 & FR4-B: Custom \Gls{lua} configuration & 2 & - \\
 	\hyperref[tab:req:stories8]{US34} & FR4-C: Support custom handling of specific data types & 2 & - \\
-	\hyperref[tab:req:stories9]{US36} & FR5: User documentation for what platform that the utility support & 3 & - \\
+	\hyperref[tab:req:stories9]{US36} & FR5: User documentation for what platform that the \gls{utility} support & 3 & - \\
 	\hyperref[tab:req:stories9]{US37} & FR5: Create developer manual from python docstrings (autodoc plugin) & 4 & - \\
 	\addlinespace
 	\textbf{Fixes} &  & \textbf{16} & \textbf{-} \\
@@ -133,10 +133,10 @@ The system design defines the new modules and architecture that has to be in pla
 
 \subsection{System overview}
 %----------------------
-Now that the utility has both basic and advanced features, it is time to specialize and make support for environmental variables that can be found in Thales' source code. This basically include various platform specific support, endian handling and minor technicalities. The latter one is vital for the customer in order for the utility to be efficient and adequate.
+Now that the \gls{utility} has both basic and advanced features, it is time to specialize and make support for environmental variables that can be found in Thales' source code. This basically include various platform specific support, \gls{endian} handling and minor technicalities. The latter one is vital for the customer in order for the \gls{utility} to be efficient and adequate.
 
 \subsubsection{Platform specific support}
-We know that the various platforms behave differently, and this must be supported by our utility. The customer has mentioned at least 3 platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. We will try to make the set-up for support easily understandable.
+We know that the various platforms behave differently, and this must be supported by our \gls{utility}. The customer has mentioned at least 3 platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. We will try to make the set-up for support easily understandable.
 
 The platform definition will be a subpart of a flag-field in the structs header. To ensure modifiability we have assigned a 16 bit field for this, giving the developers possibility to have 65536 unique platforms. The platform flag will give the following information about the platform:
 \begin{itemize}
@@ -144,12 +144,12 @@ The platform definition will be a subpart of a flag-field in the structs header.
 \item Length of fields
 \item Memory alignment
 \end{itemize}
-All these three fields have to be combined to generate a dissector that will dissect the struct correctly.\\
+All these three fields have to be combined to generate a \gls{dissector} that will dissect the struct correctly.\\
 
-\subsection{Dicitonary lookup}
-Deciding how to implement handling of different platforms ended in a design draft seen in Figure \autoref{fig:platformhandling}. The dissector module will make a dictionary lookup in the table of supported platforms. This table conatins all platforms that the utility can make dissectors for, and their information of how the dissector shall be encoded to achieve correct handling of endianness, length of fields and memory alignment.
+\subsubsection{Dicitonary lookup}
+Deciding how to implement handling of different platforms ended in a design draft seen in Figure \autoref{fig:platformhandling}. The \gls{dissector} module will make a dictionary lookup in the table of supported platforms. This table conatins all platforms that the \gls{utility} can make \glspl{dissector} for, and their information of how the \gls{dissector} shall be encoded to achieve correct handling of \gls{endianness}, length of fields and memory alignment.
 
-We will start out by hardcoding this into the source code, but in the end we want to have this feed to the utility through a configuration-file. This is the way the customer has envisioned it.  
+We will start out by hardcoding this into the source code, but in the end we want to have this feed to the \gls{utility} through a configuration-file. This is the way the customer has envisioned it.  
 
 %\begin{figure}[!htb]
 %	\includegraphics[width=\textwidth]{./sprints/img/platformhandling}
@@ -157,7 +157,12 @@ We will start out by hardcoding this into the source code, but in the end we wan
 %\end{figure}
 
 
-\paragraph{Endianness}
+\subsubsection{Endianness}
+
+\subsubsection{Filter and search in \Gls{wireshark}}
+The amount of data that are collected and dissected can be very large. The need for a filter and search mechanism is apparent. \Gls{wireshark} has this built-in, and the customer want the \gls{utility} to support it. To do that, we need to have pass specific fields  
+
+
 
 
 
@@ -168,13 +173,13 @@ We will start out by hardcoding this into the source code, but in the end we wan
 \section{Implementation}
 %-----------------------
 The main focus for this sprint was to support of different platforms. Several 
-things are dependent on platform; endianness, the memory allingment and sizes 
+things are dependent on platform; \gls{endianness}, the memory allingment and sizes 
 of data types. It is also possible that structs can be defined differnt for 
-each platform. The utility will generate different dissectors for each 
-platform. A dissector this wil detect the platform and use the correct 
-platform dissector.
+each platform. The \gls{utility} will generate different \glspl{dissector} for each 
+platform. A \gls{dissector} this wil detect the platform and use the correct 
+platform \gls{dissector}.
 
-Support for the union data type, finishing implementation of custom Lua files 
+Support for the \gls{union} data type, finishing implementation of custom \Gls{lua} files 
 and modification of functionallity implemented in the previous sprint was also 
 done in this sprint.
 
@@ -182,21 +187,21 @@ done in this sprint.
 %-----------------------
 It is necessary to specify flags for each platform to make it possible to 
 correctly detect and display packages that wireshark captures. In wireshark 
-the flags are used to tell which platform the package is sent from, so that 
-the right dissector is used to display the package in Wireshark. In the 
-utility the flag points to what kind of endianness, how memory is aligned and 
+the flags are used to tell which platform the \gls{packet} is sent from, so that 
+the right \gls{dissector} is used to display the p in \Gls{wireshark}. In the 
+\gls{utility} the flag points to what kind of \gls{endianness}, how memory is aligned and 
 the different sizes that is used for data types on the platform. These data 
-are used to genereate a dissector for the specific platform.
+are used to genereate a \gls{dissector} for the specific platform.
 
-\subsection{Support Little and Big Endian}
+\subsection{Support Little and Big \Gls{endian}}
 %-----------------------
 Different platforms can order bytes in either little(left-to-right) or 
-big(right-to-left) endian. The Windows platform uses little endian, and SPARC 
-uses big endian. Since the utility has to support both platforms, it was 
-necessary to support handling of endianness. The Lua API in wireshark has 
-functionallity to display data in both little and big endian. Therefore the 
-utility has to read the specfied flag for the platform, and generate a Lua 
-dissector that displays the data correctly for the given platform.
+big(right-to-left) \gls{endian}. The \Gls{Windows} platform uses little \gls{endian}, and \GLS{sparc} 
+uses big \gls{endian}. Since the \gls{utility} has to support both platforms, it was 
+necessary to support handling of \gls{endianness}. The \Gls{lua} API in wireshark has 
+functionallity to display data in both little and big \gls{endian}. Therefore the 
+\gls{utility} has to read the specfied flag for the platform, and generate a \Gls{lua} 
+\gls{dissector} that displays the data correctly for the given platform.
 
 \subsection{Support Different Sizes from Flags}
 %-----------------------
@@ -206,11 +211,11 @@ TODO
 %-----------------------
 TODO
 
-\subsection{Support Custom Lua Files}
+\subsection{Support Custom \Gls{lua} Files}
 %-----------------------
 TODO
 
-\subsection{Support Wireshark Filter and Search}
+\subsection{Support \Gls{wireshark} Filter and Search}
 %-----------------------
 Wireshark has a display filter, where it is possible to use packet filtering. 
 Each field in our genereated dissectors has a abbrevation name that is 
@@ -231,15 +236,15 @@ TODO
 
 \subsection{Support Union Type}
 %-----------------------
-The union type is a variabel that can contain different data types with 
-different sizes. The union will allocated memory for the largest type defined 
-in the union. \autoref{code:union} shows an example on a header-file with an 
-union type. The compiler is responisble for keeping track of size and 
+The \gls{union} type is a variabel that can contain different data types with 
+different sizes. The \gls{union} will allocated memory for the largest type defined 
+in the \gls{union}. \autoref{code:union} shows an example on a header-file with an 
+\gls{union} type. The compiler is responisble for keeping track of size and 
 alignment requirements\cite[p.147]{Kerninghan1988} . Since there is not 
-possible to find out which data type that is used in Wireshark, the utility 
-has to genereate a dissector that display the values for each data type. 
-\autoref{fig:wsunion} displays the dissector generated from the struct in 
-\autoref{code:union}, this shows the union with three members, all of them are 
+possible to find out which data type that is used in \Gls{wireshark}, the \gls{utility} 
+has to genereate a \gls{dissector} that display the values for each data type. 
+\autoref{fig:wsunion} displays the \gls{dissector} generated from the struct in 
+\autoref{code:union}, this shows the \gls{union} with three members, all of them are 
 listed with their values, in this case the float value is the correct one.
 
 \begin{figure}[ht]
@@ -251,20 +256,20 @@ listed with their values, in this case the float value is the correct one.
 \lstset{language=C,caption={Union type},label=code:union}
 \lstinputlisting[language=C]{./sprints/code/union.h}
 
-\subsection{Display Types Wireshark Do Not Support}
+\subsection{Display Types \Gls{wireshark} Do Not Support}
 %-----------------------
 TODO
 
-\subsection{Support Specifying ID of Dissectors}
+\subsection{Support Specifying ID of \Glspl{dissector}}
 %-----------------------
-Specifying dissector ID has been modified from sprint 2. The dissector will 
+Specifying \gls{dissector} ID has been modified from sprint 2. The \gls{dissector} will 
 still use the ID given in the configuration for a struct, if the struct is not 
 given an ID in the configuration, then the ID for the struct will be set to 
 \emph{NONE}. This is done to ensure that structs have an unique ID for their 
-dissector. Structs-in-structs member do not need an ID since they are called 
-from the struct' by the dissector name.
+\gls{dissector}. Structs-in-structs member do not need an ID since they are called 
+from the struct' by the \gls{dissector} name.
 
-\subsection{Do Not Regenerate dissectors}
+\subsection{Do Not Regenerate \glspl{dissector}}
 %-----------------------
 To increase the performance on generation of dissectors, dissectors that 
 allready are genereated in batch mode, will only be generated once in a batch 
@@ -272,10 +277,10 @@ mode execution. This feature will be improved in the next sprint, so it only
 genereates dissectors in batch mode that are modified or new since the last 
 batch run.
 
-\subsection{Handle Lua Reserved Keywords}
+\subsection{Handle \Gls{lua} Reserved Keywords}
 %-----------------------
-Lua has a list of reserved keywords, and some of these keywords are allowed in 
-the C language. The utility is able to support this under generation of Lua 
+\Gls{lua} has a list of reserved keywords, and some of these keywords are allowed in 
+the C language. The \gls{utility} is able to support this under generation of \Gls{lua} 
 code, when an identifier is a lua keyword, an underscore(\_) is added, so the 
 identifier start with ''\_''.
 
@@ -293,12 +298,12 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 
 \begin{itemize}
 	\item TID15 - Supporting batch mode of C header and configuration files \autoref{tab:sp3TID15}
-	\item TID16 - Supporting custom Lua configuration \autoref{tab:sp3TID16}
+	\item TID16 - Supporting custom \Gls{lua} configuration \autoref{tab:sp3TID16}
 	\item TID17 - Supporting unions \autoref{tab:sp3TID17}
 	\item TID18 - Supporting filter and search in wireshark \autoref{tab:sp3TID18}
 	\item TID19 - Supporting WIN32, \_WIN64, \_SPARC etc \autoref{tab:sp3TID19}
 	\item TID20 -  Supporting the use of flags specifying platforms to display member values correctly \autoref{tab:sp3TID20}
-	\item TID21 - Supporting platforms with different endians \autoref{tab:sp3TID21}
+	\item TID21 - Supporting platforms with different \glspl{endian} \autoref{tab:sp3TID21}
 	\item TID22 - Supporting alignments \autoref{tab:sp3TID22}
 \end{itemize}
 
@@ -317,15 +322,15 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Supporting custom Lua configuration\label{tab:sp3TID16}}
+\caption{Supporting custom \Gls{lua} configuration\label{tab:sp3TID16}}
 \begin{tabular}{l l}
 	\toprule
 	Header & Description \\
 	\midrule
 	Description & Supporting custom LUA configuration\\
-	Tester & YOUR NAME HERE \\
-	Date & DATE HERE \\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll Tønder \\
+	Date & 30.10.2011\\
+	Result & success\\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -337,9 +342,9 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Supporting unions\\
-	Tester & YOUR NAME HERE\\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 30.10.2011\\
+	Result & success\\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -351,23 +356,23 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Supporting filter and search in wireshark\\
-	Tester & YOUR NAME HERE \\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll Tønder \\
+	Date & 30.10.2011\\
+	Result & success\\
 	\bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Supporting WIN32, \_WIN64, \_sparc \label{tab:sp3TID19}}
+\caption{Supporting WIN32, \_WIN64, \_\GLS{sparc} \label{tab:sp3TID19}}
 \begin{tabular}{l l}
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting WIN32, \_WIN64, \_sparc \\
-	Tester & YOUR NAME HERE\\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Description & Supporting WIN32, \_WIN64, \_\GLS{sparc} \\
+	Tester & Lars Solvoll tønder\\
+	Date & 30.10.2011\\
+	Result & Failure. Most values were displayed correctly, but there were cases where the members and their values were different. Most notably in \gls{packet} 2 and 3 in the win64 and win32 \glspl{pcap-file} \\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -379,23 +384,23 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Supporting the use of flags specifying platforms to display member values correctly \\
-	Tester & YOUR NAME HERE\\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 30.10.2011\\
+	Result & Success\\
 	\bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Supporting platforms with different endian \label{tab:sp3TID21}}
+\caption{Supporting platforms with different \gls{endian} \label{tab:sp3TID21}}
 \begin{tabular}{l l}
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting platforms with different endian \\
-	Tester & YOUR NAME HERE\\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Description & Supporting platforms with different \gls{endian} \\
+	Tester & Lars Solvoll Tønder\\
+	Date & 30.10.2011\\
+	Result & Failure. There were no \glspl{pcap-file} associated with this test\\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -407,23 +412,23 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	Header & Description \\
 	\midrule
 	Description & Supporting alignments \\
-	Tester & YOUR NAME HERE\\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 30.10.2011\\
+	Result & Failure. All of the platforms that were used for testing were the same\\
 	\bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Handling Lua keywords \label{tab:sp3TID22}}
+\caption{Handling \Gls{lua} keywords \label{tab:sp3TID22}}
 \begin{tabular}{l l}
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Handling Lua keywords \\
-	Tester & YOUR NAME HERE\\
-	Date & DATE HERE\\
-	Result & TYPE THE RESULT HERE\\
+	Description & Handling \Gls{lua} keywords \\
+	Tester & Lars Solvoll Tønder\\
+	Date & 30.10.2011\\
+	Result & Success\\
 	\bottomrule
 \end{tabular}
 \end{table}

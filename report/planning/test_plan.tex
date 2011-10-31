@@ -19,24 +19,24 @@ When it comes to software testing, we have 2 different types of tests available,
 %--------------------------
 \section{White box Testing}
 %--------------------------
-White box testing is a method of software testing where you test internal structures or modules of an application, as opposed to its functions. White box testing requires the tester to have an internal perspective of the system, as well as sufficent programming skills. As the utility was required to be able to function with a lot of different input, as well as being used as a debugging tool itself, we chose to have every developer on the team write unit tests for their own code, and then have someone else on the team do the testing of their code in order to ensure correctness. Also in order to get a proper overview over what and how many parts of the system that are covered by unit tests, the team decided to use a tool for measuring code coverage.
+White box testing is a method of software testing where you test internal structures or modules of an application, as opposed to its functions. White box testing requires the tester to have an internal perspective of the system, as well as sufficent programming skills. As the \gls{utility} was required to be able to function with a lot of different input, as well as being used as a debugging tool itself, we chose to have every developer on the team write unit tests for their own code, and then have someone else on the team do the testing of their code in order to ensure correctness. Also in order to get a proper overview over what and how many parts of the system that are covered by unit tests, the team decided to use a tool for measuring code coverage.
 
 
 %--------------------------
 \section{Black Box Testing}
 %--------------------------
-Black box testing is a method of software testing where you test the functionality of a system, as opposed to its internal structures. Black box testing does in general not require the tester to have any intimate knowledge about the system or any of the programming logic that went into making it. Black box test cases are built around the specifications and requirements of a system, i.e its functional and in some cases non-functional requirements. The team decided to use black box testing for both the functional and non-functional requirements of the utility, as the customer had already expressed thoughts on extending and understanding the non-functional parts of the utility themselves. 
+Black box testing is a method of software testing where you test the functionality of a system, as opposed to its internal structures. Black box testing does in general not require the tester to have any intimate knowledge about the system or any of the programming logic that went into making it. Black box test cases are built around the specifications and requirements of a system, i.e its functional and in some cases non-functional requirements. The team decided to use black box testing for both the functional and non-functional requirements of the \gls{utility}, as the customer had already expressed thoughts on extending and understanding the non-functional parts of the \gls{utility} themselves. 
 
 
 %------------------------------
 \section{Templates for Testing}
 %------------------------------
-\autoref{tab:testcase} and \autoref{tab:testreport} are templates we'll be
+\autoref{tab:testcase} , \autoref{tab:testreport} and \autoref{tab:testCoverageReport} are templates we'll be
 using for testing purposes.
 
 In order to standarize the testing process, the team decided on making templates for both the tests themselves and for reporting their results. The ones responsible for testing were given the task of filling out these tables to make sure they got filled out and stored properly.
 
-The following table shows the template for each test case. All of the tests written for the utility will be in this format, and executed according to this document.
+The following table shows the template for each test case. All of the tests written for the \gls{utility} will be in this format, and executed according to this document.
 
 \begin{table}[htb] \small \center
 \caption{Test case template \label{tab:testcase}}
@@ -68,6 +68,23 @@ The following table shows the template for reporting the result of each test cas
 	Result & The success or failure of the test, and a comment on the result if needed \\
 	\bottomrule
 \end{tabular}
+\end{table}
+
+The following table shows the template for reporting code coverage.
+
+\begin{table}[!htb]\footnotesize\center
+	\caption{Code Coverage Report Template\label{tab:TestCoverageReport}}
+	\begin{tabular}{l l l l l}
+		\toprule
+		Module & Statements & Missing & Excluded & Coverage\\
+		\midrule
+		module 1 & Statements ran & Statements not ran  & Excluded statements & Percent code coverage\ \\
+		... & ... & ... & ... & ... \\
+		module n & Statements ran & Statements not ran & Excluded statements  & Percent code coverage \\
+		\bottomrule
+		Total & Statements ran & Statements not ran & Excluded statements & Percent code coverage \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 

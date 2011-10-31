@@ -236,7 +236,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # String array
         if (isinstance(child, c_ast.TypeDecl) and
-                child.children()[0].names[0] == 'char'):
+                hasattr(child.children()[0], 'names') and child.children()[0].names[0] == 'char'): #hack
             size *= self.size_of('char')
             return child.declname, 'string', size, self.alignment('char'), depth
 
@@ -248,29 +248,51 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Single dimensional normal array
         depth.append(size)
-        ctype = self._get_type(child.children()[0])
+        
+        if isinstance(child.children()[0], c_ast.IdentifierType):
+            ctype = self._get_type(child.children()[0])
 
-        # Support for typedef
-        if ctype in self.aliases:
-            token, ctype = self.aliases[ctype]
-            if token == 'array': # Hack I think
-                return child.declname, ctype[1], ctype[2], ctype[3], depth+ctype[4]
-            elif token is not None:
-                print(token, ctype) # TODO
-                raise ParseError('Incomplete support for array of typedefs')
-
-        return child.declname, ctype, self.size_of(ctype), self.alignment(ctype), depth
+            # Typedef type, which is an alias for another type
+            if ctype in self.aliases:
+                token, base = self.aliases[ctype]
+                if token in ('struct', 'union'):
+                    subproto = self.all_protocols[base, self.platform]
+                    return child.declname, subproto, subproto.get_size(), subproto.get_alignment_size(), depth
+                elif token == 'enum':
+                    return child.declname, token, self.size_of(token), self.alignment(token), depth, self.enums[ctype]
+                elif token == 'array':
+                    tmp, ctype, size, alignment, inner_depth = base
+                    return child.declname, ctype, size, alignment, depth + inner_depth
+                else:
+                    base_size = self.size_of(base)
+                    base_alignment_size = self.alignment(base)
+                    return child.declname, base, base_size, base_alignment_size, depth
+            else:
+                base_size = self.size_of(ctype)
+                base_alignment_size = self.alignment(ctype)
+                return child.declname, ctype, base_size, base_alignment_size, depth
+        # Enum
+        elif isinstance(child.children()[0], c_ast.Enum):
+            return child.declname, 'enum', self.size_of('enum'), self.alignment('enum'), depth, self.enums[child.children()[0].name]
+        # Union and struct
+        elif isinstance(child.children()[0], c_ast.Union) or isinstance(child.children()[0], c_ast.Struct):
+            subproto = self.all_protocols[child.children()[0].name, self.platform]
+            return child.declname, subproto, subproto.get_size(), subproto.get_alignment_size(), depth
+        # Error
+        else:
+            raise ParseError('Unknown type in array declaration: %s' % repr(child.children()[0]))
 
     def handle_protocol(self, proto, name, proto_name):
         """Add an protocol field or union field to the protocol."""
         sub_proto = StructVisitor.all_protocols[(proto_name, self.platform)]
         return proto.add_protocol(name, sub_proto)
 
-    def handle_array(self, proto, name, ctype, size, alignment, depth):
+    def handle_array(self, proto, name, ctype, size, alignment, depth, enum_members = None):
         """Add an ArrayField to the protocol."""
         if not depth:
             return self.handle_field(proto, name, ctype, size, alignment)
-        return proto.add_array(name, self.map_type(ctype), size, alignment, depth)
+        
+        return proto.add_array(name, ctype, size, alignment, depth, enum_members)
 
     def handle_pointer(self, node, proto):
         """Find member details in a pointer declaration."""

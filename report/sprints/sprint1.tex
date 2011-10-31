@@ -7,8 +7,8 @@
 \section{Sprint Planning}
 %------------------------
 In our first sprint we will implement basic and fundamental parts of the
-utility. Based on our preliminary studies, we have decided what preprocessor
-and parser to use, so the task is to make this work together and achieve the
+\gls{utility}. Based on our preliminary studies, we have decided what \gls{preprocessor}
+and \gls{parser} to use, so the task is to make this work together and achieve the
 desired functionality.
 
 \subsection{Duration}
@@ -21,10 +21,10 @@ meetings to show what we have accomplished and discuss further development.
 %-----------------------
 The overall goal of the first sprint is to create a preliminary design and
 implement the core of the application. It will be possible to run it to
-generate Lua dissectors which can be used by Wireshark users. The first
-version will contain only the basic dissector generating features, i.e.
-parsing C structs with basic data types as members. Also, some of the
-preprocessing capabilities will be implemented, such as handling \#include
+generate \Gls{lua} \glspl{dissector} which can be used by \Gls{wireshark} users. The first
+version will contain only the basic \gls{dissector} generating features, i.e.
+parsing \Gls{c} \glspl{struct} with basic data types as \glspl{member}. Also, some of the
+preprocessing capabilities will be implemented, such as handling \gls{include}
 directives. Basic support for configuration will be added.
 
 \subsection{Back Log}
@@ -39,7 +39,7 @@ estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
 	\toprule
 	Requirement & Task & Hours \\
 	\midrule
-	\multirow{4}{5cm}{Command line shall support parameter for C header file} & Design & 1 \\
+	\multirow{4}{5cm}{Command line shall support parameter for \Gls{c} \gls{header} file} & Design & 1 \\
 	& Implementation & 2 \\
 	& Testing & 2 \\
 	& Documentation & 4 \\
@@ -53,7 +53,7 @@ estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
 	\toprule
 	Requirement & Task & Hours \\
 	\midrule
-	\multirow{4}{5cm}{The utility must support the following basic data types: int, float, char and boolean} & Design & 4 \\
+	\multirow{4}{5cm}{The \gls{utility} must support the following basic data types: \gls{int}, \gls{float}, \gls{char} and \gls{boolean}} & Design & 4 \\
 	& Implementation & 8 \\
 	& Testing & 8 \\
 	& Documentation & 4 \\
@@ -67,7 +67,7 @@ estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
 	\toprule
 	Requirement & Task & Hours \\
 	\midrule
-	\multirow{4}{5cm}{The dissector shall be able to display simple structs} & Design & 4 \\
+	\multirow{4}{5cm}{The \gls{dissector} shall be able to display simple \glspl{struct}} & Design & 4 \\
 	& Implementation & 8 \\
 	& Testing & 8 \\
 	& Documentation & 8 \\
@@ -81,7 +81,7 @@ estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
 	\toprule
 	Requirement & Task & Hours \\
 	\midrule
-	\multirow{4}{5cm}{The utility shall support \#include} & Design & 2 \\
+	\multirow{4}{5cm}{The \gls{utility} shall support \gls{include}} & Design & 2 \\
 	& Implementation & 2 \\
 	& Testing & 2 \\
 	& Documentation & 2 \\
@@ -95,7 +95,7 @@ estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
 	\toprule
 	Requirement & Task & Hours \\
 	\midrule
-	\multirow{4}{5cm}{The utility shall support \#define and \#if} & Design & 1 \\
+	\multirow{4}{5cm}{The \gls{utility} shall support \gls{define} and \gls{if}} & Design & 1 \\
 	& Implementation & 2 \\
 	& Testing & 6 \\
 	& Documentation & 2 \\
@@ -123,7 +123,7 @@ estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
 	\toprule
 	Requirement & Task & Hours \\
 	\midrule
-	\multirow{4}{5cm}{Configuration must support valid ranges for struct members} & Design & 6 \\
+	\multirow{4}{5cm}{Configuration must support valid ranges for \gls{struct} \glspl{member}} & Design & 6 \\
 	& Implementation & 8 \\
 	& Testing & 8 \\
 	& Documentation & 8 \\
@@ -137,7 +137,7 @@ estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
 	\toprule
 	Requirement & Task & Hours \\
 	\midrule
-	\multirow{4}{5cm}{The dissector shall be able to recognize invalid values for a struct member} & Design & 4 \\
+	\multirow{4}{5cm}{The \gls{dissector} shall be able to recognize invalid values for a \gls{struct} \gls{member}} & Design & 4 \\
 	& Implementation & 6 \\
 	& Testing & 8 \\
 	& Documentation & 4 \\
@@ -153,21 +153,21 @@ estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
 	\cmidrule(r){4-5}
 	\# & Req. & Description & Est. & Act. \\
 	\midrule
-	1 & FR6-A & Command line shall support parameter for C header file & 9 & 9\\
+	1 & FR6-A & Command line shall support parameter for \Gls{c} \gls{header} file & 9 & 9\\
 	\addlinespace
-	2 & FR1-A & Support basic data types: int, float, char, boolean & 24 & 21\\
+	2 & FR1-A & Support basic data types: \gls{int}, \gls{float}, \gls{char}, \gls{boolean} & 24 & 21\\
 	\addlinespace
-	3 & FR2-A & The dissector shall be able to display simple structs & 28 & 25\\
+	3 & FR2-A & The \gls{dissector} shall be able to display simple \glspl{struct} & 28 & 25\\
 	\addlinespace
-	4 & FR3-A & The utility shall support \#include & 8 & 2\\
+	4 & FR3-A & The \gls{utility} shall support \gls{include} & 8 & 2\\
 	\addlinespace
-	5 & FR3-B & The utility shall support \#define and \#if & 11 & 3\\	
+	5 & FR3-B & The \gls{utility} shall support \gls{define} and \gls{if} & 11 & 3\\	
 	\addlinespace
 	6 & FR6-B & Command line shall support paramter for configuration file & 28 & 8\\
 	\addlinespace
-	7 & FR4-A & Support valid ranges for struct members & 30 & 15 \\
+	7 & FR4-A & Support valid ranges for \gls{struct} \glspl{member} & 30 & 15 \\
 	\addlinespace
-	8 & FR2-D & Recognize invalid values for a struct member & 22 & 15\\
+	8 & FR2-D & Recognize invalid values for a \gls{struct} \gls{member} & 22 & 15\\
 	\midrule
 	& & Total: & 160 & 98\\
 	\bottomrule
@@ -212,7 +212,7 @@ goals and guidelines:
 	\item Smart data structures and dumb code works a lot better than the other
 		way around\cite{Raymond1999}!
 	\item Clear and clean separation of the front-end and the back-end so in the
-		future other parsers can be used to generate dissectors.
+		future other parsers can be used to generate \glspl{dissector}.
 	\item Try to be pythonic, follow
 		PEP8\footnote{Style Guide for Python Code: \url{http://www.python.org/dev/peps/pep-0008/}} and
 		PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}.
@@ -225,7 +225,7 @@ goals and guidelines:
 \subsection{Preliminary Design}
 %------------------------------
 The following is a description of the preliminary design we had for our
-utility. We split our program into the several parts, described in the
+\gls{utility}. We split our program into the several parts, described in the
 following paragraphs, their relationship is explained in
 \autoref{fig:sp1:design}.
 
@@ -236,15 +236,15 @@ following paragraphs, their relationship is explained in
 \end{figure}
 
 \paragraph{Command line interface}
-The command line interface is where the user inputs which header files and
-configuration files he wants the utility to use. This module needs to ask
-the configuration to parse config files, and then ask the front-end to parse C
-files. It should finally ask the back-end to generate Wireshark dissectors
-for the given header files. The CLI should be able to accept some additional
+The command line interface is where the user inputs which \gls{header} files and
+configuration files he wants the \gls{utility} to use. This module needs to ask
+the configuration to parse config files, and then ask the front-end to parse \Gls{c}
+files. It should finally ask the back-end to generate \Gls{wireshark} \glspl{dissector}
+for the given \gls{header} files. The CLI should be able to accept some additional
 arguments like verbose, debug, nocpp and output options.
 The argument verbose should print out detailed information,
 debug should print out debugging information, and nocpp should
-disable the C preprocessor. If the CLI is provided with invalid arguments, 
+disable the \Gls{c} \gls{preprocessor}. If the CLI is provided with invalid arguments, 
 it should print a message explaining the correct usage.
 If the program ran as expected it should output a message informing
 the user of the success. 
@@ -255,44 +255,43 @@ to the command line interface, and from this information modify
 the data structures generated by the front-end.
 
 \paragraph{Front-end}
-The front-end of the system is the parser, it should parse C files and
-look for struct definitions. The struct definitions will be put into a data structure
-that the back-end will use when creating the dissectors.
-
-The front-end should use pycparser and PLY libraries for parsing of C files. It should accept C
-header files and create an abstract syntax tree, which is traversed
-to find struct definitions and their members. The struct definitions and members
+The front-end of the system is the \gls{parser}, it should parse \Gls{c} files and
+look for \gls{struct} definitions. The \gls{struct} definitions will be put into a data structure
+that the back-end will use when creating the \glspl{dissector}.
+The front-end should use \gls{pycparser} and PLY \glspl{library} for parsing of \Gls{c} files. It should accept \Gls{c}
+\gls{header} files and create an \gls{AST}, which is traversed
+to find \gls{struct} definitions and their \glspl{member}. The \gls{struct} definitions and \glspl{member}
 are then filled into a suitable data structure.
 
 \paragraph{Data Structures}
 The data structures should store the information the back-end needs to generate
-Wireshark dissectors. It should have support for protocols and fields in Wireshark.
+\Gls{wireshark} \glspl{dissector}. It should have support for protocols and fields in \Gls{wireshark}.
 The data structures should be easily modifiable by the configuration.
 
 \paragraph{Back-end}
-The back-end is the part of the system that generates the actual Lua dissectors.
+The back-end is the part of the system that generates the actual \Gls{lua} \glspl{dissector}.
 It should use the information in the data structures, that the 
-front-end and configuration generates, to create Lua code that can dissect
-the header files inputted by the user. 
+front-end and configuration generates, to create \Gls{lua} code that can dissect
+the \gls{header} files inputted by the user. 
 
 \subsection{Utility}
 %-------------------
 Figure \ref{fig:sp1_class} illustrates the current class diagram for our
-utility after the end of the first sprint. The csjark module contains the main
-method of the utility and is responsible for running the program.
+\gls{utility} after the end of the first sprint. The csjark module contains the main
+method of the \gls{utility} and is responsible for running the program.
 It is in this module we have implemented the functionality for the command line interface.
-The utility will typically start off by using cparser to parse the C header file given to
-the utility as a command line argument. cparser will then use the config module
+The \gls{utility} will typically start off by using cparser to parse the \Gls{c} \gls{header} file given to
+the \gls{utility} as a command line argument. cparser will then use the config module
 to ensure that the parsing is done correctly after the configuration, and then
 generate protocols and fields to be used in the csjark module. The csjark
-module then generates a Wireshark dissector in Lua code by going through the
+module then generates a \Gls{wireshark} \gls{dissector} in \Gls{lua} code by going through the
 protocols and fields generated earlier by the cparser module.
 
 In this sprint we added configuration support for ranges, this was done 
 by adding a RangeRule class to the config module. This class specifies how
-range rules should be written in the configuration. In the dissector module
+range rules should be written in the configuration. In the \gls{dissector} module
 we created a RangeField class, that interprets the rules
-and recognizes any invalid values when generating the dissectors.
+and recognizes any invalid values when generating the \glspl{dissector}.
 The RangeField class inherits from the Field class.
 
 
@@ -307,11 +306,11 @@ The RangeField class inherits from the Field class.
 \section{Implementation}
 %-----------------------
 \label{sec:sp1:impl}
-In this sprint we have created a very naive implementation of the utility. It
-supports the most basic types of C structs. In addition the utility supports
+In this sprint we have created a very naive implementation of the \gls{utility}. It
+supports the most basic types of \Gls{c} \glspl{struct}. In addition the \gls{utility} supports
 some very basic configuration. The main reason for the naive implementation, 
-was to find out that the libraries that the team had choosen, was suitable for 
-the utility and that we had understood the task.
+was to find out that the \glspl{library} that the team had choosen, was suitable for 
+the \gls{utility} and that we had understood the task.
 
 To get a better understanding of how the different requirements were implemented,
 look at the user stories for sprint 1 in \autoref{sec:req:stories1}.
@@ -319,61 +318,61 @@ look at the user stories for sprint 1 in \autoref{sec:req:stories1}.
 
 \subsection{CLI Support for Header File}
 %-------------------
-The tool uses a command line interface. The user inputs a C header file to the 
-command line, and the program outputs a Wireshark dissector written in Lua. 
+The tool uses a command line interface. The user inputs a \Gls{c} \gls{header} file to the 
+command line, and the program outputs a \Gls{wireshark} \gls{dissector} written in \Gls{lua}. 
 Below you can see a \autoref{fig:sp1cmd} that illustrates how the program is 
 run. 
 
-\subsection{Support Basic C Data Types}
+\subsection{Support Basic \Gls{c} Data Types}
 %-------------------
-In this first sprint the focus was to generate dissectors from structs with 
-basic datatypes. These datatypes included integers, floats, char, boolean and 
-arrays of chars. All different types of integers and floats was also 
-implemented in the utility, most of the functionallity was included in the 
-pycparser library, and sizes for the different data types was specified in the 
-utility.
+In this first sprint the focus was to generate \glspl{dissector} from \glspl{struct} with 
+basic datatypes. These datatypes included \glspl{integer}, \glspl{float}, \gls{char}, \gls{boolean} and 
+\glspl{array} of \glspl{char}. All different types of \glspl{integer} and \glspl{float} were also 
+implemented in the \gls{utility}, most of the functionallity was included in the 
+\gls{pycparser} \gls{library}, and sizes for the different data types was specified in the 
+\gls{utility}.
 
 \subsection{Display Simple Structs}
 %-------------------
-The dissectors that our utility generates is used to display the packets that 
+The \glspl{dissector} that our \gls{utility} generates is used to display the \glspl{packet} that 
 are captured by wireshark. \autoref{fig:sp1wsstruct} shows an example of a 
-packet capture. The example include a struct that is used to test different 
-basic data types, for example, signed char, char, short, int, long int, float 
-and double.
+\gls{packet} capture. The example include a \gls{struct} that is used to test different 
+basic data types, for example, signed \gls{char}, \gls{char}, short, \gls{int}, long \gls{int}, \gls{float} 
+and \gls{double}.
 
 \begin{figure}[ht]
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_simple}
 	\caption{Command line\label{fig:sp1wsstruct}}
 \end{figure}
 
-\subsection{Support \#include}
+\subsection{Support \gls{include}}
 %-------------------
-The preprocessor in C is the first step of compilation. One of the most used 
-features in the preprocessor is \#include, which include the content of a file 
-in the compilaton. Since the utility reads structs from header-files, it is 
-possible that struct member may have been defined in other header-files, 
-therefore \#include is a important part of the utility. The preprocessor in 
-this utility will replace the \#include-line with the content of the included file.
+The \gls{preprocessor} in \Gls{c} is the first step of compilation. One of the most used 
+features in the \gls{preprocessor} is \gls{include}, which include the content of a file 
+in the compilaton. Since the \gls{utility} reads \glspl{struct} from \gls{header}-files, it is 
+possible that \gls{struct} \gls{member} may have been defined in other \gls{header}-files, 
+therefore \gls{include} is a important part of the \gls{utility}. The \gls{preprocessor} in 
+this \gls{utility} will replace the \gls{include}-line with the content of the included file.
 
-\subsection{Support \#define and \#if}
+\subsection{Support \gls{define} and \gls{if}}
 %-------------------
-These two preprocessor directives are important for our utility. \#define is 
-used to define a preprocessor macro that replaces a token with a 
+These two \gls{preprocessor} directives are important for our \gls{utility}. \gls{define} is 
+used to define a \gls{preprocessor} macro that replaces a token with a 
 sequence of characters. This can for example be used to define length of 
-arrays, define values for enumeration or define a platform. \#if and \#ifdef 
-is conditional directives, that the utility will use to check if macros are 
-defined, this will be used when the utility are generating dissectors for 
-different platforms. The functionallity for these preprocessor directives and 
-the other preprocessor directives for C, was implemented by the library we 
-use, which is cpp.exe for windows and gcc for mac and linux. 
+\glspl{array}, define values for enumeration or define a platform. \gls{if} and \gls{ifdef} 
+is conditional directives, that the \gls{utility} will use to check if macros are 
+defined, this will be used when the \gls{utility} are generating \glspl{dissector} for 
+different platforms. The functionallity for these \gls{preprocessor} directives and 
+the other \gls{preprocessor} directives for \Gls{c}, was implemented by the \gls{library} we 
+use, which is cpp.exe for \Gls{Windows} and gcc for \Gls{mac} and \Gls{linux}.
 
 \subsection{CLI Support for Configuration File}
 %-------------------
 To be able to parse the configuration file, it is necessary to specify the 
 configuration-file in the CLI. An example of this is shown in 
-\autoref{fig:sp1cmd}, where a header-file and a config-file is input to the 
-utility. The option ''-v'' is specified, which will display the abstract 
-syntax tree when the utility has generated the dissector.
+\autoref{fig:sp1cmd}, where a \gls{header}-file and a config-file is input to the 
+\gls{utility}. The option ''-v'' is specified, which will display the abstract 
+syntax tree when the \gls{utility} has generated the \gls{dissector}.
 
 \begin{figure}[ht]
 	\includegraphics[width=\textwidth]{./sprints/img/cmd_agetest_run}
@@ -384,9 +383,9 @@ syntax tree when the utility has generated the dissector.
 %-------------------
 We decided to use YAML as our configuration format. In this sprint we have
 added support for range specification. A user can specify the ranges of the
-members of a struct, from a minimum to a maximum. \autoref{code:rangesconf} 
-shows an configuration in YAML for the header-file in \autoref{code:ranges}. 
-The configuration specifes that the struct member age, must have a value 
+\glspl{member} of a \gls{struct}, from a minimum to a maximum. \autoref{code:rangesconf} 
+shows an configuration in YAML for the \gls{header}-file in \autoref{code:ranges}. 
+The configuration specifes that the \gls{struct} \gls{member} age, must have a value 
 between 0 and 100.  
 
 \lstset{language=C,caption={Configuration of valid ranges},label=code:rangesconf}
@@ -397,14 +396,14 @@ between 0 and 100.
 
 \subsection{Dissector Shall Recognize Invalid Values}
 %-------------------
-In \autoref{fig:sp1rangerule} you can see how Wireshark displays a member that 
-has an invalid range. When a invalid value exist, the dissector will warn the 
+In \autoref{fig:sp1rangerule} you can see how \Gls{wireshark} displays a \gls{member} that 
+has an invalid range. When a invalid value exist, the \gls{dissector} will warn the 
 user with a message and description, this make it easier for debugging.
 
 \begin{figure}[htb]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_outofrange}
-	\caption{Wireshark dissector\label{fig:sp1rangerule}}
+	\caption{\Gls{wireshark} \gls{dissector}\label{fig:sp1rangerule}}
 \end{figure}
 
 %-----------------------
@@ -418,11 +417,11 @@ results.
 During the sprint the team executed a total of 7 tests with names as seen
 below. Tests executed:
 \begin{itemize}
-	\item TID01 - Supporting parameters for c-header file. \autoref{tab:TID01}
+	\item TID01 - Supporting parameters for \Gls{c}-\gls{header} file. \autoref{tab:TID01}
 	\item TID02 - Supporting basic data types. \autoref{tab:TID02}
-	\item TID03 - Displaying simple structs. \autoref{tab:TID03}
-	\item TID04 - Supporting c-header files with the \#include directive. \autoref{tab:TID04}
-	\item TID05 - Supporting \#define and \#if. \autoref{tab:TID05}
+	\item TID03 - Displaying simple \glspl{struct}. \autoref{tab:TID03}
+	\item TID04 - Supporting \Gls{c}-\gls{header} files with the \gls{include} directive. \autoref{tab:TID04}
+	\item TID05 - Supporting \gls{define} and \gls{if}. \autoref{tab:TID05}
 	\item TID06 - Supporting configuration files. \autoref{tab:TID06}
 	\item TID07 - Recognizing invalid values. \autoref{tab:TID07}
 \end{itemize}
@@ -432,16 +431,16 @@ below. Tests executed:
 These are the results for the tests the team ran for sprint 1 as according to \autoref{tab:testreport} discussed in the test plan.
 The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
 \begin{table}[!htb] \footnotesize \center
-\caption{Supporting parameters for c-header file \label{tab:sp1_tid01}}
+\caption{Supporting parameters for c-\gls{header} file \label{tab:sp1_tid01}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting parameters for c-header file \\
+	Description & Supporting parameters for c-\gls{header} file \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 27.09.2011 \\
-	Result & Failure. The LUA-file got created successfully but the user was not informed of the result \\
+	Result & Failure. The \Gls{lua}-file got created successfully but the user was not informed of the result \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -456,18 +455,18 @@ The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
 	Description & Supporting basic data types \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 27.09.2011 \\
-	Result & Failure. The program supports the use of int, float, char and boolean, but did not inform the user of the result\\
+	Result & Failure. The program supports the use of \gls{int}, \gls{float}, \gls{char} and \gls{boolean}, but did not inform the user of the result\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Displaying simple structs  \label{tab:sp1_tid03}}
+\caption{Displaying simple \glspl{struct}  \label{tab:sp1_tid03}}
 \begin{tabular}{l l}
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Displaying simple structs \\
+	Description & Displaying simple \glspl{struct} \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 27.09.2011 \\
 	Result & Success\\
@@ -476,31 +475,31 @@ The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Supporting c-header files with the \#include directive \label{tab:sp1_tid04}}
+\caption{Supporting c-\gls{header} files with the \gls{include} directive \label{tab:sp1_tid04}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
-	Description &  Supporting c-header files with the \#include directive  \\
+	Description &  Supporting c-\gls{header} files with the \gls{include} directive  \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 27.09.2011 \\
-	Result & Failure. The program supports header files with the \#include directive, but did not inform the user of the result\\
+	Result & Failure. The program supports \gls{header} files with the \gls{include} directive, but did not inform the user of the result\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Supporting \#define and \#if \label{tab:sp1_tid05}}
+\caption{Supporting \gls{define} and \gls{if} \label{tab:sp1_tid05}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
-	Description &  Supporting \#define and \#if  \\
+	Description &  Supporting \gls{define} and \gls{if}  \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 27.09.2011 \\
-	Result & Failure. The program supports header files with the \#define and \#if directives, but did not inform the user of the result\\
+	Result & Failure. The program supports \gls{header} files with the \gls{define} and \gls{if} directives, but did not inform the user of the result\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -571,14 +570,14 @@ This section contains the team evaluation of the first sprint.
 
 \subsection{Review}
 %------------------
-The first sprint is over and the team has implemented a working utility. During
+The first sprint is over and the team has implemented a working \gls{utility}. During
 the sprint planning we decided which requirements from the product backlog that
 we were to fulfill during the first sprint. The product backlog contains a
 prioritized list of requirements. We decided to include the requirements that
 had the highest prioritization. These requirements were basic, but essential
 and therefore high prioritized.
    
-The lack of prior knowledge to scrum made planning and execution of the sprint
+The lack of prior knowledge to \Gls{scrum} made planning and execution of the sprint
 complicated for the team. We did not agree within the team of how to do it, and
 wasted some time on discussion going back and forth. In the end we understood
 that we gave a too high level description of the requirements, and had to redo
@@ -587,11 +586,11 @@ of the sprint.
 
 Each requirement is divided in four parts: design, implementation, testing and
 documentation. We currently have most of these parts covered, except
-documentation for all files and unit test for the dissector file. This work is
+documentation for all files and unit test for the \gls{dissector} file. This work is
 postponed till the second sprint.
 
 The first sprint resulted in a solid core for our project. The customer was
-happy with the first demo they got, the utility even run on Mac (which was
+happy with the first demo they got, the \gls{utility} even run on Mac (which was
 overwhelming for Stig). We feel that we have a good start and are confident
 that we will be able to give the customer the product that they want in the
 end.
@@ -625,15 +624,15 @@ probably be part of the next sprint.
 \subsection{Negative Experiences}
 %--------------------------------
 \begin{itemize}
-	\item Hard for the team members to "give" 25 person-hours each week
+	\item Hard for the team member to "give" 25 person-hours each week
 	\begin{itemize}
 		\item to understand that it is needed
 		\item to free up so many hours, and still have time to do other subjects
 	\end{itemize}
-	\item Hard to find time for meeting/work where all team members was able to meet
+	\item Hard to find time for meeting/work where all team member was able to meet
 	\item One member of the team got sick
 	\item We did not document the process and work during the first sprint well enough, which was a burden at the end of the sprint
-	\item We did perhaps not understand scrum properly, which resulted in extra work
+	\item We did perhaps not understand \Gls{scrum} properly, which resulted in extra work
 \end{itemize}
 
 \subsection{Planned Actions}
@@ -660,23 +659,23 @@ having the sprint is a much better way to work, then most part of the
 documentation is already done before the sprint evaluation.
 
 \subsubsection{Split Coding and Report Writing Between Team Members} 
-Not all the team members have to do coding. It is important to maintain a
+Not all the team \glspl{member} have to do coding. It is important to maintain a
 steady progress making the project report (which our grade evaluation is based
 on), while doing the implementation. Responsibilities for coding and report
 will be assigned next sprint. 
 
 \subsection{Barriers}
 %--------------------
-Some of the team members has experience some technical difficulties with their
+Some of the team member has experience some technical difficulties with their
 Git client, and others had problems setting up PyCharm. Problems rose as we
 realized that there would be hard setting up the programs on different
 platforms (Windows and Mac).
 
-We had problems with C parser library, pycparser, which did not support \_Bool
-type, specified in the C99 standard. A patch for this was written by Even, and
-was later included in the pycparser library. There was also problems with the
+We had problems with \Gls{c} \gls{parser} \gls{library}, \gls{pycparser}, which did not support \_Bool
+type, specified in the \GLS{C99} standard. A patch for this was written by Even, and
+was later included in the \gls{pycparser} \gls{library}. There was also problems with the
 testing framework, attest, this framework did not have support for Windows
-command line prompt, a patch was written and was later added to their library.
+command line prompt, a patch was written and was later added to their \gls{library}.
 
-Some team members had conflicting deadlines for deliveries in different courses.
+Some team \glspl{member} had conflicting deadlines for deliveries in different courses.
 

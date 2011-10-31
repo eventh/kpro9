@@ -1,5 +1,5 @@
 ****************************
-  What's New In CSjark 0.15
+  What's New In CSjark 0.2.3
 ****************************
 
 :Author: Even

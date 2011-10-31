@@ -41,8 +41,8 @@ def create_protocols(header, yml):
         structs[proto.name] = proto.create()
 
     # Write out dissectors for manual testing
-    config.Options.output_dir = os.path.dirname(__file__)
-    csjark.write_dissectors_to_file(protocols)
+    #config.Options.output_dir = os.path.dirname(__file__)
+    #csjark.write_dissectors_to_file(protocols)
 
     # Clean up context
     config.Options.platforms = set()
@@ -662,10 +662,41 @@ delegator_register_proto(proto_platform_test, "Win32", "platform_test", 670)
 
 
 @sprint3.test
+def unions(structs):
+    """End-to-end test platform specific header."""
+    assert 'union_test' in structs
+    assert structs['union_test']
+    assert compare_lua(structs['union_test'], '''
+-- Dissector for win32.union_test: Test for union_test (Win32)
+local proto_union_test = Proto("win32.union_test", "Test for union_test (Win32)")
+-- ProtoField defintions for: union_test
+local f = proto_union_test.fields
+f.int_member = ProtoField.int32("union_test.int_member", "int_member")
+f.float_member = ProtoField.float("union_test.float_member", "float_member")
+f.long_long_member = ProtoField.uint64("union_test.long_long_member", "long_long_member")
+-- Dissector function for: union_test
+function proto_union_test.dissector(buffer, pinfo, tree)
+local subtree = tree:add_le(proto_union_test, buffer())
+if pinfo.private.caller_def_name then
+subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_union_test.description)
+pinfo.private.caller_def_name = nil
+else
+pinfo.cols.info:append(" (" .. proto_union_test.description .. ")")
+end
+subtree:add_le(f.int_member, buffer(0, 4))
+subtree:add_le(f.float_member, buffer(0, 4))
+subtree:add_le(f.long_long_member, buffer(0, 8))
+end
+delegator_register_proto(proto_union_test, "Win32", "union_test", 161)
+''')
+
+
+@sprint3.test
 def conformance_files(structs):
     """End-to-end test conformance-files."""
     assert 'custom_lua' in structs
     assert structs['custom_lua']
     assert compare_lua(structs['custom_lua'], '''
+    TODO!!
     ''')
 

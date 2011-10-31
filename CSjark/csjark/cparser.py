@@ -203,9 +203,10 @@ class StructVisitor(c_ast.NodeVisitor):
                 elif token == 'enum':
                     return self.handle_enum(proto, node.declname, base)
                 elif token == 'array':
-                    tmp, ctype, size, alignment, depth = base
+                    tmp, ctype, size, alignment, depth, enum_members = base
                     return self.handle_array(proto, node.declname,
-                                             ctype, size, alignment, depth)
+                                             ctype, size, alignment,
+                                             depth, enum_members)
                 else:
                     # If any rules exists, use new type and not base
                     if proto.conf and proto.conf.get_rules(None, ctype):
@@ -232,13 +233,15 @@ class StructVisitor(c_ast.NodeVisitor):
         if depth is None:
             depth = []
         child = node.children()[0]
+
         size = self._get_array_size(node.children()[1])
 
         # String array
         if (isinstance(child, c_ast.TypeDecl) and
                 hasattr(child.children()[0], 'names') and child.children()[0].names[0] == 'char'): #hack
             size *= self.size_of('char')
-            return child.declname, 'string', size, self.alignment('char'), depth
+            return child.declname, 'string', size, self.alignment('char'), depth, None
+        
 
         # Multidimensional, handle recursively
         if isinstance(child, c_ast.ArrayDecl):
@@ -257,27 +260,27 @@ class StructVisitor(c_ast.NodeVisitor):
                 token, base = self.aliases[ctype]
                 if token in ('struct', 'union'):
                     subproto = self.all_protocols[base, self.platform]
-                    return child.declname, subproto, subproto.get_size(), subproto.get_alignment_size(), depth
+                    return child.declname, subproto, subproto.get_size(), subproto.get_alignment_size(), depth, None
                 elif token == 'enum':
                     return child.declname, token, self.size_of(token), self.alignment(token), depth, self.enums[ctype]
                 elif token == 'array':
-                    tmp, ctype, size, alignment, inner_depth = base
-                    return child.declname, ctype, size, alignment, depth + inner_depth
+                    tmp, ctype, size, alignment, inner_depth, enum_members = base
+                    return child.declname, ctype, size, alignment, depth + inner_depth, enum_members
                 else:
                     base_size = self.size_of(base)
                     base_alignment_size = self.alignment(base)
-                    return child.declname, base, base_size, base_alignment_size, depth
+                    return child.declname, base, base_size, base_alignment_size, depth, None
             else:
                 base_size = self.size_of(ctype)
                 base_alignment_size = self.alignment(ctype)
-                return child.declname, ctype, base_size, base_alignment_size, depth
+                return child.declname, ctype, base_size, base_alignment_size, depth, None
         # Enum
         elif isinstance(child.children()[0], c_ast.Enum):
             return child.declname, 'enum', self.size_of('enum'), self.alignment('enum'), depth, self.enums[child.children()[0].name]
         # Union and struct
         elif isinstance(child.children()[0], c_ast.Union) or isinstance(child.children()[0], c_ast.Struct):
             subproto = self.all_protocols[child.children()[0].name, self.platform]
-            return child.declname, subproto, subproto.get_size(), subproto.get_alignment_size(), depth
+            return child.declname, subproto, subproto.get_size(), subproto.get_alignment_size(), depth, None
         # Error
         else:
             raise ParseError('Unknown type in array declaration: %s' % repr(child.children()[0]))

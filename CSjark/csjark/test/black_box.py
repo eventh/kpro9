@@ -16,6 +16,7 @@ from .test_dissector import compare_lua
 
 def create_protocols(header, yml):
     # Store default options to be able to restore them later
+    config.Options.platforms = set()
     o = config.Options
     defaults = (o.verbose, o.debug, o.strict, o.use_cpp,
                 o.output_dir, o.output_file, o.platforms, o.delegator)
@@ -40,14 +41,17 @@ def create_protocols(header, yml):
         structs[proto.name] = proto.create()
 
     # Write out dissectors for manual testing
-    #config.Options.output_dir = os.path.dirname(__file__)
-    #csjark.write_dissectors_to_file(protocols)
+    config.Options.output_dir = os.path.dirname(__file__)
+    csjark.write_dissectors_to_file(protocols)
 
     # Clean up context
+    config.Options.platforms = set()
     cparser.StructVisitor.all_protocols = {}
     config.Options.configs = {}
-    (o.verbose, o.debug, o.strict, o.use_cpp, o.output_dir,
-            o.output_file, o.platforms, o.delegator) = defaults
+    (config.Options.verbose, config.Options.debug,
+            config.Options.strict, config.Options.use_cpp,
+            config.Options.output_dir, config.Options.output_file,
+            config.Options.platforms, config.Options.delegator) = defaults
 
     return structs
 
@@ -538,6 +542,123 @@ def create_sprint3(structs={}):
         yml = os.path.join(os.path.dirname(__file__), 'sprint3.yml')
         structs.update(create_protocols(header, yml))
     yield structs
+
+
+@sprint3.test
+def keywords(structs):
+    """End-to-end test headers with lua reserved keywords in them."""
+    assert 'keyword_test' in structs
+    assert structs['keyword_test']
+    assert compare_lua(structs['keyword_test'], '''
+-- Dissector for win32.keyword_test: testing lua keywords (Win32)
+local proto_keyword_test = Proto("win32.keyword_test", "testing lua keywords (Win32)")
+-- ProtoField defintions for: keyword_test
+local f = proto_keyword_test.fields
+f._in = ProtoField.int32("keyword_test.in", "in")
+-- Array definition for until
+f._until = ProtoField.bytes("keyword_test.until", "until")
+f._until_0 = ProtoField.bytes("keyword_test.until", "until")
+f._until_0_0 = ProtoField.int32("keyword_test.until", "until")
+f._until_0_1 = ProtoField.int32("keyword_test.until", "until")
+f._until_1 = ProtoField.bytes("keyword_test.until", "until")
+f._until_1_0 = ProtoField.int32("keyword_test.until", "until")
+f._until_1_1 = ProtoField.int32("keyword_test.until", "until")
+-- Bitstring definitions for _VERSION
+f._version = ProtoField.uint32("keyword_test._VERSION", "_VERSION (bitstring)", base.HEX)
+f._version_g1 = ProtoField.uint32("keyword_test._VERSION.G1", "G1", nil, {[0]="True", [1]="False"}, 0x1)
+local function_values = {[1]="and", [2]="elseif", [412]="in"}
+f._function = ProtoField.uint32("keyword_test.function", "function", nil, function_values)
+f._and = ProtoField.int32("keyword_test.and", "and")
+f._and = ProtoField.int32("keyword_test._and", "_and")
+f._not = ProtoField.int32("keyword_test.not", "not")
+-- Dissector function for: keyword_test
+function proto_keyword_test.dissector(buffer, pinfo, tree)
+	local subtree = tree:add_le(proto_keyword_test, buffer())
+	if pinfo.private.caller_def_name then
+		subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_keyword_test.description)
+		pinfo.private.caller_def_name = nil
+	else
+		pinfo.cols.info:append(" (" .. proto_keyword_test.description .. ")")
+	end
+	local _in = subtree:add_le(f._in, buffer(0, 4))
+	if (buffer(0, 4):le_int() < 0.0) then
+		_in:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0.0")
+	end
+	if (buffer(0, 4):le_int() > 10.0) then
+		_in:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 10.0")
+	end
+	-- Array handling for until
+	local arraytree = subtree:add_le(f._until, buffer(4, 16))
+	arraytree:set_text("int array: index)")
+	local subarraytree = arraytree:add_le(f._until_0, buffer(4, 8))
+	subarraytree:set_text("int array: index_0)")
+	subarraytree:add_le(f._until_0_0, buffer(4, 4))
+	subarraytree:add_le(f._until_0_1, buffer(8, 4))
+	local subarraytree = arraytree:add_le(f._until_1, buffer(12, 8))
+	subarraytree:set_text("int array: index_1)")
+	subarraytree:add_le(f._until_1_0, buffer(12, 4))
+	subarraytree:add_le(f._until_1_1, buffer(16, 4))
+	-- Bitstring handling for _VERSION
+	local bittree = subtree:add_le(f._version, buffer(20, 4))
+	bittree:add_le(f._version_g1, buffer(20, 4))
+
+	local _function = subtree:add_le(f._function, buffer(24, 4))
+	if (function_values[buffer(24, 4):le_uint()] == nil) then
+		_function:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (1, 2, 412)")
+	end
+	pinfo.private.caller_def_name = "f._or"
+	Dissector.get("win32.local"):call(buffer(28,4):tvb(), pinfo, subtree)
+	subtree:add_le(f._and, buffer(32, 4))
+	subtree:add_le(f._and, buffer(36, 4))
+	subtree:add_le(f._not, buffer(40, 4))
+	-- Trailers handling for struct: keyword_test
+	local trail_offset = 44
+	local trail_count = buffer(40, 4):le_int()
+	for i = 1, trail_count do
+		local trailer = Dissector.get("ber")
+		trailer:call(buffer(trail_offset, 5):tvb(), pinfo, tree)
+	end
+end
+delegator_register_proto(proto_keyword_test, "Win32", "keyword_test", 255)
+''')
+
+
+@sprint3.test
+def platforms(structs):
+    """End-to-end test platform specific header."""
+    assert 'platform_test' in structs
+    assert structs['platform_test']
+    assert compare_lua(structs['platform_test'], '''
+-- Dissector for win32.platform_test: platform_test (Win32)
+local proto_platform_test = Proto("win32.platform_test", "platform_test (Win32)")
+-- ProtoField defintions for: platform_test
+local f = proto_platform_test.fields
+f.bytes = ProtoField.bytes("platform_test.bytes", "bytes")
+f.a = ProtoField.int32("platform_test.a", "a")
+f.win_float = ProtoField.float("platform_test.win_float", "win_float")
+f.b = ProtoField.int8("platform_test.b", "b")
+f.deff = ProtoField.int64("platform_test.deff", "deff")
+f.intel = ProtoField.int64("platform_test.intel", "intel")
+-- Dissector function for: platform_test
+function proto_platform_test.dissector(buffer, pinfo, tree)
+local subtree = tree:add_le(proto_platform_test, buffer())
+if pinfo.private.caller_def_name then
+subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_platform_test.description)
+pinfo.private.caller_def_name = nil
+else
+pinfo.cols.info:append(" (" .. proto_platform_test.description .. ")")
+end
+subtree:add_le(f.bytes, buffer(0, 8))
+subtree:add_le(f.a, buffer(8, 4))
+subtree:add_le(f.win_float, buffer(12, 4))
+subtree:add_le(f.b, buffer(16, 1))
+pinfo.private.caller_def_name = "f.anom"
+Dissector.get("win32.anom"):call(buffer(20,4):tvb(), pinfo, subtree)
+subtree:add_le(f.deff, buffer(24, 4))
+subtree:add_le(f.intel, buffer(28, 4))
+end
+delegator_register_proto(proto_platform_test, "Win32", "platform_test", 670)
+''')
 
 
 @sprint3.test

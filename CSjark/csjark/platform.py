@@ -103,9 +103,9 @@ class Platform:
 DEFAULT_C_TYPE_MAP = {
         'bool': 'bool',
         '_Bool': 'bool',
-        'char': 'gint8',
-        'signed char': 'gint8',
-        'unsigned char': 'guint8',
+        'char': 'int8',
+        'signed char': 'int8',
+        'unsigned char': 'uint8',
         'string': 'string',
         'short': "int16",
         'signed short': "int16",

@@ -129,28 +129,27 @@ Timetable for this sprint: Table \ref{tab:sprint3time}.\\
 %----------------------
 \section{System Design}
 %----------------------
-The system design defines the new modules and architecture that has to be in place to satisfy the specified requirements that we have included in the sprint 3 backlog.
+The system design defines the new modules and architecture that has to be in place to satisfy the specified requirements that we have included in the sprint 3 backlog. Most of the design are already done in earlier sprints; now we extend that and add some new elements.
 
 \subsection{System overview}
 %----------------------
 Now that the \gls{utility} has both basic and advanced features, it is time to specialize and make support for environmental variables that can be found in Thales' source code. This basically include various platform specific support, \gls{endian} handling and minor technicalities. The latter one is vital for the customer in order for the \gls{utility} to be efficient and adequate.
 
 \subsubsection{Platform specific support}
-We know that the various platforms behave differently, and this must be supported by our \gls{utility}. The customer has mentioned at least 3 platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. Thereby we will try to make the set-up for support easily understandable.
+We know that the various platforms behave differently, and this must be supported by our \gls{utility}. The customer has mentioned at least three platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. Thereby we will try to make the set-up for support easily understandable.
 
-The platform definition will be a subpart of a flag-field in the structs header. To ensure modifiability we have assigned a 16 bit field for this, giving the developers possibility to have 65536 unique platforms. A platform definition will provide the utility with this information:
+We have decided that the platform definition will be a subpart of a flag-field in the structs header. To ensure modifiability we will assign a 16 bit field for this, giving the developers possibility to have 65536 unique platforms. From this we imagine that the platform flag can point to a dictionary which has the following information about the actual platform:
 \begin{itemize}
 \item Endianness
 \item Length of fields
 \item Memory alignment
 \end{itemize}
-All these three fields have to be combined to generate a \gls{dissector} that will dissect the struct correctly.\\
+All these three fields must be combined to enable the utility to generate a \gls{dissector} that will dissect the struct correctly.\\
 
-The use of this information will be done in the ... module, as you can see in the new class diagram MAKE REF.
+The use of this information will be done in the config module, as you can see in the new class diagram MAKE REF.
 
 \subsubsection{Dicitonary lookup}
 Deciding how to implement handling of different platforms ended in a design draft seen in Figure \autoref{fig:platformhandling}. The \gls{dissector} module will make a dictionary lookup in the table of supported platforms. This table conatins all platforms that the \gls{utility} can make \glspl{dissector} for, and their information of how the \gls{dissector} shall be encoded to achieve correct handling of \gls{endianness}, length of fields and memory alignment.
-
 We will start out by hardcoding this into the source code, but in the end we want to have this feed to the \gls{utility} through a configuration-file. This is the way the customer has envisioned it.  
 
 %\begin{figure}[!htb]
@@ -160,23 +159,22 @@ We will start out by hardcoding this into the source code, but in the end we wan
 
 
 \subsubsection{Endianness}
-An important feature is the support for different endian handling. Endianness defines how the bits are ordered in the struct. It tells what bit is the most significant, and thereby the value that the bits represent. See the figure REF.
-%begin figure
+An important feature is the support for different endian handling. Endianness defines how the bits are ordered in the struct. It tells what bit is the most significant, and thereby the value that the bits represent. See the figure \ref{fig:endianness}.
+
+\begin{figure}[!htb]
+	\includegraphics[width=\textwidth]{./sprints/img/endianness}
+	\caption{Endianness\label{fig:endianness}}
+\end{figure}
 
 A design decision we made in the 
+We know that Wireshark has support for reading both big- and little-endian. We understood that if the header could both be big and little endian, we would have problems, but Thales ensure us that headers always appear as small endian. So we need to dissect the data blob, which can be either big or small endian. By using the built-in reader support for endianness in Wireshark gave us much for free, but another problem would be .... 
 
 
 \subsubsection{Filter and search in \Gls{wireshark}}
-The amount of data that are collected and dissected can be very large. The need for a filter and search mechanism is apparent. \Gls{wireshark} has this built-in, and the customer want the \gls{utility} to support it. To do that, we need to pass the attributes to Wireshark with a 
+The amount of data that are collected and dissected can be very large. The need for a filter and search mechanism is apparent. \Gls{wireshark} has this built-in, and the customer want the \gls{utility} to support it. To do that, we need to pass the abbrevation fields to Wireshark. These abbrevations will be generated by the dissector module and stored in the dissector made by the utility. Wireshark collects these when the actual dissector is used, and then a user will be able to search for them. In the design we have emphesized and assured us that the chosen abbrevations are descriptive, as the customer has stated it important in earlier customer meetings. 
 
 \subsubsection{Technicalities}
 Our design, and thereby implementation, will be influenced by Stig. He is a core developer for Wireshark and professional Python programmer. He points out things that we have done earlier that might not be efficient or not correct use. We have got some feedback on how elements should be passed to Wireshark. 
-
-
-
-
-
-
 
 
 %-----------------------

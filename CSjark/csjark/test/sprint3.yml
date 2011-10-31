@@ -1,0 +1,56 @@
+Options:
+    platforms: [Win32]
+
+Structs:
+  - name: keyword_test
+    id: 255
+    description: testing lua keywords
+    enums:
+      - member: false
+        values: {1: and, 2: elseif, 3: end }
+    ranges:
+      - member: in
+        min: 0
+        max: 10
+    bitstrings:
+      - member: _VERSION
+        1: [G1, yes, no]
+    trailers:
+      - name: ber
+        member: not
+        size: 5
+
+  - name: custom_lua
+    cnf: sprint3.cnf
+    id: 74
+    customs:
+      - type: time_t
+        field: relative_time
+      - member: abs
+        field: absolute_time
+      - type: BOOL
+        field: bool
+        size: 4
+        alignment_size: 4
+        abbr: bool
+        name: A BOOL
+      - member: all
+        field: uint32
+        abbr: all.all
+        name: Something
+        base: base.HEX
+        values: {0: Monday, 1: Tuesday}
+        mask: nil
+        desc: This is something dark side!
+
+  - name: platform_test
+    id: 670
+
+  - name: union_within_struct
+    id: 160
+    description: Test for union_within_struct
+
+  - name: union_test
+    id: 161
+    description: Test for union_test
+

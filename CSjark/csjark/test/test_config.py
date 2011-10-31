@@ -181,6 +181,33 @@ def fields_rule(conf):
     assert three.size is None and three.abbr is None
 
 
+# Test that configuration support custom conformance files
+conformance = Tests()
+
+@conformance.context
+def create_fields():
+    """Create struct config with fields rules."""
+    text = '''
+    Structs:
+      - name: test
+        cnf: sprint3.cnf
+    '''
+    config.parse_file(__file__, only_text=text)
+    yield Options.configs['test']
+    Options.configs = {}
+
+@conformance.test
+def cnf_file(conf):
+    """Test that config support conformance files."""
+    assert conf
+    assert conf.cnf
+    rules = conf.cnf.rules
+    assert rules
+    assert len(rules) == 8
+    assert (None, 'DEF_EXTRA') in rules
+    assert rules[(None, 'DEF_EXTRA')] == '-- This was all the field defintions'
+
+
 # Test that configuration support trailers
 trailers = Tests()
 

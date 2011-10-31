@@ -21,7 +21,7 @@ Structs:
         size: 5
 
   - name: custom_lua
-    #cnf: sprint3.cnf
+    cnf: sprint3.cnf
     id: 74
     customs:
       - type: time_t

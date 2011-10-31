@@ -87,22 +87,18 @@ class Field:
 
     def get_code(self, offset, store=None, sequence=None, tree='subtree'):
         """Get the code for dissecting this field."""
-        variable_name = self.var
-
-        if sequence != None:
-            postfix = '';
-            for index in sequence:
-                postfix = '%s_%i' % (postfix, index)
-            variable_name = self.var + postfix
-
+        var = self.var
+        if sequence is not None:
+            var = '%s_%s' % (var, '_'.join([str(i) for i in sequence]))
         if store:
             store = 'local {var} = '.format(var=create_lua_var(store))
         else:
             store = ''
         self.offset = offset
+
         t = '\t{store}{tree}:{add}({var}, buffer({offset}, {size}))'
         return t.format(store=store, tree=tree, add=self.add_var,
-                        var=variable_name, offset=offset, size=self.size)
+                        var=var, offset=offset, size=self.size)
 
     def get_padded_offset(self, offset):
         padding = 0
@@ -293,9 +289,10 @@ class ArrayField(Field):
     def get_definition(self, sequence=None):
         if sequence is None:
             sequence = []
+
         data = ['']
         if not sequence:
-            data.append('-- Array definition for %s' % self.name)
+            data = ['-- Array definition for %s' % self.name]
 
         type_ = self.type
         if type_ not in ('string', 'stringz'):

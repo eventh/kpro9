@@ -217,7 +217,18 @@ TODO
 
 \subsection{Support \Gls{wireshark} Filter and Search}
 %-----------------------
-TODO
+Wireshark has a display filter, where it is possible to use packet filtering. 
+Each field in our genereated dissectors has a abbrevation name that is 
+connected to a struct. For each member of a struct, it is possible to filter 
+for a value. An example is shown in \autoref{fig:wsfilter}, this shows a 
+filtering for packets where Trondheim is equal to the member \emph{place} in 
+the struct \emph{postcode}. 
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/wireshark_filter}
+	\caption{Union type support\label{fig:wsfilter}}
+\end{figure}
 
 \subsection{Support Different Memory Alignment}
 %-----------------------
@@ -260,7 +271,11 @@ from the struct' by the \gls{dissector} name.
 
 \subsection{Do Not Regenerate \glspl{dissector}}
 %-----------------------
-TODO
+To increase the performance on generation of dissectors, dissectors that 
+allready are genereated in batch mode, will only be generated once in a batch 
+mode execution. This feature will be improved in the next sprint, so it only 
+genereates dissectors in batch mode that are modified or new since the last 
+batch run.
 
 \subsection{Handle \Gls{lua} Reserved Keywords}
 %-----------------------
@@ -268,6 +283,13 @@ TODO
 the C language. The \gls{utility} is able to support this under generation of \Gls{lua} 
 code, when an identifier is a lua keyword, an underscore(\_) is added, so the 
 identifier start with ''\_''.
+
+\subsection{Support for Complex Arrays}
+%-----------------------
+Support for typedef was implemented in the previous sprint, in this sprint it 
+has been improved to also support typedefs of more complex arrays.
+TODO: Not finished
+
 
 %-----------------------
 \section{Sprint Testing}

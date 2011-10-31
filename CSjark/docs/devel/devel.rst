@@ -2,6 +2,8 @@
 Developer's reference
 =====================
 
+Module dictionary:
+
 .. autosummary:: 
    
    csjark

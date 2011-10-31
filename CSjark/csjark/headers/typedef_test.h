@@ -17,7 +17,7 @@ typedef unsigned char BENQ;
 typedef BENQ BENQTWO[2];
 typedef BENQTWO BENQFOUR[2];
 typedef twoints ARRAY[2];
-typedef int* INTPOINTER[3];
+typedef int INTPOINTER[3];
 typedef media MEDIATWO[2];
 typedef ageunion TWOAGEUNION[2];
 

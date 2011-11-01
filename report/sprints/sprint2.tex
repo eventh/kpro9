@@ -339,9 +339,12 @@ example of \gls{asn1} in \Gls{wireshark}, can be seen in \autoref{fig:wstrailer}
 Csjark can support custom \Gls{lua} configuration, by including \Gls{lua}-\glspl{script} from a 
 file specified in the configuration file. The reason for supporting custom \Gls{lua} 
 configuration is for protocols that are not built-in \glspl{dissector} in \Gls{wireshark}, 
-and are not \glspl{struct}. The only way to support this, is to write a own \gls{dissector} 
-in \Gls{lua}, and include it in the configuration. 
-TODO: Not finished(add example + screenshot)
+and are not \glspl{struct}, or display the members in a struct in a different way 
+than our utility do . The only way to support this, is to write Lua code for 
+it. To be able to insert the Lua code in correct places in the lua files, the 
+utility use a conformance file, which make it possible to specify where in the 
+dissector the code should be inserted. This feature was not completly finished 
+in this sprint, and will be finished in sprint 3.
 
 \subsection{\Gls{dissector} ID}
 %----------------------
@@ -653,7 +656,7 @@ The documentation should specify what parameters are needed, like what parameter
 \subsubsection{Locating “missing” \gls{header} files}
 Some of the \gls{header} files specified in a file might be located in an unknown location. The customer suggested that we should include a way to configure \gls{header} location.
 
-\subsubsection{What \glspl{header} should the \gls{utility} be generate \glspl{dissector} for}
+\subsubsection{What \glspl{header} should the \gls{utility} generate \glspl{dissector} for}
 The customer suggested that we include a way to specify the relevant \gls{header} files in a configuration file.
 
 \subsubsection{\Gls{dissector} id}

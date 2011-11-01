@@ -35,7 +35,8 @@ cparser
 dissector
 ---------
 
-.. automodule:: dissector
+.. 
+    automodule:: dissector
  
 platform
 --------

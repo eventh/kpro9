@@ -18,6 +18,18 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('../csjark'))
 
+# import Mocker
+
+class Mock(object):
+    def __init__(self, *args):
+        pass
+
+    def __getattr__(self, name):
+        return Mock
+
+for mod_name in ('yaml', 'pycparser', 'argparse'):
+    sys.modules[mod_name] = Mock()
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -88,7 +100,7 @@ pygments_style = 'sphinx'
 
 # autodoc config
 autodoc_default_flags = ['members', 'undoc-members','private-members']
-
+autodoc_member_order = 'bysource'
 
 #autosummary_generate = True
 

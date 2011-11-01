@@ -34,7 +34,7 @@ As in all other projects, the project members have to deal with various limitati
 	\item[\Gls{c} \gls{preprocessor}] To fulfill all the requirements we might need to
 		either modify an existing \gls{preprocessor} or write our own, which can be
 		a huge undertaking.
-	\item[Platforms] \GLS{sparc} platform that are required for the program are not
+	\item[Platforms] \gls{asparc} platform that are required for the program are not
 		available to the project group.
 \end{description}
 
@@ -72,10 +72,10 @@ hosting provided by Github\footnote{\url{http://github.com/}}.
 	\includegraphics[width=3cm]{./planning/img/github_logo}
 	\vspace{-20pt}
 \end{wrapfigure}
-We had experience with CVS, SVN, Git and Mercurial, and although everyone 
-knew SVN and only two knew Git, we selected Git for this project.
-The main reason we didn't choose SVN was because of its lack of hosting capabilities,
-and the other reason was that, unlike Git and Mercurial, SVN does not have any of the
+We had experience with \Gls{cvs}, \Gls{svn}, Git and Mercurial, and although everyone 
+knew \Gls{svn} and only two knew Git, we selected Git for this project.
+The main reason we didn't choose \Gls{svn} was because of its lack of hosting capabilities,
+and the other reason was that, unlike Git and Mercurial, \Gls{svn}	 does not have any of the
 advantageous features of a modern \gls{version control system} like \glspl{branch} and a \gls{distributed
 repository model}.
 
@@ -140,7 +140,7 @@ report, and we have created a few templates for test plans and minutes.
 	\vspace{-20pt}
 \end{wrapfigure}
 For asynchronous communication the team uses an electronic mailing list
-provided by IDI, NTNU.
+provided by \Gls{idi}, \Gls{ntnu}.
 
 \subsubsection{Google Calendar}
 \begin{wrapfigure}{r}{3cm}
@@ -155,18 +155,18 @@ members can include in their own, prevents misunderstandings and duplication
 of work.
 
 \subsubsection{text2pcap}
-In this project text2pcap is used to generate capture files from \GLS{ascii}
+In this project text2pcap is used to generate capture files from \gls{aascii}
 \glspl{hex dump}. Since the customer cannot provide us with capture files, 
 we have to create them ourselves. The capture files are important for testing
 the generated \Gls{lua}-\glspl{script}. The text2pcap tool is included with \Gls{wireshark}. 
-The input to the tool is a \GLS{ascii} \gls{hex dump} as a text-file, and the output will
+The input to the tool is an \gls{aascii} \gls{hex dump} as a text-file, and the output will
 be a \gls{pcap-file}. When running text2pcap, it is necessary to specifiy the \gls{protocol}
 type. In this project the team uses ''-l 147'' as an option to text2pcap,
 which is a user defined \gls{link-layer} type.
 
 \subsubsection{Hex Editor}
 The team is using a hex editor to create input for text2pcap. To make it
-easier to write \GLS{ascii} \glspl{hex dump}, it is necessary to write them in a hex editor.
+easier to write \gls{aascii} \glspl{hex dump}, it is necessary to write them in a hex editor.
 HxD\footnote{\url{http://mh-nexus.de/en/hxd/}} is the recommended hex editor
 for this project, since it is free and has the necessary functionality. HxD is
 only for Windows.
@@ -178,9 +178,9 @@ only for Windows.
 	\vspace{-20pt}
 \end{wrapfigure}
 Violet\footnote{\url{http://violet.sourceforge.net/}} is a free
-and easy to use modeling software for making UML-diagrams.
+and easy to use modeling software for making \Gls{uml}-diagrams.
 It is also a cross platform solution, which means that all team members can use
-the same application. If we had to use different UML applications we could have problems
+the same application. If we had to use different \Gls{uml} applications we could have problems
 editing the diagrams due to incompatible file formats.
 The architectural and design team will be using violet to create diagrams
 to illustrate the workings of the utility. As very advanced diagrams were not needed for
@@ -324,8 +324,8 @@ This subsection lists the partners of this project. The customer of this
 project is Thales Norway AS, which are located at Lerkendal Stadium,
 Strindveien 1, 7030 Trondheim. The customer contacts are listed in
 \autoref{tab:plan:customer}. The development team consist of seven student
-from NTNU, and are listed in \autoref{tab:plan:devs}. The team is assigned two
-advisors from the Department of Computer and Information Science at NTNU,
+from \Gls{ntnu}, and are listed in \autoref{tab:plan:devs}. The team is assigned two
+advisors from the Department of Computer and Information Science at \Gls{ntnu},
 listed in \autoref{tab:plan:advisors}. 
 
 \begin{table}[!htb] \footnotesize \center
@@ -500,9 +500,9 @@ agenda, phasedoc, e.g.) and the date, if applicable.
 The programming language used to implement the utility specified by the
 customer requirements is \Gls{python}. The coding style the team has agreed upon is
 the \Gls{python} Standard Styling Guide as defined by
-PEP8\footnote{Style Guide for \Gls{python} Code: \url{http://www.python.org/dev/peps/pep-0008/}}.
+PEP8\footnote{Style Guide for Python Code: \url{http://www.python.org/dev/peps/pep-0008/}}.
 In addition the design should attempt to be pythonic, as detailed by
-PEP20\footnote{The Zen of \Gls{python} \url{http://www.python.org/dev/peps/pep-0020/}}.
+PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}.
 
 \subsection{Version Control Procedures}
 %--------------------------------------
@@ -527,7 +527,7 @@ These documents should follow the templates specified in Templates and Standards
 %------------------------
 \section{Risk Management}
 %------------------------
-The following section lists the possible risk scenarios that can occur in the project, and how they should be handled. \autoref{tab:risk} shows how to handle the possible risks in the team. Each risk has a consequence and a probability:  High (H), Medium (M) or Low (L).
+The following section lists the possible risk scenarios that can occur in the project, and how they should be handled. \autoref{tab:risk} shows how to handle the possible risks in the team. Each risk has a consequence and a probability:  \Gls{h}, \Gls{m} or \Gls{l}.
 Strategy and actions describes what we should do to reduce the consequences of the risk, or prevent the risk from happening altogether. Deadline states when we need to handle the risk.
 \begin{description}
 \item[R1. Choosing an incompatible technical solution]  The team decides to use a technical solution that is not suited for the given problem, or decides on an implementation that is too time consuming.
@@ -548,79 +548,79 @@ Strategy and actions describes what we should do to reduce the consequences of t
 	\toprule
 	Risk ID & R1 \\
 	Risk factor & Choosing an incompatible technical solution \\
-	Consequences & H: The project will not be completed on time, or at all. \\
-	Probability & M \\ 
+	Consequences & \Gls{h}: The project will not be completed on time, or at all. \\
+	Probability & \Gls{m} \\ 
 	Strategy \& actions & Do a good pre-study, consult the customer’s technical expert. \\
 	Deadline & During the first sprint.\\
 	Responsible & Even and Erik \\
 	\midrule
 	Risk ID & R2 \\
 	Risk factor & Too much focus on report \\
-	Consequences & M: The product will not be of a satisfying quality. \\
-	Probability & M \\ 
+	Consequences & \Gls{m}: The product will not be of a satisfying quality. \\
+	Probability & \Gls{m} \\ 
 	Strategy \& actions & Plan enough hours to use on the customer product. Look at old reports for inspiration. Ask the advisor for help. \\
 	Deadline & Continuous\\
 	Responsible & Sondre \\
 	\midrule
 	Risk ID & R3 \\
 	Risk factor & Too much focus on implementation \\
-	Consequences & H: The documentation will not be good enough, leads to a bad grade. \\
-	Probability & M \\ 
+	Consequences & \Gls{h}: The documentation will not be good enough, leads to a bad grade. \\
+	Probability & \Gls{m} \\ 
 	Strategy \& actions & Plan enough hours to use on the report. Write documentation sooner later than later. Write good requirements that limit the scope of the project. \\
 	Deadline & Continuous \\
 	Responsible & All \\
 	\midrule
 	Risk ID & R4 \\
 	Risk factor & Illness/Absence \\
-	Consequences & L/M/H: Consequences depend on how many members are absent, and how often they are absent. Absence may hinder the progress of the project in different ways.  \\
-	Probability & M \\ 
+	Consequences & \Gls{l}/\Gls{m}/\Gls{h}: Consequences depend on how many members are absent, and how often they are absent. Absence may hinder the progress of the project in different ways.  \\
+	Probability & \Gls{m} \\ 
 	Strategy \& actions & Make sure several people are proficient in the technical parts of the project. Have backups for the most important roles. \\
 	Deadline & Continuous \\
 	Responsible & Terje \\
 	\midrule
 	Risk ID & R5 \\
 	Risk factor & Even is absent \\
-	Consequences & H \\
+	Consequences & \Gls{h} \\
 	Strategy \& actions & All group members should read through the source code and code documentation written by Even. \\
 	Deadline & Continuous \\
 	Responsible & All \\
 	\midrule
 	Risk ID & R6 \\
 	Risk factor & Conflicts within group \\
-	Consequences & M: May lead to bad morale, which could affect the work of the team. Could also be a waste of time. \\
-	Probability & M \\ 
+	Consequences & \Gls{m}: May lead to bad morale, which could affect the work of the team. Could also be a waste of time. \\
+	Probability & \Gls{m} \\ 
 	Strategy \& actions & Not all conflicts are bad. If the conflict is simply a disagreement over technical issues, or the planning of the project, it could benefit the team. All such conflicts should lead to a constructive discussion that the entire team should take part in. Other types of conflicts, that can not positively influence the project should be avoided if possible. The team should agree on specific ground rules. \\
 	Deadline & Continuous \\
 	Responsible & Terje \\
 	\midrule
 	Risk ID & R7 \\
 	Risk factor & Lack of technical competence \\
-	Consequences & H: The team is unable to solve the problem  \\
-	Probability & H \\ 
+	Consequences & \Gls{h}: The team is unable to solve the problem  \\
+	Probability & \Gls{h} \\ 
 	Strategy \& actions & Make sure the team is proficient in the programming languages and tools that are to be used. Decide on technical solutions that the team already is familiar with. Do a good pre-study of the parts the team is unfamiliar with. Consult with the customer’s technical expert. \\
 	Deadline & Early phases of development (Pre-study, first sprint) \\
 	Responsible & All \\
 	\midrule
 	Risk ID & R8 \\
 	Risk factor & Miscommunication within team \\
-	Consequences & M: Team members waste time doing nothing, or doing something that is irrelevant. \\
-	Probability & M \\ 
+	Consequences & \Gls{m}: Team members waste time doing nothing, or doing something that is irrelevant. \\
+	Probability & \Gls{m} \\ 
 	Strategy \& actions & Make sure that everyone knows what to do at all times. Ask questions if you are unsure about your specific task. \\
 	Deadline & Continuous \\
 	Responsible & Terje \\
 	\midrule
 	Risk ID & R9 \\
 	Risk factor & Miscommunication with customer \\
-	Consequences & H: The team waste time on functionality the customer did not want. The completed product does not do what the customer wanted. \\
-	Probability & M \\ 
+	Consequences & \Gls{h}: The team waste time on functionality the customer did not want. The completed product does not do what the customer wanted. \\
+	Probability & \Gls{m} \\ 
 	Strategy \& actions & Make sure we and the customer have a common understanding of the requirements. Have frequent meetings with the customers.  \\
 	Deadline & Continuous \\
 	Responsible & Sigurd \\
 	\midrule
 	Risk ID & R10 \\
 	Risk factor & Lack of experience with \Gls{scrum} \\
-	Consequences & M: The team does not provide the correct documents for the report, which could lead to a bad grade. \\
-	Probability & M \\ 
+	Consequences & \Gls{m}: The team does not provide the correct documents for the report, which could lead to a bad grade. \\
+	Probability & \Gls{m} \\ 
 	Strategy \& actions & Learn how to properly do \Gls{scrum}. Have \Gls{scrum} meetings as often as possible. Get feedback on documents from advisor. \\
 	Deadline & Continuous \\
 	Responsible & Jaroslav \\

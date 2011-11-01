@@ -135,6 +135,21 @@ The system design defines the new modules and architecture that has to be in pla
 %----------------------
 Now that the \gls{utility} has both basic and advanced features, it is time to specialize and make support for environmental variables that can be found in Thales' source code. This basically include various platform specific support, \gls{endian} handling and minor technicalities. The latter one is vital for the customer in order for the \gls{utility} to be efficient and adequate.
 
+The new design resulted in both major and minor changes to the class diagram, see \autoref{fig:ClassDiagramSprint3}.
+
+\begin{figure}[!htb]
+	\includegraphics[width=\textwidth]{./sprints/img/ClassDiagramSprint3}
+	\caption{Platform handling\label{fig:ClassDiagramSprint3}}
+\end{figure}
+
+Major changes:
+\begin{itemize}
+\item New module called Platform, to hold platform specific information. Ealier some information were stored in the config module, but now we have so extensive platform specifications that it is best to separate it in its own module. See the section regarding platform specific support for more info.
+\item Moved the Cli class from csjark to config, and renamed it to Options. This class holds the attributes passed from the commandline interface. This will make the code more loose coupled now that the configuration attributes are stored in the correct module. 
+\item A delegator class was added to dissector. This class is responsible for 
+\end{itemize}
+
+
 \subsubsection{Platform specific support}
 We know that the various platforms behave differently, and this must be supported by our \gls{utility}. The customer has mentioned at least three platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. Thereby we will try to make the set-up for support easily understandable.
 
@@ -146,16 +161,16 @@ We have decided that the platform definition will be a subpart of a flag-field i
 \end{itemize}
 All these three fields must be combined to enable the utility to generate a \gls{dissector} that will dissect the struct correctly.\\
 
-The use of this information will be done in the config module, as you can see in the new class diagram MAKE REF.
+The use of this information will be done in the config module, as you can see in the new class diagram .
 
 \subsubsection{Dicitonary lookup}
-Deciding how to implement handling of different platforms ended in a design draft seen in Figure \autoref{fig:platformhandling}. The \gls{dissector} module will make a dictionary lookup in the table of supported platforms. This table conatins all platforms that the \gls{utility} can make \glspl{dissector} for, and their information of how the \gls{dissector} shall be encoded to achieve correct handling of \gls{endianness}, length of fields and memory alignment.
+Deciding how to implement handling of different platforms ended in a design draft seen in \autoref{fig:platformhandling}. The \gls{dissector} module will make a dictionary lookup in the table of supported platforms. This table conatins all platforms that the \gls{utility} can make \glspl{dissector} for, and their information of how the \gls{dissector} shall be encoded to achieve correct handling of \gls{endianness}, length of fields and memory alignment.
 We will start out by hardcoding this into the source code, but in the end we want to have this feed to the \gls{utility} through a configuration-file. This is the way the customer has envisioned it.  
 
-%\begin{figure}[!htb]
-%	\includegraphics[width=\textwidth]{./sprints/img/platformhandling}
-%	\caption{Platform handling\label{fig:platformhandling}}
-%\end{figure}
+\begin{figure}[!htb]
+	\includegraphics[width=\textwidth]{./sprints/img/platformhandling}
+	\caption{Platform handling\label{fig:platformhandling}}
+\end{figure}
 
 
 \subsubsection{Endianness}
@@ -178,7 +193,8 @@ Our design, and thereby implementation, will be influenced by Stig. He is a core
 
 
 \subsubsection{Batch processing}
-The batch processing was implemented in the second sprint, but we need to modifiy it to make it able to process header-files even though it encounter some that it can not make dissectors for. 
+The batch processing was implemented in the second sprint, but we need to modifiy it to make it able to process header-files even though it encounter some that it can not make dissectors for.
+
 
 %-----------------------
 \section{Implementation}

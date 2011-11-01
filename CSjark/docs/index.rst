@@ -10,6 +10,12 @@ CSjark is a tool for generating Lua dissectors from C struct definitions to use 
 
 For more information about Wireshark please visit http://www.wireshark.org.
 
+Features:
+
+- C header files ...
+- various platforms support: Win32, Win64, ...
+
+
 User Documentation
 ------------------
 

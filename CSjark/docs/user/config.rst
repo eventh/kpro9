@@ -49,8 +49,15 @@ Example: ::
         min: 0
         max: 100
 
+Value explanations
+~~~~~~~~~~~~~~~~~~
+
+Some variables may actually represent other values than its type. For example, for an enum it could be preferable to get the textual name of the value displayed, instead of the integer value that represent it. Such example can be an enum type or a bitstring.
+
+
+
 Enums
-~~~~~
+^^^^^
 
 Values of integer variables can be assigned to string values similarly to enumerated values in most programming languages. Thus, instead of integer value, a corresponding value defined in configuration file as a enumeration can be displayed. 
 
@@ -105,7 +112,7 @@ In this example we can see definition of enumerated values for ``int`` type. Val
 
 
 Bitstrings
-~~~~~~~~~~
+^^^^^^^^^^
 
 It is possible to configure bitstrings in the utility. This makes it possible to view common data types like integer, short, float, etc. used as a bitstring in the wireshark dissector.
 
@@ -162,10 +169,6 @@ This is an example of the specification ::
 	   − name: structname 
 	     id: 10 
 
-Value explanations
-~~~~~~~~~~~~~~~~~~
-
-Some variables may actually represent other values than its type. For example, for an enum it could be preferable to get the textual name of the value displayed, instead of the integer value that represent it. For enums, this will usually happen automaticlly, but if there are other types that does something similar, it needs to be provided manually. This can be done by:
 
 *Insert when implemented*
 
@@ -364,6 +367,10 @@ Custom handling of datatypes
 -------------------------------------------
 
 The utility supports custom handling of specified data types, which also includes functionality to support time_t and nstime_t. All basic data types and struct members can be configured to be handled as a special case. The custom handeling must be done through a configuration file. 
+
+
+Some variables may actually represent other values than its own type. 
+For example, this functionality supports redefinition of ``time_t`` data type to ``absolute_time``
 
 
 .. [#] Basic Encoding Rules

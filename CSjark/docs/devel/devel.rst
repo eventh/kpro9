@@ -7,7 +7,6 @@ Module dictionary:
 .. autosummary:: 
    
    csjark
-   config
    cparser
    platform
    
@@ -21,7 +20,8 @@ csjark
 config
 ------
 
-.. automodule:: config
+.. 
+    automodule:: config
 
 
 

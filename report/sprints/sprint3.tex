@@ -372,7 +372,7 @@ arrays of enums, arrays, structs and pointers has been added.
 %-----------------------
 \section{Sprint Testing}
 %-----------------------
-During sprint 3 the team executed a total of 9 tests were run, but no additional testingfeatures were added during the sprint. Tests executed:
+During sprint 3 the team executed a total of 11 tests were run, but no additional testing features were added during the sprint. Tests executed:
 
 \begin{itemize}
 	\item TID15 - Supporting batch mode of C header and configuration files \autoref{tab:sp3TID15}
@@ -383,6 +383,9 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 	\item TID20 -  Supporting the use of flags specifying platforms to display member values correctly \autoref{tab:sp3TID20}
 	\item TID21 - Supporting platforms with different \glspl{endian} \autoref{tab:sp3TID21}
 	\item TID22 - Supporting alignments \autoref{tab:sp3TID22}
+	\item TID 23 - Handling \Gls{lua} keywords {tab:sp3TID23}
+	\item TID24 - Sprint 3 functionality test \autoref{tab:sp3TID24}
+	\item TID25 - Sprint 3 requirements test \autoref{tab:spTID25}
 \end{itemize}
 
 \begin{table}[!htb] \footnotesize \center
@@ -498,7 +501,7 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Handling \Gls{lua} keywords \label{tab:sp3TID22}}
+\caption{Handling \Gls{lua} keywords \label{tab:sp3TID23}}
 \begin{tabular}{l l}
 	\toprule
 	Header & Description \\
@@ -511,9 +514,72 @@ During sprint 3 the team executed a total of 9 tests were run, but no additional
 \end{tabular}
 \end{table}
 
+\begin{table}[!htb] \footnotesize \center
+\caption{Sprint 3 functionality test \label{tab:sp3TID24}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Unit test encompassing all of the functionality implemented thus far in the utility \\
+	Tester & Lars Solvoll Tønder\\
+	Date & 01.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Requirements test \label{tab:sp3TID25}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Unit test covering all of the functionality imposed by the customer \\
+	Tester & Lars Solvoll Tønder\\
+	Date & 01.11.2011\\
+	Result & Failure. Failed because one or more of the following tests failed: a.type should be equal to int32, b.type should be equal to string, c.type should be equal to float\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Test Evaluation}
+In this sprint we were finally able to harvest the fruits of using a tool to calculate our code coverage. By being able to more easily see what code was not being tested, the team was able to uncover several bugs in the system, though the team unfortunately were unable to fix them all by the end of the sprint. There were also some problems with tests failing because of poor communication between the ones responsible for making the tests and the ones generating pcap packet traffic that were to be used in the test. It was therefore decided that these two groups of people should work more closely together on creating the tests.
+
+
 
 \subsubsection{Test Coverage}
+
+As can be seen in both \autoref{tab:sp3CoverageReport} and \autoref{fig:sp3CoverageChart} the team finally managed to hit the goal of having a code coverage of at least 80\% in this sprint. This was achieved mostly by improving the black\_box.py, which is a test of all the major parts of the utility. In this sprint the team had 9 assertions in their unit tests fail. Unfortunately because these bugs were considered minor and because of time constraint the team was unable to fix the utility before the end of the sprint. These bugfixes therefore had to be moved to sprint 4. The following list shows the unit tests ran in sprint 3:
+\begin{itemize}
+	\item black\_box.py
+	\item requirements.py
+	\item test\_config.py
+	\item test\_cparser.py
+	\item test\_csjark.py
+	\item test\_dissector.py
+\end{itemize}
+
+\begin{table}[!htb]\footnotesize\center
+	\caption{Sprint 3 Coverage Report\label{tab:sp3CoverageReport}}
+	\begin{tabular}{l l l l l}
+		\toprule
+		Module & Statements & Missing & Excluded & Coverage\\
+		\midrule
+		config & 309 & 25 & 0 & 98\%\ \\
+		cparser & 230 & 32 & 0 & 86\%\ \\
+		csjark & 113 & 51 & 0 & 55\%\ \\
+		dissector & 497 & 72 & 0 & 86\%\ \\
+		Total & 1149 & 180  & 0 & 81.25\%\ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/sprint3_code_coverage_chart.png}
+	\caption{Code coverage progress from previous sprints\label{fig:sp3CoverageChart}}
+\end{figure}
+
 
 %--------------------------
 \section{Customer Feedback}

@@ -16,28 +16,36 @@
      <object id="ClassNode1" class="com.horstmann.violet.ClassNode"> 
       <void property="attributes"> 
        <void property="text"> 
-        <string>structs: list
-enums: dict
-aliases: dict
-type_decl: list</string> 
+        <string>all_protocols: Dict
+platform: Platform
+map_type: String
+size_of: Integer
+alignment: Integer
+enums: Dict
+aliases: Dict
+type_decl: List</string> 
        </void> 
       </void> 
       <void property="methods"> 
        <void property="text"> 
         <string>__init__()
-_get_type()
 visit_Struct()
+visit_Union()
+_visit_nodes()
 visit_Enum()
 visit_Typedef()
 visit_TypeDecl()
 handle_type_decl()
-handle_struct()
-handle_enum()
-_get_array_size()
 handle_array_decl()
-handle_ptr_decl()
-add_field()
-</string> 
+handle_protocol()
+handle_array()
+handle_pointer()
+handle_enum()
+handle_field()
+_create_protocol()
+_store_protocol()
+_get_type()
+_get_array_size()</string> 
        </void> 
       </void> 
       <void property="name"> 
@@ -66,7 +74,7 @@ find_structs()
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>470.0</double> 
+     <double>0.0</double> 
      <double>940.0</double> 
     </void> 
    </object> 
@@ -94,11 +102,11 @@ name: String
 type: String
 size: Integer
 alignment_size: Integer
-add_var: 
-var: 
+add_var: Dict
+var: Dict
 abbr: String
 base: String
-values: dict
+values: Dict
 mask: Integer
 desc: String
 offset: Integer
@@ -154,7 +162,7 @@ get_code()
       <void property="attributes"> 
        <void property="text"> 
         <string>base_size: Integer
-depth: list
+depth: List
 array_size: Integer
 elements: Integer</string> 
        </void> 
@@ -327,11 +335,11 @@ _fields_code()
 name: String
 longname: String
 id: Integer
-var: 
-table_var:
-id_table:
-msg_var:
-values:
+var: String
+table_var: String
+id_table: String
+msg_var: String
+values: Dict
 </string> 
        </void> 
       </void> 
@@ -365,48 +373,21 @@ _dissector_func()
    </object> 
   </void> 
   <void method="addNode"> 
-   <object id="ClassNode11" class="com.horstmann.violet.ClassNode"> 
-    <void property="attributes"> 
-     <void property="text"> 
-      <string>verbose: Boolean
-debug: Boolean
-use_cpp: Boolean
-output_dir: String
-output_file: String</string> 
-     </void> 
-    </void> 
-    <void property="methods"> 
-     <void property="text"> 
-      <string>parse_args()
-</string> 
-     </void> 
-    </void> 
-    <void property="name"> 
-     <void property="text"> 
-      <string>Cli</string> 
-     </void> 
-    </void> 
-   </object> 
-   <object class="java.awt.geom.Point2D$Double"> 
-    <void method="setLocation"> 
-     <double>153.0</double> 
-     <double>1988.0</double> 
-    </void> 
-   </object> 
-  </void> 
-  <void method="addNode"> 
    <object id="PackageNode4" class="com.horstmann.violet.PackageNode"> 
     <void property="contents"> 
      <void property="text"> 
-      <string>create_dissector()
+      <string>parse_args()
+create_dissectors()
+write_dissectors_to_file()
+write_delegator_to_file()
 main()</string> 
      </void> 
     </void> 
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>301.0</double> 
-     <double>2052.0</double> 
+     <double>1148.0995122509264</double> 
+     <double>1009.6194657161785</double> 
     </void> 
    </object> 
   </void> 
@@ -427,7 +408,7 @@ main()</string>
    </object> 
   </void> 
   <void method="addNode"> 
-   <object id="ClassNode12" class="com.horstmann.violet.ClassNode"> 
+   <object id="ClassNode11" class="com.horstmann.violet.ClassNode"> 
     <void property="name"> 
      <void property="text"> 
       <string>ConfigError</string> 
@@ -442,7 +423,7 @@ main()</string>
    </object> 
   </void> 
   <void method="addNode"> 
-   <object id="ClassNode13" class="com.horstmann.violet.ClassNode"> 
+   <object id="ClassNode12" class="com.horstmann.violet.ClassNode"> 
     <void property="attributes"> 
      <void property="text"> 
       <string>member: String
@@ -469,7 +450,7 @@ obj: dict</string>
    </object> 
   </void> 
   <void method="addNode"> 
-   <object id="ClassNode14" class="com.horstmann.violet.ClassNode"> 
+   <object id="ClassNode13" class="com.horstmann.violet.ClassNode"> 
     <void property="attributes"> 
      <void property="text"> 
       <string>min: Integer
@@ -495,7 +476,7 @@ max: Integer</string>
    </object> 
   </void> 
   <void method="addNode"> 
-   <object id="ClassNode15" class="com.horstmann.violet.ClassNode"> 
+   <object id="ClassNode14" class="com.horstmann.violet.ClassNode"> 
     <void property="attributes"> 
      <void property="text"> 
       <string>strict: Boolean
@@ -521,7 +502,7 @@ values: dict</string>
    </object> 
   </void> 
   <void method="addNode"> 
-   <object id="ClassNode16" class="com.horstmann.violet.ClassNode"> 
+   <object id="ClassNode15" class="com.horstmann.violet.ClassNode"> 
     <void property="attributes"> 
      <void property="text"> 
       <string>bits: list
@@ -549,7 +530,7 @@ value: List
    </object> 
   </void> 
   <void method="addNode"> 
-   <object id="ClassNode17" class="com.horstmann.violet.ClassNode"> 
+   <object id="ClassNode16" class="com.horstmann.violet.ClassNode"> 
     <void property="attributes"> 
      <void property="text"> 
       <string>name: String
@@ -576,7 +557,7 @@ size: Integer</string>
    </object> 
   </void> 
   <void method="addNode"> 
-   <object id="ClassNode18" class="com.horstmann.violet.ClassNode"> 
+   <object id="ClassNode17" class="com.horstmann.violet.ClassNode"> 
     <void property="attributes"> 
      <void property="text"> 
       <string>field: String
@@ -611,7 +592,7 @@ create()</string>
    </object> 
   </void> 
   <void method="addNode"> 
-   <object id="ClassNode19" class="com.horstmann.violet.ClassNode"> 
+   <object id="ClassNode18" class="com.horstmann.violet.ClassNode"> 
     <void property="attributes"> 
      <void property="text"> 
       <string>t_def_hdr: Token
@@ -657,8 +638,8 @@ match()
    <object idref="ClassNode0"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>478.0</double> 
-     <double>1154.0</double> 
+     <double>13.128557380451582</double> 
+     <double>1153.3878929480193</double> 
     </void> 
    </object> 
   </void> 
@@ -666,8 +647,8 @@ match()
    <object idref="ClassNode1"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>677.0</double> 
-     <double>973.0</double> 
+     <double>212.1285573804516</double> 
+     <double>972.3878929480202</double> 
     </void> 
    </object> 
   </void> 
@@ -675,8 +656,8 @@ match()
    <object idref="PackageNode1"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>501.0</double> 
-     <double>989.0</double> 
+     <double>36.12855738045158</double> 
+     <double>988.3878929480202</double> 
     </void> 
    </object> 
   </void> 
@@ -719,10 +700,10 @@ match()
   <void method="addNode"> 
    <object id="PackageNode6" class="com.horstmann.violet.PackageNode"> 
     <void method="addChild"> 
-     <object idref="ClassNode11"/> 
+     <object idref="PackageNode4"/> 
     </void> 
     <void method="addChild"> 
-     <object idref="PackageNode4"/> 
+     <object id="InterfaceNode0" class="com.horstmann.violet.InterfaceNode"/> 
     </void> 
     <void property="name"> 
      <string>csjark</string> 
@@ -730,8 +711,8 @@ match()
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>140.0</double> 
-     <double>1960.0</double> 
+     <double>1140.0</double> 
+     <double>920.0</double> 
     </void> 
    </object> 
   </void> 
@@ -766,8 +747,8 @@ match()
    <object idref="ClassNode8"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>499.0</double> 
-     <double>35.0</double> 
+     <double>535.8654205650843</double> 
+     <double>31.43237865499185</double> 
     </void> 
    </object> 
   </void> 
@@ -790,16 +771,16 @@ match()
    </object> 
   </void> 
   <void method="addNode"> 
-   <object id="ClassNode20" class="com.horstmann.violet.ClassNode"> 
+   <object id="ClassNode19" class="com.horstmann.violet.ClassNode"> 
     <void property="attributes"> 
      <void property="text"> 
       <string>name: String
 id: Integer
 description: String
 cnf: File
-members: 
-types: 
-trailers:</string> 
+members: Dict
+types: Dict
+trailers: List</string> 
      </void> 
     </void> 
     <void property="methods"> 
@@ -829,7 +810,7 @@ get_field_attributes()
    </object> 
   </void> 
   <void method="addNode"> 
-   <object id="ClassNode21" class="com.horstmann.violet.ClassNode"> 
+   <object id="ClassNode20" class="com.horstmann.violet.ClassNode"> 
     <void property="attributes"> 
      <void property="text"> 
       <string>verbose: Boolean
@@ -871,6 +852,9 @@ handle_protocol_config()</string>
      <object idref="PackageNode5"/> 
     </void> 
     <void method="addChild"> 
+     <object idref="ClassNode11"/> 
+    </void> 
+    <void method="addChild"> 
      <object idref="ClassNode12"/> 
     </void> 
     <void method="addChild"> 
@@ -897,9 +881,6 @@ handle_protocol_config()</string>
     <void method="addChild"> 
      <object idref="ClassNode20"/> 
     </void> 
-    <void method="addChild"> 
-     <object idref="ClassNode21"/> 
-    </void> 
     <void property="name"> 
      <string>config</string> 
     </void> 
@@ -908,6 +889,131 @@ handle_protocol_config()</string>
     <void method="setLocation"> 
      <double>750.0</double> 
      <double>0.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object idref="InterfaceNode0"/> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>1244.2946886618356</double> 
+     <double>949.5413833457357</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object class="com.horstmann.violet.PackageNode"> 
+    <void method="addChild"> 
+     <object id="ClassNode21" class="com.horstmann.violet.ClassNode"> 
+      <void property="attributes"> 
+       <void property="text"> 
+        <string>big: String
+little: String
+name: String
+flag: Integer
+endian: String
+macros: Dict
+header: String
+types: Dict
+sizes: Dict
+alignment_sizes: Integer</string> 
+       </void> 
+      </void> 
+      <void property="methods"> 
+       <void property="text"> 
+        <string>__init__()
+map_type()
+size_of()
+alignment_size_of()
+create_all_headers()
+_generate_undefines()
+_generate_defines()
+</string> 
+       </void> 
+      </void> 
+      <void property="name"> 
+       <void property="text"> 
+        <string>Platform</string> 
+       </void> 
+      </void> 
+     </object> 
+    </void> 
+    <void method="addChild"> 
+     <object id="PackageNode8" class="com.horstmann.violet.PackageNode"> 
+      <void property="contents"> 
+       <void property="text"> 
+        <string>DEFAULT_C_TYPE_MAP: Dict
+DEFAULT_C_SIZE_MAP: Dict
+DEFAULT_C_ALIGNMENT_SIZE_MAP: Dict
+UNIX_C_SIZE_MAP: Dict
+SOLARIS_X86_C_SIZE_MAP: Dict
+SPARC_C_SIZE_MAP: Dict
+UNIX_C_ALIGNMENT_SIZE_MAP: Dict
+WIN32_MACROS: Dict
+SOLARIS_MACROS: Dict
+MACOS_MACROS: Dict
+X86_MACROS: Dict
+X64_MACROS: Dict
+SPARC_MACROS: Dict
+merge()
+</string> 
+       </void> 
+      </void> 
+     </object> 
+    </void> 
+    <void property="name"> 
+     <string>Platform</string> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>570.0</double> 
+     <double>1220.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object idref="ClassNode21"/> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>872.878022411997</double> 
+     <double>1248.6674707528575</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object idref="PackageNode8"/> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>580.502100816364</double> 
+     <double>1252.6081564768951</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object class="com.horstmann.violet.NoteNode"/> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>593.4143503863578</double> 
+     <double>460.223153506053</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object class="com.horstmann.violet.NoteNode"/> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>624.3337353764285</double> 
+     <double>456.65553216104485</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object class="com.horstmann.violet.NoteNode"/> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>636.2258065264557</double> 
+     <double>456.65553216104485</double> 
     </void> 
    </object> 
   </void> 
@@ -923,6 +1029,18 @@ handle_protocol_config()</string>
      <string>Raises</string> 
     </void> 
    </object> 
+   <object idref="ClassNode12"/> 
+   <object idref="ClassNode11"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="bentStyle"> 
+     <object class="com.horstmann.violet.BentStyle" field="VHV"/> 
+    </void> 
+    <void property="endArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="TRIANGLE"/> 
+    </void> 
+   </object> 
    <object idref="ClassNode13"/> 
    <object idref="ClassNode12"/> 
   </void> 
@@ -936,7 +1054,7 @@ handle_protocol_config()</string>
     </void> 
    </object> 
    <object idref="ClassNode14"/> 
-   <object idref="ClassNode13"/> 
+   <object idref="ClassNode12"/> 
   </void> 
   <void method="connect"> 
    <object class="com.horstmann.violet.ClassRelationshipEdge"> 
@@ -948,7 +1066,7 @@ handle_protocol_config()</string>
     </void> 
    </object> 
    <object idref="ClassNode15"/> 
-   <object idref="ClassNode13"/> 
+   <object idref="ClassNode12"/> 
   </void> 
   <void method="connect"> 
    <object class="com.horstmann.violet.ClassRelationshipEdge"> 
@@ -960,7 +1078,7 @@ handle_protocol_config()</string>
     </void> 
    </object> 
    <object idref="ClassNode16"/> 
-   <object idref="ClassNode13"/> 
+   <object idref="ClassNode12"/> 
   </void> 
   <void method="connect"> 
    <object class="com.horstmann.violet.ClassRelationshipEdge"> 
@@ -972,19 +1090,7 @@ handle_protocol_config()</string>
     </void> 
    </object> 
    <object idref="ClassNode17"/> 
-   <object idref="ClassNode13"/> 
-  </void> 
-  <void method="connect"> 
-   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
-    <void property="bentStyle"> 
-     <object class="com.horstmann.violet.BentStyle" field="VHV"/> 
-    </void> 
-    <void property="endArrowHead"> 
-     <object class="com.horstmann.violet.ArrowHead" field="TRIANGLE"/> 
-    </void> 
-   </object> 
-   <object idref="ClassNode18"/> 
-   <object idref="ClassNode13"/> 
+   <object idref="ClassNode12"/> 
   </void> 
   <void method="connect"> 
    <object class="com.horstmann.violet.ClassRelationshipEdge"> 
@@ -1017,7 +1123,7 @@ handle_protocol_config()</string>
     </void> 
    </object> 
    <object idref="PackageNode0"/> 
-   <object idref="ClassNode18"/> 
+   <object idref="ClassNode17"/> 
   </void> 
   <void method="connect"> 
    <object class="com.horstmann.violet.ClassRelationshipEdge"> 
@@ -1166,8 +1272,32 @@ handle_protocol_config()</string>
      <string>Raises</string> 
     </void> 
    </object> 
-   <object idref="ClassNode21"/> 
-   <object idref="ClassNode12"/> 
+   <object idref="ClassNode20"/> 
+   <object idref="ClassNode11"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="endArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
+    </void> 
+    <void property="lineStyle"> 
+     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
+    </void> 
+   </object> 
+   <object idref="PackageNode6"/> 
+   <object idref="ClassNode20"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="endArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
+    </void> 
+    <void property="lineStyle"> 
+     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
+    </void> 
+   </object> 
+   <object idref="PackageNode2"/> 
+   <object idref="PackageNode8"/> 
   </void> 
  </object> 
 </java> 

@@ -46,12 +46,12 @@ at its architecture and data structures, especially how it generates \glspl{diss
 
 \subsection{Asn2wrs}
 %-------------------
-A tool for generating \Gls{wireshark} \glspl{dissector} from \Gls{asn.1} \glspl{protocol}. It requires
-four input files: an \Gls{asn.1} \gls{protocol} description, a configuration file and two
+A tool for generating \Gls{wireshark} \glspl{dissector} from \gls{asnone} \glspl{protocol}. It requires
+four input files: an \gls{asnone} \gls{protocol} description, a configuration file and two
 template files. Advantages of using Asn2wrs are faster development from
 easier recompilation, and plugins which are easy to distribute. Disadvantages
 are that code and \glspl{makefile} are more complex. Our customer can't use this
-solution as it would require them to rewrite their \Gls{c} \glspl{struct} to \Gls{asn.1}
+solution as it would require them to rewrite their \Gls{c} \glspl{struct} to \gls{asnone}
 descriptions, which would take very long time.
 
 
@@ -298,7 +298,7 @@ justification for the \glspl{library} we selected can be found in
 Recognition, is a compiler toolkit for creating \glspl{lexer} and \glspl{parser} from grammar
 files. It can create these compilers for several different target languages,
 including \Gls{java} and \Gls{python}. There exists \gls{antlr} grammar files for the challenges
-we are facing: parsing \Gls{c}, \Gls{c} \gls{preprocessor} step and parsing \Gls{asn.1}. These grammars
+we are facing: parsing \Gls{c}, \Gls{c} \gls{preprocessor} step and parsing \gls{asnone}. These grammars
 configure \gls{antlr} to create \Gls{java} \glspl{lexer} and \glspl{parser} which reads and validates
 inputted source code files.
 
@@ -380,14 +380,14 @@ support the following:
 	\item Allow custom \Gls{lua} \glspl{dissector} to be defined and used in special cases.
 \end{itemize}
 
-\subsection{\Gls{asn.1}}
+\subsection{\gls{asnone}}
 %-----------------
-Abstract Syntax Notation One (\Gls{asn.1}) is a notation for describing data
-structures, the standard is defined by \Gls{iso} 8824. \Gls{asn.1} is used for
+Abstract Syntax Notation One (\gls{asnone}) is a notation for describing data
+structures, the standard is defined by \Gls{iso} 8824. \gls{asnone} is used for
 representing, encoding, transferring and decoding of data. It provides a
 fundamental tool to be used in application, which make it possible to exchange
 information in a independent way. There exist two \Gls{python} \glspl{library} for parsing
-of  \Gls{asn.1}, but neither support the 3.x \gls{branch} of \Gls{python}, which we require.
+of  \gls{asnone}, but neither support the 3.x \gls{branch} of \Gls{python}, which we require.
 
 \subsection{\Gls{yaml}}
 %----------------
@@ -705,7 +705,7 @@ different configuration frameworks we looked at in \autoref{tab:pre:config}.
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.1\textwidth}{X X X X X}
 	\toprule
-	& \Gls{yaml} & configparser & ConfigObj & \Gls{asn.1} \\
+	& \Gls{yaml} & configparser & ConfigObj & \gls{asnone} \\
 	\midrule
 	Advantages &
 	+Simplicity\newline +Flexibility &
@@ -729,7 +729,7 @@ different configuration frameworks we looked at in \autoref{tab:pre:config}.
 We decided to use \hyperref[sec:pre:yaml]{YAML} for handling configuration
 files, as it covered most of our requirements. Because we decided to use the
 latest version of \Gls{python}, version 3.2.2, the range of possible configuration
-frameworks was reduced. Therefore, although \Gls{asn.1} and ConfigObj are very
+frameworks was reduced. Therefore, although \gls{asnone} and ConfigObj are very
 suitable for our task, they were eliminated (those \glspl{parser} are available
 only up to version 2.7), which left us 2 main possibilities: \Gls{yaml} and
 configparser. configparser turned out to be insufficient for us, mainly because

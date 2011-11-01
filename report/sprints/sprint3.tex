@@ -142,6 +142,13 @@ The new design resulted in both major and minor changes to the class diagram, se
 	\caption{Platform handling\label{fig:ClassDiagramSprint3}}
 \end{figure}
 
+Major changes:
+\begin{itemize}
+\item New module called Platform, to hold platform specific information. Ealier some information were stored in the config module, but now we have so extensive platform specifications that it is best to separate it in its own module. See the section regarding platform specific support for more info.
+\item Moved the Cli class from csjark to config, and renamed it to Options. This class holds the attributes passed from the commandline interface. This will make the code more loose coupled now that the configuration attributes are stored in the correct module. 
+\item A delegator class was added to dissector. This class is responsible for 
+\end{itemize}
+
 
 \subsubsection{Platform specific support}
 We know that the various platforms behave differently, and this must be supported by our \gls{utility}. The customer has mentioned at least three platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. Thereby we will try to make the set-up for support easily understandable.

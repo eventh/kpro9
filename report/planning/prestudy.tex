@@ -40,7 +40,7 @@ A tool for generating \Gls{wireshark} \glspl{dissector} from IDL files. The tool
 in \Gls{python}, and generates \glspl{dissector} in \Gls{c} from IDL specifications. Interface
 Description Language (IDL) is used to interface in a language-neutral way,
 which enables communication between software of different languages. It is
-used for example in \Gls{Sun RPC} and \Gls{acorba}. Since idl2wrs takes input in a different
+used for example in SUN RPC and CORBA. Since idl2wrs takes input in a different
 language than us, and creates \glspl{dissector} in a different language than us, we
 can not reuse any of its code. Instead we will look at its architecture and
 data structures, especially how it generates \glspl{dissector}.
@@ -272,7 +272,7 @@ language. It was created by Guido van Rossum, and is today developed by \Gls{pyt
 Software Foundation and the \Gls{python} community. \Gls{python}’s strength include
 automatic memory management, large and comprehensive standard \gls{library},
 portability, powerful but very clear, concise and simple syntax. There exists
-several pure \Gls{python} \glspl{library} for creating \glspl{lexer} and \glspl{parser}, like \Gls{aply},
+several pure \Gls{python} \glspl{library} for creating \glspl{lexer} and \glspl{parser}, like \gls{aply},
 \gls{pycparser} and cppheaderparser. These are described further in
 \autoref{sec:pre:parser}.
 
@@ -283,7 +283,7 @@ several pure \Gls{python} \glspl{library} for creating \glspl{lexer} and \glspl{
 \label{sec:pre:parser}
 This section contains various tools and \glspl{library} we have looked at for solving
 the challenge of parsing \Gls{c} \gls{header} files. They range from language-independent
-tools like \Gls{agcc} and \Gls{clang} to \Gls{python}-only \glspl{library} like \Gls{aply} and \gls{pycparser}. The
+tools like \gls{agcc} and \Gls{clang} to \Gls{python}-only \glspl{library} like \Gls{aply} and \gls{pycparser}. The
 justification for the \glspl{library} we selected can be found in
 \autoref{sec:pre:parserchoice}.
 
@@ -328,7 +328,7 @@ is a \gls{parser} for \Gls{c++} \gls{header} files written in \Gls{python}. It i
 \gls{pycparser} in case we need to parse \Gls{c++} files instead of simple \Gls{c} \gls{header} files.
 It also depends on \Gls{aply}.
 
-\subsection{\Gls{agcc}}
+\subsection{GCC}
 %---------------
 \label{sec:pre:gcc}
 \begin{wrapfigure}{r}{1.5cm}
@@ -342,7 +342,7 @@ in \Gls{c} and \Gls{c++}. It can be used in our \gls{utility} as an external too
 parsing and then outputs an intermediate language representation which we can
 parse/search to find the \Gls{c} \gls{struct} definitions. Its drawbacks are a lack of
 flexibility if we need to change its behaviour, and we will still need to write
-a custom \gls{parser} or use something like \GLS{GCC-XML} and an \Gls{axml} \gls{parser}.
+a custom \gls{parser} or use something like \gls{GCC-XML} and an \gls{axml} \gls{parser}.
 
 \subsection{\Gls{clang}}
 %-----------------

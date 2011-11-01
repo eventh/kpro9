@@ -97,5 +97,26 @@ An item will be considered to have passed a test if the actual result from the t
 %---------------------------------
 \section{Testing Responsibilities}
 %---------------------------------
-Each group member are responsible for writing their own unit tests while the test leader is responsible for the quality of the test plan and the tests. The tests will mainly not be executed by the same developers who wrote the code that is to undergo testing, but by others in the testing group with as little ownership of the code as possible. 
+Each group member is responsible for writing their own unit tests while the test leader is responsible for the quality of the test plan and the tests. The tests will mainly not be executed by the same developers who wrote the code that is to undergo testing, but by others in the testing group with as little ownership of the code as possible. 
+
+%---------------------
+\section{Changelog}
+%----------------------
+
+\subsection{Sprint 1}
+%----------------------
+During sprint 1 it became apparent that the customers would not be able to supply the team with any real traffic data to use for testing. The testing teme therefore decided to use a hex-editor to generate their own data packets with the c-structs that would be used for testing the utility. This is done by manually writing the hex values for the individual bytes in a pcap packet, where the first byte indicates the version number, the second byte indicates the flag value of the packet and where the third and fourth byte indicates the message ID. The rest of the bytes in the packet then contain the member values of whatever struct was associated with the packet's message ID.
+
+During the sprint it also became apparent that Wireshark would be able to provide the developers and testers with feedback on syntax and user errors on both the dissectors created by the utility, as well as the traffic used for testing. This is done by wireshark crashing and/or providing the team with error messages related to which code in which dissector is faulty. There will also be displayed a warning or error message with the generated traffic-data if there are any faults with them. The team was therefore able to use wireshark in assisting them in creating correct code early on before writing unit tests.   
+
+\subsection{Sprint 2}
+%----------------------
+As of sprint 2 it was decided that the team should use an automated tool for calculating code coverage. Code coverage is a measure describing the actual amount of, and which code that undergoes unit testing. As code coverage inspects code directly is is considered a form of white box testing. In this project it will be used to ensure that an as big part as possible of the system actually undergoes testing, and that the unit tests associated with the different modules of the utility actually tests what they are supposed to. It was also added as a goal to have at least 80\% at the end of the project, where the testers and developers would aim to increase the amount of code coverage from each previous sprint.
+
+\subsection{Sprint 3}
+%----------------------
+During sprint 3 it was suggested that the team should create a C-program that generates hex dumps that were to be used for generating traffic to test the utility with. It was therefore decided that the team would create such a program to generate data for the bigger and more complex c-header files that could have a dozens of struct-members of various types. This would help the team to be able to generate more test traffic for the most complex headers without having to spend much extra time manually writing down the hex values of each struct member.
+
+\subsection{Sprint 4}
+%----------------------
 

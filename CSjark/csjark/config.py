@@ -285,12 +285,14 @@ class ConformanceFile:
     store_tokens = def_tokens + func_tokens + [t_def_extra, t_func_extra]
     valid_tokens = store_tokens + [t_comment, t_end, t_end_cnf]
 
-    def __init__(self, conf, file, rule=None):
+    def __init__(self, conf, file, config_file=''):
         """Parse a conformance file and create rules for it."""
         # Find the specified file
         self.file = str(file)
         if not os.path.isfile(self.file):
-            self.file = os.path.join(os.path.dirname(__file__), self.file)
+            self.file = os.path.join(os.path.dirname(__file__), file)
+        if not os.path.isfile(self.file):
+            self.file = os.path.join(os.path.dirname(config_file), file)
         if not os.path.isfile(self.file):
             raise ConfigError('Unknown file: %s' % file)
 
@@ -449,7 +451,7 @@ class Options:
 
         # Protocol's optional conformance file
         if 'cnf' in obj:
-            conf.cnf = ConformanceFile(conf, obj['cnf'])
+            conf.cnf = ConformanceFile(conf, obj['cnf'], filename)
 
         # Handle rules
         types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,

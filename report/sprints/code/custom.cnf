@@ -1,0 +1,11 @@
+#.DEF_FOOTER celsius
+-- This is below 'celsius'
+#.END
+
+#.FUNC_HEADER celsius
+	-- This is above 'celsius' inside the dissector function.
+#.END
+
+#.FUNC_FOOTER celsius
+	-- This is below 'celsius' inside dissector function
+#.END

@@ -248,7 +248,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
         # Single dimensional normal array
         depth.append(size)
-        
+
         if isinstance(child.children()[0], c_ast.IdentifierType):
             ctype = self._get_type(child.children()[0])
 
@@ -291,7 +291,7 @@ class StructVisitor(c_ast.NodeVisitor):
         """Add an ArrayField to the protocol."""
         if not depth:
             return self.handle_field(proto, name, ctype, size, alignment)
-        
+
         return proto.add_array(name, ctype, size, alignment, depth, enum_members)
 
     def handle_pointer(self, node, proto):

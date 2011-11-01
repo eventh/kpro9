@@ -344,17 +344,14 @@ class ArrayField(Field):
         else:
             var = '%s_%s' % (var, postfix)
         
-
-        t = '\tlocal {tree} = {parent}:{add}({var}, buffer({off}, {size}))'
-        data.append(t.format(tree=tree, parent=parent, add=self.add_var,
-                             var=var, off=offset, size=self.size))
-        
         if sequence == []:
-            t = '\t{tree}:set_text("{name}, {type} array:")'
-            data.append(t.format(name = self.name, tree=tree, type=self.type))
+            t = '\tlocal {tree} = {parent}:{add}("{name}: {type} array", buffer({off}, {size}))'
+            data.append(t.format(tree=tree, parent=parent, name=self.name, type=self.type, add=self.add_var,
+                             var=var, off=offset, size=self.size))
         else:
-            t = '\t{tree}:set_text("{type} array index_{index}")'
-            data.append(t.format(tree=tree, type=self.type, index = postfix))
+            t = '\tlocal {tree} = {parent}:{add}("{type} array: index_{index}", buffer({off}, {size}))'
+            data.append(t.format(tree=tree, parent=parent, type=self.type, index = postfix, add=self.add_var,
+                             var=var, off=offset, size=self.size))
 
         for i in range(0, self.elements):
             if  isinstance(self.field, ArrayField):
@@ -376,14 +373,14 @@ class ProtocolField(Field):
         pass
 
     def get_code(self, offset, store=None, sequence=None, tree='subtree'):
-        var = self.var
+        name = self.name
         if sequence is not None:
-            var = '%s_%s' % (self.var, self.get_array_postfix(sequence))         
+            name = '%s_%s' % (name, self.get_array_postfix(sequence))         
 
         t = '\tpinfo.private.caller_def_name = "{name}"\n'\
             '\tDissector.get("{proto}"):call('\
             'buffer({offset},{size}):tvb(), pinfo, {tree})'
-        return t.format(name=var, proto=self.proto_name, tree=tree,
+        return t.format(name=name, proto=self.proto_name, tree=tree,
                 dt=self.proto.DISSECTOR_TABLE, offset=offset, size=self.size)
 
 
@@ -468,7 +465,9 @@ class RangeField(Field):
     def get_code(self, offset, sequence=None, tree='subtree'):
         """Get the code for dissecting this field."""
         data = []
-        var = '%s_%s' % (self.var, self.get_array_postfix(sequence))
+        var = self.var
+        if sequence is not None:
+            var = '%s_%s' % (var, self.get_array_postfix(sequence))
 
         # Local var definitions
         t = '\tlocal {name} = {tree}:{add}({var}, buffer({off}, {size}))'

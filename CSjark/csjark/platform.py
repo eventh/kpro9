@@ -214,6 +214,13 @@ DEFAULT_C_ALIGNEMT_SIZE_MAP = {
         'time_t': 4,
 }
 
+
+# Mapping of C sizes for Windows 64-bit platform
+WIN64_C_SIZE_MAP = {
+        'pointer': 8,
+}
+
+
 # Mapping of C sizes for unix like platforms
 UNIX_C_SIZE_MAP = {
         'long': 8,
@@ -305,13 +312,14 @@ Platform('Win32', 1, Platform.little,
 
 # Windows 64 bit
 Platform('Win64', 2, Platform.little,
-         macros=merge(WIN32_MACROS, X64_MACROS, {'_WIN64':1}))
+         macros=merge(WIN32_MACROS, X64_MACROS, {'_WIN64':1}),
+         sizes=WIN64_C_SIZE_MAP, alignment=WIN64_C_SIZE_MAP)
 
 # Solaris 32 bit
 Platform('Solaris-x86', 3, Platform.little,
          macros=merge(SOLARIS_MACROS, X86_MACROS),
          sizes=SOLARIS_X86_C_SIZE_MAP,
-         alignment=UNIX_C_ALIGNMENT_SIZE_MAP)
+         alignment=SOLARIS_X86_C_SIZE_MAP)
 
 # Solaris 64 bit
 Platform('Solaris-x86-64', 4, Platform.little,

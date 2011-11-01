@@ -33,8 +33,8 @@ files may be used when additional configuration is required.
 
 \autoref{tab:req:func} lists the functional requirements, while
 \autoref{tab:req:nonfunc} lists the non-functional requirements. Each
-requirement have a priority (Pri) and a complexity (Cmp): High (H), 
-Medium (M) or Low (L) which is explained in \autoref{sec:req:priority} and
+requirement have a priority (Pri) and a complexity (Cmp): \Gls{h}, 
+\Gls{m} or \Gls{l} which is explained in \autoref{sec:req:priority} and
 \autoref{sec:req:compl}.
 
 \subsection{Prioritization}
@@ -93,45 +93,45 @@ categories as for requirements priority:
 	\toprule
 	ID & Description & Pri. & Cmp. \\
 	\midrule
-	FR1 & The \gls{utility} must be able to read basic \Gls{c} language \gls{struct} definitions from \Gls{c} \gls{header} files & H & \\
-	FR1-A & The \gls{utility} must support the following basic data types: \gls{int}, \gls{float}, \gls{char} and \gls{boolean} & H & L \\
-	FR1-B & The \gls{utility} must support \glspl{member} of type \gls{enum} & H & L \\
-	FR1-C & The \gls{utility} must support \glspl{member} of type \gls{struct} & H & M \\
-	FR1-D & The \gls{utility} must support \glspl{member} of type \gls{union} & M & M \\
-	FR1-E & The \gls{utility} must support \glspl{member} of type \gls{array} & H & M \\
-	FR1-F & The \gls{utility} should detect \glspl{struct} with the same name, and report it as an error & M & L \\
+	FR1 & The \gls{utility} must be able to read basic \Gls{c} language \gls{struct} definitions from \Gls{c} \gls{header} files & \Gls{h} & \\
+	FR1-A & The \gls{utility} must support the following basic data types: \gls{int}, \gls{float}, \gls{char} and \gls{boolean} & \Gls{h} & \Gls{l} \\
+	FR1-B & The \gls{utility} must support \glspl{member} of type \gls{enum} & \Gls{h} & \Gls{l} \\
+	FR1-C & The \gls{utility} must support \glspl{member} of type \gls{struct} & \Gls{h} & \Gls{m} \\
+	FR1-D & The \gls{utility} must support \glspl{member} of type \gls{union} & \Gls{m} & \Gls{m} \\
+	FR1-E & The \gls{utility} must support \glspl{member} of type \gls{array} & \Gls{h} & \Gls{m} \\
+	FR1-F & The \gls{utility} should detect \glspl{struct} with the same name, and report it as an error & \Gls{m} & \Gls{l} \\
 	\midrule
-	FR2 & The \gls{utility} must be able to generate \Gls{lua} \glspl{dissector} for \Gls{wireshark} for the \gls{binary} representation of \Gls{c} \gls{struct} & H & \\
-	FR2-A & The \gls{dissector} shall be able to display simple \glspl{struct} & H & L \\
-	FR2-B & The \gls{dissector} shall be able to support \glspl{struct} within \glspl{struct} & M & M \\
-	FR2-C & The \gls{dissector} must support \Gls{wireshark}'s built-in filter and search on attributes & H & L \\
-	FR2-D & The \gls{dissector} shall be able to recognize invalid values for a \gls{struct} \gls{member} & L & L \\
+	FR2 & The \gls{utility} must be able to generate \Gls{lua} \glspl{dissector} for \Gls{wireshark} for the \gls{binary} representation of \Gls{c} \gls{struct} & \Gls{h} & \\
+	FR2-A & The \gls{dissector} shall be able to display simple \glspl{struct} & \Gls{h} & \Gls{l} \\
+	FR2-B & The \gls{dissector} shall be able to support \glspl{struct} within \glspl{struct} & \Gls{m} & \Gls{m} \\
+	FR2-C & The \gls{dissector} must support \Gls{wireshark}'s built-in filter and search on attributes & \Gls{h} & \Gls{l} \\
+	FR2-D & The \gls{dissector} shall be able to recognize invalid values for a \gls{struct} \gls{member} & \Gls{l} & \Gls{l} \\
 	\midrule
-	FR3 & The \gls{utility} must support \Gls{c} \gls{preprocessor} directives and macros & H & \\
-	FR3-A & The \gls{utility} shall support \gls{include} & H & L \\
-	FR3-B & The \gls{utility} shall support \gls{define} and \gls{if} & H & L \\
-	FR3-C & The \gls{utility} shall support \verb+WIN32+, \verb+_WIN32+, \verb+_WIN64+, \verb+__sparc__+, \verb+__sparc+ and \verb+sun+ & M & H \\
+	FR3 & The \gls{utility} must support \Gls{c} \gls{preprocessor} directives and macros & \Gls{h} & \\
+	FR3-A & The \gls{utility} shall support \gls{include} & \Gls{h} & \Gls{l} \\
+	FR3-B & The \gls{utility} shall support \gls{define} and \gls{if} & \Gls{h} & \Gls{l} \\
+	FR3-C & The \gls{utility} shall support \verb+WIN32+, \verb+_WIN32+, \verb+_WIN64+, \verb+__sparc__+, \verb+__sparc+ and \verb+sun+ & \Gls{m} & \Gls{h} \\
 	\midrule
-	FR4 & The \gls{utility} must support user configuration & M & \\
-	FR4-A & Configuration must support valid ranges for \gls{struct} \glspl{member} & L & L \\
-	FR4-B & Configuration must support custom \Gls{lua} files for specific \glspl{protocol} & H & H \\
-	FR4-C & Configuration must support custom handling of specific data types & L & M \\
-	FR4-D & Configuration must support specifying the ID of \glspl{dissector} & H & L \\
-	FR4-E & Configuration must support various trailers (other registered \gls{protocol}) & L & H \\
-	FR4-F & Configuration must support integer \glspl{member} which represent enumerated named value & M & L \\	
-	FR4-G & Configuration must support \glspl{member} which are \gls{bit string} & M & L \\
+	FR4 & The \gls{utility} must support user configuration & \Gls{m} & \\
+	FR4-A & Configuration must support valid ranges for \gls{struct} \glspl{member} & \Gls{l} & \Gls{l} \\
+	FR4-B & Configuration must support custom \Gls{lua} files for specific \glspl{protocol} & \Gls{h} & \Gls{h} \\
+	FR4-C & Configuration must support custom handling of specific data types & \Gls{l} & \Gls{m} \\
+	FR4-D & Configuration must support specifying the ID of \glspl{dissector} & \Gls{h} & \Gls{l} \\
+	FR4-E & Configuration must support various trailers (other registered \gls{protocol}) & \Gls{l} & \Gls{h} \\
+	FR4-F & Configuration must support integer \glspl{member} which represent enumerated named value & \Gls{m} & \Gls{l} \\	
+	FR4-G & Configuration must support \glspl{member} which are \gls{bit string} & \Gls{m} & \Gls{l} \\
 	\midrule
-	FR5 & The \glspl{dissector} must be able to handle \gls{binary} input which size and \gls{endian} depends on originating platform & M & \\
-	FR5-A & Flags must be specified in configuration for each platform & M & M \\
-	FR5-B & Generate \glspl{dissector} with correct alignment depending on platform & M & M \\
-	FR5-C & Generate \glspl{dissector} which support both little and big \gls{endian} platforms & H & M \\
-	FR5-D & Generate \glspl{dissector} which support different sizes depending on platforms & M & H \\
+	FR5 & The \glspl{dissector} must be able to handle \gls{binary} input which size and \gls{endian} depends on originating platform & \Gls{m} & \\
+	FR5-A & Flags must be specified in configuration for each platform & \Gls{m} & \Gls{m} \\
+	FR5-B & Generate \glspl{dissector} with correct alignment depending on platform & \Gls{m} & \Gls{m} \\
+	FR5-C & Generate \glspl{dissector} which support both little and big \gls{endian} platforms & \Gls{h} & \Gls{m} \\
+	FR5-D & Generate \glspl{dissector} which support different sizes depending on platforms & \Gls{m} & \Gls{h} \\
 	\midrule
-	FR6 & The \gls{utility} shall support parameters from command line & H & \\
-	FR6-A & Command line shall support parameter for \Gls{c} \gls{header} file & H & L \\
-	FR6-B & Command line shall support parameter for configuration file & H & L \\
-	FR6-C & Command line shall support batch processing of \Gls{c} \gls{header} and configuration files & L & M \\
-	FR6-D & When running \gls{batch mode}, \glspl{dissector} that already are generated, shall not be regenerated, if the source are not modified since last run & L & M \\
+	FR6 & The \gls{utility} shall support parameters from command line & \Gls{h} & \\
+	FR6-A & Command line shall support parameter for \Gls{c} \gls{header} file & \Gls{h} & \Gls{l} \\
+	FR6-B & Command line shall support parameter for configuration file & \Gls{h} & \Gls{l} \\
+	FR6-C & Command line shall support batch processing of \Gls{c} \gls{header} and configuration files & \Gls{l} & \Gls{m} \\
+	FR6-D & When running \gls{batch mode}, \glspl{dissector} that already are generated, shall not be regenerated, if the source are not modified since last run & \Gls{l} & \Gls{m} \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -143,19 +143,19 @@ categories as for requirements priority:
 	\toprule
 	ID & Description & Pri. & Cmp. \\
 	\midrule
-	NR1 & The \gls{utility} shall be able to run on latest Windows and \Gls{Solaris} operating system & M & L \\
+	NR1 & The \gls{utility} shall be able to run on latest Windows and \Gls{Solaris} operating system & \Gls{m} & \Gls{l} \\
 	\addlinespace
-	NR2 & The \gls{dissector} shall be able to run on Windows \gls{x86}, Windows \gls{x86-64}, \Gls{Solaris} \gls{x86}, \Gls{Solaris} \gls{x86-64} and \Gls{Solaris} SPARC & M & M \\
+	NR2 & The \gls{dissector} shall be able to run on Windows \gls{x86}, Windows \gls{x86-64}, \Gls{Solaris} \gls{x86}, \Gls{Solaris} \gls{x86-64} and \Gls{Solaris} \gls{asparc} & \Gls{m} & \Gls{m} \\
 	\addlinespace
-	NR3 & The \gls{utility} shall only have a command line user interface. No GUI \& clicking! & H & L \\
+	NR3 & The \gls{utility} shall only have a command line user interface. No \Gls{gui} \& clicking! & \Gls{h} & \Gls{l} \\
 	\addlinespace
-	NR4 & The \gls{utility} must have sufficient documentation to allow a person, with no previous knowledge of the system or \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after 5 hours of reading & M & M \\
+	NR4 & The \gls{utility} must have sufficient documentation to allow a person, with no previous knowledge of the system or \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after 5 hours of reading & \Gls{m} & \Gls{m} \\
 	\addlinespace
-	NR5 & The \gls{utility} must have sufficient documentation to allow a person, already proficient with the system, to be able to extend its functionality after Y hours of reading & M & M \\
+	NR5 & The \gls{utility} must have sufficient documentation to allow a person, already proficient with the system, to be able to extend its functionality after Y hours of reading & \Gls{m} & \Gls{m} \\
 	\addlinespace
-	NR6 & The \gls{utility} code should follow standard python coding convention as specified by PEP8 and try to follow python style guidelines defined by PEP20 & H & L \\
+	NR6 & The \gls{utility} code should follow standard python coding convention as specified by PEP8 and try to follow python style guidelines defined by PEP20 & \Gls{h} & \Gls{l} \\
 	\addlinespace
-	NR7 & All Python modules, classes, functions and methods in the \gls{utility} should have docstrings which explains their code & L & L \\
+	NR7 & All Python modules, classes, functions and methods in the \gls{utility} should have docstrings which explains their code & \Gls{l} & \Gls{l} \\
 	\bottomrule
 \end{tabularx}}
 \end{table}

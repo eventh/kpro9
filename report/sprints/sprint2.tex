@@ -115,7 +115,7 @@ The second sprint we will implement thirteen requirements. These are listed in T
 	   &  & Testing - unit & 2 & 0 \\
 	   &  & Testing - end to end & 6 & 0 \\
 	\addlinespace
-	12 & FR6-C & Batch processing; folder support in the CLI & \underline{ 7 } & 4.5 \\
+	12 & FR6-C & Batch processing; folder support in the \gls{cli} & \underline{ 7 } & 4.5 \\
 	   &  & Implementation & 4 & 2 \\
 	   &  & Testing - unit & 2 & 1.5 \\
 	   &  & User documentation & 1 & 1 \\
@@ -314,18 +314,18 @@ The \gls{utility} is able to support all kinds of \gls{trailers}, that \Gls{wire
 built-in \gls{dissector} for. Trailers are data that follows a \gls{struct}, this can be 
 any kind of data, but only trails that have built-in support in \Gls{wireshark} can 
 be displayed.  To be able to use the \Gls{wireshark} \glspl{dissector}, they have to be 
-configured. In the example below, the \Gls{wireshark} \gls{dissector} for \gls{asn1} 
-BER\footnote{Basic Encoding Rules}  is used.  In \autoref{code:trailer}, we 
+configured. In the example below, the \Gls{wireshark} \gls{dissector} for \gls{asnone} 
+\gls{ber} is used.  In \autoref{code:trailer}, we 
 specify ''asn1\_count'' as a \gls{member} in the \gls{struct}, this is used to tell the 
-number of \gls{asn1} fields. The config in  \autoref{code:trailerconf} specifies 
+number of \gls{asnone} fields. The config in  \autoref{code:trailerconf} specifies 
 fields with size of six bytest, the number of fields are specified by the data 
 sent with the \gls{struct}. At the end there is aa field of size five bytes. An 
-example of \gls{asn1} in \Gls{wireshark}, can be seen in \autoref{fig:wstrailer}.
+example of \gls{asnone} in \Gls{wireshark}, can be seen in \autoref{fig:wstrailer}.
 
 \begin{figure}[ht]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_trailer}
-	\caption{BER Trailer in \Gls{wireshark}\label{fig:wstrailer}}
+	\caption{\gls{ber} Trailer in \Gls{wireshark}\label{fig:wstrailer}}
 \end{figure}
 
 \lstset{language=C,caption={Enumerated named values},label=code:trailer}
@@ -340,8 +340,8 @@ Csjark can support custom \Gls{lua} configuration, by including \Gls{lua}-\glspl
 file specified in the configuration file. The reason for supporting custom \Gls{lua} 
 configuration is for protocols that are not built-in \glspl{dissector} in \Gls{wireshark}, 
 and are not \glspl{struct}, or display the members in a struct in a different way 
-than our utility do . The only way to support this, is to write Lua code for 
-it. To be able to insert the Lua code in correct places in the lua files, the 
+than our utility do . The only way to support this, is to write \Gls{lua} code for 
+it. To be able to insert the \Gls{lua} code in correct places in the lua files, the 
 utility use a conformance file, which make it possible to specify where in the 
 dissector the code should be inserted. This feature was not completly finished 
 in this sprint, and will be finished in sprint 3.
@@ -363,9 +363,9 @@ is an example of how this is done.
 \Gls{endian} handling is postponed to the next sprint, because it is a platform 
 specific problem, and should be implemented together with platform support.
 
-\subsection{Folder Support in the CLI}
+\subsection{Folder Support in the \gls{cli}}
 %----------------------
-Folder support in the CLI\footnote{Command-line Interface} has been 
+Folder support in the \gls{cli}\footnote{Command-line Interface} has been 
 implemented, so it is possible to generate \Gls{lua}-\glspl{script} for all \glspl{struct} stored 
 in a given folder. At the moment, all \glspl{dissector} will be regenerated. 
 Functionality to only generate modified or new \gls{header}-files will be added in 
@@ -618,7 +618,7 @@ When an external \gls{dissector} is called, it should be called with name, and n
 The customer stated that they would like certain types to be interpreted in a certain way as default behaviour, but that the user should be able to configure specific behaviour for a specific \gls{member} of a \gls{struct}.
 
 \subsubsection{FR4-E: \Glspl{header}/\gls{trailers}}
-The customer originally stated that this feature included both \glspl{header} and trailer \glspl{struct} for a given \gls{struct}. This is now refined to mean that the given \gls{struct} is the \gls{header}, and that it can have various \gls{trailers} (could be one or more \Gls{c} \glspl{struct}, \gls{asn1}, etc.). A configuration file should specify the kind of trailer, and what variable inside the \gls{header} \gls{struct} which specify how many trailer items to expect. If the \gls{header} does not specify the length of the trailer the \gls{dissector} should just use the rest of the buffer, or the \gls{dissector} is responsible to return the length used from the buffer, so the caller can give the rest to the next \gls{dissector}.
+The customer originally stated that this feature included both \glspl{header} and trailer \glspl{struct} for a given \gls{struct}. This is now refined to mean that the given \gls{struct} is the \gls{header}, and that it can have various \gls{trailers} (could be one or more \Gls{c} \glspl{struct}, \gls{asnone}, etc.). A configuration file should specify the kind of trailer, and what variable inside the \gls{header} \gls{struct} which specify how many trailer items to expect. If the \gls{header} does not specify the length of the trailer the \gls{dissector} should just use the rest of the buffer, or the \gls{dissector} is responsible to return the length used from the buffer, so the caller can give the rest to the next \gls{dissector}.
 In \Gls{wireshark} it should be displayed as a sequence of \glspl{struct}.
 
 \subsubsection{FR4-F: Support for \glspl{integer} that represents enumerated values and \glspl{bit string}}

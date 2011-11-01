@@ -9,7 +9,6 @@ Module dictionary:
    csjark
    config
    cparser
-   dissector
    platform
    
 

@@ -477,7 +477,7 @@ This section is subject to change throughout the sprint, as we do not know all t
 	Result & The \gls{utility} support \gls{union} \glspl{member} in \glspl{struct}. \\
 	\midrule
 	ID & US27 \\
-	Requirements & FR2-A\textit{Addition:} Display a \gls{wildcard} type for valid \Gls{c} types that \Gls{wireshark} has no support for. \\
+	Requirement & FR2-A\textit{Addition:} Display a \gls{wildcard} type for valid \Gls{c} types that \Gls{wireshark} has no support for. \\
 	What & The administrator should be able to give the tool a \gls{struct} with a valid \Gls{c}-type even if \Gls{wireshark} does not have a way to display that type in a natural way.
 	The \gls{dissector} should the just display the name of the type, the name of the \gls{member} and the hex value from the \gls{packet}. \\
 	How & The \gls{parser} module will recognise if a type it encounters are supported in \Gls{wireshark} or not. If it is not supported, it will add a \gls{wildcard} field to the prototype object
@@ -485,7 +485,7 @@ This section is subject to change throughout the sprint, as we do not know all t
 	Result & The administrator will be able to both run the \gls{utility} and get some information from the \gls{dissector} even if the type used is not supported by \Gls{wireshark}. \\
 	\midrule
 	ID & US28 \\
-	Requirements & FR2-C: Filter and search on attributes (important to have descriptive abbreviations) \\
+	Requirement & FR2-C: Filter and search on attributes (important to have descriptive abbreviations) \\
 	What & The developer wants to find specific attributes in \Gls{wireshark}. The amount of data captured can be big.
 	After the \glspl{packet} have been dissected, they are presented in \Gls{wireshark}. The developer will have a hard time finding 
 	attributes by manual seeking. The built-in search and filter functionality needs to be supported to accommodate the developer. \\
@@ -495,7 +495,7 @@ This section is subject to change throughout the sprint, as we do not know all t
 	Result & The developer will be able to search and filter by attributes. \\
 	\midrule
 	ID & US29 \\
-	Requirements & FR5-A: Flags must be specified in configuration for each platform \\
+	Requirement & FR5-A: Flags must be specified in configuration for each platform \\
 	What & The administrator wants to generate \glspl{dissector} which are different depending on platform. \\
 	How & To be able to create \glspl{dissector} which are different depending on the originating platform, the administrator needs to specify in the configuration which platforms he wants to support.
 	The config module should accept such configuration and store it so other modules can use it. \\ 
@@ -520,7 +520,7 @@ This section is subject to change throughout the sprint, as we do not know all t
 	Result & Dissectors can be created with platform specific \gls{endian}. \\
 	\midrule
 	ID & US32 \\
-	Requirements & FR5-D: Generate \glspl{dissector} which support different sizes depending on platforms \\
+	Requirement & FR5-D: Generate \glspl{dissector} which support different sizes depending on platforms \\
 	What & The administrator wants to generate \glspl{dissector} for \gls{struct} where \glspl{member} size depend on the originating platform. \\
 	How & When the administrator feeds the \gls{utility} a \gls{header} file and a config file with a set of platform he wants \glspl{dissector} for, the config module will create new \gls{header} files
 	with \Gls{c} \gls{preprocessor} directives for each platform. These files should define platform-specific macros which emulates parsing on the specific platform. 
@@ -529,7 +529,7 @@ This section is subject to change throughout the sprint, as we do not know all t
 	Result & Dissectors can be created with platform specific sizes of \glspl{member}.\\
 	\midrule
 	ID & US33 \\
-	Requirements & FR3-C: Support for configuring a platform with a platform specific macro like WIN32, \_WIN64, \_\_sparc to be able to  support different \gls{struct} definitions 
+	Requirement & FR3-C: Support for configuring a platform with a platform specific macro like WIN32, \_WIN64, \_\_sparc to be able to  support different \gls{struct} definitions 
 	for different platforms. \\
 	What & The administratorwants to be able to configure the \gls{utility} to make \glspl{dissector} that support \glspl{struct} that is defined differently on different platforms via platform specific
 	macros like WIN32, \_WIN64, \_\_sparc. \\
@@ -558,7 +558,7 @@ This section is subject to change throughout the sprint, as we do not know all t
 	Header & Value \\
 	\midrule
 	ID & US35 \\
-	Requirements & FR4-D modified: Configuration must support specifying the ID of \glspl{dissector} \\
+	Requirement & FR4-D modified: Configuration must support specifying the ID of \glspl{dissector} \\
 	What & The administrator wants to specify the ID of a \gls{dissector} in a configuration file. The \glspl{dissector} should not be given any ID if it has not been specifically configured. \\
 	How & When the cparser finds a \gls{struct} in the \gls{AST} it looks for a configuration file for the \gls{struct}. If a config-file is found, the	ID of the prototype field
 	representing the \gls{dissector} will be mapped to the ID given in the config-file.  If it is not found, the ID will be sat to NONE. \\
@@ -581,7 +581,7 @@ This section is subject to change throughout the sprint, as we do not know all t
 	Result & The administrator is now able to look up what platforms he can get the \glspl{dissector} to support. \\
 	\midrule
 	ID & US38 \\
-	Requirements & FR6-D The \gls{utility} should not regenerate \glspl{dissector} within a single run. \\
+	Requirement & FR6-D The \gls{utility} should not regenerate \glspl{dissector} within a single run. \\
 	What & The administrator should be able to specify folder that includes both a standalone \gls{header} file with a \gls{struct} definitions and another \gls{header} file that includes
 	the first \gls{header}. The \gls{utility} will only generate the \gls{dissector} once for the \gls{struct} inside the first \gls{header}. \\
 	How & For each \gls{struct} encountered, the \gls{utility} will check the table of generated \glspl{dissector} to see if there is an existing \gls{dissector} generated for the \gls{struct} name.
@@ -589,7 +589,7 @@ This section is subject to change throughout the sprint, as we do not know all t
 	Result & The \gls{utility} will run faster as a result of not needing to regenerate \glspl{dissector}. \\
 	\midrule
 	ID & US39 \\
-	Requirements & Handle \Gls{lua} reserved definition names \\
+	Requirement & Handle \Gls{lua} reserved definition names \\
 	What & The \Gls{c} \glspl{struct} could contain \glspl{member} with names that are reserved by \Gls{lua}. The \gls{dissector} module needs to avoid creating \Gls{lua} variables with such names.  \\
 	How &	 The \gls{dissector} module has a method called create\_lua\_var. This method will ensure that variable names are valid, by comparing the variable names to a list
 	of \Gls{lua} reserved keywords, and if there is a match we need to add an underscore in front of the variable name. \\ 
@@ -598,9 +598,26 @@ This section is subject to change throughout the sprint, as we do not know all t
 \end{tabularx}}
 \end{table}
 
+\begin{table}[htbp] \footnotesize \center
+\caption{User stories - Sprint 3 part 4\label{tab:req:stories10}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Value \\
+	\midrule
+	ID & US40 \\
+	Requirement &  FR5-B: Generate dissectors with correct alignment depending on platform \\
+	What & The administrator wants to generate dissectors which are different depending on platform. \\
+	How & The dissector module will use the configured flags from the config module to modify the generated lua dissectors so that they have the right memory structure alignment and endianness.
+	The dissector module shall have a function which calculates the offset for each field to align it, and functions which creates fields for specific endianness. \\
+	Result & Dissectors can be created with platform specific memory structure alignment \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
 \subsection{Sprint 4}
 \label{sec:req:stories4}
-This section lists the user stories for the fourth sprint, these are displayed in \autoref{tab:req:stories10}.
+This section lists the user stories for the fourth sprint, these are displayed in \autoref{tab:req:stories10}, \autoref{tab:req:stories11}, \autoref{tab:req:stories12} and \autoref{tab:req:stories13}.
 As we are developing a very technical \gls{utility} we have written user stories with an implementation level of abstraction. 
 These user stories represent how we intend to add the functionality of each requirement to the \gls{utility}.
 The administrator in this context is the administrator at Thales Norway AS. 
@@ -615,38 +632,163 @@ This section is subject to change throughout the sprint, as we do not know all t
 	\toprule
 	Header & Value \\
 	\midrule
-	ID & US \\
-	Requirements &  \\
-	What &  \\
-	How &  \\
-	Result & \\
+	ID & US41 \\
+	Requirement & FR3-A modification: \#include system includes \\
+	What & The utility needs to be able to support header files that includes system dependent headers
+	even if these are not available on the platform that the utility is used on. \\
+	How & The administrator is able to specify a fake system header file with the defines they need to make their structs work correctly.
+	This fake header is then used to represent the system header in the so the file is parsed correctly by pycparcer.  \\
+	Result & The administrator is now able to make the utility generate system dependent dissectors for headers with system dependent includes. \\
 	\midrule
-	ID & US \\
-	Requirements &  \\
-	What &  \\
-	How &  \\
-	Result & \\
+	ID & US42 \\
+	Requirement & FR3-D: Ignoring \#pragma directives  \\
+	What &  The utility needs to be able to support header files with the \#pragma directive without necessarily having a to support to functionality of the directive\\
+	How & Before feeding the header files to the parser the utility needs to be able to run a pass through all of the headers that are to be parsed and remove all of the \#pragma directives encountered in those header files.\\
+	Result & The user will be able to create dissectors for header files with the \#pragma directive instead of having the utility be forced to skip them. \\
 	\midrule
-	ID & US \\
-	Requirements &  \\
-	What &  \\
-	How &  \\
-	Result & \\	
+	ID & US43 \\
+	Requirement & FR3-E: Find missing includes  \\
+	What & It should be possible to generate dissector from header-files, that have definitions in header-files that are not included with a preprocessor directive in the header-file.  \\
+	How & The cparser module has to be able to detect when a exception is raised in the pycparser library, if an exception is raised, cparser has to search through the header-files
+	to find the declaration that the pycparser library failed on, and include this header file. The cparser module will have to do this procedure until the dissector is correctly parsed in the pycparser library. \\
+	Result & The utility shall be able to generate dissectors for these header-files \\	
 	\midrule
-	ID & US \\
-	Requirements &  \\
-	What &  \\
-	How &  \\
-	Result & \\
+	ID & US44 \\
+	Requirement & Support C \#defines from CLI  \\
+	What & The administrator wants to pass C \#define directives from the command-line to the preprocessor.   \\
+	How & When CSjark is executed, it takes the arguments given in the command-line interface and store them in the config module.
+	The \#define directives must added to the preprocessor arguments before the header-file is parsed in the pycparser library.   \\
+	Result & The utility supports C \#define directives passed from the CLI. \\
 	\midrule
-	ID & US \\
-	Requirements &  \\
-	What &  \\
-	How &  \\
-	Result & \\
+	ID & US45 \\
+	User doc & Support C \#defines from CLI \\
+	What & The user wants to understand how the utility will handle C \#defines and what \#defines that are possible to pass to the CLI.   \\
+	How & The user finds the correct section in the user documentation, describing the command-line interface and how C \#defines are handled.  \\
+	Result & The user understands how to use C \#defines with the utility. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{User stories - Sprint 4 part 2\label{tab:req:stories11}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Value \\
+	\midrule
+	ID & US46 \\
+	Requirement & FR7-A: Use Doxygen comments for "Description"  \\
+	What & The utility will read Doxygen comments for a struct and use that to specify the description field for the proto object in the dissector. \\
+	How & The utility will search the header files for Doxygen comments before giving the file to the preprocessor. It will note what struct the comment
+	corresponds to and add it to the config module. The dissector module will look up in the config module for each struct and use the description field there if it has been found.  \\
+	Result & The dissectors now requires less manual configuration because it is able to use some of the text from the header files. \\
+	\midrule
+	ID & US47 \\
+	Requirement & FR7-B: Read int-enum config from header files \\
+	What &  The utility will read \#define statements that define the allowed values and the names corresponding to those values for integers that are to be treated like enums, so that the user will not have to configure them manually.\\
+	How & The utility will search the header files for define statements that correpsonds to a member that is configured to be handled as an enum. The statements needs to follow some configurable format.
+	These statements are then used to auto generate a configuration file for the int member used to make an enum field for the int member when parsing the header file.\\
+	Result & The utility now requires less manual configurations to make dissectors interpret certaion integers as enums. \\
+	\midrule
+	ID & US48 \\
+	Requirement & Fetch offset in custom Lua configuration  \\
+	What & The administrator should be able to add configuration in the conformance file, so it is possible to add custom Lua code with correct offset values.  \\
+	How & The conformace file must support a variable for offset, and a way to use this. The config module have to read this variable, so it can be used in the dissector module to genereate a field in the dissector that uses the correct offset. \\
+	Result & The Lua dissector is generated with correct offset for the custom Lua code. \\	
+	\midrule
+	ID & US49 \\
+	User doc & Fetch offset in custom Lua configuration  \\
+	What & The administrator shall learn how to use offset values in custom Lua configuration.   \\
+	How & The administrator reads the section in the user documentation, about how to use custom Lua in the utility.   \\
+	Result & The user will understand how to offset values in the conformance file. \\
+	\midrule
+	ID & US50 \\
+	Requirement & FR4-D modification: Support multiple message ID's for one struct \\
+	What & he administrator should be able to configure more than one message ID per struct. Therefore it is possible to use the dissector with more different messages (specified by different ID’s).    \\
+	How & The configuration file must support definition of multiple ID’s. These ID’s then have to be used for registering multiple protocols for one dissector.  \\
+	Result & The Lua dissector can be used with multiple messages with different ID’s. \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{User stories - Sprint 4 part 3\label{tab:req:stories12}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Value \\
+	\midrule
+	ID & US51 \\
+	User doc & FR4-D modification: Support multiple message ID's for one struct  \\
+	What & The administrator should be able to find out how to specify multiple message ID’s for a specific struct.
+	This include the proper position and syntax of the message ID’s specification. Also, he should be aware of the consequences of that definition. \\
+	How & The administrator reads the configuration section in the user documentation, about how to specify multiple message ID’s for a specific struct.  \\
+	Result & The administrator is able to specify and use multiple message ID’s for a specific struct. \\
+	\midrule
+	ID & US52 \\
+	Requirement & FR4-I: Allow configuration to specify the size of unknown struct members \\
+	What & The administrator should be able specify in the confirguration, how big (in bytes) is the struct member without having the member itself defined. Note: This is also a workaround for structs that are not parseable.\\
+	How & The configuration should contain an optional attribute for each struct member which specifies the size of the member. If this member is a nested struct, and this struct is not defined, the size has to be specifies. Otherwise the user should be informed about that.\\
+	Result & The Lua dissector can be used with C header that includes unspecified struct member. This member has only defined by its size, so it could be displayed as raw data in Wireshark. \\
+	\midrule
+	ID & US53 \\
+	User doc & FR4-I: Allow configuration to specify the size of unknown struct members  \\
+	What & The administrator should be able to find out how to specify in the confirguration, how big (in bytes) is the struct member without having the member itself defined.  \\
+	How & The administrator reads the configuration section in the user documentation, about how to specify the size of the struct members. \\
+	Result & The user is able to specify the size of unknown struct member. \\	
+	\midrule
+	ID & US54 \\
+	User doc & Auto generate configuration files for structs with no corresponding configuration file \\
+	What & The utility will generate template configuration files if it encounters structs with no corresponding configuration file. This is to make it easier to make such a configuration file.   \\
+	How & The cparser module checks if an encountered struct has a corresponding configuration in the config module. If not, the utility writes a template file for this struct.   \\
+	Result & The user will now be able to use the auto generated template file to write the configuration for a struct instead of having to start from scratch. \\
+	\midrule
+	ID & US55 \\
+	Requirement & Only generate dissectors for structs that have a valid ID and their dependencies \\
+	What & The utility should only generate dissectors for structs that have a configuration file with a valid ID and their dependencies.    \\
+	How & When the utility discovers a struct definition inside a header file it should check if there exists a configuration file for that struct and if it has a valid ID.
+	If not then the utility should skip that struct and continue with the header file. If a struct with a valid configuration file and ID has a member that is not defined in the current header
+	file, then the utility will check the includes in the current header for the missing structs and create a dissector for them as well.\\
+	Result & The utility will not generate dissectors for structs which have not been specified in the configuration.
+	This gives the users of the system the ability to specify which structs they want to look at as well as shortening the time the utility needs to run.. \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{User stories - Sprint 4 part 4\label{tab:req:stories13}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Value \\
+	\midrule
+	ID & US56 \\
+	User doc & Only generate dissectors for structs that have a valid ID and their dependencies  \\
+	What & The administrator should be able to specify in the configuration which structs should have dissectors created for them. \\
+	How & The administrator reads the configuration section in the utility’s user documentation that specifies how to specify which structs should have a dissector generated for them.  \\
+	Result & The user will be able to specify which structs the utility will generate dissectors for. \\
+	\midrule
+	ID & US57 \\
+	Requirement & Guess dissector by packet size \\
+	What & The utility should be able to generate a LUA file that runs with Wireshark and guesses the dissector that is to be used for a packet if it has a message ID that does not match any preexisting dissector.\\
+	How & The luastructs.lua file that is generated by the utility should contain a dictonary of all dissectors sorted by the size of the structs that they are associated with.
+ 	When a packet with an unrecognized message ID is discovered by wireshark, the code in the luastructs.lua file should try to match the unidentified packet with a dissector
+ 	that has been generated with the same size as the unidentified packet. The matching dissectors should then be run with the unidentified packet. \\
+	Result & Instead of only displaying the raw hex data from the unidientified packet, wireshark should display the packet as containing all of the possible structs and member values the packet might really be containing as dictated by the matching dissectors. This packet should also be displayed with a warning. \\
+	\midrule
+	ID & US58 \\
+	Requirement & Display if struct member contains uninitialized memory \\
+	What & The dissectors generated by the utility should be able to identify struct members that might possibly have uninitialized memory set as their values.
+ 	These members and their values should be displayed with a warning in wireshark to indicate that the values might have been uninitialized.  \\
+	How & If the C-code that uses header files isn’t using memset to set the initial values of different variables a parser might decide to fill uninitialized variables with some kind of patterned garbage data.
+ 	This pattern might be possible to detect by the dissectors generated by the utility by adding a check to the dissector code which compares 	the member values with different known garbage-patterns generated by different parsers. \\
+	Result & The utility will now be able to generate dissectors which will make wireshark display struct members and their values with a warning if they are suspected as being filled with uninitialized memory. \\	
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+
+
 
 %------------------
 \section{Use Cases}

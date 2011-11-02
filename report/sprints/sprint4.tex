@@ -34,25 +34,28 @@ This section contains the sprint backlog \ref{tab:sprint4req} and the timetable 
 	\cmidrule(r){3-4}
 	User story & Req. and Description & Est. & Act. \\
 	\midrule
-	\textbf{Impl.} &  & \textbf{27} & \textbf{-} \\
+	\textbf{Impl.} &  & \textbf{47} & \textbf{-} \\
+	\hyperref[tab:req:stories7]{US27} & FR2-E: guess dissector from packet size & 5 & - \\
 	\hyperref[tab:req:stories7]{US29} & FR3-A mod: support \#include of system headers &  8  & - \\
 	\hyperref[tab:req:stories8]{US31} & FR3-D mod: ignore \#pragma directives & 2 & - \\
-	\hyperref[tab:req:stories8]{US32} & FR3-E: Find include dependencies which are not explicit set & 16  & - \\
-	\hyperref[tab:req:stories8]{US32} & FR4-H: Autogenerate configuration files for structs with no config file & 1  & - \\
+	\hyperref[tab:req:stories8]{US32} & FR3-E: find include dependencies which are not explicit set & 16  & - \\
+	\hyperref[tab:req:stories7]{US29} & FR4-B mod: custom Lua files support offset and value inside .cnf file & 4 & - \\
+	\hyperref[tab:req:stories7]{US29} & FR4-D mod: multiple message ID's for one dissector & 2 & - \\
+	\hyperref[tab:req:stories8]{US32} & FR4-H: autogenerate configuration files for structs with no config file & 1  & - \\
+	\hyperref[tab:req:stories7]{US29} & FR4-I: allow configuration of size for unknown structs & 4 & - \\
+	\hyperref[tab:req:stories7]{US29} & FR6-E: support C macros from CLI & 1 & - \\
+	\hyperref[tab:req:stories7]{US29} & FR6-F: only generate dissectors for structs with valid id and their dependences & 4 & - \\
 	\addlinespace
-	\textbf{Fixes} &  & \textbf{16} & \textbf{-} \\
-	\hyperref[tab:req:stories7]{US29} & Fix1: Improve generated Lua output - Remove platform prefix & 10 & - \\
-	\hyperref[tab:req:stories7]{US29} & Fix2: Fix bugs to be able to process customers files & 12 & - \\
-	\hyperref[tab:req:stories7]{US29} & Fix3: Array bug in text & 2 & - \\
-	\hyperref[tab:req:stories7]{US29} & Fix4: Pointer support (array) & 1 & - \\
-	\hyperref[tab:req:stories7]{US29} & Fix5: Enum in arrays & 1 & - \\		
-	\hyperref[tab:req:stories7]{US29} & Fix6: Support command line arguments for Cpp macros & 1 & - \\
-	\hyperref[tab:req:stories7]{US29} & Fix7: Multiple message ID's for one dissector & 2 & - \\
-	\hyperref[tab:req:stories7]{US29} & Fix8: Allow configuration of size for unknown structs & 4 & - \\
+	\textbf{Fixes} &  & \textbf{35} & \textbf{-} \\
+	\hyperref[tab:req:stories7]{US29} & TheFIX: Fix bugs to be able to process customers files & 12 & - \\
+	\hyperref[tab:req:stories7]{US29} & FR2-A: Improve generated Lua output - Remove platform prefix & 10 & - \\
+	\hyperref[tab:req:stories7]{US29} & FR1-E: Array bug in text & 2 & - \\
+	\hyperref[tab:req:stories7]{US29} & FR1-E: Pointer support (array) & 1 & - \\
+	\hyperref[tab:req:stories7]{US29} & FR1-E: Enum in arrays & 1 & - \\		
 	\hyperref[tab:req:stories7]{US29} & FR6-C: Batch mode fix (recursive searching for subfolders) &  8  & - \\
 	\hyperref[tab:req:stories7]{US29} & FR6-C: Support command line arguments for Cpp "--Include" (folders) & 1 & - \\
 	\addlinespace
-	\textbf{Testing} &  & \textbf{19} & \textbf{-} \\
+	\textbf{Testing} &  & \textbf{16} & \textbf{-} \\
 	 & FR4-B: Custom \Gls{lua} configuration & 2 & - \\
 	 & FR5-C: \Glspl{dissector} support both little and big \gls{endian} & 1 & - \\
 	 & FR5-D: \Glspl{dissector} support different sizes from flags & 2 & - \\
@@ -67,7 +70,7 @@ This section contains the sprint backlog \ref{tab:sprint4req} and the timetable 
 	\hyperref[tab:req:stories9]{US36} & FR5: User documentation for what platform that the \gls{utility} support & 3 & - \\
 	\hyperref[tab:req:stories9]{US37} & FR5: Create developer manual from python docstrings (autodoc plugin) & 4 & - \\
 	\midrule
-	& Total: & 102 &  -\\
+	& Total: & 109 &  -\\
 	\bottomrule
 \end{tabularx}
 \end{table}
@@ -81,37 +84,43 @@ This section contains the sprint backlog \ref{tab:sprint4req} and the timetable 
 	\cmidrule(r){2-3}
 	Description & Est. & Act. \\
 	\midrule
-	\textbf{Sprint planning} & \textbf{30} & \textbf{47.5} \\
+	\textbf{Sprint planning} & \textbf{30} & \textbf{27} \\
 	\addlinespace
-	\textbf{Sprint 3 requirements} & \textbf{102} & \textbf{-} \\
-	Implementation & 56 & - \\
-	Testing & 19 & - \\
+	\textbf{Sprint 3 requirements} & \textbf{109} & \textbf{-} \\
+	Implementation & 47 & - \\
+	Fixes & 35 & - \\
+	Testing & 16 & - \\
 	User Documentation & 11 & - \\
-	Fixes & 16 & - \\
 	\addlinespace
 	\textbf{Sprint review} & \textbf{20} & \textbf{-} \\
 	\addlinespace
-	\textbf{Sprint documentation} & \textbf{75} & \textbf{-} \\
-	Sprint 1 document & 10 & -\\
-	Sprint 2 document & 14 & - \\
-	Sprint 3 document & 51 & - \\
+	\textbf{Sprint documentation} & \textbf{46} & \textbf{-} \\
+	Sprint 3 document & 4 & - \\
+	Sprint 4 document & 42 & - \\
 	\addlinespace
-	\textbf{Report work} & \textbf{42} & \textbf{-} \\
-	User stories to LaTeX & 3 & 4\\
-	Architecture update & 8 & -\\
-	Glossaries and acronyms & 16 & -\\
-	Requirement review & 15 & -\\
-	Layout and correction & 15 & -\\
+	\textbf{Report work} & \textbf{38} & \textbf{-} \\
+	Update tables with actual hours & 2 & - \\
+	Abstract - improve & 2 & -\\
+	Importing user documentation to report & 3 & -\\
+	Introduction section & 6 & -\\
+	Report read-through from a technical perspective & 6 & -\\
+	Report read-through from a non-technical perspective & 6 & -\\
+	Glossary refinement & 3 & -\\
+	Acronym refinement & 1 & -\\
+	Write about optional requirements & 4 & -\\
+	References & 3 & -\\
+	Requirement agreement & 2 & -\\
 	\addlinespace
-	\textbf{Lectures} & \textbf{21} & \textbf{14} \\
+	\textbf{Thales presentation} & \textbf{28} & \textbf{14} \\
 	\addlinespace
-	\textbf{Meetings} & \textbf{57} & \textbf{-} \\
+	\textbf{Meetings} & \textbf{63} & \textbf{-} \\
 	Advisor meetings & 28 & - \\
-	Customer meetings & 8 & - \\
+	Customer meetings & 14 & - \\
 	Stand-up meetings & 21 & - \\
-	\textbf{Project management} & \textbf{20} & \textbf{-} \\
+	\addlinespace
+	\textbf{Project management} & \textbf{17} & \textbf{-} \\
 	\midrule
-	Total: & 367 & - \\
+	Total: & 351 & - \\
 	\bottomrule
 \end{tabularx}
 \end{table}

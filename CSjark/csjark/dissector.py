@@ -93,10 +93,12 @@ class Field:
     def get_definition(self, sequence=None):
         """Get the ProtoField definition for this field."""
         var = self.var
+        index = ''
         if sequence is not None:
             var = '%s_%s' % (self.var, self.get_array_postfix(sequence))
+            index = self.get_array_index_postfix(sequence)
         return self._create_field(var, self.type, self.abbr,
-                self.name, self.base, self.values, self.mask, self.desc)
+                self.name + index, self.base, self.values, self.mask, self.desc)
 
     def get_code(self, offset, store=None, sequence=None, tree='subtree'):
         """Get the code for dissecting this field."""
@@ -203,14 +205,16 @@ class EnumField(Field):
     def get_definition(self, sequence = None):
         """Get the ProtoField definition for this field."""
         variable_name = self.var
+        index = ''
         if sequence is not None:
             variable_name = '%s_%s' % (self.var, self.get_array_postfix(sequence))
+            index = self.get_array_index_postfix(sequence)
         data = []
         if self.strict and (sequence == None or sequence[len(sequence) - 1] == 0):
             data.append('local {var} = {values}'.format(
                     var=self.values_var, values=self.values))
         data.append(self._create_field(variable_name, self.type, self.abbr,
-                self.name, self.base, self.values_var, self.mask, self.desc))
+                self.name + index, self.base, self.values_var, self.mask, self.desc))
         return '\n'.join(data)
 
     def get_code(self, offset, store=None, sequence=None, tree='subtree'):
@@ -410,9 +414,10 @@ class BitField(Field):
         
         postfix = self.get_array_postfix(sequence)
         var = self.var
+        index = ''
         if sequence is not None:
             var = '%s_%s' % (self.var, postfix)
-        
+            index = self.get_array_index_postfix(sequence)
 
         # Bitstrings need to be unsigned for HEX?? Research needed!
         if 'int' in self.type and not self.type.startswith('u'):
@@ -438,7 +443,7 @@ class BitField(Field):
             if sequence is not None:
                 bit_var = '%s_%s' % (bit_var, postfix)
             data.append(self._create_field(bit_var, type_,
-                    self._bit_abbr(name), name, values=values, mask=mask))
+                    self._bit_abbr(name), name + index, values=values, mask=mask))
 
         return '\n'.join(data)
 

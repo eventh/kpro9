@@ -82,6 +82,13 @@ class Field:
         if sequence is not None:
             postfix = '_'.join(str(i) for i in sequence)
         return postfix
+    
+    def get_array_index_postfix(self, sequence):
+        postfix = ''
+        if sequence is not None:
+            for i in sequence:
+                postfix = postfix + '[%i]' % (i)
+        return postfix
 
     def get_definition(self, sequence=None):
         """Get the ProtoField definition for this field."""
@@ -94,6 +101,7 @@ class Field:
     def get_code(self, offset, store=None, sequence=None, tree='subtree'):
         """Get the code for dissecting this field."""
         var = self.var
+        set_text = ''
         if sequence is not None:
             var = '%s_%s' % (self.var, self.get_array_postfix(sequence))
         if store:
@@ -101,8 +109,8 @@ class Field:
         else:
             store = ''
         self.offset = offset
-
         t = '\t{store}{tree}:{add}({var}, buffer({offset}, {size}))'
+            
         return t.format(store=store, tree=tree, add=self.add_var,
                         var=var, offset=offset, size=self.size)
 
@@ -334,28 +342,30 @@ class ArrayField(Field):
 
         return '\n'.join(data)
 
-    def get_code(self, offset, tree='arraytree', parent='subtree', name='', sequence=None):
+    def get_code(self, offset, tree='arraytree', parent='subtree', sequence=None):
         data = []
         var = self.var
-        postfix = self.get_array_postfix(sequence)
         if sequence is None:
             sequence = []
             data = ['\t-- Array handling for %s' % self.name]
-        else:
-            var = '%s_%s' % (var, postfix)
         
         if sequence == []:
             t = '\tlocal {tree} = {parent}:{add}("{name}: {type} array", buffer({off}, {size}))'
-            data.append(t.format(tree=tree, parent=parent, name=self.name, type=self.type, add=self.add_var,
-                             var=var, off=offset, size=self.size))
+            data.append(t.format(tree=tree, parent=parent, name=self.name,
+                                 type=self.type, add=self.add_var, var=var,
+                                 off=offset, size=self.size))
         else:
-            t = '\tlocal {tree} = {parent}:{add}("{type} array: index_{index}", buffer({off}, {size}))'
-            data.append(t.format(tree=tree, parent=parent, type=self.type, index = postfix, add=self.add_var,
-                             var=var, off=offset, size=self.size))
+            index = self.get_array_index_postfix(sequence)
+            var = '%s_%s' % (var, self.get_array_postfix(sequence))
+            t = '\tlocal {tree} = {parent}:{add}("{name}{index}: {type} array", buffer({off}, {size}))'
+            data.append(t.format(name=self.name, tree=tree, parent=parent,
+                                 type=self.type, index = index, 
+                                 add=self.add_var, var=var, off=offset,
+                                 size=self.size))
 
         for i in range(0, self.elements):
             if  isinstance(self.field, ArrayField):
-                data.append(self.field.get_code(offset, 'sub' + tree, tree, name, sequence + [i]))
+                data.append(self.field.get_code(offset, 'sub' + tree, tree, sequence + [i]))
                 offset += self.field.size
             else:
                 data.append(self.field.get_code(offset, None, sequence + [i], tree))
@@ -366,16 +376,15 @@ class ArrayField(Field):
 
 class ProtocolField(Field):
     def __init__(self, proto, name, sub_proto):
-        super().__init__(proto, name, sub_proto.name, sub_proto.get_size(), sub_proto.get_alignment_size())
+        super().__init__(proto, name, sub_proto.name, sub_proto.get_size(),
+                         sub_proto.get_alignment_size())
         self.proto_name = sub_proto.longname
 
     def get_definition(self, sequence=None):
         pass
 
     def get_code(self, offset, store=None, sequence=None, tree='subtree'):
-        name = self.name
-        if sequence is not None:
-            name = '%s_%s' % (name, self.get_array_postfix(sequence))         
+        name = self.name + self.get_array_index_postfix(sequence)
 
         t = '\tpinfo.private.caller_def_name = "{name}"\n'\
             '\tDissector.get("{proto}"):call('\
@@ -660,15 +669,15 @@ class Protocol:
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
         sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
         check = '\tif pinfo.private.caller_def_name then\n\t\t'\
-            'subtree:set_text(pinfo.private.caller_def_name .. ": " .. {var}.'\
-            'description)\n\t\tpinfo.private.caller_def_name = nil\n\telse\n'\
+            'subtree:set_text(pinfo.private.caller_def_name .. ": " .. "{name}")'\
+            '\n\t\tpinfo.private.caller_def_name = nil\n\telse\n'\
             '\t\tpinfo.cols.info:append(" (" .. {var}.description .. ")")\n'\
             '\tend\n'
 
         self.data.append(func_diss.format(var=self.var))
         self.data.append(sub_tree.format(
                 add=self._get_tree_add(), var=self.var))
-        self.data.append(check.format(var=self.var))
+        self.data.append(check.format(var=self.var, name = self.name))
 
         offset = self._fields_code()
 

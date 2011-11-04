@@ -29,7 +29,7 @@ The sprint started with the planning meeting the 19th of October and our work st
 %-----------------------
 For the third sprint the team will update CSjark to version 0.3 which will extend the \gls{utility} so that it contains the complete functionality requested by the customer at this phase of the project. In this sprint we will pick all of the current requirements from the product backlog as all of the underlying functionality needed for them are already in place from the previous sprints. This means that we will also aim to create a draft of the final design of the system during the sprint.
 
-The most important function that is going to be implemented in this sprint is being able to display packets from different originating platforms properly. This will be implemented by having every \gls{packet} contain a flag specifying their originating platform, and by having our \glspl{dissector} use this flag value to influence how it handles the data in the \gls{packet}.
+The most important function that is going to be implemented in this sprint is being able to display \glspl{packet} from different originating platforms properly. This will be implemented by having every \gls{packet} contain a flag specifying their originating platform, and by having our \glspl{dissector} use this flag value to influence how it handles the data in the \gls{packet}.
 
 \subsection{Back Log}
 %--------------------
@@ -51,9 +51,9 @@ Timetable for this sprint: Table \ref{tab:sprint3time}.\\
 	\hyperref[tab:req:stories8]{US33} & FR3-C: Support WIN32, WIN64,\gls{asparc} etc &  5  & 2.5 \\
 	\hyperref[tab:req:stories7]{US29} & FR4-B: Configuration supports custom \Gls{lua} files & 6 & 3.5\\
 	\hyperref[tab:req:stories7]{US28} & FR2-C: Support \Gls{wireshark} filter and search on attributes &  3 & 1.5\\
-	\hyperref[tab:req:stories7]{US29} & FR5-B: \Glspl{dissector} support memory alignement & 4 & 6.5\\
-	\hyperref[tab:req:stories7]{US26} & FR1-D: Support members of type \gls{union} & 5  & 6\\
-	\hyperref[tab:req:stories7]{US27} & FR2-A add: Display a wildcard type for valid c types that \Gls{wireshark} has no support for & 3  & 1.5\\
+	\hyperref[tab:req:stories7]{US29} & FR5-B: \Glspl{dissector} support memory alignment & 4 & 6.5\\
+	\hyperref[tab:req:stories7]{US26} & FR1-D: Support \glspl{member} of type \gls{union} & 5  & 6\\
+	\hyperref[tab:req:stories7]{US27} & FR2-A add: Display a \gls{wildcard} type for valid \Gls{c} types that \Gls{wireshark} has no support for & 3  & 1.5\\
 	\hyperref[tab:req:stories9]{US35} & FR4-D mod: Support specifying the ID of \glspl{dissector} (name and function) & 3  & 3 \\
 	\hyperref[tab:req:stories9]{US39} & FR6-D: Don’t regenerate \glspl{dissector} & 1 & 1.5\\
 	\hyperref[tab:req:stories7]{US29} & FR2: Handle \Gls{lua} reserved definition names & 2 & 3 \\
@@ -71,7 +71,7 @@ Timetable for this sprint: Table \ref{tab:sprint3time}.\\
 	 & FR4-B: Custom \Gls{lua} configuration & 2 & 3.5\\
 	\hyperref[tab:req:stories8]{US34} & FR4-C: Support custom handling of specific data types & 2 & 1.5 \\
 	\hyperref[tab:req:stories9]{US36} & FR5: User documentation for what platform that the \gls{utility} support & 3 & 0 \\
-	\hyperref[tab:req:stories9]{US37} & FR5: Create developer manual from python docstrings (autodoc plugin) & 4 & 7 \\
+	\hyperref[tab:req:stories9]{US37} & FR5: Create developer manual from \Gls{python} docstrings (autodoc plugin) & 4 & 7 \\
 	\addlinespace
 	\textbf{Fixes} &  & \textbf{16} & \textbf{27} \\
 	\midrule
@@ -145,7 +145,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	\midrule
 	ID & US26 \\
 	Requirement & FR1-D: The \gls{utility} must support \glspl{member} of type \gls{union} \\
-	What & The administrator wants to generate \glspl{dissector} which contain \glspl{struct} with unions as \glspl{member}. \\
+	What & The administrator wants to generate \glspl{dissector} which contain \glspl{struct} with \glspl{union} as \glspl{member}. \\
 	How & When the administrator feeds the \gls{utility} with a \gls{header} containing a \gls{union}, the cparser module should parse the \gls{union} and its \glspl{member} to find the total size of the 
 	\gls{union} (which equals the size of the largest \gls{member}), and then create an instance of UnionField from the \gls{dissector} module representing the \gls{union} and its \gls{member}\\
 	Result & The \gls{utility} support \gls{union} \glspl{member} in \glspl{struct}. \\
@@ -188,10 +188,10 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	ID & US31 \\
 	Requirement & FR5-C: Generate \glspl{dissector} which support both little and big \gls{endian} platforms \\
 	What & The administrator wants \glspl{dissector} which handle both big and little \gls{endian} encoding. \\
-	How & The \gls{dissector} module will need to create different lua code for big and little \gls{endian}, when adding nodes to the \Gls{wireshark} tree and when calling other \glspl{dissector}.
-	The \gls{dissector} module shall have functionality which generates lua code depending on \gls{endianness}, and the different Field classes must use this function when adding 
+	How & The \gls{dissector} module will need to create different \Gls{lua} code for big and little \gls{endian}, when adding nodes to the \Gls{wireshark} tree and when calling other \glspl{dissector}.
+	The \gls{dissector} module shall have functionality which generates \Gls{lua} code depending on \gls{endianness}, and the different Field classes must use this function when adding 
 	nodes to the \Gls{wireshark} tree. \\
-	Result & Dissectors can be created with platform specific \gls{endian}. \\
+	Result & \Glspl{dissector} can be created with platform specific \gls{endian}. \\
 	\midrule
 	ID & US32 \\
 	Requirement & FR5-D: Generate \glspl{dissector} which support different sizes depending on platforms \\
@@ -200,7 +200,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	with \Gls{c} \gls{preprocessor} directives for each platform. These files should define platform-specific macros which emulates parsing on the specific platform. 
 	The \gls{dissector} module then create different \glspl{dissector} for each message on each platform, and a mapping is added inside the master \Gls{lua} file which maps message id and
 	platform to the correct \gls{dissector}. \\
-	Result & Dissectors can be created with platform specific sizes of \glspl{member}.\\
+	Result & \Glspl{dissector} can be created with platform specific sizes of \glspl{member}.\\
 	\midrule
 	ID & US33 \\
 	Requirement & FR3-C: Support for configuring a platform with a platform specific macro like WIN32, \_WIN64, \_\_sparc to be able to  support different \gls{struct} definitions 
@@ -280,11 +280,11 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	Header & Value \\
 	\midrule
 	ID & US40 \\
-	Requirement &  FR5-B: Generate dissectors with correct alignment depending on platform \\
-	What & The administrator wants to generate dissectors which are different depending on platform. \\
-	How & The dissector module will use the configured flags from the config module to modify the generated lua dissectors so that they have the right memory structure alignment and endianness.
-	The dissector module shall have a function which calculates the offset for each field to align it, and functions which creates fields for specific endianness. \\
-	Result & Dissectors can be created with platform specific memory structure alignment \\
+	Requirement &  FR5-B: Generate \glspl{dissector} with correct alignment depending on platform \\
+	What & The administrator wants to generate \glspl{dissector} which are different depending on platform. \\
+	How & The \gls{dissector} module will use the configured flags from the config module to modify the generated \Gls{lua} \glspl{dissector} so that they have the right memory structure alignment and \gls{endianness}.
+	The \gls{dissector} module shall have a function which calculates the offset for each field to align it, and functions which creates fields for specific \gls{endianness}. \\
+	Result & \Glspl{dissector} can be created with platform specific memory structure alignment \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -308,10 +308,10 @@ The new design resulted in both major and minor changes to the class diagram, se
 \paragraph{Major changes}
 \begin{itemize}
 \item New module called Platform, to hold platform specific information. Ealier some information about the platform were stored in the config module, but now we have so extensive platform specifications that it is best to separate it in its own module. See the section regarding platform specific support for more info.
-\item Moved the \gls{cli} class from csjark to config, and renamed it to Options. This class holds the attributes passed from the commandline interface. This will make the code more loose coupled now that the configuration attributes are stored in the correct module. 
-\item A delegator class was added to dissector module. This class will be responsible for delegating dissecting to protocols. It will be a top-level dissector that delegates the task of dissecting specific messages to dissectors generated by protocol instances. It will be responisble for finding the correct dissector for a message based on the origin of it.
-\item UnionProtocol class was added to the dissector module. This class willl be responsible for holding the union and its memebers. Now the utility will be able to handle unions. 
-\item In the config module the class StructConfig was removed and replaced by Options and Config. As mentioned, Options holds the attributes submitted from the commandline or attributes loaded by one or more config-files. Config holds the configuration for a specific protocol.
+\item Moved the \gls{cli} class from csjark to config, and renamed it to Options. This class holds the attributes passed from the command line interface. This will make the code more loosely coupled now that the configuration attributes are stored in the correct module. 
+\item A delegator class was added to \gls{dissector} module. This class will be responsible for delegating dissecting to \glspl{protocol}. It will be a top-level \gls{dissector} that delegates the task of dissecting specific messages to \glspl{dissector} generated by \gls{protocol} instances. It will be responisble for finding the correct \gls{dissector} for a message based on the origin of it.
+\item UnionProtocol class was added to the \gls{dissector} module. This class willl be responsible for holding the \gls{union} and its \glspl{member}. Now the \gls{utility} will be able to handle \glspl{union}. 
+\item In the config module the class StructConfig was removed and replaced by Options and Config. As mentioned, Options holds the attributes submitted from the commandline or attributes loaded by one or more config-files. Config holds the configuration for a specific \gls{protocol}.
 
 \end{itemize}
 
@@ -320,24 +320,24 @@ The new design resulted in both major and minor changes to the class diagram, se
 \item Config now only have one method.
 \item In the ConformanceFile, tokens and methods have been added.
 \item Trailers have a name variable.
-\item In the ProtocolField in the dissector module, the protocol is stored with a name instead of id. This has been pointed out by Thales as the correct way to do it.
+\item In the ProtocolField in the \gls{dissector} module, the \gls{protocol} is stored with a name instead of id. This has been pointed out by Thales as the correct way to do it.
 \item Methods have been added to different classes to support the major changes. This is a change, more than an addition of new elements. 
 \end{itemize}
 
 \subsubsection{Platform specific support}
 We know that the various platforms behave differently, and this must be supported by our \gls{utility}. The customer has mentioned at least three platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. Thereby we will try to make the set-up for support easily understandable.
 
-We have decided that the platform definition will be a subpart of a flag-field in the structs header. To ensure modifiability we will assign a 16 bit field for this, giving the developers possibility to have 65536 unique platforms. We will make the platform flag point to the platform module which has the following information about the actual platform:
+We have decided that the platform definition will be a subpart of a flag-field in the \glspl{struct} \gls{header}. To ensure modifiability we will assign a 16 bit field for this, giving the developers possibility to have 65536 unique platforms. We will make the platform flag point to the platform module which has the following information about the actual platform:
 \begin{itemize}
-\item Endianness
+\item \Gls{endianness}
 \item Length of fields
 \item Memory alignment
 \item Macros
 \item Types
 \end{itemize}
-All of these fields must be combined to enable the utility to generate a \gls{dissector} that will dissect the struct correctly.\\
+All of these fields must be combined to enable the \gls{utility} to generate a \gls{dissector} that will dissect the \gls{struct} correctly.\\
 
-\subsubsection{Dicitonary lookup}
+\subsubsection{Dictionary lookup}
 Deciding how to implement handling of different platforms ended in a design draft seen in \autoref{fig:platformhandling}. The \gls{dissector} module will make a dictionary lookup in the table of supported platforms. This table conatins all platforms that the \gls{utility} can make \glspl{dissector} for, and their information of how the \gls{dissector} shall be encoded to achieve correct handling of \gls{endianness}, length of fields and memory alignment.
 We will start out by hardcoding this into the source code, but in the end we want to have this feed to the \gls{utility} through a configuration-file which will be stored in the platform module. This is the way the customer has envisioned it.  
 
@@ -346,22 +346,22 @@ We will start out by hardcoding this into the source code, but in the end we wan
 	\caption{Platform handling\label{fig:platformhandling}}
 \end{figure}
 
-\subsubsection{Endianness}
-An important feature is the support for different endian handling. Endianness defines how the bits are ordered in the struct. It tells what bit is the most significant, and thereby the value that the bits represent. See the figure \ref{fig:endianness}.
+\subsubsection{\Gls{endianness}}
+An important feature is the support for different \gls{endian} handling. \Gls{endianness} defines how the bits are ordered in the \gls{struct}. It tells what bit is the most significant, and thereby the value that the bits represent. See the figure \ref{fig:endianness}.
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{./sprints/img/endianness}
-	\caption{Endianness\label{fig:endianness}}
+	\caption{\Gls{endianness}\label{fig:endianness}}
 \end{figure}
-Wireshark has built-in support for reading big and little endian, but we have to tell it to do so. When the dissector module builds the abstract syntacs tree, it must call the platform module to see what endian it shall use. In the class diagram the dissector module imports the platform module, from there it gets the information it needs regarding the endianness. 
+\Gls{wireshark} has built-in support for reading big and little \gls{endian}, but we have to tell it to do so. When the \gls{dissector} module builds the abstract syntacs tree, it must call the platform module to see what \gls{endian} it shall use. In the class diagram the \gls{dissector} module imports the platform module, from there it gets the information it needs regarding the \gls{endianness}. 
 
 \subsubsection{Filter and search in \Gls{wireshark}}
-The amount of data that are collected and dissected can be very large. The need for a filter and search mechanism is apparent. \Gls{wireshark} has this built-in, and the customer want the \gls{utility} to support it. To do that, we need to pass the abbrevation fields to Wireshark. These abbrevations will be generated by the dissector module and stored in the dissector made by the utility. Wireshark collects these when the actual dissector is used, and then a user will be able to search for them. In the design we have emphesized and assured us that the chosen abbrevations are descriptive, as the customer has stated it important in earlier customer meetings. 
+The amount of data that are collected and dissected can be very large. The need for a filter and search mechanism is apparent. \Gls{wireshark} has this built-in, and the customer want the \gls{utility} to support it. To do that, we need to pass the abbrevation fields to \Gls{wireshark}. These abbrevations will be generated by the \gls{dissector} module and stored in the \gls{dissector} made by the utility. \Gls{wireshark} collects these when the actual \gls{dissector} is used, and then a user will be able to search for them. In the design we have emphesized and assured us that the chosen abbrevations are descriptive, as the customer has stated it important in earlier customer meetings. 
 
 \subsubsection{Technicalities}
-Our design, and thereby implementation, will be influenced by Stig. He is a core developer for Wireshark and professional Python programmer. He points out things that we have done earlier that might not be efficient or not correct use. We have got some feedback on how elements should be passed to Wireshark, displayed in Wireshark and so on. Making these adjustments to the code, will satisfy the customer. 
+Our design, and thereby implementation, will be influenced by Stig. He is a core developer for \Gls{wireshark} and professional \Gls{python} programmer. He points out things that we have done earlier that might not be efficient or correct use. We have got some feedback on how elements should be passed to \Gls{wireshark}, displayed in \Gls{wireshark} and so on. Making these adjustments to the code, will satisfy the customer. 
 
-\subsubsection{Batch processing}
-The batch processing was implemented in the second sprint, but we have to modified it to ensure efficiency and reliability. When the utility encounter a header that it can not parse, it should skip that and move on to the next header in the queue. This will make the utility able to process almost all the headers in one bacth, and ensure reliability. This is also according to the customers specification.
+\subsubsection{\Gls{batch processing}}
+The \gls{batch processing} was implemented in the second sprint, but we have to modified it to ensure efficiency and reliability. When the \gls{utility} encounter a \gls{header} that it can not parse, it should skip that and move on to the next \gls{header} in the queue. This will make the \gls{utility} able to process almost all the \glspl{header} in one bacth, and ensure reliability. This is also according to the customers specification.
 
 The redesign of the config module will ensure better efficiency when the batch process is executed. It will also be easier to trace the connection between configuration and options. 
 
@@ -371,7 +371,7 @@ The redesign of the config module will ensure better efficiency when the batch p
 %-----------------------
 The main focus for this sprint was to support of different platforms. Several 
 things are dependent on platform; \gls{endianness}, the memory allingment and sizes 
-of data types. It is also possible that structs can be defined differnt for 
+of data types. It is also possible that \glspl{struct} can be defined differnt for 
 each platform. The \gls{utility} will generate different \glspl{dissector} for each 
 platform. A \gls{dissector} this wil detect the platform and use the correct 
 platform \gls{dissector}.
@@ -385,7 +385,7 @@ done in this sprint.
 It is necessary to specify flags for each platform to make it possible to 
 correctly detect and display packages that wireshark captures. In wireshark 
 the flags are used to tell which platform the \gls{packet} is sent from, so that 
-the right \gls{dissector} is used to display the packets in \Gls{wireshark}. In the 
+the right \gls{dissector} is used to display the \glspl{packet} in \Gls{wireshark}. In the 
 \gls{utility} the flag points to what kind of \gls{endianness}, how memory is aligned and 
 the different sizes that is used for data types on the platform. These data 
 are used to genereate a \gls{dissector} for the specific platform.
@@ -395,7 +395,7 @@ are used to genereate a \gls{dissector} for the specific platform.
 Different platforms can order bytes in either little(left-to-right) or 
 big(right-to-left) \gls{endian}. The \Gls{Windows} platform uses little \gls{endian}, and \gls{asparc} 
 uses big \gls{endian}. Since the \gls{utility} has to support both platforms, it was 
-necessary to support handling of \gls{endianness}. The \Gls{lua} API in wireshark has 
+necessary to support handling of \gls{endianness}. The \Gls{lua} \gls{api} in \Gls{wireshark} has 
 functionallity to display data in both little and big \gls{endian}. Therefore the 
 \gls{utility} has to read the specfied flag for the platform, and generate a \Gls{lua} 
 \gls{dissector} that displays the data correctly for the given platform.
@@ -405,19 +405,19 @@ functionallity to display data in both little and big \gls{endian}. Therefore th
 On different platforms, there can be different sizes on the data types. For 
 example on windows a \emph{long double} is 8 bytes, and on \gls{asparc} it is 16 
 bytes. It is possible to specify sizes for data types for each platform. All 
-these specifications is written in python code, and are easy to modify for the 
+these specifications is written in \Gls{python} code, and are easy to modify for the 
 user of the system.
 
 \subsection{Support Platform Specific Macros}
 %-----------------------
-All c complilers have predefined macros for different operating systems and 
+All \Gls{c} compilers have predefined macros for different operating systems and 
 processors. These macros are much used in code that need to be portabel for 
 different platforms. When using these macros it is possible to create 
-different struct members for each operating system, as shown in 
+different \gls{struct} \glspl{member} for each operating system, as shown in 
 \autoref{code:predefmacro}, which will use different data types on each 
 operating system. All platform specific macros are specified for each 
-platform, so the dissector is generated correctly for each of the platforms. 
-Currently all the platform specifications is done in python code.
+platform, so the \gls{dissector} is generated correctly for each of the platforms. 
+Currently all the platform specifications is done in \Gls{python} code.
 
 \lstset{language=C,caption={Macros in C},label=code:predefmacro}
 \lstinputlisting[language=C]{./sprints/code/predefmacro.h}
@@ -425,18 +425,18 @@ Currently all the platform specifications is done in python code.
 \subsection{Support Custom \Gls{lua} Files}
 %-----------------------
 Implementation of this feature started in sprint 2, and support for using 
-conformance file to add lua code to correct places in the lua dissector was 
+conformance file to add \Gls{lua} code to correct places in the \Gls{lua} \gls{dissector} was 
 finished in this sprint. With the conformance file it is possible to add code 
-before and after an member in both the definition and function part of the 
-dissector. It also possible to replace the code for a member in both of these 
-sections. In the example below there is written custom lua for a 
-struct(temperature) with on integer member(celsius). In the conformance file 
+before and after an \gls{member} in both the definition and function part of the 
+\gls{dissector}. It also possible to replace the code for a \gls{member} in both of these 
+sections. In the example below there is written custom \Gls{lua} for a 
+\gls{struct}(temperature) with on \gls{integer} \gls{member} (celsius). In the conformance file 
 in \autoref{code:customcnf} there added three lines of comments as a custom 
-Lua code, that are going to be added to the Lua dissector. In 
-\autoref{code:customlua} it is possible to see the custom Lua code that was 
-added to the Lua dissector. The first comment is added after the member 
-definition. The two other comments are added above and below the member in the 
-function part of the Lua dissector.
+\Gls{lua} code, that are going to be added to the \Gls{lua} \gls{dissector}. In 
+\autoref{code:customlua} it is possible to see the custom \Gls{lua} code that was 
+added to the \Gls{lua} \gls{dissector}. The first comment is added after the \gls{member} 
+definition. The two other comments are added above and below the \gls{member} in the 
+function part of the \Gls{lua} \gls{dissector}.
 
 \lstset{language=C,caption={Custom Lua conformance file},label=code:customcnf}
 \lstinputlisting[language=C]{./sprints/code/custom.cnf}
@@ -446,12 +446,12 @@ function part of the Lua dissector.
 
 \subsection{Support \Gls{wireshark} Filter and Search}
 %-----------------------
-Wireshark has a display filter, where it is possible to use packet filtering. 
-Each field in our genereated dissectors has a abbrevation name that is 
-connected to a struct. For each member of a struct, it is possible to filter 
-for a value. An example is shown in \autoref{fig:wsfilter}, this shows a 
-filtering for packets where Trondheim is equal to the member \emph{place} in 
-the struct \emph{postcode}. 
+\Gls{wireshark} has a display filter, where it is possible to use \gls{packet} filtering. 
+Each field in our generated \glspl{dissector} has a abbrevation name that is 
+connected to a \gls{struct}. For each \gls{member} of a \gls{struct}, it is possible to filter 
+on a value. An example is shown in \autoref{fig:wsfilter}, this shows a 
+filtering for \glspl{packet} where Trondheim is equal to the \gls{member} \emph{place} in 
+the \gls{struct} \emph{postcode}. 
 
 \begin{figure}[ht]
 	\center
@@ -461,25 +461,25 @@ the struct \emph{postcode}.
 
 \subsection{Support Different Memory Alignment}
 %-----------------------
-Since the dissectors generated by the utility, are going to be used for 
+Since the \glspl{dissector} generated by the \gls{utility}, are going to be used for 
 inter-process commuincation, it is important to handle memory structure 
-alignment, because the packet that Wireshark capture is only a copy of the 
-memory. Memory alignment is how the data are stored in the memory. Each member 
+alignment, because the \gls{packet} that \Gls{wireshark} capture is only a copy of the 
+memory. Memory alignment is how the data are stored in the memory. Each \gls{member} 
 of a structure has a alignment. With the correct handling of memory alignment it is 
-possible to display the structs correctly in wireshark.
+possible to display the \glspl{struct} correctly in \Gls{wireshark}.
 
 \subsection{Support Union Type}
 %-----------------------
 The \gls{union} type is a variabel that can contain different data types with 
 different sizes. The \gls{union} will allocated memory for the largest type defined 
-in the \gls{union}. \autoref{code:union} shows an example on a header-file with an 
+in the \gls{union}. \autoref{code:union} shows an example on a \gls{header}-file with an 
 \gls{union} type. The compiler is responisble for keeping track of size and 
-alignment requirements\cite[p.147]{Kerninghan1988} . Since there is not 
+alignment requirements\cite[p.147]{Kerninghan1988} . Since it is not 
 possible to find out which data type that is used in \Gls{wireshark}, the \gls{utility} 
-has to genereate a \gls{dissector} that display the values for each data type. 
-\autoref{fig:wsunion} displays the \gls{dissector} generated from the struct in 
-\autoref{code:union}, this shows the \gls{union} with three members, all of them are 
-listed with their values, in this case the float value is the correct one.
+has to genereate a \gls{dissector} that displays the values for each data type. 
+\autoref{fig:wsunion} displays the \gls{dissector} generated from the \gls{struct} in 
+\autoref{code:union}, this shows the \gls{union} with three \glspl{member}, all of them are 
+listed with their values, in this case the \gls{float} value is the correct one.
 
 \begin{figure}[ht]
 	\center
@@ -492,43 +492,43 @@ listed with their values, in this case the float value is the correct one.
 
 \subsection{Display Types \Gls{wireshark} Do Not Support}
 %-----------------------
-The utility is able to genereate dissectors for C data types, that Wireshark 
-do not support. When such a data type occour, Wireshark will display only 
-display the packet data. An example of a data type, which Wireshark do not 
+The \gls{utility} is able to genereate \glspl{dissector} for \Gls{c} data types, that \Gls{wireshark} 
+do not support. When such a data type occur, \Gls{wireshark} will display only 
+display the \gls{packet} data. An example of a data type, which \Gls{wireshark} do not 
 support is \emph{long double} on the \gls{asparc} platform, which is a 128-bit foat. 
-For this Wireshark will display the 16 bytes in hexadecimal.
+For this \Gls{wireshark} will display the 16 bytes in \gls{hexadecimal}.
 
 \subsection{Support Specifying ID of \Glspl{dissector}}
 %-----------------------
 Specifying \gls{dissector} ID has been modified from sprint 2. The \gls{dissector} will 
-still use the ID given in the configuration for a struct, if the struct is not 
-given an ID in the configuration, then the ID for the struct will be set to 
-\emph{NONE}. This is done to ensure that structs have an unique ID for their 
-\gls{dissector}. Structs-in-structs member do not need an ID since they are called 
-from the struct' by the \gls{dissector} name.
+still use the ID given in the configuration for a \gls{struct}, if the \gls{struct} is not 
+given an ID in the configuration, then the ID for the \gls{struct} will be set to 
+\emph{NONE}. This is done to ensure that \glspl{struct} have an unique ID for their 
+\gls{dissector}. \Glspl{struct}-in-\glspl{struct} \gls{member} do not need an ID since they are called 
+from the \gls{struct}' by the \gls{dissector} name.
 
 \subsection{Do Not Regenerate \glspl{dissector}}
 %-----------------------
-To increase the performance on generation of dissectors, dissectors that 
-allready are genereated in batch mode, will only be generated once in a batch 
+To increase the performance on generation of \glspl{dissector}, \glspl{dissector} that 
+allready are genereated in \gls{batch mode}, will only be generated once in a batch 
 mode execution. This feature will be improved in the next sprint, so it only 
-genereates dissectors in batch mode that are modified or new since the last 
+genereates \glspl{dissector} in \gls{batch mode} that are modified or new since the last 
 batch run.
 
 \subsection{Handle \Gls{lua} Reserved Keywords}
 %-----------------------
 \Gls{lua} has a list of reserved keywords, and some of these keywords are allowed in 
-the C language. The \gls{utility} is able to support this under generation of \Gls{lua} 
+the \Gls{c} language. The \gls{utility} is able to support this under generation of \Gls{lua} 
 code, when an identifier is a lua keyword, an underscore(\_) is added, so the 
 identifier start with ''\_''.
 
-\subsection{Support for Complex Arrays}
+\subsection{Support for Complex \Glspl{array}}
 %-----------------------
 Support for typedef was implemented in the previous sprint, in this sprint it 
-has been improved to also support type definitions of complex arrays. Support 
+has been improved to also support type definitions of complex \glspl{array}. Support 
 for type definition of array is implemented, an example of such type 
-definition in c is shown in \autoref{code:typedefarray}. Also support for 
-arrays of enums, arrays, structs and pointers has been added.
+definition in \Gls{c} is shown in \autoref{code:typedefarray}. Also support for 
+\glspl{array} of \glspl{enum}, \glspl{array}, \glspl{struct} and pointers has been added.
 
 \lstset{language=C,caption={Typedef of arrays},label=code:typedefarray}
 \lstinputlisting[language=C]{./sprints/code/typedefarray.h}
@@ -539,12 +539,12 @@ arrays of enums, arrays, structs and pointers has been added.
 During sprint 3 the team executed a total of 11 tests were run, but no additional testing features were added during the sprint. Tests executed:
 
 \begin{itemize}
-	\item TID15 - Supporting batch mode of C header and configuration files \autoref{tab:sp3TID15}
+	\item TID15 - Supporting \gls{batch mode} of \Gls{c} \gls{header} and configuration files \autoref{tab:sp3TID15}
 	\item TID16 - Supporting custom \Gls{lua} configuration \autoref{tab:sp3TID16}
-	\item TID17 - Supporting unions \autoref{tab:sp3TID17}
-	\item TID18 - Supporting filter and search in wireshark \autoref{tab:sp3TID18}
-	\item TID19 - Supporting WIN32, \_WIN64, \_SPARC etc \autoref{tab:sp3TID19}
-	\item TID20 -  Supporting the use of flags specifying platforms to display member values correctly \autoref{tab:sp3TID20}
+	\item TID17 - Supporting \glspl{union} \autoref{tab:sp3TID17}
+	\item TID18 - Supporting filter and search in \Gls{wireshark} \autoref{tab:sp3TID18}
+	\item TID19 - Supporting WIN32, \_WIN64, \_\gls{asparc} etc \autoref{tab:sp3TID19}
+	\item TID20 -  Supporting the use of flags specifying platforms to display \gls{member} values correctly \autoref{tab:sp3TID20}
 	\item TID21 - Supporting platforms with different \glspl{endian} \autoref{tab:sp3TID21}
 	\item TID22 - Supporting alignments \autoref{tab:sp3TID22}
 	\item TID 23 - Handling \Gls{lua} keywords {tab:sp3TID23}
@@ -553,12 +553,12 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 \end{itemize}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Supporting batch mode of C-headers and configuration files\label{tab:sp3TID15}}
+\caption{Supporting \gls{batch mode} of \Gls{c}-\glspl{header} and configuration files\label{tab:sp3TID15}}
 \begin{tabular}{l l}
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting batch mode of C header and configuration files \\
+	Description & Supporting \gls{batch mode} of \Gls{c} \gls{header} and configuration files \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 28.10.2011 \\
 	Result & Success\\
@@ -572,7 +572,7 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting custom LUA configuration\\
+	Description & Supporting custom \Gls{lua} configuration\\
 	Tester & Lars Solvoll Tønder \\
 	Date & 30.10.2011\\
 	Result & success\\
@@ -581,12 +581,12 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Supporting unions\label{tab:sp3TID17}}
+\caption{Supporting \glspl{union}\label{tab:sp3TID17}}
 \begin{tabular}{l l}
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting unions\\
+	Description & Supporting \glspl{union}\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 30.10.2011\\
 	Result & success\\
@@ -595,12 +595,12 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Supporting filter and search in wireshark\label{tab:sp3TID18}}
+\caption{Supporting filter and search in \Gls{wireshark}\label{tab:sp3TID18}}
 \begin{tabular}{l l}
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting filter and search in wireshark\\
+	Description & Supporting filter and search in \Gls{wireshark}\\
 	Tester & Lars Solvoll Tønder \\
 	Date & 30.10.2011\\
 	Result & success\\
@@ -623,15 +623,15 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Supporting the use of flags specifying platforms to display member values correctly \label{tab:sp3TID20}}
+\caption{Supporting the use of flags specifying platforms to display \gls{member} values correctly \label{tab:sp3TID20}}
 \begin{tabular}{l l}
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting the use of flags specifying platforms to display member values correctly \\
+	Description & Supporting the use of flags specifying platforms to display \gls{member} values correctly \\
 	Tester & Lars Solvoll Tønder\\
 	Date & 30.10.2011\\
-	Result & Failure. Most values were displayed correctly, but there were cases where the members and their values were different. Most notably in \gls{packet} 2 and 3 in the win64 and win32 \glspl{pcap-file}\\
+	Result & Failure. Most values were displayed correctly, but there were cases where the \glspl{member} and their values were different. Most notably in \gls{packet} 2 and 3 in the win64 and win32 \glspl{pcap-file}\\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -684,7 +684,7 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Unit test encompassing all of the functionality implemented thus far in the utility \\
+	Description & Unit test encompassing all of the functionality implemented thus far in the \gls{utility} \\
 	Tester & Lars Solvoll Tønder\\
 	Date & 01.11.2011\\
 	Result & Success\\
@@ -701,19 +701,19 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 	Description & Unit test covering all of the functionality imposed by the customer \\
 	Tester & Lars Solvoll Tønder\\
 	Date & 01.11.2011\\
-	Result & Failure. Failed because one or more of the following tests failed: a.type should be equal to int32, b.type should be equal to string, c.type should be equal to float\\
+	Result & Failure. Failed because one or more of the following tests failed: a.type should be equal to int32, b.type should be equal to \gls{string}, c.type should be equal to \gls{float}\\
 	\bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Test Evaluation}
-In this sprint we were finally able to harvest the fruits of using a tool to calculate our code coverage. By being able to more easily see what code was not being tested, the team was able to uncover several bugs in the system, though the team unfortunately were unable to fix them all by the end of the sprint. There were also some problems with tests failing because of poor communication between the ones responsible for making the tests and the ones generating pcap packet traffic that were to be used in the test. It was therefore decided that these two groups of people should work more closely together on creating the tests.
+In this sprint we were finally able to harvest the fruits of using a tool to calculate our code coverage. By being able to more easily see what code was not being tested, the team was able to uncover several bugs in the system, though the team unfortunately were unable to fix them all by the end of the sprint. There were also some problems with tests failing because of poor communication between the ones responsible for making the tests and the ones generating pcap \gls{packet} traffic that were to be used in the test. It was therefore decided that these two groups of people should work more closely together on creating the tests.
 
 
 
 \subsubsection{Test Coverage}
 
-As can be seen in both \autoref{tab:sp3CoverageReport} and \autoref{fig:sp3CoverageChart} the team finally managed to hit the goal of having a code coverage of at least 80\% in this sprint. This was achieved mostly by improving the black\_box.py, which is a test of all the major parts of the utility. In this sprint the team had 9 assertions in their unit tests fail. Unfortunately because these bugs were considered minor and because of time constraint the team was unable to fix the utility before the end of the sprint. These bugfixes therefore had to be moved to sprint 4. The following list shows the unit tests ran in sprint 3:
+As can be seen in both \autoref{tab:sp3CoverageReport} and \autoref{fig:sp3CoverageChart} the team finally managed to hit the goal of having a code coverage of at least 80\% in this sprint. This was achieved mostly by improving the black\_box.py, which is a test of all the major parts of the \gls{utility}. In this sprint the team had 9 assertions in their unit tests fail. Unfortunately because these bugs were considered minor and because of time constraint the team was unable to fix the \gls{utility} before the end of the sprint. These bugfixes therefore had to be moved to sprint 4. The following list shows the unit tests ran in sprint 3:
 \begin{itemize}
 	\item black\_box.py
 	\item requirements.py
@@ -754,32 +754,32 @@ As can be seen in both \autoref{tab:sp3CoverageReport} and \autoref{fig:sp3Cover
 The customer was satisfied with the functionality we implemented in sprint 2.
 They feel that we are flexible and adapt well to their needs.
 Some of the features from sprint 2 were postponed to sprint 3 because we needed additional feedback from the customer.
-These include endianness and completing the handling of custom Lua files.
+These include \gls{endianness} and completing the handling of custom \Gls{lua} files.
 
 \subsubsection{New requirements}
 
 We have assigned all the remaining requirements in the product backlog for this sprint.
 If we are able to complete all the implementation tasks, the customer will provide us with more requirements for sprint 4.
-The customer wants our utility to be as automatic as possible, and with as little configuration as possible. 
-Additional requirements for sprint 4 will address optimization of the utility.
+The customer wants our \gls{utility} to be as automatic as possible, and with as little configuration as possible. 
+Additional requirements for sprint 4 will address optimization of the \gls{utility}.
 
 \subsection{During sprint}
 
-In sprint 3 we again demonstrated our utility to the customer, and as a result we got some feedback on changes
+In sprint 3 we again demonstrated our \gls{utility} to the customer, and as a result we got some feedback on changes
 and improvements we could make. The changes and additions are listed below.
 
-\subsubsection{Wireshark, support of search and filter}
+\subsubsection{\Gls{wireshark}, support of search and filter}
 
 To support this the abbreviation field needs to be in place in our code
 
-\subsubsection{Structs within structs}
+\subsubsection{\Glspl{struct} within \glspl{struct}}
 
-The customer thought we displayed too much information in the info column in Wireshark,
- we should only display the name of the outer struct.
+The customer thought we displayed too much information in the info column in \Gls{wireshark},
+ we should only display the name of the outer \gls{struct}.
 
 \subsubsection{Platforms}
 
-We should not generate separate dissector files for the different platforms. It is much better if we have one protocol
+We should not generate separate \gls{dissector} files for the different platforms. It is much better if we have one \gls{protocol}
 with different functions for the different platforms, as this would not be such a performance hit.
 
 \subsubsection{Flag values}
@@ -787,47 +787,46 @@ with different functions for the different platforms, as this would not be such 
 The customer said that our flag values were inconsistent, some flag values were platform names and some were operating
 system names. They suggested using flags such as Solaris-x86, Solaris-SPARC, Win32 and Linux-x86.
 
-\subsubsection{Testing of customer's header files}
+\subsubsection{Testing of customer's \gls{header} files}
 
-The customer stressed the importance of our utility being able to run on the header files they have provided.
-Once our utility is able to do this they can begin testing the utility on their own data.
-We can expect to get a greater amount of feedback on the utility when they can test it themselves.
+The customer stressed the importance of our \gls{utility} being able to run on the \gls{header} files they have provided.
+Once our \gls{utility} is able to do this they can begin testing the \gls{utility} on their own data.
+We can expect to get more feedback on the \gls{utility} when they can fully test it themselves.
 
 
 \subsection{The backlog and suggestions for sprint 4}
 
 The customer was satisfied with the backlog for sprint 3.
-They made several suggestions on features that could improve the utility, that we could implement in sprint 4.
+They made several suggestions on features that could improve the \gls{utility}, that we could implement in sprint 4.
 These are listed below.
 
 \subsubsection{Unitialized Memory}
 
-It would be a nice if our utility were able to detect unitialized memory while debugging.
-Different compilers use default patterns in members that are unitialized. If our utility could detect these patterns,
-we could display the data in Wireshark with a warning that lets the user know that the data might have been unitialized.
+It would be nice if our \gls{utility} was able to detect unitialized memory while debugging.
+Different compilers use default patterns in \glspl{member} that are unitialized. If our \gls{utility} could detect these patterns,
+we could display the data in \Gls{wireshark} with a warning that lets the user know that the data might have been unitialized.
 
-\subsubsection{Dissector Ids}
+\subsubsection{\Gls{dissector} Ids}
 
-The customer informed us that a struct could belong to several dissector IDs.
+The customer informed us that a \gls{struct} could belong to several \gls{dissector} IDs.
 We should implement this by specifying a list of IDs instead of just a single one.
 
 \subsubsection{Include dependency}
 
-Christian describes that some structs may be included in other structs, which are resident in a different header file
-not directly included in the  first, but both are included in a third header/source file. This creates a dependency which we must take
-into consideration and implement in the utility.
-TODO Rewrite this to english
+The customer describes a scenario where a \gls{struct} is included in another \gls{struct}, which is resident in a different \gls{header} file
+that the first \gls{struct} has not included. In this scenario both files are included in a third \gls{header} file.
+This creates a dependency which we must take into consideration and implement in the \gls{utility}.
 
-\subsubsection{Specifying file name endings in batch mode}
+\subsubsection{Specifying file name endings in \gls{batch mode}}
 
-The customer would like to be able to specify the file name endings of the files that are to be created dissectors for,
-when running the utility in batch mode. The utility only needs to examine header files. The header files will have one or more known
+The customer would like to be able to specify the file name endings of the files that are to be created \glspl{dissector} for,
+when running the \gls{utility} in \gls{batch mode}. The \gls{utility} only needs to examine \gls{header} files. The \gls{header} files will have one or more known
 file extensions, for example, .h and .hpp.
 
 \subsubsection{Overall customer satisfaction}
 
 In general the customer is satisfied with the progress we have made so far. Most of the requirements are
-implemented or close to completion. When the utility is ready to be tested on their code, we can expect to receive
+implemented or close to completion. When the \gls{utility} is ready to be tested on their code, we can expect to receive
 a lot of feedback on things we need to fix and improve.
 
 %--------------------------

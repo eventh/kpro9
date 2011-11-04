@@ -6,11 +6,11 @@ TODO
 %------------------------
 \section{Sprint Planning}
 %------------------------
-The fourth sprint will be the last iteration in this project. Testing and bugfixing will take most of the sprint work hours, because it is very important to make the utility work properly on Thales source code. Now the utility fail on most of the structs; Stig tried to generate dissectors for 580 structs, where only 4 of them succeeded. It will probably just be some small tweaks needed, to make it work for most of the structs.
+The fourth sprint will be the last iteration in this project. Testing and bugfixing will take most of the sprint work hours, because it is very important to make the \gls{utility} work properly on Thales source code. Now the \gls{utility} fail on most of the \glspl{struct}; Stig tried to generate dissectors for 580 \glspl{struct}, where only 4 of them succeeded. It will probably just be some small tweaks needed, to make it work for most of the \glspl{struct}.
 
 We know that some of our earlier implementation do not work as intended or is incomplete. The customer has given us feedback on the fulfilled requirements, and pointed out what needs to be improved. These are important work items of this sprint backlog \ref{sp4:backlog}. In addition we got new requirements that would be nice if we implemented, some which will be convenient for the customer to have. For the optional requirements we do not have time to implement, we have agreed to write a specification on how to implement them. 
 
-There will not be another sprint after this one, so we can not postpone any work items. Because of this, we had to make some of the new requirements from the customer optional, and also telling the customer that we will probably not be able complete all their desires. We are tyring to improve from tha last sprint, are not going to add more tasks than we can complete this sprint. This sprint we plan to use close to 350 hours, but it is still likely that we will use more and are prepared for that. It will certainly pop up new tasks and unforeseen bugs that we have to fix.
+There will not be another sprint after this one, so we can not postpone any work items. Because of this, we had to make some of the new requirements from the customer optional, and also telling the customer that we will probably not be able complete all their desires. We are trying to improve from the last sprint, and will not add more tasks than we think we can complete this sprint. This sprint we plan to use close to 350 hours, but it is still likely that we will use more and are prepared for that. There will certainly pop up new tasks and unforeseen bugs that we have to fix.
 
 \subsection{Duration}
 %-----------------------
@@ -18,7 +18,7 @@ The sprint started with the planning meeting the 2nd of November and our work st
 
 \subsection{Sprint Goal}
 %-----------------------
-The goal of this sprint will be focusing on fixing and implement function that the customer will need to use the utility on their source code. The most important thing to focus on in beginning of the sprint will be to implement support for \#pragma directives and support for including header-files that are not included by the pre-processor. This is important, since it will make it possible for the customer to test the utility.
+The goal of this sprint will be focusing on fixing and implement function that the customer will need to use the \gls{utility} on their source code. The most important thing to focus on in beginning of the sprint will be to implement support for \#pragma directives and support for including \gls{header}-files that are not included by the \gls{preprocessor}. This is important, since it will make it possible for the customer to test the \gls{utility}.
 
 Since the deadline of the project is 24th November, there will also be a focus on preparing a presentation and improve the report for a final delivery. The team are also going to hold a presentation for the customers developers on the 17th November, and it is important to also focus on this presentation.
 
@@ -35,24 +35,24 @@ This section contains the sprint backlog \ref{tab:sprint4req} and the timetable 
 	User story & Req. and Description & Est. & Act. \\
 	\midrule
 	\textbf{Impl.} &  & \textbf{47} & \textbf{-} \\
-	\hyperref[tab:req:stories13]{US57} & FR2-E: guess dissector from packet size & 5 & - \\
- 	\hyperref[tab:req:stories10]{US41} & FR3-A mod: support \#include of system headers &  8  & - \\
+	\hyperref[tab:req:stories13]{US57} & FR2-E: guess \gls{dissector} from packet size & 5 & - \\
+ 	\hyperref[tab:req:stories10]{US41} & FR3-A mod: support \gls{include} of system \glspl{header} &  8  & - \\
 	\hyperref[tab:req:stories10]{US42} & FR3-D mod: ignore \#pragma directives & 2 & - \\
 	\hyperref[tab:req:stories10]{US43} & FR3-E: find include dependencies which are not explicit set & 16  & - \\
-	\hyperref[tab:req:stories11]{US48} & FR4-B mod: custom Lua files support offset and value inside .cnf file & 4 & - \\
-	\hyperref[tab:req:stories12]{US50} & FR4-D mod: multiple message ID's for one dissector & 2 & - \\
-	\hyperref[tab:req:stories12]{US53} & FR4-H: autogenerate configuration files for structs with no config file & 1  & - \\
-	\hyperref[tab:req:stories12]{US52} & FR4-I: allow configuration of size for unknown structs & 4 & - \\
-	\hyperref[tab:req:stories10]{US44} & FR6-E: support C macros from CLI & 1 & - \\
-	\hyperref[tab:req:stories12]{US55} & FR6-F: only generate dissectors for structs with valid id and their dependences & 4 & - \\
+	\hyperref[tab:req:stories11]{US48} & FR4-B mod: custom \Gls{lua} files support offset and value inside .cnf file & 4 & - \\
+	\hyperref[tab:req:stories12]{US50} & FR4-D mod: multiple message ID's for one \gls{dissector} & 2 & - \\
+	\hyperref[tab:req:stories12]{US53} & FR4-H: autogenerate configuration files for \glspl{struct} with no config file & 1  & - \\
+	\hyperref[tab:req:stories12]{US52} & FR4-I: allow configuration of size for unknown \glspl{struct} & 4 & - \\
+	\hyperref[tab:req:stories10]{US44} & FR6-E: support \Gls{c} macros from \gls{cli} & 1 & - \\
+	\hyperref[tab:req:stories12]{US55} & FR6-F: only generate dissectors for \glspl{struct} with valid id and their dependencies & 4 & - \\
 	\addlinespace
 	\textbf{Fixes} &  & \textbf{35} & \textbf{-} \\
 	& TheFIX: Be able to process customers files & 12 & - \\
-	 & FR2-A: Improve generated Lua output - Remove platform prefix & 10 & - \\
-	 & FR1-E: Array bug in text & 2 & - \\
+	 & FR2-A: Improve generated \Gls{lua} output - Remove platform prefix & 10 & - \\
+	 & FR1-E: \Gls{array} bug in text & 2 & - \\
 	 & FR1-E: Pointer support (array) & 1 & - \\
-	 & FR1-E: Enum in arrays & 1 & - \\		
-	 & FR6-C: Batch mode (recursive search for subfolders) &  8  & - \\
+	 & FR1-E: \Gls{enum} in \glspl{array} & 1 & - \\		
+	 & FR6-C: \Gls{batch mode} (recursive search for subfolders) &  8  & - \\
 	 & FR6-C: Support command line arguments for Cpp "--Include" (folders) & 1 & - \\
 	\addlinespace
 	\textbf{Testing} &  & \textbf{16} & \textbf{-} \\
@@ -66,11 +66,11 @@ This section contains the sprint backlog \ref{tab:sprint4req} and the timetable 
 	\addlinespace
 	\textbf{Doc.} &  & \textbf{10} & \textbf{-} \\
 	\hyperref[tab:req:stories10]{US45} & Update command line interface doc & 1 & - \\
-	\hyperref[tab:req:stories11]{US49} & Update user documentation for custom Lua & 1 & - \\
+	\hyperref[tab:req:stories11]{US49} & Update user documentation for custom \Gls{lua} & 1 & - \\
 	\hyperref[tab:req:stories12]{US51} & Update user documentation for message ID & 1 & - \\
-	\hyperref[tab:req:stories12]{US54} & User documentation for struct size configuration & 1 & - \\
-	\hyperref[tab:req:stories12]{US56} & User documentation for generating only struct with valid ID or dependencies & 1 & - \\
-	\hyperref[tab:req:stories9]{US36} & Which platforms that the utility support & 2 & - \\
+	\hyperref[tab:req:stories12]{US54} & User documentation for \gls{struct} size configuration & 1 & - \\
+	\hyperref[tab:req:stories12]{US56} & User documentation for generating only \gls{struct} with valid ID or dependencies & 1 & - \\
+	\hyperref[tab:req:stories9]{US36} & Which platforms that the \gls{utility} support & 2 & - \\
 	\hyperref[tab:req:stories13]{US59} & How to define new platforms to support & 1 & - \\
 	\hyperref[tab:req:stories9]{US37} & Create developer manual from python docstrings & 2 & - \\
 	\midrule
@@ -144,38 +144,38 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	Header & Value \\
 	\midrule
 	ID & US41 \\
-	Requirement & FR3-A modification: \#include system includes \\
-	What & The utility needs to be able to support header files that includes system dependent headers
-	even if these are not available on the platform that the utility is used on. \\
-	How & The administrator is able to specify a fake system header file with the defines they need to make their structs work correctly.
-	This fake header is then used to represent the system header in the so the file is parsed correctly by pycparcer.  \\
-	Result & The administrator is now able to make the utility generate system dependent dissectors for headers with system dependent includes. \\
+	Requirement & FR3-A modification: \gls{include} system includes \\
+	What & The \gls{utility} needs to be able to support \gls{header} files that includes system dependent \glspl{header}
+	even if these are not available on the platform that the \gls{utility} is used on. \\
+	How & The administrator is able to specify a fake system \gls{header} file with the defines they need to make their \glspl{struct} work correctly.
+	This fake \gls{header} is then used to represent the system \gls{header} in the so the file is parsed correctly by pycparcer.  \\
+	Result & The administrator is now able to make the \gls{utility} generate system dependent dissectors for \glspl{header} with system dependent includes. \\
 	\midrule
 	ID & US42 \\
 	Requirement & FR3-D: Ignoring \#pragma directives  \\
-	What &  The utility needs to be able to support header files with the \#pragma directive without necessarily having a to support to functionality of the directive\\
-	How & Before feeding the header files to the parser the utility needs to be able to run a pass through all of the headers that are to be parsed and remove all of the \#pragma directives encountered in those header files.\\
-	Result & The user will be able to create dissectors for header files with the \#pragma directive instead of having the utility be forced to skip them. \\
+	What &  The \gls{utility} needs to be able to support \gls{header} files with the \#pragma directive without necessarily having a to support to functionality of the directive\\
+	How & Before feeding the \gls{header} files to the \gls{parser} the \gls{utility} needs to be able to run a pass through all of the \glspl{header} that are to be parsed and remove all of the \#pragma directives encountered in those \gls{header} files.\\
+	Result & The user will be able to create dissectors for \gls{header} files with the \#pragma directive instead of having the \gls{utility} be forced to skip them. \\
 	\midrule
 	ID & US43 \\
 	Requirement & FR3-E: Find missing includes  \\
-	What & It should be possible to generate dissector from header-files, that have definitions in header-files that are not included with a preprocessor directive in the header-file.  \\
-	How & The cparser module has to be able to detect when a exception is raised in the pycparser library, if an exception is raised, cparser has to search through the header-files
-	to find the declaration that the pycparser library failed on, and include this header file. The cparser module will have to do this procedure until the dissector is correctly parsed in the pycparser library. \\
-	Result & The utility shall be able to generate dissectors for these header-files \\	
+	What & It should be possible to generate \gls{dissector} from \gls{header}-files, that have definitions in \gls{header}-files that are not included with a preprocessor directive in the \gls{header}-file.  \\
+	How & The cparser module has to be able to detect when a exception is raised in the pycparser library, if an exception is raised, cparser has to search through the \gls{header}-files
+	to find the declaration that the pycparser library failed on, and include this \gls{header} file. The cparser module will have to do this procedure until the \gls{dissector} is correctly parsed in the pycparser library. \\
+	Result & The \gls{utility} shall be able to generate dissectors for these \gls{header}-files \\	
 	\midrule
 	ID & US44 \\
-	Requirement & Support C \#defines from CLI  \\
-	What & The administrator wants to pass C \#define directives from the command-line to the preprocessor.   \\
+	Requirement & Support \Gls{c} \glspl{define} from \gls{cli}  \\
+	What & The administrator wants to pass \Gls{c} \gls{define} directives from the command-line to the preprocessor.   \\
 	How & When CSjark is executed, it takes the arguments given in the command-line interface and store them in the config module.
-	The \#define directives must added to the preprocessor arguments before the header-file is parsed in the pycparser library.   \\
-	Result & The utility supports C \#define directives passed from the CLI. \\
+	The \gls{define} directives must added to the preprocessor arguments before the \gls{header}-file is parsed in the pycparser library.   \\
+	Result & The \gls{utility} supports \Gls{c} \gls{define} directives passed from the \gls{cli}. \\
 	\midrule
 	ID & US45 \\
-	User doc & Support C \#defines from CLI \\
-	What & The user wants to understand how the utility will handle C \#defines and what \#defines that are possible to pass to the CLI.   \\
-	How & The user finds the correct section in the user documentation, describing the command-line interface and how C \#defines are handled.  \\
-	Result & The user understands how to use C \#defines with the utility. \\
+	User doc & Support \Gls{c} \glspl{define} from \gls{cli} \\
+	What & The user wants to understand how the \gls{utility} will handle \Gls{c} \glspl{define} and what \glspl{define} that are possible to pass to the \gls{cli}.   \\
+	How & The user finds the correct section in the user documentation, describing the command-line interface and how \Gls{c} \glspl{define} are handled.  \\
+	Result & The user understands how to use \Gls{c} \glspl{define} with the \gls{utility}. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -189,35 +189,35 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	\midrule
 	ID & US46 \\
 	Requirement & FR7-A: Use Doxygen comments for "Description"  \\
-	What & The utility will read Doxygen comments for a struct and use that to specify the description field for the proto object in the dissector. \\
-	How & The utility will search the header files for Doxygen comments before giving the file to the preprocessor. It will note what struct the comment
-	corresponds to and add it to the config module. The dissector module will look up in the config module for each struct and use the description field there if it has been found.  \\
-	Result & The dissectors now requires less manual configuration because it is able to use some of the text from the header files. \\
+	What & The \gls{utility} will read Doxygen comments for a \gls{struct} and use that to specify the description field for the proto object in the \gls{dissector}. \\
+	How & The \gls{utility} will search the \gls{header} files for Doxygen comments before giving the file to the preprocessor. It will note what \gls{struct} the comment
+	corresponds to and add it to the config module. The \gls{dissector} module will look up in the config module for each \gls{struct} and use the description field there if it has been found.  \\
+	Result & The dissectors now requires less manual configuration because it is able to use some of the text from the \gls{header} files. \\
 	\midrule
 	ID & US47 \\
-	Requirement & FR7-B: Read int-enum config from header files \\
-	What &  The utility will read \#define statements that define the allowed values and the names corresponding to those values for integers that are to be treated like enums, so that the user will not have to configure them manually.\\
-	How & The utility will search the header files for define statements that correpsonds to a member that is configured to be handled as an enum. The statements needs to follow some configurable format.
-	These statements are then used to auto generate a configuration file for the int member used to make an enum field for the int member when parsing the header file.\\
-	Result & The utility now requires less manual configurations to make dissectors interpret certaion integers as enums. \\
+	Requirement & FR7-B: Read int-enum config from \gls{header} files \\
+	What &  The \gls{utility} will read \gls{define} statements that define the allowed values and the names corresponding to those values for integers that are to be treated like enums, so that the user will not have to configure them manually.\\
+	How & The \gls{utility} will search the \gls{header} files for define statements that correpsonds to a \gls{member} that is configured to be handled as an enum. The statements needs to follow some configurable format.
+	These statements are then used to auto generate a configuration file for the int \gls{member} used to make an enum field for the int \gls{member} when parsing the \gls{header} file.\\
+	Result & The \gls{utility} now requires less manual configurations to make dissectors interpret certaion integers as enums. \\
 	\midrule
 	ID & US48 \\
-	Requirement & Fetch offset in custom Lua configuration  \\
-	What & The administrator should be able to add configuration in the conformance file, so it is possible to add custom Lua code with correct offset values.  \\
-	How & The conformace file must support a variable for offset, and a way to use this. The config module have to read this variable, so it can be used in the dissector module to genereate a field in the dissector that uses the correct offset. \\
-	Result & The Lua dissector is generated with correct offset for the custom Lua code. \\	
+	Requirement & Fetch offset in custom \Gls{lua} configuration  \\
+	What & The administrator should be able to add configuration in the conformance file, so it is possible to add custom \Gls{lua} code with correct offset values.  \\
+	How & The conformace file must support a variable for offset, and a way to use this. The config module have to read this variable, so it can be used in the \gls{dissector} module to genereate a field in the \gls{dissector} that uses the correct offset. \\
+	Result & The \Gls{lua} \gls{dissector} is generated with correct offset for the custom \Gls{lua} code. \\	
 	\midrule
 	ID & US49 \\
-	User doc & Fetch offset in custom Lua configuration  \\
-	What & The administrator shall learn how to use offset values in custom Lua configuration.   \\
-	How & The administrator reads the section in the user documentation, about how to use custom Lua in the utility.  \\
+	User doc & Fetch offset in custom \Gls{lua} configuration  \\
+	What & The administrator shall learn how to use offset values in custom \Gls{lua} configuration.   \\
+	How & The administrator reads the section in the user documentation, about how to use custom \Gls{lua} in the \gls{utility}.  \\
 	Result & The user will understand how to offset values in the conformance file. \\
 	\midrule
 	ID & US50 \\
-	Requirement & FR4-D modification: Support multiple message ID's for one struct \\
-	What & he administrator should be able to configure more than one message ID per struct. Therefore it is possible to use the dissector with more different messages (specified by different ID’s).    \\
-	How & The configuration file must support definition of multiple ID’s. These ID’s then have to be used for registering multiple protocols for one dissector.  \\
-	Result & The Lua dissector can be used with multiple messages with different ID’s. \\
+	Requirement & FR4-D modification: Support multiple message ID's for one \gls{struct} \\
+	What & he administrator should be able to configure more than one message ID per \gls{struct}. Therefore it is possible to use the \gls{dissector} with more different messages (specified by different ID’s).    \\
+	How & The configuration file must support definition of multiple ID’s. These ID’s then have to be used for registering multiple protocols for one \gls{dissector}.  \\
+	Result & The \Gls{lua} \gls{dissector} can be used with multiple messages with different ID’s. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -230,38 +230,38 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	Header & Value \\
 	\midrule
 	ID & US51 \\
-	User doc & FR4-D modification: Support multiple message ID's for one struct  \\
-	What & The administrator should be able to find out how to specify multiple message ID’s for a specific struct.
+	User doc & FR4-D modification: Support multiple message ID's for one \gls{struct}  \\
+	What & The administrator should be able to find out how to specify multiple message ID’s for a specific \gls{struct}.
 	This include the proper position and syntax of the message ID’s specification. Also, he should be aware of the consequences of that definition. \\
-	How & The administrator reads the configuration section in the user documentation, about how to specify multiple message ID’s for a specific struct.  \\
-	Result & The administrator is able to specify and use multiple message ID’s for a specific struct. \\
+	How & The administrator reads the configuration section in the user documentation, about how to specify multiple message ID’s for a specific \gls{struct}.  \\
+	Result & The administrator is able to specify and use multiple message ID’s for a specific \gls{struct}. \\
 	\midrule
 	ID & US52 \\
-	Requirement & FR4-I: Allow configuration to specify the size of unknown struct members \\
-	What & The administrator should be able specify in the confirguration, how big (in bytes) is the struct member without having the member itself defined. Note: This is also a workaround for structs that are not parseable.\\
-	How & The configuration should contain an optional attribute for each struct member which specifies the size of the member. If this member is a nested struct, and this struct is not defined, the size has to be specifies. Otherwise the user should be informed about that.\\
-	Result & The Lua dissector can be used with C header that includes unspecified struct member. This member has only defined by its size, so it could be displayed as raw data in Wireshark. \\
+	Requirement & FR4-I: Allow configuration to specify the size of unknown \gls{struct} \glspl{member} \\
+	What & The administrator should be able specify in the confirguration, how big (in bytes) is the \gls{struct} \gls{member} without having the \gls{member} itself defined. Note: This is also a workaround for \glspl{struct} that are not parseable.\\
+	How & The configuration should contain an optional attribute for each \gls{struct} \gls{member} which specifies the size of the \gls{member}. If this \gls{member} is a nested \gls{struct}, and this \gls{struct} is not defined, the size has to be specifies. Otherwise the user should be informed about that.\\
+	Result & The \Gls{lua} \gls{dissector} can be used with \Gls{c} \gls{header} that includes unspecified \gls{struct} \gls{member}. This \gls{member} was only defined by its size, so it could be displayed as raw data in \Gls{wireshark}. \\
 	\midrule
 	ID & US53 \\
-	User doc & FR4-I: Allow configuration to specify the size of unknown struct members  \\
-	What & The administrator should be able to find out how to specify in the confirguration, how big (in bytes) is the struct member without having the member itself defined.  \\
-	How & The administrator reads the configuration section in the user documentation, about how to specify the size of the struct members. \\
-	Result & The user is able to specify the size of unknown struct member. \\	
+	User doc & FR4-I: Allow configuration to specify the size of unknown \gls{struct} \glspl{member}  \\
+	What & The administrator should be able to find out how to specify in the confirguration, how big (in bytes) is the \gls{struct} \gls{member} without having the \gls{member} itself defined.  \\
+	How & The administrator reads the configuration section in the user documentation, about how to specify the size of the \gls{struct} \glspl{member}. \\
+	Result & The user is able to specify the size of unknown \gls{struct} \gls{member}. \\	
 	\midrule
 	ID & US54 \\
-	User doc & Auto generate configuration files for structs with no corresponding configuration file \\
-	What & The utility will generate template configuration files if it encounters structs with no corresponding configuration file. This is to make it easier to make such a configuration file.   \\
-	How & The cparser module checks if an encountered struct has a corresponding configuration in the config module. If not, the utility writes a template file for this struct.   \\
-	Result & The user will now be able to use the auto generated template file to write the configuration for a struct instead of having to start from scratch. \\
+	User doc & Auto generate configuration files for \glspl{struct} with no corresponding configuration file \\
+	What & The \gls{utility} will generate template configuration files if it encounters \glspl{struct} with no corresponding configuration file. This is to make it easier to make such a configuration file.   \\
+	How & The cparser module checks if an encountered \gls{struct} has a corresponding configuration in the config module. If not, the \gls{utility} writes a template file for this \gls{struct}.   \\
+	Result & The user will now be able to use the auto generated template file to write the configuration for a \gls{struct} instead of having to start from scratch. \\
 	\midrule
 	ID & US55 \\
-	Requirement & Only generate dissectors for structs that have a valid ID and their dependencies \\
-	What & The utility should only generate dissectors for structs that have a configuration file with a valid ID and their dependencies.    \\
-	How & When the utility discovers a struct definition inside a header file it should check if there exists a configuration file for that struct and if it has a valid ID.
-	If not then the utility should skip that struct and continue with the header file. If a struct with a valid configuration file and ID has a member that is not defined in the current header
-	file, then the utility will check the includes in the current header for the missing structs and create a dissector for them as well.\\
-	Result & The utility will not generate dissectors for structs which have not been specified in the configuration.
-	This gives the users of the system the ability to specify which structs they want to look at as well as shortening the time the utility needs to run.. \\
+	Requirement & Only generate dissectors for \glspl{struct} that have a valid ID and their dependencies \\
+	What & The \gls{utility} should only generate dissectors for \glspl{struct} that have a configuration file with a valid ID and their dependencies.    \\
+	How & When the \gls{utility} discovers a \gls{struct} definition inside a \gls{header} file it should check if there exists a configuration file for that \gls{struct} and if it has a valid ID.
+	If not then the \gls{utility} should skip that \gls{struct} and continue with the \gls{header} file. If a \gls{struct} with a valid configuration file and ID has a \gls{member} that is not defined in the current \gls{header}
+	file, then the \gls{utility} will check the includes in the current \gls{header} for the missing \glspl{struct} and create a \gls{dissector} for them as well.\\
+	Result & The \gls{utility} will not generate dissectors for \glspl{struct} which have not been specified in the configuration.
+	This gives the users of the system the ability to specify which \glspl{struct} they want to look at as well as shortening the time the \gls{utility} needs to run.. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -274,32 +274,32 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	Header & Value \\
 	\midrule
 	ID & US56 \\
-	User doc & Only generate dissectors for structs that have a valid ID and their dependencies  \\
-	What & The administrator should be able to specify in the configuration which structs should have dissectors created for them. \\
-	How & The administrator reads the configuration section in the utility’s user documentation that specifies how to specify which structs should have a dissector generated for them.  \\
-	Result & The user will be able to specify which structs the utility will generate dissectors for. \\
+	User doc & Only generate dissectors for \glspl{struct} that have a valid ID and their dependencies  \\
+	What & The administrator should be able to specify in the configuration which \glspl{struct} should have dissectors created for them. \\
+	How & The administrator reads the configuration section in the \gls{utility}’s user documentation that specifies how to specify which \glspl{struct} should have a \gls{dissector} generated for them.  \\
+	Result & The user will be able to specify which \glspl{struct} the \gls{utility} will generate dissectors for. \\
 	\midrule
 	ID & US57 \\
-	Requirement & Guess dissector by packet size \\
-	What & The utility should be able to generate a LUA file that runs with Wireshark and guesses the dissector that is to be used for a packet if it has a message ID that does not match any preexisting dissector.\\
-	How & The luastructs.lua file that is generated by the utility should contain a dictonary of all dissectors sorted by the size of the structs that they are associated with.
- 	When a packet with an unrecognized message ID is discovered by wireshark, the code in the luastructs.lua file should try to match the unidentified packet with a dissector
+	Requirement & Guess \gls{dissector} by packet size \\
+	What & The \gls{utility} should be able to generate a \Gls{lua} file that runs with \Gls{wireshark} and guesses the \gls{dissector} that is to be used for a packet if it has a message ID that does not match any preexisting \gls{dissector}.\\
+	How & The luastructs.\Gls{lua} file that is generated by the \gls{utility} should contain a dictonary of all dissectors sorted by the size of the \glspl{struct} that they are associated with.
+ 	When a packet with an unrecognized message ID is discovered by \Gls{wireshark}, the code in the luastructs.\Gls{lua} file should try to match the unidentified packet with a \gls{dissector}
  	that has been generated with the same size as the unidentified packet. The matching dissectors should then be run with the unidentified packet. \\
-	Result & Instead of only displaying the raw hex data from the unidientified packet, wireshark should display the packet as containing all of the possible structs and member values the packet might really be containing as dictated by the matching dissectors. This packet should also be displayed with a warning. \\
+	Result & Instead of only displaying the raw hex data from the unidientified packet, \Gls{wireshark} should display the packet as containing all of the possible \glspl{struct} and \gls{member} values the packet might really be containing as dictated by the matching dissectors. This packet should also be displayed with a warning. \\
 	\midrule
 	ID & US58 \\
-	Requirement & Display if struct member contains uninitialized memory \\
-	What & The dissectors generated by the utility should be able to identify struct members that might possibly have uninitialized memory set as their values.
- 	These members and their values should be displayed with a warning in wireshark to indicate that the values might have been uninitialized.  \\
-	How & If the C-code that uses header files isn’t using memset to set the initial values of different variables a parser might decide to fill uninitialized variables with some kind of patterned garbage data.
- 	This pattern might be possible to detect by the dissectors generated by the utility by adding a check to the dissector code which compares 	the member values with different known garbage-patterns generated by different parsers. \\
-	Result & The utility will now be able to generate dissectors which will make wireshark display struct members and their values with a warning if they are suspected as being filled with uninitialized memory. \\	
+	Requirement & Display if \gls{struct} \gls{member} contains uninitialized memory \\
+	What & The dissectors generated by the \gls{utility} should be able to identify \gls{struct} \glspl{member} that might possibly have uninitialized memory set as their values.
+ 	These \glspl{member} and their values should be displayed with a warning in \Gls{wireshark} to indicate that the values might have been uninitialized.  \\
+	How & If the \Gls{c}-code that uses \gls{header} files isn’t using memset to set the initial values of different variables a \gls{parser} might decide to fill uninitialized variables with some kind of patterned garbage data.
+ 	This pattern might be possible to detect by the dissectors generated by the \gls{utility} by adding a check to the \gls{dissector} code which compares the \gls{member} values with different known garbage-patterns generated by different \glspl{parser}. \\
+	Result & The \gls{utility} will now be able to generate dissectors which will make \Gls{wireshark} display \gls{struct} \glspl{member} and their values with a warning if they are suspected as being filled with uninitialized memory. \\	
 	\midrule
 	ID & US59 \\
 	User doc & How to define new platforms \\
 	What & The Administrator should be able to define new platform to support.  \\
 	How & The user should look in the user documentation, and read the section about defining new platforms. \\
-	Result & After the administrator has defined the new platform, the utility should be able to generate dissectors for the new platform. \\	
+	Result & After the administrator has defined the new platform, the \gls{utility} should be able to generate dissectors for the new platform. \\	
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -313,7 +313,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 \section{Implementation}
 %-----------------------
 
-\subsection{Include Unsupported System-headers}
+\subsection{Include Unsupported System-\glspl{header}}
 %--------------------
 TODO
 
@@ -321,7 +321,7 @@ TODO
 %--------------------
 TODO
 
-\subsection{Improve Generated Lua Output}
+\subsection{Improve Generated \Gls{lua} Output}
 %--------------------
 TODO
 

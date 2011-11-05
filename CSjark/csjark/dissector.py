@@ -93,11 +93,14 @@ class Field:
     def get_definition(self, sequence=None):
         """Get the ProtoField definition for this field."""
         var = self.var
+        abbr = self.abbr
         index = ''
         if sequence is not None:
-            var = '%s_%s' % (self.var, self.get_array_postfix(sequence))
+            postfix = self.get_array_postfix(sequence)
+            var = '%s_%s' % (self.var, postfix)
+            abbr = '%s_%s' % (abbr, postfix)
             index = self.get_array_index_postfix(sequence)
-        return self._create_field(var, self.type, self.abbr,
+        return self._create_field(var, self.type, abbr,
                 self.name + index, self.base, self.values, self.mask, self.desc)
 
     def get_code(self, offset, store=None, sequence=None, tree='subtree'):
@@ -205,15 +208,18 @@ class EnumField(Field):
     def get_definition(self, sequence = None):
         """Get the ProtoField definition for this field."""
         variable_name = self.var
+        abbr = self.abbr
         index = ''
         if sequence is not None:
-            variable_name = '%s_%s' % (self.var, self.get_array_postfix(sequence))
+            postfix = self.get_array_postfix(sequence)
+            variable_name = '%s_%s' % (self.var, postfix)
+            abbr = '%s_%s' % (abbr, postfix)
             index = self.get_array_index_postfix(sequence)
         data = []
         if self.strict and (sequence == None or sequence[len(sequence) - 1] == 0):
             data.append('local {var} = {values}'.format(
                     var=self.values_var, values=self.values))
-        data.append(self._create_field(variable_name, self.type, self.abbr,
+        data.append(self._create_field(variable_name, self.type, abbr,
                 self.name + index, self.base, self.values_var, self.mask, self.desc))
         return '\n'.join(data)
 
@@ -440,10 +446,12 @@ class BitField(Field):
 
             values = create_lua_valuestring(values)
             bit_var = self._bit_var(name)
+            abbr = self._bit_abbr(name)
             if sequence is not None:
                 bit_var = '%s_%s' % (bit_var, postfix)
+                abbr = '%s_%s' % (abbr, postfix)
             data.append(self._create_field(bit_var, type_,
-                    self._bit_abbr(name), name + index, values=values, mask=mask))
+                    abbr, name + index, values=values, mask=mask))
 
         return '\n'.join(data)
 
@@ -674,7 +682,7 @@ class Protocol:
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
         sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
         check = '\tif pinfo.private.caller_def_name then\n\t\t'\
-            'subtree:set_text(pinfo.private.caller_def_name .. ": " .. "{name}")'\
+            'subtree:set_text(pinfo.private.caller_def_name .. ": {name}")'\
             '\n\t\tpinfo.private.caller_def_name = nil\n\telse\n'\
             '\t\tpinfo.cols.info:append(" (" .. {var}.description .. ")")\n'\
             '\tend\n'

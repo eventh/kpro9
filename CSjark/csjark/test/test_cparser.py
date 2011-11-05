@@ -114,7 +114,7 @@ def find_basic_types(fields):
     a, b, c = fields[:3]
     assert a and b and c
     assert a.name == 'a' and b.name == 'b' and c.name == 'c'
-    assert a.type == 'int32' and b.type == 'float' and c.type == 'string'
+    assert a.type == 'int32' and b.type == 'float' and c.type == 'int8'
     assert a.size == 4 and b.size == 4 and c.size == 1
 
 @find_structs.test

@@ -86,7 +86,7 @@ f.mnd = ProtoField.uint32("cenum_test.mnd", "mnd", nil, mnd_values)
 function proto_cenum_test.dissector(buffer, pinfo, tree)
 local subtree = tree:add(proto_cenum_test, buffer())
 if pinfo.private.caller_def_name then
-subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_cenum_test.description)
+subtree:set_text(pinfo.private.caller_def_name .. ": cenum_test")
 pinfo.private.caller_def_name = nil
 else
 pinfo.cols.info:append(" (" .. proto_cenum_test.description .. ")")
@@ -114,98 +114,88 @@ local f = proto_array_test.fields
 f.chararr1 = ProtoField.string("array_test.chararr1", "chararr1")
 -- Array definition for intarr2
 f.intarr2 = ProtoField.bytes("array_test.intarr2", "intarr2")
-f.intarr2_0 = ProtoField.bytes("array_test.intarr2", "intarr2")
-f.intarr2_0_0 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_0_1 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_0_2 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_0_3 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_1 = ProtoField.bytes("array_test.intarr2", "intarr2")
-f.intarr2_1_0 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_1_1 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_1_2 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_1_3 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_2 = ProtoField.bytes("array_test.intarr2", "intarr2")
-f.intarr2_2_0 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_2_1 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_2_2 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_2_3 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_3 = ProtoField.bytes("array_test.intarr2", "intarr2")
-f.intarr2_3_0 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_3_1 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_3_2 = ProtoField.int32("array_test.intarr2", "intarr2")
-f.intarr2_3_3 = ProtoField.int32("array_test.intarr2", "intarr2")
+f.intarr2_0 = ProtoField.bytes("array_test.intarr2_0", "intarr2")
+f.intarr2_0_0 = ProtoField.int32("array_test.intarr2_0_0", "intarr2[0][0]")
+f.intarr2_0_1 = ProtoField.int32("array_test.intarr2_0_1", "intarr2[0][1]")
+f.intarr2_0_2 = ProtoField.int32("array_test.intarr2_0_2", "intarr2[0][2]")
+f.intarr2_0_3 = ProtoField.int32("array_test.intarr2_0_3", "intarr2[0][3]")
+f.intarr2_1 = ProtoField.bytes("array_test.intarr2_1", "intarr2")
+f.intarr2_1_0 = ProtoField.int32("array_test.intarr2_1_0", "intarr2[1][0]")
+f.intarr2_1_1 = ProtoField.int32("array_test.intarr2_1_1", "intarr2[1][1]")
+f.intarr2_1_2 = ProtoField.int32("array_test.intarr2_1_2", "intarr2[1][2]")
+f.intarr2_1_3 = ProtoField.int32("array_test.intarr2_1_3", "intarr2[1][3]")
+f.intarr2_2 = ProtoField.bytes("array_test.intarr2_2", "intarr2")
+f.intarr2_2_0 = ProtoField.int32("array_test.intarr2_2_0", "intarr2[2][0]")
+f.intarr2_2_1 = ProtoField.int32("array_test.intarr2_2_1", "intarr2[2][1]")
+f.intarr2_2_2 = ProtoField.int32("array_test.intarr2_2_2", "intarr2[2][2]")
+f.intarr2_2_3 = ProtoField.int32("array_test.intarr2_2_3", "intarr2[2][3]")
+f.intarr2_3 = ProtoField.bytes("array_test.intarr2_3", "intarr2")
+f.intarr2_3_0 = ProtoField.int32("array_test.intarr2_3_0", "intarr2[3][0]")
+f.intarr2_3_1 = ProtoField.int32("array_test.intarr2_3_1", "intarr2[3][1]")
+f.intarr2_3_2 = ProtoField.int32("array_test.intarr2_3_2", "intarr2[3][2]")
+f.intarr2_3_3 = ProtoField.int32("array_test.intarr2_3_3", "intarr2[3][3]")
 -- Array definition for chararr3
 f.chararr3 = ProtoField.string("array_test.chararr3", "chararr3")
-f.chararr3_0 = ProtoField.string("array_test.chararr3", "chararr3")
-f.chararr3_1 = ProtoField.string("array_test.chararr3", "chararr3")
+f.chararr3_0 = ProtoField.string("array_test.chararr3_0", "chararr3[0]")
+f.chararr3_1 = ProtoField.string("array_test.chararr3_1", "chararr3[1]")
 -- Array definition for floatarr4
 f.floatarr4 = ProtoField.bytes("array_test.floatarr4", "floatarr4")
-f.floatarr4_0 = ProtoField.bytes("array_test.floatarr4", "floatarr4")
-f.floatarr4_0_0 = ProtoField.float("array_test.floatarr4", "floatarr4")
-f.floatarr4_0_1 = ProtoField.float("array_test.floatarr4", "floatarr4")
-f.floatarr4_1 = ProtoField.bytes("array_test.floatarr4", "floatarr4")
-f.floatarr4_1_0 = ProtoField.float("array_test.floatarr4", "floatarr4")
-f.floatarr4_1_1 = ProtoField.float("array_test.floatarr4", "floatarr4")
-f.floatarr4_2 = ProtoField.bytes("array_test.floatarr4", "floatarr4")
-f.floatarr4_2_0 = ProtoField.float("array_test.floatarr4", "floatarr4")
-f.floatarr4_2_1 = ProtoField.float("array_test.floatarr4", "floatarr4")
+f.floatarr4_0 = ProtoField.bytes("array_test.floatarr4_0", "floatarr4")
+f.floatarr4_0_0 = ProtoField.float("array_test.floatarr4_0_0", "floatarr4[0][0]")
+f.floatarr4_0_1 = ProtoField.float("array_test.floatarr4_0_1", "floatarr4[0][1]")
+f.floatarr4_1 = ProtoField.bytes("array_test.floatarr4_1", "floatarr4")
+f.floatarr4_1_0 = ProtoField.float("array_test.floatarr4_1_0", "floatarr4[1][0]")
+f.floatarr4_1_1 = ProtoField.float("array_test.floatarr4_1_1", "floatarr4[1][1]")
+f.floatarr4_2 = ProtoField.bytes("array_test.floatarr4_2", "floatarr4")
+f.floatarr4_2_0 = ProtoField.float("array_test.floatarr4_2_0", "floatarr4[2][0]")
+f.floatarr4_2_1 = ProtoField.float("array_test.floatarr4_2_1", "floatarr4[2][1]")
 -- Dissector function for: array_test
 function proto_array_test.dissector(buffer, pinfo, tree)
-	local subtree = tree:add(proto_array_test, buffer())
-	if pinfo.private.caller_def_name then
-		subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_array_test.description)
-		pinfo.private.caller_def_name = nil
-	else
-		pinfo.cols.info:append(" (" .. proto_array_test.description .. ")")
-	end
-	subtree:add(f.chararr1, buffer(0, 16))
-	-- Array handling for intarr2
-	local arraytree = subtree:add(f.intarr2, buffer(16, 64))
-	arraytree:set_text("int array: index)")
-	local subarraytree = arraytree:add(f.intarr2_0, buffer(16, 16))
-	subarraytree:set_text("int array: index_0)")
-	subarraytree:add(f.intarr2_0_0, buffer(16, 4))
-	subarraytree:add(f.intarr2_0_1, buffer(20, 4))
-	subarraytree:add(f.intarr2_0_2, buffer(24, 4))
-	subarraytree:add(f.intarr2_0_3, buffer(28, 4))
-	local subarraytree = arraytree:add(f.intarr2_1, buffer(32, 16))
-	subarraytree:set_text("int array: index_1)")
-	subarraytree:add(f.intarr2_1_0, buffer(32, 4))
-	subarraytree:add(f.intarr2_1_1, buffer(36, 4))
-	subarraytree:add(f.intarr2_1_2, buffer(40, 4))
-	subarraytree:add(f.intarr2_1_3, buffer(44, 4))
-	local subarraytree = arraytree:add(f.intarr2_2, buffer(48, 16))
-	subarraytree:set_text("int array: index_2)")
-	subarraytree:add(f.intarr2_2_0, buffer(48, 4))
-	subarraytree:add(f.intarr2_2_1, buffer(52, 4))
-	subarraytree:add(f.intarr2_2_2, buffer(56, 4))
-	subarraytree:add(f.intarr2_2_3, buffer(60, 4))
-	local subarraytree = arraytree:add(f.intarr2_3, buffer(64, 16))
-	subarraytree:set_text("int array: index_3)")
-	subarraytree:add(f.intarr2_3_0, buffer(64, 4))
-	subarraytree:add(f.intarr2_3_1, buffer(68, 4))
-	subarraytree:add(f.intarr2_3_2, buffer(72, 4))
-	subarraytree:add(f.intarr2_3_3, buffer(76, 4))
-	-- Array handling for chararr3
-	local arraytree = subtree:add(f.chararr3, buffer(80, 6))
-	arraytree:set_text("string array: index)")
-	arraytree:add(f.chararr3_0, buffer(80, 3))
-	arraytree:add(f.chararr3_1, buffer(83, 3))
-	-- Array handling for floatarr4
-	local arraytree = subtree:add(f.floatarr4, buffer(88, 24))
-	arraytree:set_text("float array: index)")
-	local subarraytree = arraytree:add(f.floatarr4_0, buffer(88, 8))
-	subarraytree:set_text("float array: index_0)")
-	subarraytree:add(f.floatarr4_0_0, buffer(88, 4))
-	subarraytree:add(f.floatarr4_0_1, buffer(92, 4))
-	local subarraytree = arraytree:add(f.floatarr4_1, buffer(96, 8))
-	subarraytree:set_text("float array: index_1)")
-	subarraytree:add(f.floatarr4_1_0, buffer(96, 4))
-	subarraytree:add(f.floatarr4_1_1, buffer(100, 4))
-	local subarraytree = arraytree:add(f.floatarr4_2, buffer(104, 8))
-	subarraytree:set_text("float array: index_2)")
-	subarraytree:add(f.floatarr4_2_0, buffer(104, 4))
-	subarraytree:add(f.floatarr4_2_1, buffer(108, 4))
+local subtree = tree:add(proto_array_test, buffer())
+if pinfo.private.caller_def_name then
+subtree:set_text(pinfo.private.caller_def_name .. ": array_test")
+pinfo.private.caller_def_name = nil
+else
+pinfo.cols.info:append(" (" .. proto_array_test.description .. ")")
+end
+subtree:add(f.chararr1, buffer(0, 16))
+-- Array handling for intarr2
+local arraytree = subtree:add("intarr2: int32 array", buffer(16, 64))
+local subarraytree = arraytree:add("intarr2[0]: int32 array", buffer(16, 16))
+subarraytree:add(f.intarr2_0_0, buffer(16, 4))
+subarraytree:add(f.intarr2_0_1, buffer(20, 4))
+subarraytree:add(f.intarr2_0_2, buffer(24, 4))
+subarraytree:add(f.intarr2_0_3, buffer(28, 4))
+local subarraytree = arraytree:add("intarr2[1]: int32 array", buffer(32, 16))
+subarraytree:add(f.intarr2_1_0, buffer(32, 4))
+subarraytree:add(f.intarr2_1_1, buffer(36, 4))
+subarraytree:add(f.intarr2_1_2, buffer(40, 4))
+subarraytree:add(f.intarr2_1_3, buffer(44, 4))
+local subarraytree = arraytree:add("intarr2[2]: int32 array", buffer(48, 16))
+subarraytree:add(f.intarr2_2_0, buffer(48, 4))
+subarraytree:add(f.intarr2_2_1, buffer(52, 4))
+subarraytree:add(f.intarr2_2_2, buffer(56, 4))
+subarraytree:add(f.intarr2_2_3, buffer(60, 4))
+local subarraytree = arraytree:add("intarr2[3]: int32 array", buffer(64, 16))
+subarraytree:add(f.intarr2_3_0, buffer(64, 4))
+subarraytree:add(f.intarr2_3_1, buffer(68, 4))
+subarraytree:add(f.intarr2_3_2, buffer(72, 4))
+subarraytree:add(f.intarr2_3_3, buffer(76, 4))
+-- Array handling for chararr3
+local arraytree = subtree:add("chararr3: string array", buffer(80, 6))
+arraytree:add(f.chararr3_0, buffer(80, 3))
+arraytree:add(f.chararr3_1, buffer(83, 3))
+-- Array handling for floatarr4
+local arraytree = subtree:add("floatarr4: float array", buffer(88, 24))
+local subarraytree = arraytree:add("floatarr4[0]: float array", buffer(88, 8))
+subarraytree:add(f.floatarr4_0_0, buffer(88, 4))
+subarraytree:add(f.floatarr4_0_1, buffer(92, 4))
+local subarraytree = arraytree:add("floatarr4[1]: float array", buffer(96, 8))
+subarraytree:add(f.floatarr4_1_0, buffer(96, 4))
+subarraytree:add(f.floatarr4_1_1, buffer(100, 4))
+local subarraytree = arraytree:add("floatarr4[2]: float array", buffer(104, 8))
+subarraytree:add(f.floatarr4_2_0, buffer(104, 4))
+subarraytree:add(f.floatarr4_2_1, buffer(108, 4))
 end
 delegator_register_proto(proto_array_test, "default", "array_test", 16)
 ''')
@@ -242,7 +232,7 @@ f.color2_green = ProtoField.uint16("bitstring_test.color2.Green", "Green", nil, 
 function proto_bitstring_test.dissector(buffer, pinfo, tree)
 	local subtree = tree:add(proto_bitstring_test, buffer())
 	if pinfo.private.caller_def_name then
-		subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_bitstring_test.description)
+		subtree:set_text(pinfo.private.caller_def_name .. ": bitstring_test")
 		pinfo.private.caller_def_name = nil
 	else
 		pinfo.cols.info:append(" (" .. proto_bitstring_test.description .. ")")
@@ -289,78 +279,73 @@ local truth_values = {[0]="TRUE", [1]="FALSE"}
 f.truth = ProtoField.uint32("custom_lua.truth", "truth", nil, truth_values)
 -- Array definition for five
 f.five = ProtoField.bytes("custom_lua.five", "five")
-f.five_0 = ProtoField.int32("custom_lua.five", "five")
-f.five_1 = ProtoField.int32("custom_lua.five", "five")
-f.five_2 = ProtoField.int32("custom_lua.five", "five")
-f.five_3 = ProtoField.int32("custom_lua.five", "five")
-f.five_4 = ProtoField.int32("custom_lua.five", "five")
+f.five_0 = ProtoField.int32("custom_lua.five_0", "five[0]")
+f.five_1 = ProtoField.int32("custom_lua.five_1", "five[1]")
+f.five_2 = ProtoField.int32("custom_lua.five_2", "five[2]")
+f.five_3 = ProtoField.int32("custom_lua.five_3", "five[3]")
+f.five_4 = ProtoField.int32("custom_lua.five_4", "five[4]")
 f.pointer = ProtoField.int32("custom_lua.pointer", "pointer")
 -- Array definition for str
 f.str = ProtoField.string("custom_lua.str", "str")
-f.str_0 = ProtoField.string("custom_lua.str", "str")
-f.str_0_0 = ProtoField.string("custom_lua.str", "str")
-f.str_0_1 = ProtoField.string("custom_lua.str", "str")
-f.str_0_2 = ProtoField.string("custom_lua.str", "str")
-f.str_0_3 = ProtoField.string("custom_lua.str", "str")
-f.str_1 = ProtoField.string("custom_lua.str", "str")
-f.str_1_0 = ProtoField.string("custom_lua.str", "str")
-f.str_1_1 = ProtoField.string("custom_lua.str", "str")
-f.str_1_2 = ProtoField.string("custom_lua.str", "str")
-f.str_1_3 = ProtoField.string("custom_lua.str", "str")
-f.str_2 = ProtoField.string("custom_lua.str", "str")
-f.str_2_0 = ProtoField.string("custom_lua.str", "str")
-f.str_2_1 = ProtoField.string("custom_lua.str", "str")
-f.str_2_2 = ProtoField.string("custom_lua.str", "str")
-f.str_2_3 = ProtoField.string("custom_lua.str", "str")
+f.str_0 = ProtoField.string("custom_lua.str_0", "str")
+f.str_0_0 = ProtoField.string("custom_lua.str_0_0", "str[0][0]")
+f.str_0_1 = ProtoField.string("custom_lua.str_0_1", "str[0][1]")
+f.str_0_2 = ProtoField.string("custom_lua.str_0_2", "str[0][2]")
+f.str_0_3 = ProtoField.string("custom_lua.str_0_3", "str[0][3]")
+f.str_1 = ProtoField.string("custom_lua.str_1", "str")
+f.str_1_0 = ProtoField.string("custom_lua.str_1_0", "str[1][0]")
+f.str_1_1 = ProtoField.string("custom_lua.str_1_1", "str[1][1]")
+f.str_1_2 = ProtoField.string("custom_lua.str_1_2", "str[1][2]")
+f.str_1_3 = ProtoField.string("custom_lua.str_1_3", "str[1][3]")
+f.str_2 = ProtoField.string("custom_lua.str_2", "str")
+f.str_2_0 = ProtoField.string("custom_lua.str_2_0", "str[2][0]")
+f.str_2_1 = ProtoField.string("custom_lua.str_2_1", "str[2][1]")
+f.str_2_2 = ProtoField.string("custom_lua.str_2_2", "str[2][2]")
+f.str_2_3 = ProtoField.string("custom_lua.str_2_3", "str[2][3]")
 -- Dissector function for: custom_lua
 function proto_custom_lua.dissector(buffer, pinfo, tree)
-	local subtree = tree:add(proto_custom_lua, buffer())
-	if pinfo.private.caller_def_name then
-		subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_custom_lua.description)
-		pinfo.private.caller_def_name = nil
-	else
-		pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
-	end
-	subtree:add(f.normal, buffer(0, 2))
-	subtree:add(f.special, buffer(8, 8))
-	subtree:add(f.abs, buffer(16, 4))
-	subtree:add(f.rel, buffer(20, 4))
-	subtree:add(f.bol, buffer(24, 4))
-	subtree:add(f.all, buffer(28, 4))
-	local truth = subtree:add(f.truth, buffer(32, 4))
-	if (truth_values[buffer(32, 4):uint()] == nil) then
-		truth:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1)")
-	end
-	-- Array handling for five
-	local arraytree = subtree:add(f.five, buffer(36, 20))
-	arraytree:set_text("int array: index)")
-	arraytree:add(f.five_0, buffer(36, 4))
-	arraytree:add(f.five_1, buffer(40, 4))
-	arraytree:add(f.five_2, buffer(44, 4))
-	arraytree:add(f.five_3, buffer(48, 4))
-	arraytree:add(f.five_4, buffer(52, 4))
-	subtree:add(f.pointer, buffer(56, 4))
-	-- Array handling for str
-	local arraytree = subtree:add(f.str, buffer(60, 24))
-	arraytree:set_text("string array: index)")
-	local subarraytree = arraytree:add(f.str_0, buffer(60, 8))
-	subarraytree:set_text("string array: index_0)")
-	subarraytree:add(f.str_0_0, buffer(60, 2))
-	subarraytree:add(f.str_0_1, buffer(62, 2))
-	subarraytree:add(f.str_0_2, buffer(64, 2))
-	subarraytree:add(f.str_0_3, buffer(66, 2))
-	local subarraytree = arraytree:add(f.str_1, buffer(68, 8))
-	subarraytree:set_text("string array: index_1)")
-	subarraytree:add(f.str_1_0, buffer(68, 2))
-	subarraytree:add(f.str_1_1, buffer(70, 2))
-	subarraytree:add(f.str_1_2, buffer(72, 2))
-	subarraytree:add(f.str_1_3, buffer(74, 2))
-	local subarraytree = arraytree:add(f.str_2, buffer(76, 8))
-	subarraytree:set_text("string array: index_2)")
-	subarraytree:add(f.str_2_0, buffer(76, 2))
-	subarraytree:add(f.str_2_1, buffer(78, 2))
-	subarraytree:add(f.str_2_2, buffer(80, 2))
-	subarraytree:add(f.str_2_3, buffer(82, 2))
+local subtree = tree:add(proto_custom_lua, buffer())
+if pinfo.private.caller_def_name then
+subtree:set_text(pinfo.private.caller_def_name .. ": custom_lua")
+pinfo.private.caller_def_name = nil
+else
+pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
+end
+subtree:add(f.normal, buffer(0, 2))
+subtree:add(f.special, buffer(8, 8))
+subtree:add(f.abs, buffer(16, 4))
+subtree:add(f.rel, buffer(20, 4))
+subtree:add(f.bol, buffer(24, 4))
+subtree:add(f.all, buffer(28, 4))
+local truth = subtree:add(f.truth, buffer(32, 4))
+if (truth_values[buffer(32, 4):uint()] == nil) then
+truth:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1)")
+end
+-- Array handling for five
+local arraytree = subtree:add("five: int32 array", buffer(36, 20))
+arraytree:add(f.five_0, buffer(36, 4))
+arraytree:add(f.five_1, buffer(40, 4))
+arraytree:add(f.five_2, buffer(44, 4))
+arraytree:add(f.five_3, buffer(48, 4))
+arraytree:add(f.five_4, buffer(52, 4))
+subtree:add(f.pointer, buffer(56, 4))
+-- Array handling for str
+local arraytree = subtree:add("str: string array", buffer(60, 24))
+local subarraytree = arraytree:add("str[0]: string array", buffer(60, 8))
+subarraytree:add(f.str_0_0, buffer(60, 2))
+subarraytree:add(f.str_0_1, buffer(62, 2))
+subarraytree:add(f.str_0_2, buffer(64, 2))
+subarraytree:add(f.str_0_3, buffer(66, 2))
+local subarraytree = arraytree:add("str[1]: string array", buffer(68, 8))
+subarraytree:add(f.str_1_0, buffer(68, 2))
+subarraytree:add(f.str_1_1, buffer(70, 2))
+subarraytree:add(f.str_1_2, buffer(72, 2))
+subarraytree:add(f.str_1_3, buffer(74, 2))
+local subarraytree = arraytree:add("str[2]: string array", buffer(76, 8))
+subarraytree:add(f.str_2_0, buffer(76, 2))
+subarraytree:add(f.str_2_1, buffer(78, 2))
+subarraytree:add(f.str_2_2, buffer(80, 2))
+subarraytree:add(f.str_2_3, buffer(82, 2))
 end
 delegator_register_proto(proto_custom_lua, "default", "custom_lua", 74)
 ''')
@@ -387,7 +372,7 @@ f.number = ProtoField.int32("enum_test.number", "number", nil, number_values)
 function proto_enum_test.dissector(buffer, pinfo, tree)
 	local subtree = tree:add(proto_enum_test, buffer())
 	if pinfo.private.caller_def_name then
-		subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_enum_test.description)
+		subtree:set_text(pinfo.private.caller_def_name .. ": enum_test")
 		pinfo.private.caller_def_name = nil
 	else
 		pinfo.cols.info:append(" (" .. proto_enum_test.description .. ")")
@@ -426,7 +411,7 @@ f.age = ProtoField.int32("range_test.age", "age")
 function proto_range_test.dissector(buffer, pinfo, tree)
 	local subtree = tree:add(proto_range_test, buffer())
 	if pinfo.private.caller_def_name then
-		subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_range_test.description)
+		subtree:set_text(pinfo.private.caller_def_name .. ": range_test")
 		pinfo.private.caller_def_name = nil
 	else
 		pinfo.cols.info:append(" (" .. proto_range_test.description .. ")")
@@ -457,16 +442,16 @@ local f = proto_struct_within_struct_test.fields
 f.prime = ProtoField.int32("struct_within_struct_test.prime", "prime")
 -- Dissector function for: struct_within_struct_test
 function proto_struct_within_struct_test.dissector(buffer, pinfo, tree)
-	local subtree = tree:add(proto_struct_within_struct_test, buffer())
-	if pinfo.private.caller_def_name then
-		subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_struct_within_struct_test.description)
-		pinfo.private.caller_def_name = nil
-	else
-		pinfo.cols.info:append(" (" .. proto_struct_within_struct_test.description .. ")")
-	end
-	subtree:add(f.prime, buffer(0, 4))
-	pinfo.private.caller_def_name = "f.astruct"
-	Dissector.get("default.cenum_test"):call(buffer(4,8):tvb(), pinfo, subtree)
+local subtree = tree:add(proto_struct_within_struct_test, buffer())
+if pinfo.private.caller_def_name then
+subtree:set_text(pinfo.private.caller_def_name .. ": struct_within_struct_test")
+pinfo.private.caller_def_name = nil
+else
+pinfo.cols.info:append(" (" .. proto_struct_within_struct_test.description .. ")")
+end
+subtree:add(f.prime, buffer(0, 4))
+pinfo.private.caller_def_name = "astruct"
+Dissector.get("default.cenum_test"):call(buffer(4,8):tvb(), pinfo, subtree)
 end
 delegator_register_proto(proto_struct_within_struct_test, "default", "struct_within_struct_test", 12)
 ''')
@@ -479,53 +464,54 @@ def trailers(structs):
     assert structs['trailer_test']
     assert compare_lua(structs['trailer_test'], '''
 -- Dissector for default.trailer_test: trailer_test (default)
-local proto_trailer_test = Proto("default.trailer_test", "trailer_test (default)")
+local proto_trailer_test = Proto("default.trailer_test", "trailer_test (default)
+")
+
 -- ProtoField defintions for: trailer_test
 local f = proto_trailer_test.fields
 -- Array definition for tmp
 f.tmp = ProtoField.bytes("trailer_test.tmp", "tmp")
-f.tmp_0 = ProtoField.float("trailer_test.tmp", "tmp")
-f.tmp_1 = ProtoField.float("trailer_test.tmp", "tmp")
-f.tmp_2 = ProtoField.float("trailer_test.tmp", "tmp")
-f.tmp_3 = ProtoField.float("trailer_test.tmp", "tmp")
-f.tmp_4 = ProtoField.float("trailer_test.tmp", "tmp")
+f.tmp_0 = ProtoField.float("trailer_test.tmp_0", "tmp[0]")
+f.tmp_1 = ProtoField.float("trailer_test.tmp_1", "tmp[1]")
+f.tmp_2 = ProtoField.float("trailer_test.tmp_2", "tmp[2]")
+f.tmp_3 = ProtoField.float("trailer_test.tmp_3", "tmp[3]")
+f.tmp_4 = ProtoField.float("trailer_test.tmp_4", "tmp[4]")
 f.asn1_count = ProtoField.int32("trailer_test.asn1_count", "asn1_count")
 -- Dissector function for: trailer_test
 function proto_trailer_test.dissector(buffer, pinfo, tree)
-	local subtree = tree:add(proto_trailer_test, buffer())
-	if pinfo.private.caller_def_name then
-		subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_trailer_test.description)
-		pinfo.private.caller_def_name = nil
-	else
-		pinfo.cols.info:append(" (" .. proto_trailer_test.description .. ")")
-	end
-	-- Array handling for tmp
-	local arraytree = subtree:add(f.tmp, buffer(0, 20))
-	arraytree:set_text("float array: index)")
-	arraytree:add(f.tmp_0, buffer(0, 4))
-	arraytree:add(f.tmp_1, buffer(4, 4))
-	arraytree:add(f.tmp_2, buffer(8, 4))
-	arraytree:add(f.tmp_3, buffer(12, 4))
-	arraytree:add(f.tmp_4, buffer(16, 4))
-	subtree:add(f.asn1_count, buffer(20, 4))
-	-- Trailers handling for struct: trailer_test
-	local trail_offset = 24
-	local trail_count = buffer(20, 4):int()
-	for i = 1, trail_count do
-		local trailer = Dissector.get("ber")
-		trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
-		trail_offset = trail_offset + 6
-	end
-	local trailer = Dissector.get("ber")
-	trailer:call(buffer(trail_offset, 5):tvb(), pinfo, tree)
-	trail_offset = trail_offset + 5
-	for i = 1, 2 do
-		local trailer = Dissector.get("ber")
-		trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
-		trail_offset = trail_offset + 6
-	end
-	local trailer = Dissector.get("ber")
-	trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
+local subtree = tree:add(proto_trailer_test, buffer())
+if pinfo.private.caller_def_name then
+subtree:set_text(pinfo.private.caller_def_name .. ": trailer_test")
+pinfo.private.caller_def_name = nil
+else
+pinfo.cols.info:append(" (" .. proto_trailer_test.description ..")")
+end
+-- Array handling for tmp
+local arraytree = subtree:add("tmp: float array", buffer(0, 20))
+arraytree:add(f.tmp_0, buffer(0, 4))
+arraytree:add(f.tmp_1, buffer(4, 4))
+arraytree:add(f.tmp_2, buffer(8, 4))
+arraytree:add(f.tmp_3, buffer(12, 4))
+arraytree:add(f.tmp_4, buffer(16, 4))
+subtree:add(f.asn1_count, buffer(20, 4))
+-- Trailers handling for struct: trailer_test
+local trail_offset = 24
+local trail_count = buffer(20, 4):int()
+for i = 1, trail_count do
+local trailer = Dissector.get("ber")
+trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
+trail_offset = trail_offset + 6
+end
+local trailer = Dissector.get("ber")
+trailer:call(buffer(trail_offset, 5):tvb(), pinfo, tree)
+trail_offset = trail_offset + 5
+for i = 1, 2 do
+local trailer = Dissector.get("ber")
+trailer:call(buffer(trail_offset, 6):tvb(), pinfo, tree)
+trail_offset = trail_offset + 6
+end
+local trailer = Dissector.get("ber")
+trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
 end
 delegator_register_proto(proto_trailer_test, "default", "trailer_test", 66)
 ''')
@@ -557,12 +543,12 @@ local f = proto_keyword_test.fields
 f._in = ProtoField.int32("keyword_test.in", "in")
 -- Array definition for until
 f._until = ProtoField.bytes("keyword_test.until", "until")
-f._until_0 = ProtoField.bytes("keyword_test.until", "until")
-f._until_0_0 = ProtoField.int32("keyword_test.until", "until")
-f._until_0_1 = ProtoField.int32("keyword_test.until", "until")
-f._until_1 = ProtoField.bytes("keyword_test.until", "until")
-f._until_1_0 = ProtoField.int32("keyword_test.until", "until")
-f._until_1_1 = ProtoField.int32("keyword_test.until", "until")
+f._until_0 = ProtoField.bytes("keyword_test.until_0", "until")
+f._until_0_0 = ProtoField.int32("keyword_test.until_0_0", "until[0][0]")
+f._until_0_1 = ProtoField.int32("keyword_test.until_0_1", "until[0][1]")
+f._until_1 = ProtoField.bytes("keyword_test.until_1", "until")
+f._until_1_0 = ProtoField.int32("keyword_test.until_1_0", "until[1][0]")
+f._until_1_1 = ProtoField.int32("keyword_test.until_1_1", "until[1][1]")
 -- Bitstring definitions for _VERSION
 f._version = ProtoField.uint32("keyword_test._VERSION", "_VERSION (bitstring)", base.HEX)
 f._version_g1 = ProtoField.uint32("keyword_test._VERSION.G1", "G1", nil, {[0]="True", [1]="False"}, 0x1)
@@ -573,51 +559,47 @@ f._and = ProtoField.int32("keyword_test._and", "_and")
 f._not = ProtoField.int32("keyword_test.not", "not")
 -- Dissector function for: keyword_test
 function proto_keyword_test.dissector(buffer, pinfo, tree)
-	local subtree = tree:add_le(proto_keyword_test, buffer())
-	if pinfo.private.caller_def_name then
-		subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_keyword_test.description)
-		pinfo.private.caller_def_name = nil
-	else
-		pinfo.cols.info:append(" (" .. proto_keyword_test.description .. ")")
-	end
-	local _in = subtree:add_le(f._in, buffer(0, 4))
-	if (buffer(0, 4):le_int() < 0.0) then
-		_in:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0.0")
-	end
-	if (buffer(0, 4):le_int() > 10.0) then
-		_in:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 10.0")
-	end
-	-- Array handling for until
-	local arraytree = subtree:add_le(f._until, buffer(4, 16))
-	arraytree:set_text("int array: index)")
-	local subarraytree = arraytree:add_le(f._until_0, buffer(4, 8))
-	subarraytree:set_text("int array: index_0)")
-	subarraytree:add_le(f._until_0_0, buffer(4, 4))
-	subarraytree:add_le(f._until_0_1, buffer(8, 4))
-	local subarraytree = arraytree:add_le(f._until_1, buffer(12, 8))
-	subarraytree:set_text("int array: index_1)")
-	subarraytree:add_le(f._until_1_0, buffer(12, 4))
-	subarraytree:add_le(f._until_1_1, buffer(16, 4))
-	-- Bitstring handling for _VERSION
-	local bittree = subtree:add_le(f._version, buffer(20, 4))
-	bittree:add_le(f._version_g1, buffer(20, 4))
-
-	local _function = subtree:add_le(f._function, buffer(24, 4))
-	if (function_values[buffer(24, 4):le_uint()] == nil) then
-		_function:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (1, 2, 412)")
-	end
-	pinfo.private.caller_def_name = "f._or"
-	Dissector.get("win32.local"):call(buffer(28,4):tvb(), pinfo, subtree)
-	subtree:add_le(f._and, buffer(32, 4))
-	subtree:add_le(f._and, buffer(36, 4))
-	subtree:add_le(f._not, buffer(40, 4))
-	-- Trailers handling for struct: keyword_test
-	local trail_offset = 44
-	local trail_count = buffer(40, 4):le_int()
-	for i = 1, trail_count do
-		local trailer = Dissector.get("ber")
-		trailer:call(buffer(trail_offset, 5):tvb(), pinfo, tree)
-	end
+local subtree = tree:add_le(proto_keyword_test, buffer())
+if pinfo.private.caller_def_name then
+subtree:set_text(pinfo.private.caller_def_name .. ": keyword_test")
+pinfo.private.caller_def_name = nil
+else
+pinfo.cols.info:append(" (" .. proto_keyword_test.description .. ")")
+end
+local _in = subtree:add_le(f._in, buffer(0, 4))
+if (buffer(0, 4):le_int() < 0.0) then
+_in:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0.0")
+end
+if (buffer(0, 4):le_int() > 10.0) then
+_in:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 10.0")
+end
+-- Array handling for until
+local arraytree = subtree:add_le("until: int32 array", buffer(4, 16))
+local subarraytree = arraytree:add_le("until[0]: int32 array", buffer(4, 8))
+subarraytree:add_le(f._until_0_0, buffer(4, 4))
+subarraytree:add_le(f._until_0_1, buffer(8, 4))
+local subarraytree = arraytree:add_le("until[1]: int32 array", buffer(12, 8))
+subarraytree:add_le(f._until_1_0, buffer(12, 4))
+subarraytree:add_le(f._until_1_1, buffer(16, 4))
+-- Bitstring handling for _VERSION
+local bittree = subtree:add_le(f._version, buffer(20, 4))
+bittree:add_le(f._version_g1, buffer(20, 4))
+local _function = subtree:add_le(f._function, buffer(24, 4))
+if (function_values[buffer(24, 4):le_uint()] == nil) then
+_function:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (1, 2, 412)")
+end
+pinfo.private.caller_def_name = "or"
+Dissector.get("win32.local"):call(buffer(28,4):tvb(), pinfo, subtree)
+subtree:add_le(f._and, buffer(32, 4))
+subtree:add_le(f._and, buffer(36, 4))
+subtree:add_le(f._not, buffer(40, 4))
+-- Trailers handling for struct: keyword_test
+local trail_offset = 44
+local trail_count = buffer(40, 4):le_int()
+for i = 1, trail_count do
+local trailer = Dissector.get("ber")
+trailer:call(buffer(trail_offset, 5):tvb(), pinfo, tree)
+end
 end
 delegator_register_proto(proto_keyword_test, "Win32", "keyword_test", 255)
 ''')
@@ -643,7 +625,7 @@ f.intel = ProtoField.int64("platform_test.intel", "intel")
 function proto_platform_test.dissector(buffer, pinfo, tree)
 local subtree = tree:add_le(proto_platform_test, buffer())
 if pinfo.private.caller_def_name then
-subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_platform_test.description)
+subtree:set_text(pinfo.private.caller_def_name .. ": platform_test")
 pinfo.private.caller_def_name = nil
 else
 pinfo.cols.info:append(" (" .. proto_platform_test.description .. ")")
@@ -652,7 +634,7 @@ subtree:add_le(f.bytes, buffer(0, 8))
 subtree:add_le(f.a, buffer(8, 4))
 subtree:add_le(f.win_float, buffer(12, 4))
 subtree:add_le(f.b, buffer(16, 1))
-pinfo.private.caller_def_name = "f.anom"
+pinfo.private.caller_def_name = "anom"
 Dissector.get("win32.anom"):call(buffer(20,4):tvb(), pinfo, subtree)
 subtree:add_le(f.deff, buffer(24, 4))
 subtree:add_le(f.intel, buffer(28, 4))
@@ -678,7 +660,7 @@ f.long_long_member = ProtoField.uint64("union_test.long_long_member", "long_long
 function proto_union_test.dissector(buffer, pinfo, tree)
 local subtree = tree:add_le(proto_union_test, buffer())
 if pinfo.private.caller_def_name then
-subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_union_test.description)
+subtree:set_text(pinfo.private.caller_def_name .. ": union_test")
 pinfo.private.caller_def_name = nil
 else
 pinfo.cols.info:append(" (" .. proto_union_test.description .. ")")
@@ -713,36 +695,36 @@ f.truth = ProtoField.uint32("custom_lua.truth", "truth", nil, truth_values)
 -- This is below
 -- Array definition for five
 f.five = ProtoField.bytes("custom_lua.five", "five")
-f.five_0 = ProtoField.int32("custom_lua.five", "five")
-f.five_1 = ProtoField.int32("custom_lua.five", "five")
-f.five_2 = ProtoField.int32("custom_lua.five", "five")
-f.five_3 = ProtoField.int32("custom_lua.five", "five")
-f.five_4 = ProtoField.int32("custom_lua.five", "five")
+f.five_0 = ProtoField.int32("custom_lua.five_0", "five[0]")
+f.five_1 = ProtoField.int32("custom_lua.five_1", "five[1]")
+f.five_2 = ProtoField.int32("custom_lua.five_2", "five[2]")
+f.five_3 = ProtoField.int32("custom_lua.five_3", "five[3]")
+f.five_4 = ProtoField.int32("custom_lua.five_4", "five[4]")
 f.pointer = ProtoField.int32("custom_lua.pointer", "pointer")
 -- This is below 'pointer'
 -- Array definition for str
 f.str = ProtoField.string("custom_lua.str", "str")
-f.str_0 = ProtoField.string("custom_lua.str", "str")
-f.str_0_0 = ProtoField.string("custom_lua.str", "str")
-f.str_0_1 = ProtoField.string("custom_lua.str", "str")
-f.str_0_2 = ProtoField.string("custom_lua.str", "str")
-f.str_0_3 = ProtoField.string("custom_lua.str", "str")
-f.str_1 = ProtoField.string("custom_lua.str", "str")
-f.str_1_0 = ProtoField.string("custom_lua.str", "str")
-f.str_1_1 = ProtoField.string("custom_lua.str", "str")
-f.str_1_2 = ProtoField.string("custom_lua.str", "str")
-f.str_1_3 = ProtoField.string("custom_lua.str", "str")
-f.str_2 = ProtoField.string("custom_lua.str", "str")
-f.str_2_0 = ProtoField.string("custom_lua.str", "str")
-f.str_2_1 = ProtoField.string("custom_lua.str", "str")
-f.str_2_2 = ProtoField.string("custom_lua.str", "str")
-f.str_2_3 = ProtoField.string("custom_lua.str", "str")
+f.str_0 = ProtoField.string("custom_lua.str_0", "str")
+f.str_0_0 = ProtoField.string("custom_lua.str_0_0", "str[0][0]")
+f.str_0_1 = ProtoField.string("custom_lua.str_0_1", "str[0][1]")
+f.str_0_2 = ProtoField.string("custom_lua.str_0_2", "str[0][2]")
+f.str_0_3 = ProtoField.string("custom_lua.str_0_3", "str[0][3]")
+f.str_1 = ProtoField.string("custom_lua.str_1", "str")
+f.str_1_0 = ProtoField.string("custom_lua.str_1_0", "str[1][0]")
+f.str_1_1 = ProtoField.string("custom_lua.str_1_1", "str[1][1]")
+f.str_1_2 = ProtoField.string("custom_lua.str_1_2", "str[1][2]")
+f.str_1_3 = ProtoField.string("custom_lua.str_1_3", "str[1][3]")
+f.str_2 = ProtoField.string("custom_lua.str_2", "str")
+f.str_2_0 = ProtoField.string("custom_lua.str_2_0", "str[2][0]")
+f.str_2_1 = ProtoField.string("custom_lua.str_2_1", "str[2][1]")
+f.str_2_2 = ProtoField.string("custom_lua.str_2_2", "str[2][2]")
+f.str_2_3 = ProtoField.string("custom_lua.str_2_3", "str[2][3]")
 -- This was all the field defintions
 -- Dissector function for: custom_lua
 function proto_custom_lua.dissector(buffer, pinfo, tree)
 local subtree = tree:add_le(proto_custom_lua, buffer())
 if pinfo.private.caller_def_name then
-subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_custom_lua.description)
+subtree:set_text(pinfo.private.caller_def_name .. ": custom_lua")
 pinfo.private.caller_def_name = nil
 else
 pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
@@ -759,8 +741,7 @@ if (truth_values[buffer(32, 4):le_uint()] == nil) then
 truth:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1)")
 end
 -- Array handling for five
-local arraytree = subtree:add_le(f.five, buffer(36, 20))
-arraytree:set_text("int array: index)")
+local arraytree = subtree:add_le("five: int32 array", buffer(36, 20))
 arraytree:add_le(f.five_0, buffer(36, 4))
 arraytree:add_le(f.five_1, buffer(40, 4))
 arraytree:add_le(f.five_2, buffer(44, 4))
@@ -770,22 +751,18 @@ arraytree:add_le(f.five_4, buffer(52, 4))
 subtree:add_le(f.pointer, buffer(56, 4))
 --[[ This comments out the str array code
 -- Array handling for str
-local arraytree = subtree:add_le(f.str, buffer(60, 24))
-arraytree:set_text("string array: index)")
-local subarraytree = arraytree:add_le(f.str_0, buffer(60, 8))
-subarraytree:set_text("string array: index_0)")
+local arraytree = subtree:add_le("str: string array", buffer(60, 24))
+local subarraytree = arraytree:add_le("str[0]: string array", buffer(60, 8))
 subarraytree:add_le(f.str_0_0, buffer(60, 2))
 subarraytree:add_le(f.str_0_1, buffer(62, 2))
 subarraytree:add_le(f.str_0_2, buffer(64, 2))
 subarraytree:add_le(f.str_0_3, buffer(66, 2))
-local subarraytree = arraytree:add_le(f.str_1, buffer(68, 8))
-subarraytree:set_text("string array: index_1)")
+local subarraytree = arraytree:add_le("str[1]: string array", buffer(68, 8))
 subarraytree:add_le(f.str_1_0, buffer(68, 2))
 subarraytree:add_le(f.str_1_1, buffer(70, 2))
 subarraytree:add_le(f.str_1_2, buffer(72, 2))
 subarraytree:add_le(f.str_1_3, buffer(74, 2))
-local subarraytree = arraytree:add_le(f.str_2, buffer(76, 8))
-subarraytree:set_text("string array: index_2)")
+local subarraytree = arraytree:add_le("str[2]: string array", buffer(76, 8))
 subarraytree:add_le(f.str_2_0, buffer(76, 2))
 subarraytree:add_le(f.str_2_1, buffer(78, 2))
 subarraytree:add_le(f.str_2_2, buffer(80, 2))

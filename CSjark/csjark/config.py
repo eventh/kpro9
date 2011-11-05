@@ -378,9 +378,10 @@ class Options:
     debug = False
     strict = True
     use_cpp = True
-    cpp_includes = []
     output_dir = None
     output_file = None
+    cpp_includes = []
+    cpp_args = []
 
     # Utility options
     platforms = set() # Set of platforms to support in dissectors
@@ -403,9 +404,12 @@ class Options:
         cls.debug = obj.get('verbose', cls.debug)
         cls.strict = obj.get('strict', cls.strict)
         cls.use_cpp = obj.get('use_cpp', cls.use_cpp)
-        cls.cpp_includes = obj.get('includes', cls.cpp_includes)
         cls.output_dir = obj.get('output_dir', cls.output_dir)
         cls.output_file = obj.get('output_file', cls.output_file)
+
+        # Handle C preprocessor arguments
+        cls.cpp_includes.extend(obj.get('includes', []))
+        cls.cpp_args.extend(obj.get('cpp_args', []))
 
     @classmethod
     def prepare_for_parsing(cls):

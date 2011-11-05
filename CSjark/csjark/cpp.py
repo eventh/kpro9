@@ -30,6 +30,10 @@ def parse_file(filename, platform=None):
         path_list.extend(['-D%s=%s' % (i, j)
                 for i, j in platform.macros.items()])
 
+    # Add any C preprocesser arguments from CLI or config
+    if Options.cpp_args:
+        path_list.extend(Options.cpp_args)
+
     # Call C preprocessor with args and file
     path_list.append(filename)
     pipe = Popen(path_list, stdout=PIPE, universal_newlines=True)

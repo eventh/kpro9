@@ -50,6 +50,7 @@ def post_cpp(lines):
 
 
 def pre_cpp(lines):
+    """Perform a pre preprocessing step."""
     return lines
 
 

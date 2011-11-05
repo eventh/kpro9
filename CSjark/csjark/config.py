@@ -85,7 +85,7 @@ class Config:
 
         # Create basic Field if no rules fired
         return proto.add_field(name, type_, size, alignment)
-    
+
     def get_field_attributes(self, name, ctype):
         """Create a field depending on rules."""
         # Sort the rules
@@ -96,6 +96,7 @@ class Config:
                 if isinstance(rule, tmp):
                     values[i].append(rule)
         return values
+
 
 class BaseRule:
     """A base class for rules referring to protocol fields."""
@@ -422,9 +423,6 @@ class Options:
 
         # Delegator creates lua file which delegates messages to dissectors
         cls.delegator = Delegator(Platform.mappings)
-
-        # Create platform specific header include files
-        Platform.create_all_headers()
 
     @classmethod
     def handle_protocol_config(cls, obj, filename=''):

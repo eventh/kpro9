@@ -220,6 +220,9 @@ def main():
         config.parse_file(filename)
     Options.prepare_for_parsing()
 
+    # Modify headers so we are able to parse them with pycparser
+    #headers, mapping = cpp.pre_parse_files(headers)
+
     # Create protocols
     for filename in headers:
         create_dissectors(filename)

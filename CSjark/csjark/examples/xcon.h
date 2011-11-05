@@ -9,7 +9,7 @@
 #pragma ident "@(#) $Id$"
 #endif
 
-#include "time.h"
+#include <time.h>
 
 /*
 ** Machine-dependent types

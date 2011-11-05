@@ -85,7 +85,7 @@ class Config:
 
         # Create basic Field if no rules fired
         return proto.add_field(name, type_, size, alignment)
-    
+
     def get_field_attributes(self, name, ctype):
         """Create a field depending on rules."""
         # Sort the rules
@@ -96,6 +96,7 @@ class Config:
                 if isinstance(rule, tmp):
                     values[i].append(rule)
         return values
+
 
 class BaseRule:
     """A base class for rules referring to protocol fields."""
@@ -377,9 +378,10 @@ class Options:
     debug = False
     strict = True
     use_cpp = True
-    cpp_includes = []
     output_dir = None
     output_file = None
+    cpp_includes = []
+    cpp_args = []
 
     # Utility options
     platforms = set() # Set of platforms to support in dissectors
@@ -402,9 +404,12 @@ class Options:
         cls.debug = obj.get('verbose', cls.debug)
         cls.strict = obj.get('strict', cls.strict)
         cls.use_cpp = obj.get('use_cpp', cls.use_cpp)
-        cls.cpp_includes = obj.get('includes', cls.cpp_includes)
         cls.output_dir = obj.get('output_dir', cls.output_dir)
         cls.output_file = obj.get('output_file', cls.output_file)
+
+        # Handle C preprocessor arguments
+        cls.cpp_includes.extend(obj.get('includes', []))
+        cls.cpp_args.extend(obj.get('cpp_args', []))
 
     @classmethod
     def prepare_for_parsing(cls):
@@ -422,9 +427,6 @@ class Options:
 
         # Delegator creates lua file which delegates messages to dissectors
         cls.delegator = Delegator(Platform.mappings)
-
-        # Create platform specific header include files
-        Platform.create_all_headers()
 
     @classmethod
     def handle_protocol_config(cls, obj, filename=''):

@@ -1,4 +1,4 @@
-#include "time.h"
+#include <time.h>
 
 typedef signed int BOOL;
 typedef enum {TRUE, FALSE} bool_t;

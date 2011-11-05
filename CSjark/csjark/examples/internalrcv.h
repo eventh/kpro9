@@ -3,7 +3,7 @@
  * Copyright 2011, Stig Bjorlykke <stig@bjorlykke.org>
  */
 
-#include "time.h"
+#include <time.h>
 
 #define INTERNALRCV 2
 #define STRING_LEN 26

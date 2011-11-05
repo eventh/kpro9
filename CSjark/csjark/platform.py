@@ -47,10 +47,10 @@ class Platform:
             self.sizes[key] = value
 
         # Extend alignment sizes with missing types from default alignment size map
-        self.alignment_sizes = dict(DEFAULT_C_ALIGNEMT_SIZE_MAP)
+        self.alignments = dict(DEFAULT_C_ALIGNEMT_SIZE_MAP)
 
         for key, value in alignment.items():
-            self.alignment_sizes[key] = value
+            self.alignments[key] = value
 
     def map_type(self, ctype):
         """Find the Wireshark type for a ctype."""
@@ -68,35 +68,10 @@ class Platform:
 
     def alignment_size_of(self, ctype):
         """Find the alignment size of a C type in bytes."""
-        if ctype in self.alignment_sizes.keys():
-            return self.alignment_sizes[ctype]
+        if ctype in self.alignments.keys():
+            return self.alignments[ctype]
         else:
             raise ValueError('No known alignment size for type %s' % ctype)
-
-    @classmethod
-    def create_all_headers(cls):
-        """Create all header macros for all platforms."""
-        platforms = cls.mappings.values()
-        undefs = cls._generate_undefines(platforms)
-        for p in platforms:
-            p.header = '%s\n%s\n' % (undefs, p._generate_defines())
-
-    @classmethod
-    def _generate_undefines(cls, platforms):
-        """Create macros which undefines platform specific macros."""
-        def generate(macro):
-            return '#ifdef %s\n\t#undef %s\n#endif' % (macro, macro)
-
-        data = ['/* Undefine all platform macros */']
-        for p in platforms:
-            data.extend(generate(i) for i, j in p.macros.items())
-        return '\n'.join(data)
-
-    def _generate_defines(self):
-        """Create macros which defines platform specific macros."""
-        t = '\n/* Define platform-specific macros for %s */\n' % self.name
-        macros = ['#define %s %s' % (i, j) for i, j in self.macros.items()]
-        return t + '\n'.join(macros)
 
 
 # Default mapping of C type and their wireshark field type.
@@ -232,6 +207,7 @@ UNIX_C_SIZE_MAP = {
         'long double': 16,
 }
 
+
 # Mapping of C sizes for Solaris-x86 platform
 SOLARIS_X86_C_SIZE_MAP = {
         'long': 4,
@@ -248,6 +224,7 @@ SOLARIS_X86_C_SIZE_MAP = {
 SPARC_C_SIZE_MAP = {
         'long double': 16,
 }
+
 
 # Mapping of C sizes for unix like platforms
 UNIX_C_ALIGNMENT_SIZE_MAP = {

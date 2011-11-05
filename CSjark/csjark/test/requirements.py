@@ -5,6 +5,7 @@ import sys, os
 from attest import Tests, assert_hook, contexts
 from pycparser import c_ast
 
+import cpp
 import csjark
 import cparser
 import dissector
@@ -116,19 +117,20 @@ def req_1f():
 
 # Tests for the third requirement, C preprocessor directives and macros
 # FR3: The utility must support C preprocessor directives and macros
-cpp = Tests()
+cpps = Tests()
 
-@cpp.context
+@cpps.context
 def create_ast():
     """Parse a C headerfile with C preprocessor, and create an AST."""
     # Find the header files and cpp if we are run from a different folder
     cpp_h = os.path.join(os.path.dirname(__file__), 'cpp.h')
     inc_h = os.path.join(os.path.dirname(__file__), 'include.h')
     assert os.path.isfile(cpp_h) and os.path.isfile(inc_h)
-    yield cparser.parse_file(cpp_h)
+    text = cpp.parse_file(cpp_h)
+    yield cparser.parse(text)
 
 # FR3-A: The utility shall support #include
-@cpp.test
+@cpps.test
 def req_3a(ast):
     """Test requirement FR3-A: Support for #include."""
     assert ast
@@ -137,7 +139,7 @@ def req_3a(ast):
     assert int(_child(c, 3).children()[1].value) == 5
 
 # FR3-B: The utility shall support #define and #if
-@cpp.test
+@cpps.test
 def req_3b(ast):
     """Test requirement FR3-B: Support for #define and #if."""
     a, b, c = ast.children()
@@ -149,7 +151,7 @@ def req_3b(ast):
     assert int(constant.value) == 10
 
 # FR3-C: Support WIN32, _WIN32, _WIN64, __sparc__, __sparc and sun
-@cpp.test
+@cpps.test
 def req_3c(ast):
     """Test requirement FR3-C: Support for platform specific macros."""
     pass #TODO

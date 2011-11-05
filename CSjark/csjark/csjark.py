@@ -29,6 +29,7 @@ import sys
 import os
 import argparse
 
+import cpp
 import cparser
 import config
 from config import Options
@@ -145,7 +146,8 @@ def create_dissectors(filename):
 
         # Parse the filename and find all struct definitions
         try:
-            ast = cparser.parse_file(filename, platform)
+            text = cpp.parse_file(filename, platform)
+            ast = cparser.parse(text, filename)
             cparser.find_structs(ast, platform)
 
         # Silence errors if not in strict mode

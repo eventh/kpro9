@@ -20,49 +20,6 @@ class ParseError(plyparser.ParseError):
     pass
 
 
-def parse_file(filename, platform=None):
-    """Parse a C file, returns abstract syntax tree."""
-    file = filename
-    cpp_path = 'cpp'
-
-    if Options.use_cpp:
-        cpp_args = []
-
-        cpp_args.append(r'-I../utils/fake_libc_include')
-        cpp_args.extend(Options.cpp_includes)
-
-        # Add as include the folder the files are located in
-        # Need to use absolute paths to avoid a pycparser #line bug
-        if os.path.dirname(filename):
-            cpp_args.append(r'-I%s' %
-                    os.path.abspath(os.path.dirname(filename)))
-
-        if sys.platform == 'win32' and cpp_path == 'cpp':
-            cpp_path = '../utils/cpp.exe' # Windows don't come with a CPP
-        elif sys.platform == 'darwin':
-            cpp_path = 'gcc' # Fix for a bug in Mac GCC 4.2.1
-            cpp_args.append('-E')
-
-        # Create temporary header with platform-specific macros
-        if platform is not None:
-            file = 'temp-%s.tmp.h' % os.path.split(filename)[1]
-            with open(file, 'w') as fp:
-                fp.write('%s\n#include "%s"\n\n' % (
-                        platform.header, os.path.basename(filename)))
-    else:
-        cpp_args = None
-
-    # Generate an abstract syntax tree
-    ast = pycparser.parse_file(file, use_cpp=Options.use_cpp,
-                               cpp_path=cpp_path, cpp_args=cpp_args)
-
-    # Delete temp file, can't use real tempfile as we call CPP program
-    if file != filename:
-        os.remove(file)
-
-    return ast
-
-
 def parse(text, filename=''):
     """Parse C code and return an AST."""
     parser = c_parser.CParser()
@@ -241,7 +198,6 @@ class StructVisitor(c_ast.NodeVisitor):
                 hasattr(child.children()[0], 'names') and child.children()[0].names[0] == 'char'): #hack
             size *= self.size_of('char')
             return child.declname, 'string', size, self.alignment('char'), depth, None
-        
 
         # Multidimensional, handle recursively
         if isinstance(child, c_ast.ArrayDecl):

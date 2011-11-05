@@ -7,6 +7,7 @@ import sys, os
 from attest import Tests, assert_hook, contexts
 from pycparser import c_ast
 
+import cpp
 import cparser
 from platform import Platform
 
@@ -178,17 +179,18 @@ def parse_error():
 
 
 # Tests for the C preprocessor
-cpp = Tests()
+cpps = Tests()
 
-@cpp.context
+@cpps.context
 def create_ast():
     """Parse a C headerfile with C preprocessor, and create an AST."""
     cpp_h = os.path.join(os.path.dirname(__file__), 'cpp.h')
     inc_h = os.path.join(os.path.dirname(__file__), 'include.h')
     assert os.path.isfile(cpp_h) and os.path.isfile(inc_h)
-    yield cparser.parse_file(cpp_h)
+    text = cpp.parse_file(cpp_h)
+    yield cparser.parse(text)
 
-@cpp.test
+@cpps.test
 def cpp_define(ast):
     """Test that our C preprocessor support #define."""
     assert ast
@@ -200,14 +202,14 @@ def cpp_define(ast):
     assert constant.type == 'int'
     assert int(constant.value) == 10
 
-@cpp.test
+@cpps.test
 def cpp_include(ast):
     """Test that our C preprocessor support #include."""
     a, b, c = ast.children()
     assert _child(c, 5).names[0] == 'bool'
     assert int(_child(c, 3).children()[1].value) == 5
 
-@cpp.test
+@cpps.test
 def cpp_macros(ast):
     """Test that our C preprocessor support _WIN32 and other macros."""
     pass # Meh, how do we solve this?

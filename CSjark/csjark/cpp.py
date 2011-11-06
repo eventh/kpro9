@@ -78,6 +78,8 @@ def pre_cpp(lines):
 
 def _get_cpp():
     """Find the path and args to the C preprocessor."""
+    if Options.cpp_path is not None:
+        return Options.cpp_path
     path = ['cpp']
     if sys.platform == 'win32':
         path = ['../utils/cpp.exe'] # Windows don't come with a CPP

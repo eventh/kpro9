@@ -83,6 +83,10 @@ def parse_args(args=None):
     parser.add_argument('-n', '--nocpp', action='store_false', dest='nocpp',
             default=Options.use_cpp, help='disable C preprocessor')
 
+    # Arugment for specifying which CPP to use
+    parser.add_argument('-C', '--CPP', metavar='cpp',
+            nargs='?', help='Which C preprocessor to use')
+
     # CPP include arguments
     parser.add_argument('-i', '--include', metavar='header', default=[],
             nargs='*', help='Process file as Cpp #include "file" directive')
@@ -113,8 +117,9 @@ def parse_args(args=None):
     Options.verbose = namespace.verbose
     Options.debug = namespace.debug
     Options.strict = namespace.strict
-    Options.use_cpp = namespace.nocpp
     Options.generate_placeholders = namespace.placeholders
+    Options.use_cpp = namespace.nocpp
+    Options.cpp_path = namespace.CPP
     Options.cpp_includes = namespace.include
     Options.cpp_include_dirs = namespace.Includes
     Options.cpp_defines = namespace.Define

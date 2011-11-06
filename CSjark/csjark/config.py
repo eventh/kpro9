@@ -383,6 +383,7 @@ class Options:
 
     # C preprocessor options, can also be set by CLI
     use_cpp = True
+    cpp_path = None
     cpp_include_dirs = []
     cpp_includes = []
     cpp_defines = []
@@ -417,6 +418,7 @@ class Options:
         cls.use_cpp = obj.get('use_cpp', cls.use_cpp)
         if 'cpp' in obj:
             cppobj = obj['cpp']
+            cls.cpp_path = cppobj.get('cpp_path', cls.cpp_path)
             cls.cpp_include_dirs.extend(cppobj.get('include_dirs', []))
             cls.cpp_includes.extend(cppobj.get('includes', []))
             cls.cpp_defines.extend(cppobj.get('defines', []))

@@ -8,8 +8,13 @@ from subprocess import Popen, PIPE
 from config import Options
 
 
-def parse_file(filename, platform=None):
-    """Run 'filename' through C preprocessor program."""
+def parse_file(filename, platform=None, includes=None):
+    """Run a C header or code file through C preprocessor program.
+
+    'filename' is the file to feed CPP.
+    'platform' is the platform to simulate.
+    'includes' is a set of filename to #include.
+    """
     # Just read the content of the file if we don't want to use cpp
     if not Options.use_cpp:
         with open(filename, 'r') as f:
@@ -24,6 +29,12 @@ def parse_file(filename, platform=None):
     if os.path.dirname(filename):
         path_list.append('-I%s' % os.path.dirname(filename))
 
+    # Add arguments to #include if 'includes' is given
+    #if includes is not None:
+    #    print("wtf", ['-i "%s"' % i for i in includes])
+    #    path_list.extend(['-include%s' % i for i in includes])
+    # TODO: cpp.exe dont accept -include,wtf!
+
     # Define macros
     if platform is not None:
         #path_list.append('-undef') # Remove system-specific defines
@@ -32,7 +43,7 @@ def parse_file(filename, platform=None):
 
     # Add any C preprocesser arguments from CLI or config
     path_list.extend('-I%s' % i for i in Options.cpp_include_dirs)
-    path_list.extend('-i%s' % i for i in Options.cpp_includes)
+    path_list.extend('-include "%s"' % i for i in Options.cpp_includes)
     path_list.extend('-D%s' % i for i in Options.cpp_defines)
     path_list.extend('-U%s' % i for i in Options.cpp_undefines)
     path_list.extend(Options.cpp_args)

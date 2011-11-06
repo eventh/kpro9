@@ -31,7 +31,8 @@ def create_protocols(header, yml):
 
     # Create protocols
     for filename in headers:
-        csjark.create_dissectors(filename)
+        for platform in config.Options.platforms:
+            csjark.create_dissector(filename, platform)
 
     protocols = cparser.StructVisitor.all_protocols
 

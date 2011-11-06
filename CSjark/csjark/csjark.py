@@ -170,30 +170,68 @@ def parse_args(args=None):
     return headers, configs
 
 
-def create_dissectors(filename):
-    """Parse 'filename' to create a Wireshark protocol dissector."""
-    # Handle different platforms
-    for platform in Options.platforms:
+def parse_headers(headers):
+    """Parse 'headers' to create a Wireshark protocol dissector."""
+    failed = [] # Protocols we have failed to generate
 
-        # Parse the filename and find all struct definitions
-        try:
-            text = cpp.parse_file(filename, platform)
-            ast = cparser.parse(text, filename)
-            cparser.find_structs(ast, platform)
+    # First try, in the order given through the CLI
+    for filename in headers:
+        for platform in Options.platforms:
+            err = create_dissector(filename, platform)
+            if err is not None:
+                failed.append((filename, platform, err))
 
-        except Exception as err:
-            print('Skipped "%s":%s as it raised %s' % (
-                    filename, platform.name, repr(err)))
+    # Second try, simply try the failed files again as it might work now
+    for i in reversed(range(len(failed))):
+        filename, platform, tmp = failed.pop(i)
+        err = create_dissector(filename, platform)
+        if err is not None:
+            failed.append((filename, platform, err))
+
+    # Third try, include all who worked as it might help
+    includes = set(headers) - set([i for i,j,k in failed])
+
+    for i in reversed(range(len(failed))):
+        filename, platform, tmp = failed.pop(i)
+        err = create_dissector(filename, platform, includes)
+        if err is None:
+            includes.add(filename)
+        else:
+            failed.append((filename, platform, err))
             if Options.debug:
                 sys.excepthook(*sys.exc_info())
                 print()
-            continue
+
+    # Give up!
+    for filename, platform, err in failed:
+        print('Skipped "%s":%s as it raised %s' % (
+                filename, platform.name, repr(err)))
 
     if Options.debug:
         ast.show()
 
+
+def create_dissector(filename, platform, includes=None):
+    """Parse 'filename' to create a Wireshark protocol dissector.
+
+    'filename' is the C header/code file to parse.
+    'platform' is the platform we should simulate.
+    'includes' is a set of filenames to #include.
+    Returns the error if parsing failed, None if succeeded.
+    """
+    try:
+        text = cpp.parse_file(filename, platform, includes)
+        ast = cparser.parse(text, filename)
+        cparser.find_structs(ast, platform)
+    except Exception as err:
+        if Options.verbose:
+            print('Failed "%s":%s which raised %s' % (
+                    filename, platform.name, repr(err)))
+        return err
+
     if Options.verbose:
-        print("Parsed header file '%s' successfully." % filename)
+        print("Parsed header file '%s':%s successfully." % (
+                filename, platform.name))
 
 
 def write_dissectors_to_file(all_protocols):
@@ -265,9 +303,8 @@ def main():
         config.parse_file(filename)
     Options.prepare_for_parsing()
 
-    # Create protocols
-    for filename in headers:
-        create_dissectors(filename)
+    # Parse all headers to create protocols
+    parse_headers(headers)
 
     # Write dissectors to disk
     protocols = cparser.StructVisitor.all_protocols

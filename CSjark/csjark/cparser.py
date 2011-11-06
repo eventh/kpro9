@@ -65,9 +65,6 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def _visit_nodes(self, node, union=False):
         """Visit a node in the tree."""
-        # Visit children
-        c_ast.NodeVisitor.generic_visit(self, node)
-
         # No children, its a member and not a declaration
         if not node.children():
             return
@@ -75,6 +72,13 @@ class StructVisitor(c_ast.NodeVisitor):
         # Typedef structs
         if not node.name:
             node.name = self.type_decl[-1]
+
+        # Check if a protocol already exists for this node
+        if self._find_protocol(node) is not None:
+            return
+
+        # Visit children
+        c_ast.NodeVisitor.generic_visit(self, node)
 
         # Create the protocol for the struct
         proto = self._create_protocol(node, union)
@@ -286,6 +290,21 @@ class StructVisitor(c_ast.NodeVisitor):
         else:
             return proto.conf.create_field(proto, name, ctype, size, alignment)
 
+    def _find_protocol(self, node):
+        """Check if the protocol already exists."""
+        if (node.name, self.platform) not in StructVisitor.all_protocols:
+            return None
+        else:
+            old = StructVisitor.all_protocols[(node.name, self.platform)]
+
+        # Disallow structs with same name
+        o, norm = old._coord, os.path.normpath
+        if norm(o.file) == norm(node.coord.file) and o.line == node.coord.line:
+            return old
+
+        raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
+               node.name, o.file, o.line, node.coord.file, node.coord.line))
+
     def _create_protocol(self, node, union=False):
         """Create a new protocol for 'node'."""
         conf = Options.configs.get(node.name, None)
@@ -295,26 +314,9 @@ class StructVisitor(c_ast.NodeVisitor):
             proto = Protocol(node.name, conf, self.platform)
         proto._coord = node.coord
 
-        return self._store_protocol(node, proto)
-
-    def _store_protocol(self, node, proto):
-        """Store the protocol, unless it already exists."""
         # Add protocol to list of all protocols
-        if (node.name, self.platform) not in StructVisitor.all_protocols:
-            StructVisitor.all_protocols[(node.name, self.platform)] = proto
-            return proto
-
-        old_proto = StructVisitor.all_protocols[(node.name, self.platform)]
-
-        # Don't re-create already created protocols
-        o, norm = old_proto._coord, os.path.normpath
-        if norm(o.file) == norm(node.coord.file) and o.line == node.coord.line:
-            del proto
-            return None
-
-        # Disallow structs with same name
-        raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
-               node.name, o.file, o.line, node.coord.file, node.coord.line))
+        StructVisitor.all_protocols[(node.name, self.platform)] = proto
+        return proto
 
     def _get_type(self, node):
         """Get the C type from a node."""

@@ -10,7 +10,7 @@ Options:
     files:
 
 Structs:
-  - name: sprint4_test
+  - name: cpp_test
     id: 99
     #id: [10, 12, 14]
 

@@ -373,20 +373,27 @@ class Options:
     These options are set by either command line interface or
     one or more configuration yaml files.
     """
-    # Parser options, can also be set by command line arguments
+    # Parser options, can also be set by CLI
     verbose = False
     debug = False
     strict = True
-    use_cpp = True
     output_dir = None
     output_file = None
+    generate_placeholders = False
+
+    # C preprocessor options, can also be set by CLI
+    use_cpp = True
+    cpp_include_dirs = []
     cpp_includes = []
+    cpp_defines = []
+    cpp_undefines = []
     cpp_args = []
 
     # Utility options
     platforms = set() # Set of platforms to support in dissectors
     delegator = None # Used to create a delegator dissector
     configs = {} # Configuration for specific protocols
+    files = {} # Configuration for specific files
 
     @classmethod
     def update(cls, obj):
@@ -401,15 +408,20 @@ class Options:
 
         # Handle boolean options
         cls.verbose = obj.get('verbose', cls.verbose)
-        cls.debug = obj.get('verbose', cls.debug)
-        cls.strict = obj.get('strict', cls.strict)
-        cls.use_cpp = obj.get('use_cpp', cls.use_cpp)
+        cls.debug = obj.get('debug', cls.debug)
+        #cls.strict = obj.get('strict', cls.strict)
         cls.output_dir = obj.get('output_dir', cls.output_dir)
         cls.output_file = obj.get('output_file', cls.output_file)
 
         # Handle C preprocessor arguments
-        cls.cpp_includes.extend(obj.get('includes', []))
-        cls.cpp_args.extend(obj.get('cpp_args', []))
+        cls.use_cpp = obj.get('use_cpp', cls.use_cpp)
+        if 'cpp' in obj:
+            cppobj = obj['cpp']
+            cls.cpp_include_dirs.extend(cppobj.get('include_dirs', []))
+            cls.cpp_includes.extend(cppobj.get('includes', []))
+            cls.cpp_defines.extend(cppobj.get('defines', []))
+            cls.cpp_undefines.extend(cppobj.get('undefines', []))
+            cls.cpp_args.extend(cppobj.get('arguments', []))
 
     @classmethod
     def prepare_for_parsing(cls):

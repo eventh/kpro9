@@ -57,17 +57,13 @@ def parse_args(args=None):
     parser.add_argument('-d', '--debug', action='store_true',
             default=Options.debug, help='print debugging information')
 
-    # No CPP flag
-    parser.add_argument('-n', '--nocpp', action='store_false', dest='nocpp',
-            default=Options.use_cpp, help='disable C preprocessor')
-
-    # CPP include arguments
-    parser.add_argument('-I', '--Include', metavar='include',
-            default=[], nargs='*', help='C preprocessor includes')
+    # Strict flag, not in use yet
+    #parser.add_argument('-s', '--strict', action='store_true',
+    #        default=Options.strict, help='')
 
     # A list of C header files
-    parser.add_argument('-i', '--input', metavar='header',
-            default=[], nargs='*', help='C file(s) to parse')
+    parser.add_argument('-f', '--file', metavar='header',
+            default=[], nargs='*', help='C header or code file(s) to parse')
 
     # Configuration file
     parser.add_argument('-c', '--config', metavar='config', dest='configs',
@@ -76,6 +72,35 @@ def parse_args(args=None):
     # Write output to destination file
     parser.add_argument('-o', '--output', metavar='output',
             nargs='?', help='write output to directory/file')
+
+    # Generate placeholder config files
+    parser.add_argument('-p', '--placeholders', action='store_false',
+            default=Options.generate_placeholders,
+            help='Generate placeholder config file for unknown structs')
+
+    # No CPP flag
+    parser.add_argument('-n', '--nocpp', action='store_false', dest='nocpp',
+            default=Options.use_cpp, help='disable C preprocessor')
+
+    # CPP include arguments
+    parser.add_argument('-i', '--include', metavar='header', default=[],
+            nargs='*', help='Process file as Cpp #include "file" directive')
+
+    # CPP Includes directories arguments
+    parser.add_argument('-I', '--Includes', metavar='directory', default=[],
+            nargs='*', help='Directories to be searched for Cpp includes')
+
+    # CPP Define macro arguments
+    parser.add_argument('-D', '--Define', metavar='name=definition',
+            default=[], nargs='*', help='Predefine name as a Cpp macro')
+
+    # CPP Undefine macro arguments
+    parser.add_argument('-U', '--Undefine', metavar='name', default=[],
+            nargs='*', help='Cancel any previous Cpp definition of name')
+
+    # Additional CPP arguments
+    parser.add_argument('-A', '--Additional', metavar='argument', default=[],
+            nargs='*', help='Any additional C preprocessor arguments')
 
     # Parse arguments
     if args is None:
@@ -87,9 +112,14 @@ def parse_args(args=None):
     Options.verbose = namespace.verbose
     Options.debug = namespace.debug
     Options.use_cpp = namespace.nocpp
-    Options.cpp_includes = namespace.Include
+    Options.generate_placeholders = namespace.placeholders
+    Options.cpp_includes = namespace.include
+    Options.cpp_include_dirs = namespace.Includes
+    Options.cpp_defines = namespace.Define
+    Options.cpp_undefines = namespace.Undefine
+    Options.cpp_args = namespace.Additional
 
-    headers = namespace.input
+    headers = namespace.file
     if namespace.header:
         headers.append(namespace.header)
 

@@ -19,7 +19,6 @@ def parse_file(filename, platform=None):
 
     # Add fake includes and includes from configuration
     path_list.append(r'-I../utils/fake_libc_include')
-    path_list.extend(['-I%s' % i for i in Options.cpp_includes])
 
     # Add as include the folder the files are located in
     if os.path.dirname(filename):
@@ -27,12 +26,16 @@ def parse_file(filename, platform=None):
 
     # Define macros
     if platform is not None:
+        #path_list.append('-undef') # Remove system-specific defines
         path_list.extend(['-D%s=%s' % (i, j)
                 for i, j in platform.macros.items()])
 
     # Add any C preprocesser arguments from CLI or config
-    if Options.cpp_args:
-        path_list.extend(Options.cpp_args)
+    path_list.extend('-I%s' % i for i in Options.cpp_include_dirs)
+    path_list.extend('-i%s' % i for i in Options.cpp_includes)
+    path_list.extend('-D%s' % i for i in Options.cpp_defines)
+    path_list.extend('-U%s' % i for i in Options.cpp_undefines)
+    path_list.extend(Options.cpp_args)
 
     # Call C preprocessor with args and file
     path_list.append(filename)

@@ -11,6 +11,5 @@ Options:
 
 Structs:
   - name: cpp_test
-    id: 99
-    #id: [10, 12, 14]
+    id: [10, 12, 14]
 

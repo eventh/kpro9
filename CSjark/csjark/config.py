@@ -453,11 +453,18 @@ class Options:
         conf = cls.configs[name]
 
         # Protocol's optional id
-        if 'id' in obj:
-            conf.id = int(obj['id'])
-            if conf.id < 0 or conf.id > 65535:
-                raise ConfigError('Invalid dissector ID %s: %i (0 - 65535)' % (
-                        conf.name, conf.id))
+        ids = obj.get('id', None)
+        if ids:
+            try:
+                ids = [int(ids)]
+            except TypeError:
+                pass
+
+            invalid_ids = [i for i in ids if i < 0 or i > 65535]
+            if invalid_ids:
+                raise ConfigError('Invalid dissector ID %s: %i (0 - 65535)'
+                        % (conf.name, conf.id))
+            conf.id = ids[0] # Todo, register all ids
 
         # Protocol's optional description
         if 'description' in obj:

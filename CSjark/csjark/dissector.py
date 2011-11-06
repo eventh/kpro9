@@ -76,13 +76,13 @@ class Field:
         self.mask = None # Integer mask of this field
         self.desc = None # Description of the field
         self.offset = None # Useful for others to access buffer(offset, size)
-    
+
     def get_array_postfix(self, sequence):
         postfix = ''
         if sequence is not None:
             postfix = '_'.join(str(i) for i in sequence)
         return postfix
-    
+
     def get_array_index_postfix(self, sequence):
         postfix = ''
         if sequence is not None:
@@ -115,7 +115,7 @@ class Field:
             store = ''
         self.offset = offset
         t = '\t{store}{tree}:{add}({var}, buffer({offset}, {size}))'
-            
+
         return t.format(store=store, tree=tree, add=self.add_var,
                         var=var, offset=offset, size=self.size)
 
@@ -205,7 +205,7 @@ class EnumField(Field):
             self.values_var = None
         self.tree_var = create_lua_var(self.name)
 
-    def get_definition(self, sequence = None):
+    def get_definition(self, sequence=None):
         """Get the ProtoField definition for this field."""
         variable_name = self.var
         abbr = self.abbr
@@ -227,7 +227,6 @@ class EnumField(Field):
         """Get the code for dissecting this field."""
         data = []
         postfix = self.get_array_postfix(sequence)
-        
 
         # Local var definitions
         if store is not None:
@@ -236,7 +235,7 @@ class EnumField(Field):
             store = self.tree_var
             if sequence is not None:
                 store = '%s_%s' % (store, postfix)
-            
+
         data.append(super().get_code(offset, store, sequence, tree))
 
         # Add a test which validates the enum value
@@ -268,7 +267,7 @@ class ArrayField(Field):
         else:
             self.field = ArrayField(proto, name, type, base_size,
                                     alignment_size, depth)
-            
+
         if isinstance(type, Protocol) or isinstance(type, UnionProtocol):
             super().__init__(proto, name, type.name, array_size * base_size,
                              alignment_size)
@@ -341,7 +340,7 @@ class ArrayField(Field):
         type_ = self.type
         if type_ not in ('string', 'stringz'):
             type_ = 'bytes'
-        
+
         # This subtree definition
         data.append(self._create_field(var, type_, abbr, self.name))
 
@@ -358,7 +357,7 @@ class ArrayField(Field):
         if sequence is None:
             sequence = []
             data = ['\t-- Array handling for %s' % self.name]
-        
+
         if sequence == []:
             t = '\tlocal {tree} = {parent}:{add}("{name}: {type} array", buffer({off}, {size}))'
             data.append(t.format(tree=tree, parent=parent, name=self.name,
@@ -369,7 +368,7 @@ class ArrayField(Field):
             var = '%s_%s' % (var, self.get_array_postfix(sequence))
             t = '\tlocal {tree} = {parent}:{add}("{name}{index}: {type} array", buffer({off}, {size}))'
             data.append(t.format(name=self.name, tree=tree, parent=parent,
-                                 type=self.type, index = index, 
+                                 type=self.type, index = index,
                                  add=self.add_var, var=var, off=offset,
                                  size=self.size))
 
@@ -417,7 +416,6 @@ class BitField(Field):
     def get_definition(self, sequence=None):
         data = ['-- Bitstring definitions for %s' % self.name]
 
-        
         postfix = self.get_array_postfix(sequence)
         var = self.var
         index = ''
@@ -690,7 +688,7 @@ class Protocol:
         self.data.append(func_diss.format(var=self.var))
         self.data.append(sub_tree.format(
                 add=self._get_tree_add(), var=self.var))
-        self.data.append(check.format(var=self.var, name = self.name))
+        self.data.append(check.format(var=self.var, name=self.name))
 
         offset = self._fields_code()
 

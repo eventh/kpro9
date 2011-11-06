@@ -22,7 +22,7 @@ def create_protocols(header, yml):
                 o.output_dir, o.output_file, o.platforms, o.delegator)
 
     # Parse command line arguments
-    headers, configs = csjark.parse_args(['-i', header, '-c', yml])
+    headers, configs = csjark.parse_args(['-f', header, '-c', yml])
 
     # Parse config files
     for filename in configs:

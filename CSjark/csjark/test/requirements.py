@@ -298,7 +298,7 @@ def req6_a(cli):
     header = os.path.join(os.path.dirname(__file__), 'cpp.h')
     include = os.path.join(os.path.dirname(__file__), 'include.h')
     assert os.path.isfile(include)
-    headers, _ = csjark.parse_args([header, '-v', '-d', '-i', include])
+    headers, _ = csjark.parse_args([header, '-v', '-d', '-f', include])
     assert len(headers) == 2
 
 # FR6-B: Command line shall support parameter for configuration file
@@ -310,7 +310,7 @@ def req6_b(cli):
     config = os.path.join(os.path.dirname(__file__), 'test.yml')
     assert os.path.isfile(config)
     headers, configs = csjark.parse_args(
-            [header, '--verbose', '-d', '-i', include, '--config', config])
+            [header, '--verbose', '-d', '-f', include, '--config', config])
     assert len(headers) == 2
 
 # FR6-C: Command line shall support batch mode of C header and config files

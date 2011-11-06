@@ -476,6 +476,16 @@ class Options:
                     type_(conf, rule)
 
 
+def generate_placeholders(protocols):
+    def placeholder(proto):
+        return 'name: %s #%s\n    id:\n' % (proto.name, proto._coord.file)
+
+    protos = {p.name:p for key, p in protocols.items()}
+    data = [placeholder(i) for i in protos.values() if i.conf is None]
+    output = 'Structs:%s' % '\n  - '.join([''] + data)
+    return output, len(data)
+
+
 def parse_file(filename, only_text=None):
     """Parse a configuration file."""
     if only_text is not None:

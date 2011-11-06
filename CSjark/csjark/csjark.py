@@ -74,7 +74,7 @@ def parse_args(args=None):
             nargs='?', help='write output to directory/file')
 
     # Generate placeholder config files
-    parser.add_argument('-p', '--placeholders', action='store_false',
+    parser.add_argument('-p', '--placeholders', action='store_true',
             default=Options.generate_placeholders,
             help='Generate placeholder config file for unknown structs')
 
@@ -228,7 +228,8 @@ def write_dissectors_to_file(all_protocols):
             f.write('\n\n'.join(dissectors))
 
         if Options.verbose:
-            print('Wrote %s to %s (%i platforms)' % (name, path, len(protos)))
+            print("Wrote %s to '%s' (%i platform(s))" %
+                    (name, path, len(protos)))
 
 
 def write_delegator_to_file():
@@ -239,6 +240,23 @@ def write_delegator_to_file():
 
     with open(filename, 'w') as f:
         f.write(Options.delegator.create())
+
+    if Options.verbose:
+        print("Wrote delegator file to '%s'" % filename)
+
+
+def write_placeholders_to_file(protocols):
+    """Write a placeholder file for 'protocols' with no configuration."""
+    if not protocols or not Options.generate_placeholders:
+        return
+
+    text, count = config.generate_placeholders(protocols)
+    filename = 'placeholders.yml'
+    with open(filename, 'w') as f:
+        f.write(text)
+
+    if Options.verbose:
+        print("Wrote %i config placeholders to '%s'" % (count, filename))
 
 
 def main():
@@ -258,6 +276,7 @@ def main():
     protocols = cparser.StructVisitor.all_protocols
     write_dissectors_to_file(protocols)
     write_delegator_to_file()
+    write_placeholders_to_file(protocols)
 
     print("Successfully parsed %i file(s), created %i dissector(s)." % (
             len(headers), len(protocols)))

@@ -246,7 +246,8 @@ class StructVisitor(c_ast.NodeVisitor):
         sub_proto = StructVisitor.all_protocols[(proto_name, self.platform)]
         return proto.add_protocol(name, sub_proto)
 
-    def handle_array(self, proto, name, ctype, size, alignment, depth, enum_members = None):
+    def handle_array(self, proto, name, ctype, size,
+            alignment, depth, enum_members=None):
         """Add an ArrayField to the protocol."""
         if not depth:
             return self.handle_field(proto, name, ctype, size, alignment)

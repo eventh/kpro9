@@ -1,4 +1,4 @@
-=============================
+%=============================
 \chapter{Preliminary Studies}
 %============================
 This chapter presents the preliminary studies for this project.
@@ -744,87 +744,6 @@ for creating flexible configuration support for our \gls{utility}.
 \subsection{Unit Testing Framework Choice}
 %-----------------------------------------
 \label{sec:pre:testchoice}
-The three frameworks we looked at  are very similar, being modern \Gls{python}
-testing frameworks. They differ in maturity and what is often called magic in
-the \Gls{python} community.
-
-py.test is the most mature but also the most magic, it uses a lot of
-introspection to discover tests and it has no \Gls{api}. nose is heavily influenced
-by py.test, but it tries to be more explicit, and provides an \Gls{api}. Attest is
-the youngest testing framework, and like nose, has less magic and focuses on
-providing a very pythonic \Gls{api}. Being the youngest also means it has the least
-documentation, functionality and plugins. Therefore Attest might be the easiest
-testing framework to learn. Therefor we decided to use
-\hyperref[sec:pre:attest]{Attest} for unit testing of our \gls{utility}.
-
-\subsection{Our Framework}
-%-------------------------
-\label{sec:pre:framework}
-Our \gls{utility} will need to take as input \Gls{c} \gls{header} files, search through them to
-find \gls{struct} definitions, and create \Gls{lua} scripts which dissects the \glspl{struct} in
-\hyperref[sec:pre:wireshark]{Wireshark}.
-
-To find the \glspl{struct} we will use \gls{pycparser} to parse the input files, create an
-\gls{AST}, and to find the \gls{struct} definitions. We will use pyYAML to
-read configuration from file, which together with the \gls{struct} definitions will
-be placed in some suitable data structures for generating \glspl{dissector}.
-
-The versions of the different tools and \glspl{library} we are using can be found in
-\autoref{tab:pre:versions}.
-\begin{table}[!h] \footnotesize \center
-\vspace{-10pt}
-\caption{Versions of tools and \glspl{library}\label{tab:pre:versions}}
-\begin{tabular}{l l l}
-	\toprule
-	Library/Tool & Version & Why \\
-	\midrule
-	\Gls{python} & CPython 3.2.2 & Latest stable standard \Gls{python} implementation \\
-	\gls{pycparser} & 2.05-dev & Development version, for \_Bool support \\
-	pyYAML & 3.10 & Latest stable version \\
-	\Gls{aply} & 3.4 & Latest stable version \\
-	Attest & 0.6-dev & Development version, for \Gls{python} 3.2 support \\
-	Sphinx & 1.0.8 & Latest stable version \\
-	WireShark & 1.7.0-SVN & Latest nightly build, for \Gls{lua} support \\
-	\bottomrule
-\end{tabular}
-\vspace{-10pt}
-\end{table}
-
-
-%-----------------------------
-\section{IP Rights \& License}
-%-----------------------------
-\label{sec:pre:license}
-The customer has explained that they do not intend to distribute our \gls{utility},
-and that we are free to license it as open source if we want to, under
-whichever license we feel is most suited. They suggested \gls{gnu} \Gls{gpl} as \Gls{wireshark}
-is released under it.
-
-We needed to consider the licenses of the \glspl{library} and tools we depend upon
-when we decided which license to use. This is summarized by
-\autoref{tab:pre:licenses}.
-\begin{table}[!h] \footnotesize \center
-\vspace{-20pt}
-\caption{Licenses\label{tab:pre:licenses}}
-\begin{tabular}{l l}
-	\toprule
-	\Gls{wireshark} & \gls{gnu} \Gls{gpl} \\
-	\Gls{aply} & \Gls{bsd}-new \\
-	\gls{pycparser} & \Gls{bsd}-new \\
-	pyYAML & \Gls{mit} \\
-	\midrule
-	Our \gls{utility} & \Gls{bsd}-new \\
-	\bottomrule
-\end{tabular}
-\vspace{-10pt}
-\end{table}
-
-\noindent Some of the requirements for our \gls{utility} might require us to modify
-the \Gls{c} \gls{preprocessor} in \Gls{aply} and the \gls{pycparser} \gls{library}, which made us consider
-the new 2-clause \Gls{bsd} license the most suited for us. Since it also gives us the
-option to later move to a more restrictive license like \Gls{gpl}, we decided to use
-it.
-
 The three frameworks we looked at  are very similar, being modern \Gls{python}
 testing frameworks. They differ in maturity and what is often called magic in
 the \Gls{python} community.

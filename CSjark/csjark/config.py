@@ -376,7 +376,7 @@ class Options:
     # Parser options, can also be set by CLI
     verbose = False
     debug = False
-    strict = True
+    strict = False
     output_dir = None
     output_file = None
     generate_placeholders = False
@@ -409,7 +409,7 @@ class Options:
         # Handle boolean options
         cls.verbose = obj.get('verbose', cls.verbose)
         cls.debug = obj.get('debug', cls.debug)
-        #cls.strict = obj.get('strict', cls.strict)
+        cls.strict = obj.get('strict', cls.strict)
         cls.output_dir = obj.get('output_dir', cls.output_dir)
         cls.output_file = obj.get('output_file', cls.output_file)
 
@@ -484,9 +484,9 @@ class Options:
 
 
 def generate_placeholders(protocols):
+    """Generate placeholder config for unknown structs."""
     def placeholder(proto):
         return 'name: %s #%s\n    id:\n' % (proto.name, proto._coord.file)
-
     protos = {p.name:p for key, p in protocols.items()}
     data = [placeholder(i) for i in protos.values() if i.conf is None]
     output = 'Structs:%s' % '\n  - '.join([''] + data)

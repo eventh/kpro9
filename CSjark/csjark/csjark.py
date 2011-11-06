@@ -58,8 +58,9 @@ def parse_args(args=None):
             default=Options.debug, help='print debugging information')
 
     # Strict flag, not in use yet
-    #parser.add_argument('-s', '--strict', action='store_true',
-    #        default=Options.strict, help='')
+    parser.add_argument('-s', '--strict', action='store_true',
+            default=Options.strict,
+            help='Only generate dissectors for known structs')
 
     # A list of C header files
     parser.add_argument('-f', '--file', metavar='header',
@@ -111,6 +112,7 @@ def parse_args(args=None):
     # Store options
     Options.verbose = namespace.verbose
     Options.debug = namespace.debug
+    Options.strict = namespace.strict
     Options.use_cpp = namespace.nocpp
     Options.generate_placeholders = namespace.placeholders
     Options.cpp_includes = namespace.include
@@ -155,7 +157,6 @@ def parse_args(args=None):
         i = 0
         while i < len(var):
             if os.path.isdir(var[i]):
-                Options.strict = False # Batch processing
                 folder = var.pop(i)
                 var.extend(os.path.join(folder, path) for path in
                         os.listdir(folder) if os.path.isdir(path)
@@ -163,7 +164,7 @@ def parse_args(args=None):
             else:
                 i += 1
 
-    files_in_folder(headers, ('.h', '.c'))
+    files_in_folder(headers, ('.h', '.hpp', '.c'))
     files_in_folder(configs, ('.yml', ))
 
     return headers, configs
@@ -180,17 +181,13 @@ def create_dissectors(filename):
             ast = cparser.parse(text, filename)
             cparser.find_structs(ast, platform)
 
-        # Silence errors if not in strict mode
         except Exception as err:
-            if Options.strict:
-                raise
-            else:
-                print('Skipped "%s":%s as it raised %s' % (
-                        filename, platform.name, repr(err)))
-                if Options.debug:
-                    sys.excepthook(*sys.exc_info())
-                    print()
-                continue
+            print('Skipped "%s":%s as it raised %s' % (
+                    filename, platform.name, repr(err)))
+            if Options.debug:
+                sys.excepthook(*sys.exc_info())
+                print()
+            continue
 
     if Options.debug:
         ast.show()

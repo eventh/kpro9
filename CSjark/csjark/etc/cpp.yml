@@ -1,0 +1,16 @@
+Options:
+    verbose: True
+    use_cpp: True
+    cpp:
+        include_dirs: []
+        includes: []
+        defines: [CONFIG_DEFINED=3, REMOVE=1]
+        undefines: [REMOVE]
+        arguments: [-D ARR=2]
+    files:
+
+Structs:
+  - name: sprint4_test
+    id: 99
+    #id: [10, 12, 14]
+

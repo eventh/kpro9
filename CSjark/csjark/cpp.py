@@ -43,14 +43,14 @@ def parse_file(filename, platform=None, includes=None):
     path_list.extend(Options.cpp_args)
 
     # Add arguments to #include if 'includes' is given
-    #if includes is not None:
-    #    if sys.platform == 'win32':
-    #        inc = list(includes) + [filename]
-    #        filename = 'tmpfile.h'
-    #        with open(filename, 'w') as f:
-    #            f.write('\n'.join('#include "%s"' % i for i in inc) + '\n')
-    #    else:
-    #        path_list.extend(['-include%s' % i for i in includes])
+    if includes is not None:
+        if sys.platform == 'win32': # Hack as our CPP lack -include
+            inc = list(includes) + [filename]
+            filename = 'tmpfile.h'
+            with open(filename, 'w') as f:
+                f.write('\n'.join('#include "%s"' % i for i in inc) + '\n')
+        else:
+            path_list.extend(['-include%s' % i for i in includes])
 
     # Call C preprocessor with args and file
     path_list.append(filename)

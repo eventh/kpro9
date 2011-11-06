@@ -189,13 +189,14 @@ def parse_headers(headers):
             failed.append((filename, platform, err))
 
     # Third try, include all who worked as it might help
-    includes = set(headers) - set([i for i,j,k in failed])
+    failed_names = [filename for filename, platform, err in failed]
+    includes = [file for file in headers if file not in failed_names]
 
     for i in reversed(range(len(failed))):
         filename, platform, tmp = failed.pop(i)
         err = create_dissector(filename, platform, includes)
         if err is None:
-            includes.add(filename)
+            includes.append(filename)
         else:
             failed.append((filename, platform, err))
             if Options.debug:

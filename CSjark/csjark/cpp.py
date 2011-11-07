@@ -44,13 +44,13 @@ def parse_file(filename, platform=None, includes=None):
 
     # Add arguments to #include if 'includes' is given
     if includes is not None:
-        if sys.platform == 'win32': # Hack as our CPP lack -include
+        if path_list[0] == 'gcc':
+            path_list.extend(['-include%s' % i for i in includes])
+        else:
             inc = list(includes) + [filename]
             filename = 'tmpfile.h'
             with open(filename, 'w') as f:
                 f.write('\n'.join('#include "%s"' % i for i in inc) + '\n')
-        else:
-            path_list.extend(['-include%s' % i for i in includes])
 
     # Call C preprocessor with args and file
     path_list.append(filename)
@@ -67,7 +67,7 @@ def post_cpp(lines):
     """
     for i, line in enumerate(lines):
         if '#pragma' in line:
-            lines[i] = line.split('#pragma', 1)[0] + '\n'
+            lines[i] = line.split('#pragma', 1)[0]
     return lines
 
 

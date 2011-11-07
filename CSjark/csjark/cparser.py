@@ -74,6 +74,8 @@ class StructVisitor(c_ast.NodeVisitor):
         if not node.name:
             node.name = self.type_decl[-1]
 
+        self._register_type(node) # Register as known type
+
         # Check if a protocol already exists for this node
         if self._find_protocol(node) is not None:
             return
@@ -108,6 +110,8 @@ class StructVisitor(c_ast.NodeVisitor):
         if not node.children():
             return
 
+        self._register_type(node) # Register as known type
+
         # Find id:name of members
         members = {}
         i = -1
@@ -124,6 +128,8 @@ class StructVisitor(c_ast.NodeVisitor):
         """Visit Typedef declarations nodes in the AST."""
         # Visit children
         c_ast.NodeVisitor.generic_visit(self, node)
+
+        self._register_type(node) # Register as known type
 
         # Find the type
         child = node.children()[0].children()[0]
@@ -342,4 +348,10 @@ class StructVisitor(c_ast.NodeVisitor):
             raise ParseError('This type of array not supported: %s' % node)
 
         return size
+
+    def _register_type(self, node, name=None):
+        """Register the type 'name' in the known types mapping."""
+        if name is None:
+            name = node.name
+        StructVisitor.all_known_types[(name, self.platform)] = node.coord.file
 

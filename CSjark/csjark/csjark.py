@@ -34,7 +34,7 @@ import argparse
 import cpp
 import cparser
 import config
-from config import Options
+from config import Options, FileConfig
 
 
 def parse_args(args=None):
@@ -85,7 +85,7 @@ def parse_args(args=None):
     parser.add_argument('-n', '--nocpp', action='store_false', dest='nocpp',
             default=Options.use_cpp, help='disable C preprocessor')
 
-    # Arugment for specifying which CPP to use
+    # Argument for specifying which CPP to use
     parser.add_argument('-C', '--CPP', metavar='cpp',
             nargs='?', help='Which C preprocessor to use')
 
@@ -179,6 +179,13 @@ def parse_args(args=None):
 
 def parse_headers(headers):
     """Parse 'headers' to create a Wireshark protocol dissector."""
+    def decode_error(error, platform):
+        msg = str(error)
+        if 'before: ' in msg:
+            key = msg.rsplit('before: ', 1)[1].strip(), platform
+            return cparser.StructVisitor.all_known_types.get(key, None)
+        return None
+
     failed = [] # Protocols we have failed to generate
 
     # First try, in the order given through the CLI
@@ -188,12 +195,22 @@ def parse_headers(headers):
             if err is not None:
                 failed.append((filename, platform, err))
 
-    # Second try, simply try the failed files again as it might work now
+    # Second try, include the missing file
     for i in reversed(range(len(failed))):
-        filename, platform, tmp = failed.pop(i)
-        err = create_dissector(filename, platform)
-        if err is not None:
-            failed.append((filename, platform, err))
+        filename, platform, err = failed[i]
+        include = decode_error(err, platform)
+
+        # Same file, error reports on a typedef
+        if os.path.normpath(filename) == os.path.normpath(include):
+            continue
+
+        # Test with the include
+        if include is not None:
+            new_err = create_dissector(filename, platform, [include])
+            if new_err != err:
+                FileConfig.add_include(filename, include)
+            if new_err is None:
+                failed.pop(i)
 
     # Third try, include all who worked as it might help
     failed_names = [filename for filename, platform, err in failed]

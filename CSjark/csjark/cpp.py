@@ -45,17 +45,28 @@ def parse_file(filename, platform=None, includes=None):
     path_list.extend('-U%s' % i for i in config.undefines)
     path_list.extend(config.arguments)
 
-    # Add arguments to #include if 'includes' is given
     if config.includes or includes:
-        inc = config.includes + includes + [filename]
-        include_text = '\n'.join('#include "%s"' % i for i in inc) + '\n'
+        # Find all includes and their dependencies
+        unprosess = [filename] + includes + config.includes
+        processed = []
+        incs = []
+        while len(unprosess) > 0:
+            file = unprosess.pop(0)
+            if file in processed:
+                break # Avoid endless loop
+            processed.append(file)
+            if file not in incs:
+                incs.append(file)
+            unprosess.extend(Options.match_file(file).includes)
+
+        feed = '\n'.join('#include "%s"' % i for i in reversed(incs)) + '\n'
     else:
         path_list.append(filename)
-        include_text = ''
+        feed = ''
 
     # Call C preprocessor with args and file
     pipe = Popen(path_list, stdin=PIPE, stdout=PIPE, universal_newlines=True)
-    text = pipe.communicate(include_text)[0]
+    text = pipe.communicate(feed)[0]
 
     return '\n'.join(post_cpp(text.split('\n')))
 

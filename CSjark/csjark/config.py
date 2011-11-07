@@ -381,6 +381,19 @@ class FileConfig:
         for var in self.members:
             getattr(self, var).extend(getattr(parent, var))
 
+    @classmethod
+    def add_include(cls, filename, include):
+        """Add a new 'include' to 'filename' config.
+
+        If the 'filename' has no FileConfig, creates one.
+        """
+        obj = Options.match_file(filename)
+        if obj.filename != filename:
+            obj = FileConfig(filename)
+            Options.files[filename] = obj
+        if obj.filename != os.path.normpath(include):
+            obj.includes.append(include)
+
 
 class Options:
     """Holds options for the whole utility.
@@ -408,6 +421,7 @@ class Options:
     @classmethod
     def match_file(cls, filename):
         """Find file config object for 'filename'."""
+        filename = os.path.normpath(filename)
         if filename in cls.files:
             return cls.files[filename]
         filename = os.path.basename(filename)

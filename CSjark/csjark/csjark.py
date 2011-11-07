@@ -163,10 +163,11 @@ def parse_args(args=None):
     def files_in_folder(var, file_extensions):
         i = 0
         while i < len(var):
+            print(var)
             if os.path.isdir(var[i]):
                 folder = var.pop(i)
                 var.extend(os.path.join(folder, path) for path in
-                        os.listdir(folder) if os.path.isdir(path)
+                        os.listdir(folder) if os.path.isdir(folder)
                         or os.path.splitext(path)[1] in file_extensions)
             else:
                 i += 1

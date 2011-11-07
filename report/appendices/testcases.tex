@@ -673,9 +673,9 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	Prerequisites & The utility has to be installed on the system and there needs to exist a folder with folders that all have header files in them \\
 	Feature & Checking that it is possible for the utility to be fed a folder with header files that has subfolders which are in turn inspected\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1.Feed the utility with the name of a folder of header files which again has subfolders with other header files\\
+	\multirow{3}{*}{Execution} & 1.Feed the utility with the name of a folder of header files which again has subfolders with other header files\\
 	& 2.  Read the output\\
-	& 3. Inspect the generated Lua files
+	& 3. Inspect the generated Lua files \\
 	\midrule
 	\multirow{2}{*}{Expected result}
 	& 2. The user should be presented with some text expressing the success of generating dissectors for every header file in the subfolders\\
@@ -841,11 +841,13 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	& 4. Open wireshark with the pcap file associated with this test\\
 	& 5. Inspect the different packets, their structs and member values\\ 
 	\midrule
-	\multirow{1}{*}{Expected result}
+	\multirow{2}{*}{Expected result}
 	& 2. The user should be presented with some text expressing the success of generating dissectors\\
 	& 5. All of the members of each packets should have proper values except for the unparseable members which should only be displayed as containing hex data\\
 \end{tabularx}}
 \end{table}
+
+\clearpage
 
 \begin{table}[ht] \footnotesize \center
 \caption{Test case TID37}\label{tab:TID37}
@@ -859,9 +861,9 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	Prerequisites & The utility has to be installed on the system \\
 	Feature & Checking that the utility is able to create template configuration files for all structs that does not currently have a configuration\\
 	\midrule
-	\multirow{3}{*}{Execution} & 1.Feed the utility with a c-header file which has several structs without any configuration files
+	\multirow{3}{*}{Execution} & 1.Feed the utility with a c-header file which has several structs without any configuration files \\
 	& 2.  Open the configuration folder where CSjark is installed\\
-	& 3. Inspect the configuration files 
+	& 3. Inspect the configuration files \\
 	\midrule
 	\multirow{1}{*}{Expected result}
 	& 3. There should now be one configuration file present for each struct in the c-header file that has an empty template for filling in values for configuration\\

@@ -547,9 +547,9 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 	\item TID20 -  Supporting the use of flags specifying platforms to display \gls{member} values correctly \autoref{tab:sp3TID20}
 	\item TID21 - Supporting platforms with different \glspl{endian} \autoref{tab:sp3TID21}
 	\item TID22 - Supporting alignments \autoref{tab:sp3TID22}
-	\item TID 23 - Handling \Gls{lua} keywords {tab:sp3TID23}
+	\item TID 23 - Handling \Gls{lua} keywords \autoref{tab:sp3TID23}
 	\item TID24 - Sprint 3 functionality test \autoref{tab:sp3TID24}
-	\item TID25 - Sprint 3 requirements test \autoref{tab:spTID25}
+	\item TID25 - Sprint 3 requirements test \autoref{tab:sp3TID25}
 \end{itemize}
 
 \begin{table}[!htb] \footnotesize \center
@@ -623,8 +623,9 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
-\caption{Supporting the use of flags specifying platforms to display \gls{member} values correctly \label{tab:sp3TID20}}
-\begin{tabular}{l l}
+\caption{Supporting the use of flags specifying platforms \label{tab:sp3TID20}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
@@ -633,7 +634,7 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 	Date & 30.10.2011\\
 	Result & Failure. Most values were displayed correctly, but there were cases where the \glspl{member} and their values were different. Most notably in \gls{packet} 2 and 3 in the win64 and win32 \glspl{pcap-file}\\
 	\bottomrule
-\end{tabular}
+\end{tabularx}}
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
@@ -680,7 +681,8 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 
 \begin{table}[!htb] \footnotesize \center
 \caption{Sprint 3 functionality test \label{tab:sp3TID24}}
-\begin{tabular}{l l}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
@@ -689,12 +691,13 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 	Date & 01.11.2011\\
 	Result & Success\\
 	\bottomrule
-\end{tabular}
+\end{tabularx}}
 \end{table}
 
 \begin{table}[!htb] \footnotesize \center
 \caption{Requirements test \label{tab:sp3TID25}}
-\begin{tabular}{l l}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
@@ -703,7 +706,7 @@ During sprint 3 the team executed a total of 11 tests were run, but no additiona
 	Date & 01.11.2011\\
 	Result & Failure. Failed because one or more of the following tests failed: a.type should be equal to int32, b.type should be equal to \gls{string}, c.type should be equal to \gls{float}\\
 	\bottomrule
-\end{tabular}
+\end{tabularx}}
 \end{table}
 
 \subsection{Test Evaluation}

@@ -199,13 +199,14 @@ def parse_headers(headers):
     for i in reversed(range(len(failed))):
         filename, platform, err = failed[i]
         include = decode_error(err, platform)
-
-        # Same file, error reports on a typedef
-        if os.path.normpath(filename) == os.path.normpath(include):
-            continue
-
-        # Test with the include
         if include is not None:
+
+            # Same file, error reports on a typedef
+            if os.path.normpath(filename) == os.path.normpath(include):
+                print("wtf", filename)
+                continue
+
+            # Test with the include
             new_err = create_dissector(filename, platform, [include])
             if new_err != err:
                 FileConfig.add_include(filename, include)
@@ -220,7 +221,8 @@ def parse_headers(headers):
         filename, platform, tmp = failed.pop(i)
         err = create_dissector(filename, platform, includes)
         if err is None:
-            includes.append(filename)
+            pass
+            #includes.append(filename)
         else:
             failed.append((filename, platform, err))
 

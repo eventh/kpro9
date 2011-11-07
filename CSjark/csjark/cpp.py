@@ -48,18 +48,15 @@ def parse_file(filename, platform=None, includes=None):
     if config.includes or includes:
         # Find all includes and their dependencies
         unprosess = [filename] + includes + config.includes
-        processed = []
-        incs = []
+        all_includes = []
         while len(unprosess) > 0:
             file = unprosess.pop(0)
-            if file in processed:
-                break # Avoid endless loop
-            processed.append(file)
-            if file not in incs:
-                incs.append(file)
+            if file in all_includes:
+                all_includes.remove(file) # Move it to the front
+            all_includes.insert(0, file)
             unprosess.extend(Options.match_file(file).includes)
 
-        feed = '\n'.join('#include "%s"' % i for i in reversed(incs)) + '\n'
+        feed = '\n'.join('#include "%s"' % i for i in all_includes) + '\n'
     else:
         path_list.append(filename)
         feed = ''

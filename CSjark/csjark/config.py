@@ -361,27 +361,24 @@ class ConformanceFile:
 
 class FileConfig:
     """Holds options for specific files."""
-    variables = (
+    members = (
         'include_dirs', 'includes', 'defines', 'undefines', 'arguments',
     )
 
     def __init__(self, name):
         """Create a FileConfig which holds configuration for 'name'."""
         self.filename = name
-        self.include_dirs = []
-        self.includes = []
-        self.defines = []
-        self.undefines = []
-        self.arguments = []
+        for var in self.members:
+            setattr(self, var, [])
 
     def update(self, obj):
         """Update variables with config from a yml file."""
-        for var in self.variables:
+        for var in self.members:
             getattr(self, var).extend(obj.get(var, []))
 
     def inherit(self, parent):
         """Update variables with config from another FileConfig instance."""
-        for var in self.variables:
+        for var in self.members:
             getattr(self, var).extend(getattr(parent, var))
 
 

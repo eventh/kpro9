@@ -214,11 +214,14 @@ def parse_headers(headers):
         filename, platform, tmp = failed.pop(i)
         error = create_dissector(filename, platform, includes)
         if error is None:
+            # Worked, record it in case anyone else needs this file
             for inc in includes:
                 FileConfig.add_include(filename, inc)
-            #includes.append(filename)
+            includes.append(filename)
         else:
             failed.append([filename, platform, error])
+
+    # Potential for a fourth and fifth try
 
     # Give up!
     for filename, platform, error in failed:

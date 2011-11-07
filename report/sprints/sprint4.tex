@@ -313,14 +313,25 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 %-----------------------
 \section{Implementation}
 %-----------------------
+The implementation in this sprint has mainly been bug fixing, and adding 
+features that the customers need to be able to run the utility on their code.
+TODO: Not finished
 
 \subsection{Include Unsupported System-\glspl{header}}
 %--------------------
-TODO
+To be able to parse the customers code, it was added additional 
+system-headers to the ''fake\_libc\_include''. ''fake\_libc\_include'' is a fake 
+library that is used to support...... 
+TODO:  Not finished
 
 \subsection{Ignore \#pragma Directives}
 %--------------------
-TODO
+Pragma directive is a preprocessor directive that is used to give options to 
+the compiler. This can for example be used to ignore warnings or give the 
+compiler version-information of the code. Since the pycparser library do not 
+support pragma directives, these lines in the c-code is removed before the 
+preprocessing. Removing these lines will not affect the utility, since the 
+utility never compiles the code.
 
 \subsection{Improve Generated \Gls{lua} Output}
 %--------------------

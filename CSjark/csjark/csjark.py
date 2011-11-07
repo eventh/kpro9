@@ -184,52 +184,46 @@ def parse_headers(headers):
         if 'before: ' in msg:
             key = msg.rsplit('before: ', 1)[1].strip(), platform
             return cparser.StructVisitor.all_known_types.get(key, None)
-        return None
-
-    failed = [] # Protocols we have failed to generate
 
     # First try, in the order given through the CLI
+    failed = [] # Protocols we have failed to generate
     for filename in headers:
         for platform in Options.platforms:
-            err = create_dissector(filename, platform)
-            if err is not None:
-                failed.append((filename, platform, err))
+            error = create_dissector(filename, platform)
+            if error is not None:
+                failed.append([filename, platform, error])
 
     # Second try, include the missing file
     for i in reversed(range(len(failed))):
-        filename, platform, err = failed[i]
-        include = decode_error(err, platform)
+        filename, platform, error = failed[i]
+        include = decode_error(error, platform)
         if include is not None:
-
-            # Same file, error reports on a typedef
             if os.path.normpath(filename) == os.path.normpath(include):
-                print("wtf", filename)
-                continue
-
-            # Test with the include
-            new_err = create_dissector(filename, platform, [include])
-            if new_err != err:
+                continue # Problem with typedef, impossibru!
+            new_error = create_dissector(filename, platform, [include])
+            if new_error != error:
                 FileConfig.add_include(filename, include)
-            if new_err is None:
+                failed[i][2] = new_error
+            if new_error is None:
                 failed.pop(i)
 
     # Third try, include all who worked as it might help
-    failed_names = [filename for filename, platform, err in failed]
+    failed_names = [filename for filename, platform, error in failed]
     includes = [file for file in headers if file not in failed_names]
-
     for i in reversed(range(len(failed))):
         filename, platform, tmp = failed.pop(i)
-        err = create_dissector(filename, platform, includes)
-        if err is None:
-            pass
+        error = create_dissector(filename, platform, includes)
+        if error is None:
+            for inc in includes:
+                FileConfig.add_include(filename, inc)
             #includes.append(filename)
         else:
-            failed.append((filename, platform, err))
+            failed.append([filename, platform, error])
 
     # Give up!
-    for filename, platform, err in failed:
+    for filename, platform, error in failed:
         print('Skipped "%s":%s as it raised %s' % (
-                filename, platform.name, repr(err)))
+                filename, platform.name, repr(error)))
 
 
 def create_dissector(filename, platform, includes=None):

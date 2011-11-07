@@ -1,13 +1,14 @@
 Options:
-    verbose: True
     use_cpp: True
-    cpp:
+    default:
         include_dirs: []
         includes: []
         defines: [CONFIG_DEFINED=3, REMOVE=1]
         undefines: [REMOVE]
         arguments: [-D ARR=2]
     files:
+      - name: a.h
+        includes: [b.h]
 
 Structs:
   - name: cpp_test

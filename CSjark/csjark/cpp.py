@@ -20,6 +20,10 @@ def parse_file(filename, platform=None, includes=None):
         with open(filename, 'r') as f:
             return f.read()
 
+    if includes is None:
+        includes = []
+
+    config = Options.match_file(filename)
     path_list = _get_cpp()
 
     # Add fake includes and includes from configuration
@@ -36,23 +40,22 @@ def parse_file(filename, platform=None, includes=None):
                 for i, j in platform.macros.items()])
 
     # Add any C preprocesser arguments from CLI or config
-    path_list.extend('-I%s' % i for i in Options.cpp_include_dirs)
-    path_list.extend('-include%s' % i for i in Options.cpp_includes)
-    path_list.extend('-D%s' % i for i in Options.cpp_defines)
-    path_list.extend('-U%s' % i for i in Options.cpp_undefines)
-    path_list.extend(Options.cpp_args)
+    path_list.extend('-I%s' % i for i in config.include_dirs)
+    path_list.extend('-D%s' % i for i in config.defines)
+    path_list.extend('-U%s' % i for i in config.undefines)
+    path_list.extend(config.arguments)
 
-    # Call C preprocessor with args and file
     # Add arguments to #include if 'includes' is given
-    if includes:
-        pipe = Popen(path_list, stdin=PIPE,
-                     stdout=PIPE, universal_newlines=True)
-        in_ = '\n'.join('#include "%s"' % i for i in includes + [filename])
-        text = pipe.communicate(in_ + '\n')[0]
+    if config.includes or includes:
+        inc = config.includes + includes + [filename]
+        include_text = '\n'.join('#include "%s"' % i for i in inc) + '\n'
     else:
         path_list.append(filename)
-        pipe = Popen(path_list, stdout=PIPE, universal_newlines=True)
-        text = pipe.communicate()[0]
+        include_text = ''
+
+    # Call C preprocessor with args and file
+    pipe = Popen(path_list, stdin=PIPE, stdout=PIPE, universal_newlines=True)
+    text = pipe.communicate(include_text)[0]
 
     return '\n'.join(post_cpp(text.split('\n')))
 

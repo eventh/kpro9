@@ -48,14 +48,7 @@ class Config:
 
     def create_field(self, proto, name, ctype, size=None, alignment=None):
         """Create a field depending on rules."""
-        # Sort the rules
-        types = (Bitstring, Enum, Range, Custom)
-        values = [[], [], [], []]
-        for rule in self.get_rules(name, ctype):
-            for i, tmp in enumerate(types):
-                if isinstance(rule, tmp):
-                    values[i].append(rule)
-        bits, enums, ranges, customs = values
+        bits, enums, ranges, customs = self.get_field_attributes(name, ctype)
 
         # Custom field rules
         if customs:
@@ -87,7 +80,6 @@ class Config:
         return proto.add_field(name, type_, size, alignment)
 
     def get_field_attributes(self, name, ctype):
-        """Create a field depending on rules."""
         # Sort the rules
         types = (Bitstring, Enum, Range, Custom)
         values = [[], [], [], []]
@@ -367,6 +359,32 @@ class ConformanceFile:
         return code
 
 
+class FileConfig:
+    """Holds options for specific files."""
+    variables = (
+        'include_dirs', 'includes', 'defines', 'undefines', 'arguments',
+    )
+
+    def __init__(self, name):
+        """Create a FileConfig which holds configuration for 'name'."""
+        self.filename = name
+        self.include_dirs = []
+        self.includes = []
+        self.defines = []
+        self.undefines = []
+        self.arguments = []
+
+    def update(self, obj):
+        """Update variables with config from a yml file."""
+        for var in self.variables:
+            getattr(self, var).extend(obj.get(var, []))
+
+    def inherit(self, parent):
+        """Update variables with config from another FileConfig instance."""
+        for var in self.variables:
+            getattr(self, var).extend(getattr(parent, var))
+
+
 class Options:
     """Holds options for the whole utility.
 
@@ -380,21 +398,23 @@ class Options:
     output_dir = None
     output_file = None
     generate_placeholders = False
-
-    # C preprocessor options, can also be set by CLI
     use_cpp = True
     cpp_path = None
-    cpp_include_dirs = []
-    cpp_includes = []
-    cpp_defines = []
-    cpp_undefines = []
-    cpp_args = []
 
     # Utility options
     platforms = set() # Set of platforms to support in dissectors
     delegator = None # Used to create a delegator dissector
     configs = {} # Configuration for specific protocols
-    files = {} # Configuration for specific files
+    files = {} # Cpp configuration for specific files
+    default = FileConfig('default') # Default Cpp config for all files
+
+    @classmethod
+    def match_file(cls, filename):
+        """Find file config object for 'filename'."""
+        if filename in cls.files:
+            return cls.files[filename]
+        filename = os.path.basename(filename)
+        return cls.files.get(filename, cls.default)
 
     @classmethod
     def update(cls, obj):
@@ -416,14 +436,16 @@ class Options:
 
         # Handle C preprocessor arguments
         cls.use_cpp = obj.get('use_cpp', cls.use_cpp)
-        if 'cpp' in obj:
-            cppobj = obj['cpp']
-            cls.cpp_path = cppobj.get('cpp_path', cls.cpp_path)
-            cls.cpp_include_dirs.extend(cppobj.get('include_dirs', []))
-            cls.cpp_includes.extend(cppobj.get('includes', []))
-            cls.cpp_defines.extend(cppobj.get('defines', []))
-            cls.cpp_undefines.extend(cppobj.get('undefines', []))
-            cls.cpp_args.extend(cppobj.get('arguments', []))
+        cls.cpp_path = obj.get('cpp_path', cls.cpp_path)
+        if 'default' in obj:
+            cls.default.update(obj['default'])
+
+        # Handle files configuration
+        if 'files' in obj:
+            for file_obj in obj['files']:
+                name = str(file_obj['name'])
+                cls.files[name] = FileConfig(name)
+                cls.files[name].update(file_obj)
 
     @classmethod
     def prepare_for_parsing(cls):
@@ -438,6 +460,10 @@ class Options:
         # Add the default platform, as we failed the previous step
         if not cls.platforms:
             cls.platforms.add(Platform.mappings['default'])
+
+        # Update file configs with the default cpp option
+        for config in cls.files.values():
+            config.inherit(cls.default)
 
         # Delegator creates lua file which delegates messages to dissectors
         cls.delegator = Delegator(Platform.mappings)

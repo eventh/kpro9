@@ -39,7 +39,8 @@ def find_structs(ast, platform=None):
 class StructVisitor(c_ast.NodeVisitor):
     """A class which visit struct nodes in the AST."""
 
-    all_protocols = {}
+    all_protocols = {} # Map (struct name, platform) to Protocol instances
+    all_known_types = {} # Map (type name, platform) to source filename
 
     def __init__(self, platform):
         """Create a new instance to visit all nodes in the AST.

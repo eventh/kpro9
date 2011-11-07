@@ -122,11 +122,11 @@ def parse_args(args=None):
     Options.generate_placeholders = namespace.placeholders
     Options.use_cpp = namespace.nocpp
     Options.cpp_path = namespace.CPP
-    Options.cpp_includes = namespace.include
-    Options.cpp_include_dirs = namespace.Includes
-    Options.cpp_defines = namespace.Define
-    Options.cpp_undefines = namespace.Undefine
-    Options.cpp_args = namespace.Additional
+    Options.default.includes = namespace.include
+    Options.default.include_dirs = namespace.Includes
+    Options.default.defines = namespace.Define
+    Options.default.undefines = namespace.Undefine
+    Options.default.args = namespace.Additional
 
     headers = namespace.file
     if namespace.header:
@@ -206,17 +206,11 @@ def parse_headers(headers):
             includes.append(filename)
         else:
             failed.append((filename, platform, err))
-            if Options.debug:
-                sys.excepthook(*sys.exc_info())
-                print()
 
     # Give up!
     for filename, platform, err in failed:
         print('Skipped "%s":%s as it raised %s' % (
                 filename, platform.name, repr(err)))
-
-    if Options.debug:
-        ast.show()
 
 
 def create_dissector(filename, platform, includes=None):
@@ -235,11 +229,16 @@ def create_dissector(filename, platform, includes=None):
         if Options.verbose:
             print('Failed "%s":%s which raised %s' % (
                     filename, platform.name, repr(err)))
+        if Options.debug:
+            sys.excepthook(*sys.exc_info())
         return err
 
     if Options.verbose:
         print("Parsed header file '%s':%s successfully." % (
                 filename, platform.name))
+
+    if Options.debug:
+        ast.show()
 
 
 def write_dissectors_to_file(all_protocols):

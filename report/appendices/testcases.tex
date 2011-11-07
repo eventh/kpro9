@@ -584,3 +584,326 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\bottomrule
 \end{tabularx}}
 \end{table}
+
+%----------------------
+\section{Sprint 4}
+%----------------------
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID26}\label{tab:TID26}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Including system-headers \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system and there has to exist a pcap file which is associated with this test \\
+	Feature & Checking that the utility is able to support headers which use system headers \\
+	\midrule
+	\multirow{5}{*}{Execution} & 1.Feed the utility with the name of a c-header file that includes system-headers and its configuration file \\
+	& 2.  Read the output\\
+	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
+	& 4. Run wireshark with the pcap file associated with this test\\
+	& 5. Look at the resulting structs and members are displayed in wireshark\\
+	\midrule
+	\multirow{2}{*}{Expected result}
+	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+	& 5. The structs and struct members defined in the system headers should be displayed as having a value and not just hex data\\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID27}\label{tab:TID27}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Ignoring \#pragma directives \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system and there needs to exist a pcap file which is associated with this test \\
+	Feature & Making sure that the utility is able to parse header files with the \#pragma directive by just ignoring that directive\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1.Feed the utility with the name of a c-header file that contains a \#pragma directive and it's configuration file\\
+	& 2.  Read the output\\
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID28}\label{tab:TID28}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Improve generated Lua output by removing platform prefix\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system \\
+	Feature & Making sure the utility only generates one dissector for the struct instead of several, but still keeping all of the functionality\\
+	\midrule
+	\multirow{7}{*}{Execution} & 1.Feed the utility with any c-header file and it's configration\\
+	& 2.  Read the output\\
+	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
+	& 4. Run wireshark\\
+	& 5. Open the dissector tables menu entry from the Internals menu\\
+	& 6. Click the luastructs tree entry\\
+	& 7. Inspect its contents\\ 
+	\midrule
+	\multirow{2}{*}{Expected result}
+	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+	& 7. There should only be one tree entry for each dissector, not one for each platform as well\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID29}\label{tab:TID29}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Recursive searching of subfolders\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system and there needs to exist a folder with folders that all have header files in them \\
+	Feature & Checking that it is possible for the utility to be fed a folder with header files that has subfolders which are in turn inspected\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1.Feed the utility with the name of a folder of header files which again has subfolders with other header files\\
+	& 2.  Read the output\\
+	& 3. Inspect the generated Lua files
+	\midrule
+	\multirow{2}{*}{Expected result}
+	& 2. The user should be presented with some text expressing the success of generating dissectors for every header file in the subfolders\\
+	& 3. There should be 1 file for each struct contained in the different header files located in the header folder and its subfolders \\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID30}\label{tab:TID30}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Finding include dependencies which are not explicitly set\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system \\
+	Feature & Check that the utility is able to identify include dependencies which are not explicitly set and use that information to parse files over again correctly\\
+	\midrule
+	\multirow{5}{*}{Execution} & 1.Feed the utility with a c-header file that has include dependencies which are not explicitly set, and it's configration file\\
+	& 2.  Read the output\\
+	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
+	& 4. Run wireshark with the pcap file associated with this test\\
+	& 5. Inspect the different packets, their structs and member values\\
+	\midrule
+	\multirow{2}{*}{Expected result}
+	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+	& 5. All structs and member values should be displayed as having proper values and not just hex data\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID31}\label{tab:TID31}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Pointer support\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system \\
+	Feature & Checking that the utility is able to support the use of pointers in header files\\
+	\midrule
+	\multirow{5}{*}{Execution} & 1.Feed the utility with a c-header file that has pointers, and it's configration file\\
+	& 2.  Read the output\\
+	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
+	& 4. Run wireshark with the pcap file associated with this test\\
+	& 5. Inspect the different packets, their structs and member values\\
+	\midrule
+	\multirow{2}{*}{Expected result}
+	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+	& 5. All structs and member values should be displayed as having proper values and not just hex data\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID32}\label{tab:TID32}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Enums in arrays\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system \\
+	Feature & Checking that the utility is able to support the use of enums inside of arrays\\
+	\midrule
+	\multirow{5}{*}{Execution} & 1.Feed the utility with a c-header file that has an array of enums, and it's configration file\\
+	& 2.  Read the output\\
+	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
+	& 4. Run wireshark with the pcap file associated with this test\\
+	& 5. Inspect the different packets, their structs and member values\\
+	\midrule
+	\multirow{2}{*}{Expected result}
+	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+	& 5. All structs that contain an array of enums should be displayed as containing enums instead of just integers\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID33}\label{tab:TID33}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting \#define as a command line argument\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system \\
+	Feature & Checking that it is possible to feed the utility with a \# define argument and have it force pre-processor to add a corresponding argument to the header files it is processing\\
+	\midrule
+	\multirow{5}{*}{Execution} & 1.Feed the utility with a c-header file, it's configration file and a \#define directive\\
+	& 2.  Read the output\\
+	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
+	& 4. Run wireshark with the pcap file associated with this test\\
+	& 5. Inspect the different packets, their structs and member values\\
+	\midrule
+	\multirow{2}{*}{Expected result}
+	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+	& 5. All structs and their member values should be displayed as having proper values and not just hex data\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID34}\label{tab:TID34}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Multiple message ID's for one dissector\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system \\
+	Feature & Checking that the utility supports having more than one message ID per dissector\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1.Feed the utility with a c-header file and it's configuration file which includes more than one message ID\\
+	& 2.  Read the output\\ 
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID35}\label{tab:TID35}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Allowing configuration for unknown structs\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system \\
+	Feature & Checking that the utility supports being able to configure the size of unknown structs\\
+	\midrule
+	\multirow{5}{*}{Execution} & 1.Feed the utility with a c-header file that has unparseable members and it's configuration file which includes the size of the struct itself\\
+	& 2.  Read the output\\
+	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
+	& 4. Open wireshark with the pcap file associated with this test\\
+	& 5. Inspect the different packets, their structs and member values\\ 
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+	& 5. All of the members of each packets should have proper values except for the unparseable members which should only be displayed as containing hex data\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID36}\label{tab:TID36}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Allowing configuration for unknown structs\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system \\
+	Feature & Checking that the utility supports being able to configure the size of unknown structs\\
+	\midrule
+	\multirow{5}{*}{Execution} & 1.Feed the utility with a c-header file that has unparseable members and it's configuration file which includes the size of the struct itself\\
+	& 2.  Read the output\\
+	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
+	& 4. Open wireshark with the pcap file associated with this test\\
+	& 5. Inspect the different packets, their structs and member values\\ 
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+	& 5. All of the members of each packets should have proper values except for the unparseable members which should only be displayed as containing hex data\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID37}\label{tab:TID37}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Autogenerating configuration files for structs that has no config file of their own\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system \\
+	Feature & Checking that the utility is able to create template configuration files for all structs that does not currently have a configuration\\
+	\midrule
+	\multirow{3}{*}{Execution} & 1.Feed the utility with a c-header file which has several structs without any configuration files
+	& 2.  Open the configuration folder where CSjark is installed\\
+	& 3. Inspect the configuration files 
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 3. There should now be one configuration file present for each struct in the c-header file that has an empty template for filling in values for configuration\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID38}\label{tab:TID38}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Only generating dissectors for structs with a valid ID\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system \\
+	Feature & Making sure that the utility only creates dissectors for files that have a valid ID specified in its configuration\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1.Feed the utility with a c-header file and it's configuration file that has no valid ID\\
+	& 2.  Read the output\\
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. The user should be presented with a message saying that no dissectors were created and why\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID39}\label{tab:TID39}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Guessing dissectors from packet size\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system \\
+	Feature & Making sure the utility is able to guess which dissector to use based on packet size if there are no dissectors specified for the packet\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1.NOT DONE YET\\
+	& 2.  NOT DONE YET\\
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. NOT DONE YET\\
+\end{tabularx}}
+\end{table}

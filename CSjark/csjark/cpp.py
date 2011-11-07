@@ -42,20 +42,17 @@ def parse_file(filename, platform=None, includes=None):
     path_list.extend('-U%s' % i for i in Options.cpp_undefines)
     path_list.extend(Options.cpp_args)
 
-    # Add arguments to #include if 'includes' is given
-    if includes is not None:
-        if path_list[0] == 'gcc':
-            path_list.extend(['-include%s' % i for i in includes])
-        else:
-            inc = list(includes) + [filename]
-            filename = 'tmpfile.h'
-            with open(filename, 'w') as f:
-                f.write('\n'.join('#include "%s"' % i for i in inc) + '\n')
-
     # Call C preprocessor with args and file
-    path_list.append(filename)
-    pipe = Popen(path_list, stdout=PIPE, universal_newlines=True)
-    text = pipe.communicate()[0]
+    # Add arguments to #include if 'includes' is given
+    if includes:
+        pipe = Popen(path_list, stdin=PIPE,
+                     stdout=PIPE, universal_newlines=True)
+        in_ = '\n'.join('#include "%s"' % i for i in includes + [filename])
+        text = pipe.communicate(in_ + '\n')[0]
+    else:
+        path_list.append(filename)
+        pipe = Popen(path_list, stdout=PIPE, universal_newlines=True)
+        text = pipe.communicate()[0]
 
     return '\n'.join(post_cpp(text.split('\n')))
 

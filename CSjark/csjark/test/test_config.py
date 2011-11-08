@@ -65,7 +65,7 @@ def create_structs():
 def struct_rule_id(one, two):
     """Test config support struct id."""
     assert one and two
-    assert one.id == 9 and two.id == 11
+    assert one.id == [9] and two.id == [11]
 
 @struct_rule.test
 def struct_rule_description(one, two):

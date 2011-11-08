@@ -701,12 +701,14 @@ class Protocol:
     def _register_dissector(self):
         """Add code for registering the dissector in the dissector table."""
         if self.id is None:
-            id = 'nil'
+            ids = ['nil']
         else:
-            id = self.id
-        self.data.append('{func}({var}, "{platform}", "{name}", {id})'.format(
-                func=self.REGISTER_FUNC, var=self.var, name=self.name,
-                platform=self.platform.name, id=id))
+            ids = self.id
+
+        for id in ids:
+            self.data.append('{func}({var}, "{platform}", "{name}", {id})'.format(
+                    func=self.REGISTER_FUNC, var=self.var, name=self.name,
+                    platform=self.platform.name, id=id))
         self.data.append('')
 
     def _trailers(self, rules, offset):

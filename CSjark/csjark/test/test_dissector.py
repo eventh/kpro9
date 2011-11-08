@@ -355,7 +355,7 @@ protos = Tests()
 def create_protos():
     """Create a Protocol instance with some fields."""
     conf = Config('tester')
-    conf.id = 25
+    conf.id = [25, ]
     conf.description = 'This is a test'
 
     rules = [Trailer(conf, {'name': 'missing', 'member': 'missing', 'size': 0}),
@@ -376,7 +376,7 @@ def create_protos():
 def protos_id(proto):
     """Test that Protocol has id, description and var members."""
     assert proto
-    assert proto.id == 25
+    assert proto.id == [25]
     assert proto.description.startswith('This is a test')
     assert proto.var == 'proto_tester'
     assert isinstance(proto.fields[0], dissector.Field)

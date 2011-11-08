@@ -186,7 +186,7 @@ def create_rules():
           - name: ber
             count: 1
       - name: two
-        id: 11
+        id: [11, 12, 13, 14]
         ranges:
           - type: int
             max: 15.5
@@ -238,7 +238,7 @@ def req4_c(one, two):
 def req4_d(one, two):
     """Test requirement FR4-D: Configuration of dissector ID."""
     assert one and two
-    assert one.id == 9 and two.id == 11
+    assert one.id == [9] and two.id == [11, 12, 13, 14]
     assert one.description == 'a struct' and two.description is None
 
 # FR4-E: Configuration must support various trailers

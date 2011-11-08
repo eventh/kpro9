@@ -502,7 +502,7 @@ class Options:
             cls.configs[name] = Config(name)
         conf = cls.configs[name]
 
-        # Protocol's optional id
+        # Protocol's optional message id or list of message ids
         ids = obj.get('id', None)
         if ids:
             try:
@@ -514,7 +514,7 @@ class Options:
             if invalid_ids:
                 raise ConfigError('Invalid dissector ID %s: %i (0 - 65535)'
                         % (conf.name, conf.id))
-            conf.id = ids[0] # Todo, register all ids
+            conf.id = ids
 
         # Protocol's optional description
         if 'description' in obj:

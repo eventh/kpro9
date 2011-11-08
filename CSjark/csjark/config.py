@@ -11,7 +11,7 @@ from operator import itemgetter
 import yaml
 
 from platform import Platform
-from dissector import Delegator, create_lua_valuestring
+from dissector import Delegator, create_lua_valuestring, create_lua_var
 
 
 class ConfigError(Exception):
@@ -251,7 +251,7 @@ class ConformanceFile:
     """A class for parsing a conformance file.
 
     A conformance file specifies custom lua code for fields.
-    It can give custom code for the defintion, and inside the dissector
+    It can give custom code for the definition, and inside the dissector
     function. For these two cases, it supports header, body, footer and
     extra sections which places code above, instead of, below, or at the
     end of the section.
@@ -260,9 +260,9 @@ class ConformanceFile:
     Unknown sections are ignore, to be compatible with Asn2wrs .cnf files.
     """
     # Tokens for different sections
-    t_def_hdr = 'DEF_HEADER'    # Lua code added before a field defintion
-    t_def_body = 'DEF_BODY'     # Lua code to replace a field defintion
-    t_def_ftr = 'DEF_FOOTER'    # Lua code added after a field defintion
+    t_def_hdr = 'DEF_HEADER'    # Lua code added before a field definition
+    t_def_body = 'DEF_BODY'     # Lua code to replace a field definition
+    t_def_ftr = 'DEF_FOOTER'    # Lua code added after a field definition
     t_def_extra = 'DEF_EXTRA'   # Lua code added after all defintions
     t_func_hdr = 'FUNC_HEADER'  # Lua code added before a field function code
     t_func_body = 'FUNC_BODY'   # Lua code to replace a field function code
@@ -327,17 +327,17 @@ class ConformanceFile:
         if content and token in self.store_tokens:
             self.rules[(field, token)] = '\n'.join(content)
 
-    def match(self, name, code, defintion=False):
+    def match(self, name, code, definition=False, field=None):
         """Modify fields code if a cnf file demands it."""
         # Handle extra code rules
         if name is None and code is None:
-            if defintion:
+            if definition:
                 token = self.t_def_extra
             else:
                 token = self.t_func_extra
             return self.rules.get((name, token), '')
 
-        if defintion:
+        if definition:
             tokens = self.def_tokens
         else:
             tokens = self.func_tokens
@@ -347,6 +347,17 @@ class ConformanceFile:
             content = self.rules.get((name, token), '')
             if not content:
                 continue
+
+            if not definition and field is not None:
+                # Insert field offset into content
+                content = content.replace('{OFFSET}', str(field.offset))
+
+                # Insert value into content and code
+                if '{VALUE}' in content:
+                    variable = create_lua_var('field_value_var')
+                    code = field.get_code(field.offset, store=variable)
+                    content = content.replace('{VALUE}', variable)
+
             if token.endswith('_HEADER'):
                 code = '%s\n%s' % (content, code)
             elif token.endswith('_FOOTER'):

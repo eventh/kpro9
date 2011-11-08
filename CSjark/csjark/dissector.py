@@ -462,7 +462,7 @@ class BitField(Field):
 
         buff = 'buffer({off}, {size})'.format(off=offset, size=self.size)
         t = '\tlocal bittree = {tree}:{add}({var}, {buff})'
-        data.append(t.format(tree = tree, add=self.add_var, var=var, buff=buff))
+        data.append(t.format(tree=tree, add=self.add_var, var=var, buff=buff))
 
         for i, j, name, values in self.bits:
             bit_var = self._bit_var(name)
@@ -640,13 +640,13 @@ class Protocol:
             code = field.get_definition()
 
             if self.conf and self.conf.cnf: # Conformance file code
-                code = self.conf.cnf.match(field.name, code, defintion=True)
+                code = self.conf.cnf.match(field.name, code, definition=True)
             if code is not None:
                 self.data.append(code)
 
-        # Conformance file defintion code extra
+        # Conformance file definition code extra
         if self.conf and self.conf.cnf:
-            code = self.conf.cnf.match(None, None, defintion=True)
+            code = self.conf.cnf.match(None, None, definition=True)
             if code:
                 self.data.append(code)
 
@@ -660,7 +660,7 @@ class Protocol:
             code = field.get_code(offset)
 
             if self.conf and self.conf.cnf: # Conformance file code
-                code = self.conf.cnf.match(field.name, code, defintion=False)
+                code = self.conf.cnf.match(field.name, code, False, field)
             if code:
                 self.data.append(code)
             if not union and field.size is not None:
@@ -668,7 +668,7 @@ class Protocol:
 
         # Conformance file dissection function code extra
         if self.conf and self.conf.cnf:
-            code = self.conf.cnf.match(None, None, defintion=False)
+            code = self.conf.cnf.match(None, None, definition=False)
             if code:
                 self.data.append(code)
 

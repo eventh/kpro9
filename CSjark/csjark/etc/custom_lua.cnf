@@ -36,10 +36,21 @@
 
 
 #.COMMENT
+	FUNC_HEADER, FUNC_BODY and FUNC_FOOTER can use {OFFSET} and {VALUE}
+	to access the fields offset and value inside the dissector function.
+	Be careful with value, as it must be used after its defined.
+#.FUNC_FOOTER pointer
+	-- Offset: {OFFSET}
+	-- Field value stored in lua variable: {VALUE}
+#.END
+
+
+#.COMMENT
 	FUNC_HEADER places code above the field's generated code
 	inside the dissector function.
 #.FUNC_HEADER truth
 	-- This is above 'truth' inside the dissector function.
+	-- The fields offset is: {OFFSET}
 #.END
 
 

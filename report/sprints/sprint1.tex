@@ -22,13 +22,13 @@ meetings to show what we have accomplished and discuss further development.
 The overall goal of the first sprint is to create a preliminary design and
 implement the core of the application. It will be possible to run it to
 generate \Gls{lua} \glspl{dissector} which can be used by \Gls{wireshark} users. The first
-version will contain only the basic \gls{dissector} generating features, i.e.
+version will contain only the basic \gls{dissector} generating features, for example,
 parsing \Gls{c} \glspl{struct} with basic data types as \glspl{member}. Also, some of the
 preprocessing capabilities will be implemented, such as handling \gls{include}
 directives. Basic support for configuration will be added.
 
 \subsection{Back Log}
-The first sprint we will implement eight requirements. Table
+In the first sprint we will implement eight requirements. Table
 \ref{tab:sp1_req7a}-\ref{tab:sp1_req2d}  list each requirement with a time
 estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
 \autoref{tab:sprint1time} is the time table for the first phase.
@@ -293,32 +293,14 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 %----------------------
 This section introduces the design goals we decided on, the preliminary overall
 design, and the final system design after the first sprint. In
-\autoref{sec:sp1:impl} we describe how our implementation works and are to be
+\autoref{sec:sp1:impl} we describe how our implementation works and is to be
 used.
-
-\subsection{Design Goals}
-%------------------------
-To help guide the design and the implementation we tried to follow these
-goals and guidelines:
-\begin{itemize}
-	\item Smart data structures and dumb code works a lot better than the other
-		way around\cite{Raymond1999}!
-	\item Clear and clean separation of the front-end and the back-end so in the
-		future other parsers can be used to generate \glspl{dissector}.
-	\item Try to be pythonic, follow
-		PEP8\footnote{Style Guide for Python Code: \url{http://www.python.org/dev/peps/pep-0008/}} and
-		PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}.
-	\item Now is better than never. Don't be afraid to write stupid or ugly
-		code, we can always fix it later.
-	\item The first version is never perfect, so don't wait until its perfect
-		before you commit. Commit often!
-\end{itemize}
 
 \subsection{Preliminary Design}
 %------------------------------
 The following is a description of the preliminary design we had for our
-\gls{utility}. We split our program into the several parts, described in the
-following paragraphs, their relationship is explained in
+\gls{utility}. We split our program into several parts, described in the
+following paragraphs. Their relationship is explained in
 \autoref{fig:sp1:design}.
 
 \begin{figure}[!htb]
@@ -401,7 +383,7 @@ The RangeField class inherits from the Field class.
 In this sprint we have created a very naive implementation of the \gls{utility}. It
 supports the most basic types of \Gls{c} \glspl{struct}. In addition the \gls{utility} supports
 some very basic configuration. The main reason for the naive implementation, 
-was to find out that the \glspl{library} that the team had choosen, was suitable for 
+was to find out that the \glspl{library} that the team had chosen, was suitable for 
 the \gls{utility} and that we had understood the task.
 
 To get a better understanding of how the different requirements were implemented,
@@ -452,8 +434,8 @@ These two \gls{preprocessor} directives are important for our \gls{utility}. \gl
 used to define a \gls{preprocessor} macro that replaces a token with a 
 sequence of characters. This can for example be used to define length of 
 \glspl{array}, define values for enumeration or define a platform. \gls{if} and \gls{ifdef} 
-is conditional directives, that the \gls{utility} will use to check if macros are 
-defined, this will be used when the \gls{utility} are generating \glspl{dissector} for 
+are conditional directives that the \gls{utility} will use to check if macros are 
+defined. This will be used when the \gls{utility} is generating \glspl{dissector} for 
 different platforms. The functionallity for these \gls{preprocessor} directives and 
 the other \gls{preprocessor} directives for \Gls{c}, was implemented by the \gls{library} we 
 use, which is cpp.exe for \Gls{Windows} and \gls{agcc} for \Gls{mac} and \Gls{linux}.
@@ -477,7 +459,7 @@ We decided to use \gls{yaml} as our configuration format. In this sprint we have
 added support for range specification. A user can specify the ranges of the
 \glspl{member} of a \gls{struct}, from a minimum to a maximum. \autoref{code:rangesconf} 
 shows an configuration in \gls{yaml} for the \gls{header}-file in \autoref{code:ranges}. 
-The configuration specifes that the \gls{struct} \gls{member} age, must have a value 
+The configuration specifes that the \gls{struct} \gls{member} age must have a value 
 between 0 and 100.  
 
 \lstset{language=C,caption={Configuration of valid ranges},label=code:rangesconf}
@@ -506,8 +488,8 @@ results.
 
 \subsection{Tests}
 %-----------------
-During the sprint the team executed a total of 7 tests with names as seen
-below. Tests executed:
+During the sprint the team executed a total of 7 test cases with names as seen
+below. Test cases executed:
 \begin{itemize}
 	\item TID01 - Supporting parameters for \Gls{c}-\gls{header} file. \autoref{tab:TID01}
 	\item TID02 - Supporting basic data types. \autoref{tab:TID02}
@@ -640,7 +622,7 @@ core functionality in place it only took three lines of code to fix this issue.
 %----------------------
 The customer had no objections to the contents of the first sprint, but was not
 completely satisfied with the feature descriptions. They thought that we should
-have much more implementation details for each requirement, and that each
+write much more implementation details for each requirement, and that each
 requirement should be properly broken down, also in the sense that
 implementation and design should be two separate tasks if design is necessary.
 Corollary to this, our work items were too big. They also suggested a proper
@@ -651,7 +633,7 @@ finish condition for each work item.
 We presented the result from the sprint 1 for the customer and they were very
 happy with the result. They had some ideas for how we could make our
 configuration files more compact, but said that it was not really important.
-Their other comments were mostly around what they wanted us to do for sprint 2
+Their other comments were mostly on what they wanted us to do for sprint 2
 and how those features might be implemented.
 
 
@@ -667,12 +649,12 @@ the sprint planning we decided which requirements from the product backlog that
 we were to fulfill during the first sprint. The product backlog contains a
 prioritized list of requirements. We decided to include the requirements that
 had the highest prioritization. These requirements were basic, but essential
-and therefore high prioritized.
+and therefore highly prioritized.
    
 The lack of prior knowledge to \Gls{scrum} made planning and execution of the sprint
 complicated for the team. We did not agree within the team of how to do it, and
-wasted some time on discussion going back and forth. In the end we understood
-that we gave a too high level description of the requirements, and had to redo
+wasted some time on discussions. In the end we understood
+that we wrote a too high level description of the requirements, and had to redo
 previous work. This was time consuming, stealing person-hours from other parts
 of the sprint.
 
@@ -690,8 +672,8 @@ end.
 The burndown chart, \autoref{fig:sp1:burndown}, shows the progress during
 the first sprint. The team made an effort in making a correct estimation. This
 is reflected in the chart, as the estimated and actual hours are  following
-each other closely. At the end actual hours stops at 11 hours, which means we
-have some undone tasks. These are put back in the product backlog, and will
+each other closely. In the end, actual hours stopped at 11 hours, which means we
+have some uncompleted tasks. These are put back in the product backlog, and will
 probably be part of the next sprint. 
 
 \begin{figure}[!htb]
@@ -707,7 +689,7 @@ probably be part of the next sprint.
 	\item Most of the requirements for this sprint were completed
 	\begin{itemize} 
 		\item all design, implementation and testing were completed
-		\item documentation had to be putted back in the product backlog 
+		\item documentation had to be put back in the product backlog 
 	\end{itemize}
 	\item Errors and bugs were detected and corrected swiftly and with relative ease
 	\item The team functioned well, with sufficient discussions and conflicts
@@ -758,9 +740,9 @@ will be assigned next sprint.
 
 \subsection{Barriers}
 %--------------------
-Some of the team member has experience some technical difficulties with their
+Some of the team member have experienced some technical difficulties with their
 Git client, and others had problems setting up PyCharm. Problems rose as we
-realized that there would be hard setting up the programs on different
+realized that it would be hard setting up the programs on different
 platforms (Windows and Mac).
 
 We had problems with \Gls{c} \gls{parser} \gls{library}, \gls{pycparser}, which did not support \_Bool

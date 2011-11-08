@@ -2,9 +2,8 @@
 %---------------------------
 \label{sec:prodbacklog}
 \autoref{tab:prodbacklog} contains a complete product backlog.
-
 \begin{table}[ht] \small \center
-\caption{Product Backlog \label{tab:prodbacklog}}
+\caption{Product Backlog, part I \label{tab:prodbacklog}}
 \begin{tabularx}{\textwidth}{l X c c}
 	\toprule
 	& & \multicolumn{2}{c}{Hours} \\
@@ -24,7 +23,9 @@
 	FR2-B & Support display of \glspl{struct} within \glspl{struct} & 11 & 15 \\
 	FR2-C & Support \Gls{wireshark} filter and search on attributes & 3 & - \\
 	FR2-D & Recognize invalid values for a \gls{struct} \gls{member} & 22 & 15 \\
-	\addlinespace
+	FR2-E & Guess \glspl{dissector} from packet size & 5 & \\
+	FR2-F & Display if struct member contains uninitialized memory & 8 & \\
+    \addlinespace
 	FR3 & Support \Gls{c} \gls{preprocessor} directives and macros & & \\
 	FR3-A & Support \gls{include} & 8 & 2 \\
 	FR3-B & Support \gls{define} and \gls{if} & 11 & 3 \\
@@ -38,18 +39,37 @@
 	FR4-E & Support various \gls{trailers} (other registered protocols) & 18 & 15 \\
 	FR4-F & Support \glspl{enumerated named value}  & 5 & 6.5 \\
 	FR4-G & Support bit strings & 10 & 11.5 \\
+	FR4-H & Automatic generation configuration for unknown structs & 1 & \\
+	FR4-I & Support specifying the size of unknown struct members & 4 & \\
 	\addlinespace
 	FR5 & Handle input which size and \gls{endian} depends on platform & & \\
 	FR5-A & Flags specified for each platform & 8 & - \\
 	FR5-B & \Glspl{dissector} support memory alignment & 12 & - \\
 	FR5-C & \Glspl{dissector} support both little and big \gls{endian} & 6 & - \\
 	FR5-D & \Glspl{dissector} support different sizes from flags & 14 & - \\	
-	\addlinespace
+    \bottomrule
+\end{tabularx}
+\end{table}	
+	
+\begin{table}[ht] \small \center
+\caption{Product Backlog, part II \label{tab:prodbacklog2}}
+\begin{tabularx}{\textwidth}{l X c c}
+	\toprule
+	& & \multicolumn{2}{c}{Hours} \\
+	\cmidrule(r){3-4}
+	Req. & Description & Est. & Act. \\
+	\midrule	
 	FR6 & Support parameters from command line & & \\
 	FR6-A & Support parameter for \Gls{c} \gls{header} file & 9 & 9 \\
 	FR6-B & Support parameter for configuration file & 28 & 8 \\
 	FR6-C & Support batch processing of \Gls{c} \gls{header} and configuration & 7 & 4.5 \\
 	FR6-D & Don't regenerate \glspl{dissector} & 2 & - \\
+	FR6-E & Support C \#defines from CLI & 1 & \\
+	FR6-F & Only generate dissectors for structs with valid id and their dependences & 4 & \\
+    \addlinespace
+	FR7 & Fetch configuration directly from source code & & \\
+	FR7-A & Use Doxygen comments for struct members as "Description" & 20 & \\
+	FR7-B & Read int-enum configuration from header files & 20 & \\
 	\addlinespace
 	NR1 & Run on latest \Gls{Windows} \& \Gls{Solaris} OS & & \\
 	NR2 & \Gls{dissector} run on \Gls{Windows} \& \Gls{Solaris}, Intel \& \GLS{sparc} & & \\

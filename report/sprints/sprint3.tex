@@ -6,13 +6,13 @@
 %------------------------
 \section{Sprint Planning}
 %------------------------
-For the third sprint we intend to implement the remanding requirements in the product backlog. We feel that the first and second sprint has resulted in a satisfying \gls{utility}, but it is still missing important functionality.
+For the third sprint we intend to implement the remaining requirements in the product backlog. We feel that the first and second sprint have resulted in a satisfying \gls{utility}, but it is still missing important functionality.
 
 After two sprint iterations, we are still trying to improve our approach to \Gls{scrum}. Each sprint results in new ideas and better ways to do the process, and in this sprint we want everything to be correct and in the right order.\\
 \\
 There will be two major changes this sprint:
 \begin {itemize}
-\item We will have a complete planning meeting. The meeting should result in a good planning document, user stories for all the requirements, complete set of work items in the sprint backlog and a early understanding of the design. This approach will be differently from earlier sprints, where user stories was written in parallel with implementation. The user story should now be in place before the implementation, and the implementation should be based on the user story. This will make documenting the process easier, and will in turn give the advisors more documentation of what we are doing. Then we can receive valuable feedback from them.
+\item We will have a complete planning meeting. The meeting should result in a good planning document, user stories for all the requirements, complete set of work items in the sprint backlog and a early understanding of the design. This approach will be different from earlier sprints, where user stories were written in parallel with implementation. The user story should now be in place before the implementation, and the implementation should be based on the user story. This will make documenting the process easier, and will in turn give the advisors more documentation of what we are doing. Then we can receive valuable feedback from them.
 
 \item In the sprint backlog we will have work items for every task that needs to be done throughout the sprint, including writing minutes, doing documentation, implementation and so on.  Assignment of responsibilities for items in the backlog should not be done at the planning meeting, we rather only give responsibility for one item for each team member at a time. The rest of the items will be unassigned. At each stand-up meeting we pick a task and must be done before the next meeting. This will ensure efficiency and the work done by others are easier to check and revise. It will give us a better work balance, as no team member can gap over too many tasks and leave none for the others.
 \end{itemize}
@@ -27,7 +27,7 @@ The sprint started with the planning meeting the 19th of October and our work st
 
 \subsection{Sprint Goal}
 %-----------------------
-For the third sprint the team will update CSjark to version 0.3 which will extend the \gls{utility} so that it contains the complete functionality requested by the customer at this phase of the project. In this sprint we will pick all of the current requirements from the product backlog as all of the underlying functionality needed for them are already in place from the previous sprints. This means that we will also aim to create a draft of the final design of the system during the sprint.
+For the third sprint the team will update CSjark to version 0.3 which will extend the \gls{utility} so that it contains the complete functionality requested by the customer at this phase of the project. In this sprint we will pick all of the current requirements from the product backlog, as all of the underlying functionality needed for them are already in place from the previous sprints. This means that we will also aim to create a draft of the final design of the system during the sprint.
 
 The most important function that is going to be implemented in this sprint is being able to display \glspl{packet} from different originating platforms properly. This will be implemented by having every \gls{packet} contain a flag specifying their originating platform, and by having our \glspl{dissector} use this flag value to influence how it handles the data in the \gls{packet}.
 
@@ -369,11 +369,11 @@ The redesign of the config module will ensure better efficiency when the batch p
 %-----------------------
 \section{Implementation}
 %-----------------------
-The main focus for this sprint was to support of different platforms. Several 
+The main focus in this sprint was to add support for different platforms. Several 
 things are dependent on platform; \gls{endianness}, the memory allingment and sizes 
-of data types. It is also possible that \glspl{struct} can be defined differnt for 
+of data types. It is also possible that \glspl{struct} can be defined differently for 
 each platform. The \gls{utility} will generate different \glspl{dissector} for each 
-platform. A \gls{dissector} this wil detect the platform and use the correct 
+platform. A \gls{dissector} will detect the platform and use the correct 
 platform \gls{dissector}.
 
 Support for the \gls{union} data type, finishing implementation of custom \Gls{lua} files 
@@ -470,16 +470,16 @@ possible to display the \glspl{struct} correctly in \Gls{wireshark}.
 
 \subsection{Support Union Type}
 %-----------------------
-The \gls{union} type is a variabel that can contain different data types with 
-different sizes. The \gls{union} will allocated memory for the largest type defined 
-in the \gls{union}. \autoref{code:union} shows an example on a \gls{header}-file with an 
-\gls{union} type. The compiler is responisble for keeping track of size and 
+The \gls{union} type is a \gls{member} that can contain different data types with 
+different sizes. The \gls{union} will allocate memory for the largest type defined 
+in the \gls{union}. \autoref{code:union} shows an example of a \gls{header}-file with a 
+\gls{union} type. The compiler is responsible for keeping track of size and 
 alignment requirements\cite[p.147]{Kerninghan1988} . Since it is not 
 possible to find out which data type that is used in \Gls{wireshark}, the \gls{utility} 
-has to genereate a \gls{dissector} that displays the values for each data type. 
+has to generate a \gls{dissector} that displays the values for each data type. 
 \autoref{fig:wsunion} displays the \gls{dissector} generated from the \gls{struct} in 
-\autoref{code:union}, this shows the \gls{union} with three \glspl{member}, all of them are 
-listed with their values, in this case the \gls{float} value is the correct one.
+\autoref{code:union}. This shows the \gls{union} with three \glspl{member}, all of them are 
+listed with their values. In this case the \gls{float} value is the correct one.
 
 \begin{figure}[ht]
 	\center
@@ -536,7 +536,7 @@ definition in \Gls{c} is shown in \autoref{code:typedefarray}. Also support for
 %-----------------------
 \section{Sprint Testing}
 %-----------------------
-During sprint 3 the team executed a total of 11 tests were run, but no additional testing features were added during the sprint. Tests executed:
+During sprint 3 the team executed a total of 11 test cases, but no additional testing features were added during the sprint. Test cases executed:
 
 \begin{itemize}
 	\item TID15 - Supporting \gls{batch mode} of \Gls{c} \gls{header} and configuration files \autoref{tab:sp3TID15}

@@ -214,7 +214,7 @@ The conformance file implementation allows user to place the custom Lua code on 
     ``END_OF_CNF``                          End of the conformance file                                                                                                                                                       
     ====================================    =======================          
    
-Where ``id`` denotes definition or function identifier.                                                                                                                                                 
+Where ``id`` denotes C struct member name (``DEF_*``) or field name (``FUNC_*``).                                                                                                                                                 
                                                                                                                                                                                                                                  
 Example of such conformance file follows: ::                                                                                                                                                                                     
                                                                                                                                                                                                                                  
@@ -384,7 +384,7 @@ For ``Integer`` types, there are some specific attributes that can be defined (s
 
 The section name in configuration file for custom data type handling is called ``customs``. This section can contain following attributes:
 
-Required attributes
+- Required attributes
     
     =====================   ============
     Attribute name          Value
@@ -393,7 +393,7 @@ Required attributes
     ``field``               Displayed type (see above)
     =====================   ============
     
-Optional attributes - all types
+- Optional attributes - all types
     
     ===============     ============
     Attribute name      Value
@@ -405,15 +405,15 @@ Optional attributes - all types
 
 .. _below:
     
-Optional attributes - Integer types only
+- Optional attributes - Integer types only:
     
-    ===============     ============
-    Attribute name      Value
-    ===============     ============
-    ``base``            Displayed representation - can be one of ``base.DEC``, ``base.HEX`` or ``base.OCT``
-    ``values``          List of ``key:value`` pairs representing the Integer value - e.g. ``{0: Monday, 1: Tuesday}``
-    ``mask``            Integer mask of this field    
-    ===============     ============
+    ==================     ============
+    Attribute name         Value
+    ==================     ============
+    ``base``               Displayed representation - can be one of ``base.DEC``, ``base.HEX`` or ``base.OCT``
+    ``values``             List of ``key:value`` pairs representing the Integer value - e.g. ``{0: Monday, 1: Tuesday}``
+    ``mask``               Integer mask of this field    
+    ==================     ============
 
 
 .. [#] Basic Encoding Rules

@@ -13,7 +13,7 @@ The project plan includes the specified plan on which tool we are using in this 
 %------------------------------------------
 Automatic generation of \Gls{lua} \glspl{script} from \Gls{c} \gls{header} files would bring considerable resource savings in the customer's usual work process. Time and therefore financial resources, will be saved by delivery of the solution every time they need to know the contents of \gls{ipc} messages that include \Gls{c} \glspl{struct}.
 
-The biggest impact on savings will be caused by enabling filtering of the messages by the specific attribute in the \Gls{c} \gls{struct} in \Gls{wireshark}. Once this is made possible, a lot of unnecessary searching can be omitted.
+The biggest impact on savings will be caused by enabling filtering of the messages by the specific attribute in the \Gls{c} \gls{struct} in \Gls{wireshark}. Once this is made possible, searching for a specific \gls{struct} or \gls{member} will become easier.
 
 Before the project start, \Gls{c} \glspl{struct} were investigated in two ways. The first, manual method, which means counting individual bytes of the \gls{binary} file that includes data in \Gls{c} \glspl{struct}. This is possible only for small-sized messages. For bigger messages, this method is inapplicable, since the message can consist of several thousands bytes. The second method consists of writing the \gls{dissector} in \Gls{lua} manually for the specific \Gls{c} \gls{header}. Also, this method cannot be used for more complex \Gls{c} \glspl{struct}, i.e. those using \glspl{nested struct}. So far, there has been written about 10 \Gls{lua} \glspl{script} manually.
 
@@ -23,7 +23,7 @@ If 1 hour is the average time for creating a \gls{dissector} for 1 message, our 
 
 None of the workaround methods mentioned above is capable of processing messages with \Gls{c} \glspl{struct} that are big and complex. Time savings in these cases are not easily estimated.
 
-Also, sometimes a representative of Thales Norway AS has to physically move to the their customer’s site to solve a problem. With the delivered solution, in some cases, this will be no longer necessary and the problem will be solved remotely by sending capture files to Thales and solving it in-house. Savings in this case are not only time-based but it will also directly cut the transportation costs and it will increase the satisfaction for the client.
+Somestimes a representative of Thales Norway AS has to physically move to the their customer’s site to solve a problem. With the delivered solution, in some cases, this will be no longer necessary and the problem will be solved remotely by sending capture files to Thales and solving it in-house. Savings in this case are not only time-based but it will also directly cut the transportation costs and it will increase the satisfaction for the client.
 
 \subsection{Limitations}
 %-----------------------
@@ -33,15 +33,15 @@ As in all other projects, the project members have to deal with various limitati
 \begin{description}
 	\item[\Gls{c} \gls{preprocessor}] To fulfill all the requirements we might need to
 		either modify an existing \gls{preprocessor} or write our own, which can be
-		a huge undertaking.
-	\item[Platforms] \gls{asparc} platform that are required for the program are not
+		a highly time consuming process.
+	\item[Platforms] A \gls{asparc} platform that is required for the program is not
 		available to the project group.
 \end{description}
 
 \subsubsection{Non-technical Limitations}
 \begin{description}
-	\item[Experience] None in the group have experience with \Gls{lua}-\glspl{script},
-		running a project with a larger team, or has planned a project before.
+	\item[Experience] No team members have experience with \Gls{lua}-\glspl{script},
+		running a project with a larger team, or have planned a project before.
 	\item[Time] The project group has a limited time of 12 weeks and a project
 		deadline that cannot be changed. Also, the team consists of 7 members
 		that have different schedules so finding a time when everyone is
@@ -180,17 +180,11 @@ only for Windows.
 Violet\footnote{\url{http://violet.sourceforge.net/}} is a free
 and easy to use modeling software for making \Gls{uml}-diagrams.
 It is also a cross platform solution, which means that all team members can use
-the same application. If we had to use different \Gls{uml} applications we could have problems
+the same application. If we had to use different \Gls{uml} applications there could be a problem
 editing the diagrams due to incompatible file formats.
-The architectural and design team will be using violet to create diagrams
+The architectural and design team will be using Violet to create diagrams
 to illustrate the workings of the utility. As very advanced diagrams were not needed for
-this project, violet seemed like a fitting tool.
-
-\subsection{Based on the Planned Effort}
-%---------------------------------------
-Calculations done by the course staff suggests that each student should use 325
-person-hours distributed over 13 weeks. Our group, consisting of seven
-students, will have a total of 2275 person-hours to spend on the project.
+this project, Violet seemed like a fitting tool.
 
 \subsection{Schedule of Results}
 %-------------------------------
@@ -215,7 +209,7 @@ The milestones and sprints are listed below.
 
 \subsection{Concrete Project Work Plan}
 %--------------------------------------
-The two first weeks of the project will be used on planning and pre study.
+The first two weeks of the project will be used on planning and pre study.
 The project will be divided into 4 sprints, that will each last for two weeks.
 The first sprint will have an estimated 200 person-hours, while the last three
 sprints will have 250 person-hours. The last 1.5 weeks will be used to finish
@@ -287,7 +281,7 @@ This section describes how the team is organized, which roles the developers are
 
 \subsection{Project Organization}
 %--------------------------------
-Our project organization has a flat structure and the organization chart can be seen in figure \ref{fig:orgchart}, the roles listed in the organization chart are described in table \ref{tab:roles}.
+Our project organization has a flat structure and the organization chart can be seen in figure \ref{fig:orgchart}. The roles listed in the organization chart are described in table \ref{tab:roles}.
 
 \begin{figure}[htb]
 	\noindent\makebox[\textwidth]{%
@@ -303,11 +297,11 @@ Our project organization has a flat structure and the organization chart can be 
 	Role name & Main responsibilities  \\
 	\midrule
 	Project manager & Responsible for having an overview of the project, delegating jobs and resolving conflicts. \\ 
-	Adviser contact & Responsible for distributing information between the group and the advisor. \\
+	Advisor contact & Responsible for distributing information between the group and the advisor. \\
 	Organizer & Responsible for setting up and informing the group about the meeting schedule. \\ 
 	Document master & Responsible for document quality and quantity. \\ 
 	System architect & The lead designer of the system. \\ 
-	Lead programmer & Makes sure everyone follows the agreed code standards and ensures the quality of the code. \\ 
+	Lead programmer & Makes sure everyone follows the agreed code standards, and ensures the quality of the code. \\ 
 	Customer contact & Responsible for distributing information between the group and the customer. \\ 
 	Technically responsible & Finds good technical solutions and makes sure that the essential tools are operative. \\ 
 	Technology evangelist & Brings in ideas about new technologies and tools. \\ 
@@ -321,10 +315,10 @@ Our project organization has a flat structure and the organization chart can be 
 \subsection{Partners}
 %--------------------
 This subsection lists the partners of this project. The customer of this
-project is Thales Norway AS, which are located at Lerkendal Stadium,
+project is Thales Norway AS, which is located at Lerkendal Stadium,
 Strindveien 1, 7030 Trondheim. The customer contacts are listed in
 \autoref{tab:plan:customer}. The development team consist of seven student
-from \Gls{ntnu}, and are listed in \autoref{tab:plan:devs}. The team is assigned two
+from \Gls{ntnu}, and is listed in \autoref{tab:plan:devs}. The team is assigned two
 advisors from the Department of Computer and Information Science at \Gls{ntnu},
 listed in \autoref{tab:plan:advisors}. 
 
@@ -380,7 +374,7 @@ The following section contains internal processes and routines the team will use
 We will organize in pairs when producing items, where the pair reviews each others work. This is done in an effort to enhance the quality of the project, as we will be able to find more errors, and 
 also get a broader perspective on style and solutions.
 
-We also has assigned quality assurance responsibilities for three subjects: documents, code and tests. The respective team members will try to have a birds eye overview in their area to catch further errors.
+We have also assigned quality assurance responsibilities for three articles: documents, code and tests. The respective team members will try to have a bird's eye overview in their area to catch further errors.
 
 We have agreed to have three weekly meetings to accommodate these routines.
 \begin{itemize}
@@ -393,11 +387,11 @@ We have agreed to have three weekly meetings to accommodate these routines.
 %---------------------------------
 To ensure the quality of the sprint deliverables, the group members responsible for quality assurance for a given subject will either read through, or delegate that task to another free group member.
 
-We will also present the results for the customer and advisor. They will then have an opportunity to point out problems and misunderstandings, and suggest solutions. This is a result of the \Gls{scrum} methodology: deliveries and deadlines throughout the project, making the progress very visible to the customer and advisers. We will not be able to fail big in the end of the project because we have been guided by the feedback during the process of making the utility and report. If a problem appears, we will try to correct the it and then reiterate the quality assurance.
+We will also present the results to the customer and advisor. They will then have the opportunity to point out problems and misunderstandings, and suggest solutions. This is a result of the \Gls{scrum} methodology: deliveries and deadlines throughout the project, making the progress very visible to the customer and advisors. We should be able to attain success at the end of the project because we have been guided by the feedback during the process of making the utility and report. If a problem appears, we will try to correct it and then reiterate the quality assurance.
 
 \subsection{Procedures for Customer Meetings}
 %--------------------------------------------
-All customer meetings should be called with time, place, agenda specified. All background documents relevant to the meetings should also be supplied. This is to ensure efficient and effective meetings.
+All customer meetings should be scheduled with time, place, agenda specified. All background documents relevant to the meetings should also be supplied. This is to ensure efficient and effective meetings.
 
 All customer meetings should be summarised in a document (minute). This document should include:
 \begin{itemize}
@@ -412,7 +406,7 @@ All customer meetings should be summarised in a document (minute). This document
 	\item The above should be in sequence according to time
 \end{itemize}
 
-This summary should be done and sent to the customer by 12:00 the day after the meeting. If the customer does not approve the minutes, the minutes should again be corrected by and sent 12:00 the following day. The customer contact is responsible for the above tasks.
+This summary should be done and sent to the customer by 12:00 the day after the meeting. If the customer does not approve the minutes, the minutes should again be corrected and sent 12:00 the following day. The customer contact is responsible for the above tasks.
 
 The customer has committed to respond to our interactions within 2 working days.
 
@@ -421,7 +415,7 @@ The customer has committed to respond to our interactions within 2 working days.
 The weekly advisor meeting will be at 10:30 every Friday unless otherwise stated.
 
 \subsubsection{Agenda for Meeting}
-A meeting with the advisor should be called before 14:00 the day before the meeting, and this calling should include:
+A meeting with the advisor should be scheduled before 14:00 the day before the meeting, and this schedule should include:
 \begin{itemize}
 	\item Time
 	\item Place
@@ -433,7 +427,7 @@ A meeting with the advisor should be called before 14:00 the day before the meet
 \end{itemize}
 
 \subsubsection{Minutes from Meeting}
-The minutes should be written and sent to the advisor for approval before 12:00 the day after the meeting. If the advisor should reject the minutes, they should be corrected and resent 12:00 the day following the rejection. The minutes should include:
+The minutes should be written and sent to the advisor for approval before 12:00 the day after the meeting. If the advisor should reject the minutes, they should be corrected and re-sent 12:00 the day following the rejection. The minutes should include:
 \begin{itemize}
 	\item Time of meeting
 	\item Place
@@ -482,12 +476,12 @@ CSjark/
 		under report/. The structure for this folder:
 		\begin{verbatim}
 report/
-    planning/  --   Planning & Requirements part
-        img/  --  Images for this part
-    sprints/  --  Sprints part
-        img/  --  Images for this part
-    evaluation/  --  Evaluation part
-    appendices/  --   Appendices part
+    planning/  --   Planning & Requirements section
+        img/  --  Images for this section
+    sprints/  --  Sprint sections
+        img/  --  Images for this section
+    evaluation/  --  Evaluation section
+    appendices/  --   Appendices section
 		\end{verbatim}
 	\item Examples of \gls{header}-files and \Gls{lua}-\glspl{script}, \gls{packet} capture-files and information from customer is stored under \Gls{wireshark}/.
 \end{itemize}
@@ -611,9 +605,9 @@ Strategy and actions describes what we should do to reduce the consequences of t
 	\midrule
 	Risk ID & R9 \\
 	Risk factor & Miscommunication with customer \\
-	Consequences & \Gls{h}: The team waste time on functionality the customer did not want. The completed product does not do what the customer wanted. \\
+	Consequences & \Gls{h}: The team waste time on functionality the customer did not want. The delivered product does not do what the customer asked for. \\
 	Probability & \Gls{m} \\ 
-	Strategy \& actions & Make sure we and the customer have a common understanding of the requirements. Have frequent meetings with the customers.  \\
+	Strategy \& actions & Make sure we and the customer have a common understanding of the requirements. Have frequent meetings with the customer.  \\
 	Deadline & Continuous \\
 	Responsible & Sigurd \\
 	\midrule
@@ -627,4 +621,3 @@ Strategy and actions describes what we should do to reduce the consequences of t
 	\bottomrule
 	\label{tab:risk}
 \end{longtable}
-

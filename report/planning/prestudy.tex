@@ -1,7 +1,7 @@
 %=============================
-\chapter{Preliminary Studies}
+\chapter{Preliminary Study}
 %============================
-This chapter presents the preliminary studies for this project.
+This chapter presents the preliminary study for this project.
 In \autoref{sec:pre:similar} we have examined existing solutions, and in
 \autoref{sec:pre:method} we provide a description of two popular software
 development methodologies.
@@ -10,7 +10,7 @@ development methodologies.
 \autoref{sec:pre:wireshark}.
 \hyperref[sec:pre:langs]{Section \ref*{sec:pre:langs}} contains the different
 programming languages we might use, while \autoref{sec:pre:parser}
-describe possible solutions for parsing \Gls{c} \gls{header} files.
+describes possible solutions for parsing \Gls{c} \gls{header} files.
 \hyperref[sec:pre:config]{Section \ref*{sec:pre:config}} outlines possible
 configuration libraries, and \autoref{sec:pre:testing} discusses possible unit
 testing frameworks. In \autoref{sec:pre:docs} we describe tools for creating
@@ -40,8 +40,8 @@ A tool for generating \Gls{wireshark} \glspl{dissector} from \gls{idl} files. Th
 in \Gls{python}, and generates \glspl{dissector} in \Gls{c} from \gls{idl} specifications. (\gls{idl})
 is used to interface in a language-neutral way, which enables communication between software
 of different languages. It is used for example in \gls{Sun RPC} and \gls{acorba}. 
-Since idl2wrs takes input in a different language than us, and creates \glspl{dissector}
-in a different language than us, we can not reuse any of its code. Instead we will look
+Since idl2wrs takes input in a different language than our \gls{utility} will, and creates \glspl{dissector}
+in a different language than our \gls{utility}, we can not reuse any of its code. Instead we will look
 at its architecture and data structures, especially how it generates \glspl{dissector}.
 
 \subsection{Asn2wrs}
@@ -49,10 +49,10 @@ at its architecture and data structures, especially how it generates \glspl{diss
 A tool for generating \Gls{wireshark} \glspl{dissector} from \gls{asnone} \glspl{protocol}. It requires
 four input files: an \gls{asnone} \gls{protocol} description, a configuration file and two
 template files. Advantages of using Asn2wrs are faster development from
-easier recompilation, and plugins which are easy to distribute. Disadvantages
-are that code and \glspl{makefile} are more complex. Our customer can't use this
+easier recompilation, and plugins which are easy to distribute. The disadvantage
+is that code and \glspl{makefile} are more complex. Our customer can't use this
 solution as it would require them to rewrite their \Gls{c} \glspl{struct} to \gls{asnone}
-descriptions, which would take very long time.
+descriptions, which would take a very long time.
 
 
 %-----------------------------------------
@@ -106,7 +106,7 @@ also the phase where the customer either accepts or rejects the resulting
 software.
 
 \subsubsection{Maintenance}
-Large software projects are almost impossible to get completely bug free, and
+Large software projects are almost impossible to make completely bug free, and
 therefore a certain amount of maintenance may be required. The obvious tasks
 are to either fix or provide viable workarounds for problems that appear during
 normal use. Maintenance may also include developing new features that the
@@ -120,8 +120,8 @@ impossible to completely and accurately plan everything in a software project
 before you begin. It is therefore more or less based on iterations of the
 waterfall phases described in \autoref{sec:pre:waterfall}, but instead of
 having these phases being strictly sequential, they are run in a more
-'as needed' basis. Each iteration in \Gls{scrum} is called a sprint and is typically
-lasting from two and up to four weeks. This time period is fixed for each
+'as needed' basis. Each iteration in \Gls{scrum} is called a sprint and typically
+lasts between two and four weeks. This time period is fixed for each
 project, so the sprint will always end on time. To make this possible, features
 that are not completed on time is deferred to a later sprint. Each sprint
 should result in a runnable product that potentially could deliver some value
@@ -133,9 +133,9 @@ to the customer, even if this requires some redundant work.
 		for removing obstacles for other team members. In short, the \Gls{scrum}
 		master tries to keep the other team members focused on their tasks.
 	\item[Product Owner] represents and speaks for the customer. Not
-		necessarily a part of the customers organization, but must have the
+		necessarily a part of the customer's organization, but must have the
 		stated authorities.
-	\item[Team Members] responsible for making and delivering the product.
+	\item[Team Members] are responsible for creating and delivering the product.
 		Should consist of a self organizing team of five to nine persons with
 		a cross functional skill set.
 \end{description}
@@ -174,8 +174,8 @@ In this meeting the team should discuss what was completed and what was not, and
 demonstrate the completed features for the customer.	
 
 After the review meeting, a separate retrospect meeting should be held with all
-the team members, where all members shares their reflections of how the sprint
-went and how to improve the next sprint. This is important for improving the
+the team members, where all members share their reflections of how the sprint
+went and on how we could improve for the next sprint. This is important for improving the
 process.
 
 
@@ -192,7 +192,7 @@ process.
 network \gls{protocol} analyzer. It lets you capture and browse traffic running
 through a computer network. \Gls{wireshark} is currently being developed by the
 \Gls{wireshark} team, a group of networking experts spanning the globe. Because of
-its rich set of features and ease of use, \Gls{wireshark} is de facto standard in
+its rich set of features and ease of use, \Gls{wireshark} is the de facto standard in
 many different industries and the educational community. \Gls{wireshark} is able to
 dissect and display data from a plethora of different \glspl{protocol}. One of its
 strengths lies in the ease of which developers can add their own \glspl{dissector},
@@ -449,14 +449,14 @@ section. In \autoref{sec:pre:testchoice} we describe which we selected and why.
 
 \subsection{py.test}
 %-------------------
-py.test\footnote{\url{http://pytest.org/latest/}} a mature full-featured testing
+py.test\footnote{\url{http://pytest.org/latest/}} is a mature, full-featured testing
 tool. It runs on \Gls{python} 2.4-3.2, PyPy and Jython-2.5.1 intepreters on both
 Windows and Posix platforms. It is well documented and popular in the \Gls{python}
 community. The best known project which uses it is PyPy, which has over 16,000
 unit tests. py.test discoverers tests automatically by searching for modules,
 classes, functions and methods which starts with "test\_". It uses the assert
-statement to test variables and values. These implicit behaviours makes tests
-easier to write and faster, but harder to learn and understand.
+statement to test variables and values. These implicit behaviours make tests
+easier and faster to write, but harder to learn and understand.
 
 \subsection{nose}
 %----------------
@@ -477,7 +477,7 @@ plugins, and it comes bundled with the most popular ones. It supports both
 	\vspace{-30pt}
 \end{wrapfigure}
 Attest\footnote{\url{http://packages.python.org/Attest/}} is a test automation
-framework for \Gls{python} emphasising modern idioms and conventions. It supports
+framework for \Gls{python}, emphasising modern idioms and conventions. It supports
 test collecting using \Gls{python} decorators, introspection of the assert statement,
 treating tests as \Gls{python} modules rather than scripts. Attest is a rather young
 framework, with limited features and documentation. Attest is a sub-level
@@ -643,7 +643,7 @@ language because it would run on all the platforms required, it offered
 automatic memory management so it would be easier to debug, and it was the only
 language everyone on the team had experience with.
 
-We looked at \hyperref[sec:pre:antlr]{\gls{antlr}} for generating
+We looked at \hyperref[sec:pre:antlr]{\gls{antlr}} for generating a
 \Gls{c} \gls{lexer} and \gls{parser} in \Gls{java}, which looked very promising. It also provided
 grammar files for creating a \Gls{c} \gls{preprocessor} in \Gls{java}. Closer evaluation revealed
 that the \Gls{c} \gls{preprocessor} grammar was written in 2006, and had stopped working in
@@ -671,9 +671,9 @@ self study before we start the first sprint.
 \subsection{Parsers Libraries \& Tools Choice}
 %---------------------------------------------
 \label{sec:pre:parserchoice}
-We outlined three different approaches for parsing \Gls{c} \gls{header} files. First is to
-write a custom \gls{parser} ourself, second is to use a \Gls{c} parsing \gls{library}, and
-third is using a toolkit \gls{parser} like \hyperref[sec:pre:gcc]{\Gls{agcc}} and
+We outlined three different approaches for parsing \Gls{c} \gls{header} files. The first approach is to
+write a custom \gls{parser} ourself, the second is to use a \Gls{c} parsing \gls{library}, and the
+third is to use a toolkit \gls{parser} like \hyperref[sec:pre:gcc]{\Gls{agcc}} and
 \hyperref[sec:pre:clang]{\Gls{clang}}.
 
 We felt that writing our own \Gls{c} \gls{parser} with \Gls{c} \gls{preprocessor} would possibly take

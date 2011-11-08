@@ -899,13 +899,53 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\midrule
 	Description & Guessing dissectors from packet size\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system \\
+	Prerequisites & The utility has to be installed on the system and wireshark has to have been loaded with a dissector for a struct of the same size as the one associated with this test \\
 	Feature & Making sure the utility is able to guess which dissector to use based on packet size if there are no dissectors specified for the packet\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1.NOT DONE YET\\
-	& 2.  NOT DONE YET\\
+	\multirow{2}{*}{Execution} & 1.Start wireshark with the pcap file associated with this test\\
+	& 2.  Inspect the different packets, their structs and member values\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. NOT DONE YET\\
+	& 2. All of the packets should contain a struct with different members and values instead of just raw hex data\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID40}\label{tab:TID40}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Invalid header\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system\\
+	Feature & Making sure the utility crashes if it receives an invalid header\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1.Feed the utility with an invalid header file\\
+	& 2.  Read the output\\
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. The utility should crash and give an error message explaining why it crashed\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID41}\label{tab:TID41}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Invalid header during batch mode\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system\\
+	Feature & Making sure the utility skips headers it is unable to parse during batch processing\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1.Feed the utility with a folder containing several invalid header files\\
+	& 2.  Read the output\\
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. The utility should skip the files it is unable to parse and present the user with a message saying why it skipped the files it was unable to parse\\
 \end{tabularx}}
 \end{table}

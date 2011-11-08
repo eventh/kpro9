@@ -20,15 +20,15 @@ sys.path.insert(0, os.path.abspath('../csjark'))
 
 # import Mocker
 
-class Mock(object):
-    def __init__(self, *args):
-        pass
-
-    def __getattr__(self, name):
-        return Mock
-
-for mod_name in ('yaml', 'pycparser', 'argparse'):
-    sys.modules[mod_name] = Mock()
+# class Mock(object):
+#     def __init__(self, *args):
+#         pass
+# 
+#     def __getattr__(self, name):
+#         return Mock
+# 
+# for mod_name in ('yaml', 'pycparser', 'argparse'):
+#     sys.modules[mod_name] = Mock()
 
 # -- General configuration -----------------------------------------------------
 

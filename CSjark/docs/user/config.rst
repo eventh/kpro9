@@ -1,12 +1,11 @@
-
-.. toctree::  
-   :maxdepth: 2  
-
 ===============
  Configuration
 ===============
 
 Because there exists distinct requirements for flexibility of generating dissectors, CSjark supports configuration for various parts of the program. First, general parameters for utility running can be set up. This can be for example settings of variable sizes for different platforms or other parameters that could determine generating dissectors regardless actual C header file. Second, each individual C struct can be treated in different way. For example, value of specific struct member can be checked for being within specified limits. 
+
+.. contents:: Contents
+   :depth: 4
 
 Configuration format
 --------------------
@@ -363,14 +362,58 @@ The example below shows an example with BER [#]_, which av 4 trailers with a siz
 	  - size: 6
 
 
-Custom handling of datatypes
--------------------------------------------
+Custom handling of data types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The utility supports custom handling of specified data types, which also includes functionality to support time_t and nstime_t. All basic data types and struct members can be configured to be handled as a special case. The custom handeling must be done through a configuration file. 
+The utility supports custom handling of specified data types. Some variables in input C header may actually represent other values than its own type. This CSjark feature allows user to map types defined in C header to Wireshark field types. Also, it provides a method to change how the input field is displayed in Wireshark. The custom handling must be done through a configuration file.
+
+For example, this functionality can cause Wireshark to display ``time_t`` data type as ``absolute_time``. The displayed type is given by generated Lua dissector and functions of ``ProtoField`` class.
+
+List of available output types follows:
+
+``Integer types``
+    uint8, uint16, uint24, uint32, uint64, framenum
+
+``Other types``
+    float, double, string, stringz, bytes, bool, ipv4, ipv6, ether, oid, guid
+    
+For ``Integer`` types, there are some specific attributes that can be defined (see below_). More about each individual type can be found in `Wireshark reference`_.
+
+.. _Wireshark reference: http://www.wireshark.org/docs/wsug_html_chunked/lua_module_Proto.html#lua_class_ProtoField 
 
 
-Some variables may actually represent other values than its own type. 
-For example, this functionality supports redefinition of ``time_t`` data type to ``absolute_time``
+The section name in configuration file for custom data type handling is called ``customs``. This section can contain following attributes:
+
+Required attributes
+    
+    =====================   ============
+    Attribute name          Value
+    =====================   ============
+    ``member`` | ``type``   Name of member or type for which is the configuration applied
+    ``field``               Displayed type (see above)
+    =====================   ============
+    
+Optional attributes - all types
+    
+    ===============     ============
+    Attribute name      Value
+    ===============     ============
+    ``abbr``            Filter name of the field (the string that is used in filters)
+    ``name``            Actual name of the field
+    ``desc``            The description of the field (displayed on Wireshark statusbar)
+    ===============     ============
+
+.. _below:
+    
+Optional attributes - Integer types only
+    
+    ===============     ============
+    Attribute name      Value
+    ===============     ============
+    ``base``            Displayed representation - can be one of ``base.DEC``, ``base.HEX`` or ``base.OCT``
+    ``values``          List of ``key:value`` pairs representing the Integer value - e.g. ``{0: Monday, 1: Tuesday}``
+    ``mask``            Integer mask of this field    
+    ===============     ============
 
 
 .. [#] Basic Encoding Rules

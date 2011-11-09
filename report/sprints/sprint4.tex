@@ -359,7 +359,11 @@ TODO
 
 \subsection{Support Multiple Dissector ID }
 %--------------------
-TODO
+The dissector ID for dissectors was modified in this sprint, so that a struct 
+can have multiple dissectors. This was done since a struct can have multiple 
+message ID's, in the system that the customer uses. After this fix it is 
+possible to add a list of message ID's to the configuration file of the 
+struct, and the Lua-dissector will add all message ID's to the dissector table.
 
 \subsection{Configuration of Size for Unknown Structs}
 %--------------------
@@ -375,19 +379,33 @@ TODO
 
 \subsection{Support Array of Pointers}
 %--------------------
-TODO
+
+
+TODO: Not implemented yet
 
 \subsection{Autogenerate Configuration Files}
 %--------------------
-TODO
+The autogeneration of configuration file is a simple feature, that could save 
+the user of the utility some time, since the essential part of the 
+configuration file is generated automatic. The utility will only create a new 
+file, containg the name of the struct and line to specifiy the ID for the 
+dissector. To generate the configuration file, the utility must be run with 
+\emph{-p} or \emph{--placeholders} as an option. 
 
 \subsection{Only Generate Dissectors for Structs with Valid ID}
 %--------------------
-TODO
+Since sprint 2 the utility has been generating dissectors for all header-files 
+found in a folder, when running in batch. This has been fixed, so the utility 
+only generates dissectors, for structs that have a configuration file with an 
+ID, and for structs that depends on other structs. This will speed up the 
+generation of dissectors, since it only generates dissectors that Wireshark 
+can use.
+
+TODO: Not implemented yet
 
 \subsection{Guess dissector from packet size}
 %--------------------
-TODO
+TODO: Not implemented yet
 
 %-----------------------
 \section{Sprint Testing}

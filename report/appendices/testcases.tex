@@ -949,3 +949,125 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	& 2. The utility should skip the files it is unable to parse and present the user with a message saying why it skipped the files it was unable to parse\\
 \end{tabularx}}
 \end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID42}\label{tab:TID42}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Ambiguous struct IDs \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system\\
+	Feature & Making sure the utility crashes if there are several structs that all have been configured to using the same ID\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1.Feed the utility with a pair of headers and configuration files that both have the same struct ID\\
+	& 2.  Read the output\\
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. The utility should present the user with an error message saying that there exists 2 structs which have been configured to using the same ID\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID43}\label{tab:TID43}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Ambiguous platform IDs \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system\\
+	Feature & Making sure the utility crashes if there are several platforms that all share the same ID\\
+	\midrule
+	\multirow{3}{*}{Execution} & 1.Add another platform platform.py which has the same platform ID as one of the previous ones\\
+	& 2.  Feed the utility with any header file and its config\\
+	& 3. Read the output\\
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 3. The utility should present the user with an error message saying that there exists two platforms with the same name\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID44}\label{tab:TID44}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Running the utility on Windows\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on a windows system\\
+	Feature & Making sure the utility runs on the latest version of Windows as per 24.11.2011\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1. Feed the utility with any c-header file and its config\\
+	& 2. Read the output\\
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. The utility should present the user with some text expressing the success of creating a dissector for each of the structs inside the header file\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID45}\label{tab:TID45}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Running the utility on Solaris\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on a Solaris system\\
+	Feature & Making sure the utility runs on the latest version of Solais as per 24.11.2011\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1. Feed the utility with any c-header file and its config\\
+	& 2. Read the output\\
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. The utility should present the user with some text expressing the success of creating a dissector for each of the structs inside the header file\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID46}\label{tab:TID46}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Running the dissectors on Solaris\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & Wireshark has to have been installed with the dissectors associated with this test\\
+	Feature & Making sure the dissectors runs on the latest version of Solais as per 24.11.2011\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1. Run wireshark with the pcap file associated with this test\\
+	& 2. Inspect the different packets, their structs and member values\\
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. The packets should be displayed as containing structs with members that all have proper values and not just hex data\\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID47}\label{tab:TID47}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Running the dissectors on Windows\\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & Wireshark has to have been installed with the dissectors associated with this test\\
+	Feature & Making sure the dissectors runs on the latest version of Solais as per 24.11.2011\\
+	\midrule
+	\multirow{2}{*}{Execution} & 1. Run wireshark with the pcap file associated with this test\\
+	& 2. Inspect the different packets, their structs and member values\\
+	\midrule
+	\multirow{1}{*}{Expected result}
+	& 2. The packets should be displayed as containing structs with members that all have proper values and not just hex data\\
+\end{tabularx}}
+\end{table}
+

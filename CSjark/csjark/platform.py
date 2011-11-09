@@ -289,7 +289,7 @@ Platform('Win32', 1, Platform.little,
 
 # Windows 64 bit
 Platform('Win64', 2, Platform.little,
-         macros=merge(WIN32_MACROS, X64_MACROS, {'_WIN64':1}),
+         macros=merge(WIN32_MACROS, X64_MACROS, {'_WIN64': 1}),
          sizes=WIN64_C_SIZE_MAP, alignment=WIN64_C_SIZE_MAP)
 
 # Solaris 32 bit

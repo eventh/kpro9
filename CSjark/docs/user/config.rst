@@ -420,6 +420,34 @@ The section name in configuration file for custom data type handling is called `
     ``mask``               Integer mask of this field    
     ==================     ============
 
+Example of such a configuration file follows: ::
+
+    Structs:
+      - name: custom_type_handling
+        id: 1
+        customs:
+          - type: time_t
+            field: absolute_time
+          - member: day
+            field: uint32
+            abbr: day.name
+            name: Weekday name
+            base: base.DEC
+            values: { 0: Monday, 1: Tuesday, 2: Wednesday, 3: Thursday, 4: Friday}
+            mask: nil
+            desc: This day you will work a lot!!
+            
+and applies for example for this C header file: ::
+
+    #include <time.h>
+    
+    struct custom_type_handling {
+        time_t abs;
+        int day;
+    };
+
+Both struct members are redefined. First will be displayed as ``absolute_type`` according to its type (``time_t``), second one is changed because of the struct member name (``day``).
+
 Platform specific configuraion
 ------------------------------
 
@@ -437,7 +465,7 @@ Entire platform setup is done via Python code, specifically ``platform.py``. Thi
 7. Platform-specific C preprocessor macros
 8. Platform registration method and calling for each platform
 
-
+      
 When defining new platform, following steps should be done. Referenced sections apply to ``platform.py`` sections listed above. All the new dictionary variables should have proper syntax of `Python dictionary <http://docs.python.org/release/3.1.3/tutorial/datastructures.html#dictionaries>`_:
 
 **Field sizes**

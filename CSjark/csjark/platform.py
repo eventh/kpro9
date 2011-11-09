@@ -112,7 +112,7 @@ DEFAULT_C_TYPE_MAP = {
 }
 
 
-# Default mapping of C type and their default size in bytes.
+# Default type size in bytes.
 DEFAULT_C_SIZE_MAP = {
         'bool': 1,
         '_Bool': 1,
@@ -151,7 +151,7 @@ DEFAULT_C_SIZE_MAP = {
 }
 
 
-# Default mapping of C type and their default size in bytes.
+# Default alignment size in bytes.
 DEFAULT_C_ALIGNEMT_SIZE_MAP = {
         'bool': 1,
         '_Bool': 1,
@@ -189,7 +189,7 @@ DEFAULT_C_ALIGNEMT_SIZE_MAP = {
         'time_t': 4,
 }
 
-
+# Custom C sizes
 # Mapping of C sizes for Windows 64-bit platform
 WIN64_C_SIZE_MAP = {
         'pointer': 8,
@@ -225,8 +225,8 @@ SPARC_C_SIZE_MAP = {
         'long double': 16,
 }
 
-
-# Mapping of C sizes for unix like platforms
+# Custom alignment sizes
+# Mapping of alignment sizes for unix like platforms
 UNIX_C_ALIGNMENT_SIZE_MAP = {
         'long': 8,
         'long int': 8,

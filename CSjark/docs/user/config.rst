@@ -12,6 +12,9 @@ Configuration format
 
 The configuration files are written in YAML_ which is a data serialization format designed to be easy to read and write. The format of the files are described below. The configuration should be put in a ``filename.yml`` file and specified when running CSjark with the ``--config`` command line argument.
 
+Detailed specification can be found at `YAML website <http://www.yaml.org/spec/1.2/spec.html>`_.
+
+The only part of configuration that is held directly in the code is the platform specific setup (file ``platform.py``).
 
 Configuration definitions
 -------------------------
@@ -354,6 +357,8 @@ There are two ways to configure the trailers, specifiy the total number of trail
 Example:
 The example below shows an example with BER [#]_, which av 4 trailers with a size of 6 bytes.
 
+.. [#] Basic Encoding Rules
+
 ::
 
 	trailers:
@@ -415,8 +420,95 @@ The section name in configuration file for custom data type handling is called `
     ``mask``               Integer mask of this field    
     ==================     ============
 
+Platform specific configuraion
+------------------------------
 
-.. [#] Basic Encoding Rules
+To ensure that CSjark is usable as much as possible, platform specific
+
+
+Entire platform setup is done via Python code, specifically ``platform.py``. This file contains following sections:
+
+1. Platform class definition including it's methods
+2. Default mapping of C type and their wireshark field type
+3. Default C type size in bytes
+4. Default alignment size in bytes
+5. Custom C type sizes for every platform which differ from default
+6. Custom alignment sizes for every platform which differ from default
+7. Platform-specific C preprocessor macros
+8. Platform registration method and calling for each platform
+
+
+When defining new platform, following steps should be done. Referenced sections apply to ``platform.py`` sections listed above. All the new dictionary variables should have proper syntax of `Python dictionary <http://docs.python.org/release/3.1.3/tutorial/datastructures.html#dictionaries>`_:
+
+**Field sizes**
+    Define custom C type sizes in section 5. Create new dictionary with name in capital letters. Only those different from default (section 3) must be defined. 
+
+    ::
+        
+        NEW_PLATFORM_C_SIZE_MAP = {
+            'unsigned long': 8,
+            'unsigned long int': 8,
+            'long double': 16
+        }
+
+**Memory alignment**    
+    Define custom memory alignment sizes in section 6. Create new dictionary with name in capital letters. Only those different from default (section 4) must be defined. 
+    
+    ::
+    
+        NEW_PLATFORM_C_ALIGNMENT_MAP = {
+            'unsigned long': 8,
+            'unsigned long int': 8,
+            'long double': 16
+        }
+     
+**Macros**
+    Define dictionary of platform specific macros in section 7. These macros then can be used within C header files to define platform specific struct members etc. E.g.: 
+    
+    ::
+   
+        #if _WIN32
+            float num;
+        #elif __sparc
+            long double num;
+        #else
+            double num;
+
+
+    Example of such macros: 
+    
+    ::
+     
+        NEW_PLATFORM_MACROS = {
+            '__new_platform__': 1, '__new_platform': 1
+        }
+
+
+**Register platform**
+    In last section (8), the new platform must be registered. Basically, it means calling the constructor of Platform class. That has following parameters:
+    
+    ::
+        
+        Platform(name, flag, endian, macros=None, sizes=None, alignment=None)    
+
+    where
+
+    =========== ===
+    ``name``    name of the platform
+    ``flag``    unique integer value representing this platform
+    ``endian``  either ``Platform.big`` or ``Platform.little``
+    ``macros``  C preprocessor platform-specific macros like _WIN32
+    ``sizes``   dictionary which maps C types to their size in bytes
+    =========== ===    
+ 
+    Registering of the platform then might look as follows: ::
+    
+        # New platform
+        Platform('New-platform', 8, Platform.little,
+                 macros=NEW_PLATFORM_MACROS,
+                 sizes=NEW_PLATFORM_C_SIZE_MAP,
+                 alignment=NEW_PLATFORM_C_ALIGNMENT_MAP)
+     
+
 
 .. _YAML: http://www.yaml.org/
-

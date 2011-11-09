@@ -23,22 +23,23 @@ The arguments here specify the following:
 
 **Optional arguments:**
 
-  -h, --help            		 Show a help message and exit.
-  -v, --verbose                  Print detailed information.
-  -d, --debug              		 Print debugging information.
-  -s, --strict              	 Only generate dissectors for known structs.
-  -f [header [header ...]], --file [header [header ...]]        Specifies that CSjark should look for struct definitions in the ``header`` files.
-  -c [config [config ...]], --config [config [config ...]]      Specifies that the program should use the ``config`` files as configuration.
-  -o [output], --output [output]                                Writes the output to the specified file ``output``.
-  -p, --placeholders             Generate placeholder config file for unknown structs
-  -n, --nocpp              		 Disables the C pre-processor.
-  -C [cpp], --CPP [cpp]          Specifies which preprocessor to use.
-  -i [header [header ...]], --include [header [header ...]]     Process file as Cpp #include "file" directive
-  -I [directory [directory ...]], --Includes [directory [directory ...]]        Directories to be searched for Cpp includes
-  -D [name=definition [name=definition ...]], --Define [name=definition [name=definition ...]]         Predefine name as a Cpp macro
-  -U [name [name ...]], --Undefine [name [name ...]]        Cancel any previous Cpp definition of name
-  -A [argument [argument ...]], --Additional [argument [argument ...]]          Any additional C preprocessor arguments
-
+    =================================================================================================    ===========================
+    ``-h, --help``            		                                                                     Show a help message and exit.
+    ``-v, --verbose``                                                                                    Print detailed information.
+    ``-d, --debug``              	                                                                     Print debugging information.
+    ``-s, --strict``              	                                                                     Only generate dissectors for known structs.
+    ``-f [header [header ...]], --file [header [header ...]]``                                           Specifies that CSjark should look for struct definitions in the ``header`` files.
+    ``-c [config [config ...]], --config [config [config ...]]``                                         Specifies that the program should use the ``config`` files as configuration.
+    ``-o [output], --output [output]``                                                                   Writes the output to the specified file ``output``.
+    ``-p, --placeholders``                                                                               Generate placeholder config file for unknown structs
+    ``-n, --nocpp``              		                                                                 Disables the C pre-processor.
+    ``-C [cpp], --CPP [cpp]``                                                                            Specifies which preprocessor to use.
+    ``-i [header [header ...]], --include [header [header ...]]``                                        Process file as Cpp ``#include "file"`` directive
+    ``-I [directory [directory ...]], --Includes [directory [directory ...]]``                           Directories to be searched for Cpp includes
+    ``-D [name=definition [name=definition ...]], --Define [name=definition [name=definition ...]]``     Predefine name as a Cpp macro
+    ``-U [name [name ...]], --Undefine [name [name ...]]``                                               Cancel any previous Cpp definition of name
+    ``-A [argument [argument ...]], --Additional [argument [argument ...]]``                             Any additional C preprocessor arguments
+    =================================================================================================    ===========================
 
 **Example usage:** ::
 

@@ -308,7 +308,11 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 %----------------------
 \section{System Design}
 %----------------------
-
+The sprint design this sprint will not be as comprehensive as the design in the prior sprints. This is because of two reasons:
+\begin{itemize}
+	\item This is the last sprint, if we are to implement many new features we must also have time to test and write documentation for them. Which we do not have.
+	\item The existing features have to be extensively tested and documented before the project is over, leaving little time for other work. Testing and bugfixing will usually not result in new design, except minor changes in the class diagram.
+\end{itemize}
 
 %-----------------------
 \section{Implementation}
@@ -333,6 +337,10 @@ support pragma directives, these lines in the c-code is removed before the
 preprocessing. Removing these lines will not affect the utility, since the 
 utility never compiles the code.
 
+\subsection{Include Dependencies}
+%--------------------
+TODO
+
 \subsection{Improve Generated \Gls{lua} Output}
 %--------------------
 TODO
@@ -341,9 +349,67 @@ TODO
 %--------------------
 TODO
 
-\subsection{Support for Customer Examples}
+\subsection{Fixed Proto Fields for Arrays}
 %--------------------
 TODO
+
+\subsection{CLI Support for Include Folders}
+%--------------------
+TODO
+
+\subsection{CLI Support for C Macros}
+%--------------------
+TODO
+
+\subsection{Support Multiple Dissector ID }
+%--------------------
+The dissector ID for dissectors was modified in this sprint, so that a struct 
+can have multiple dissectors. This was done since a struct can have multiple 
+message ID's, in the system that the customer uses. After this fix it is 
+possible to add a list of message ID's to the configuration file of the 
+struct, and the Lua-dissector will add all message ID's to the dissector table.
+
+\subsection{Configuration of Size for Unknown Structs}
+%--------------------
+TODO
+
+\subsection{CLI Support for C Macros}
+%--------------------
+TODO
+
+\subsection{Support Offset and Value in Custom Lua Files}
+%--------------------
+TODO
+
+\subsection{Support Array of Pointers}
+%--------------------
+
+
+TODO: Not implemented yet
+
+\subsection{Autogenerate Configuration Files}
+%--------------------
+The autogeneration of configuration file is a simple feature, that could save 
+the user of the utility some time, since the essential part of the 
+configuration file is generated automatic. The utility will only create a new 
+file, containg the name of the struct and line to specifiy the ID for the 
+dissector. To generate the configuration file, the utility must be run with 
+\emph{-p} or \emph{--placeholders} as an option. 
+
+\subsection{Only Generate Dissectors for Structs with Valid ID}
+%--------------------
+Since sprint 2 the utility has been generating dissectors for all header-files 
+found in a folder, when running in batch. This has been fixed, so the utility 
+only generates dissectors, for structs that have a configuration file with an 
+ID, and for structs that depends on other structs. This will speed up the 
+generation of dissectors, since it only generates dissectors that Wireshark 
+can use.
+
+TODO: Not implemented yet
+
+\subsection{Guess dissector from packet size}
+%--------------------
+TODO: Not implemented yet
 
 %-----------------------
 \section{Sprint Testing}

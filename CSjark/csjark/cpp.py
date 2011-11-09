@@ -69,10 +69,10 @@ def parse_file(filename, platform=None, folders=None, includes=None):
 
     # Call C preprocessor with args and file
     pipe = Popen(path_list, stdin=PIPE, stdout=PIPE, universal_newlines=True)
-    if sys.platform.startswith('win'): # WTF Python, are you mad?
-        text = pipe.communicate(feed)[0]
-    else:
+    if sys.platform.startswith('sunos'): # WTF Python, are you mad?
         text = pipe.communicate(input=bytes(feed, 'ascii'))[0]
+    else:
+        text = pipe.communicate(feed)[0]
 
     return '\n'.join(post_cpp(text.split('\n')))
 

@@ -1,5 +1,6 @@
 Options:
     use_cpp: True
+    excludes: [examples, test]
     default:
         include_dirs: []
         includes: []

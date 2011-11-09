@@ -421,6 +421,7 @@ class Options:
     generate_placeholders = False
     use_cpp = True
     cpp_path = None
+    excludes = []
 
     # Utility options
     platforms = set() # Set of platforms to support in dissectors
@@ -457,6 +458,11 @@ class Options:
             value = obj.get(member, None)
             if value is not None:
                 setattr(cls, member, value)
+
+        # Handle exclude arguments, files and folders to NOT parse
+        excludes = obj.get('excludes', None)
+        if excludes:
+            cls.excludes.extend(os.path.normpath(i) for i in excludes)
 
         # Handle C preprocessor arguments
         default = obj.get('default', None)
@@ -545,6 +551,7 @@ def generate_placeholders(protocols):
         return '  - name: %s #%s' % (proto.name, proto._coord.file)
     structs = '''
     id:
+    description:
     ranges:
     enums:
     bitstrings:
@@ -558,6 +565,7 @@ Options:
     verbose:
     debug:
     strict:
+    excludes:
     use_cpp:
     cpp_path:
     default:
@@ -581,6 +589,8 @@ def parse_file(filename, only_text=None):
     else:
         with open(filename, 'r') as f:
             obj = yaml.safe_load(f)
+    if obj is None:
+        return # Empty yaml file
 
     # Deal with utility options
     options = obj.get('Options', None)

@@ -307,7 +307,7 @@ def req6_b(cli):
     """Test requirement FR6-B: Parameter for configuration file."""
     header = os.path.join(os.path.dirname(__file__), 'cpp.h')
     include = os.path.join(os.path.dirname(__file__), 'include.h')
-    config = os.path.join(os.path.dirname(__file__), 'test.yml')
+    config = os.path.join(os.path.dirname(__file__), 'sprint2.yml')
     assert os.path.isfile(config)
     headers, configs = csjark.parse_args(
             [header, '--verbose', '-d', '-f', include, '--config', config])

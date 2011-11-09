@@ -162,17 +162,18 @@ def parse_args(args=None):
 
     # Add files if headers or configs contain folders
     def files_in_folder(var, file_extensions):
-        i = 0
-        while i < len(var):
-            if os.path.isdir(var[i]):
-                folder = var.pop(i)
-                var.extend(os.path.join(folder, path) for path in
-                        os.listdir(folder) if os.path.isdir(path)
-                        or os.path.splitext(path)[1] in file_extensions)
-            else:
-                i += 1
+        folders = [folder for folder in var if os.path.isdir(folder)]
+        while len(folders):
+            folder = folders.pop()
+            if folder in var:
+                var.remove(folder)
+            for path in os.listdir(folder):
+                if os.path.isdir(os.path.join(folder, path)):
+                    folders.append(os.path.join(folder, path))
+                elif os.path.splitext(path)[1] in file_extensions:
+                    var.append(os.path.join(folder, path))
 
-    files_in_folder(headers, ('.h', '.hpp', '.c'))
+    files_in_folder(headers, ('.h', '.hpp'))
     files_in_folder(configs, ('.yml', ))
 
     return headers, configs
@@ -186,11 +187,14 @@ def parse_headers(headers):
             key = msg.rsplit('before: ', 1)[1].strip(), platform
             return cparser.StructVisitor.all_known_types.get(key, None)
 
+    # Include a set of all folders with headers in them
+    folders = {os.path.dirname(i) for i in headers}
+
     # First try, in the order given through the CLI
     failed = [] # Protocols we have failed to generate
     for filename in headers:
         for platform in Options.platforms:
-            error = create_dissector(filename, platform)
+            error = create_dissector(filename, platform, folders)
             if error is not None:
                 failed.append([filename, platform, error])
 
@@ -201,13 +205,15 @@ def parse_headers(headers):
         if include is not None:
             if os.path.normpath(filename) == os.path.normpath(include):
                 continue # Problem with typedef, impossibru!
-            new_error = create_dissector(filename, platform, [include])
+            new_error = create_dissector(
+                    filename, platform, folders, [include])
             if new_error != error:
                 FileConfig.add_include(filename, include)
                 failed[i][2] = new_error
             if new_error is None:
                 failed.pop(i)
 
+    '''
     # Third try, include all who worked as it might help
     failed_names = [filename for filename, platform, error in failed]
     includes = [file for file in headers if file not in failed_names]
@@ -221,6 +227,7 @@ def parse_headers(headers):
             includes.append(filename)
         else:
             failed.append([filename, platform, error])
+    '''
 
     # Potential for a fourth and fifth try
 
@@ -230,16 +237,17 @@ def parse_headers(headers):
                 filename, platform.name, repr(error)))
 
 
-def create_dissector(filename, platform, includes=None):
+def create_dissector(filename, platform, folders=None, includes=None):
     """Parse 'filename' to create a Wireshark protocol dissector.
 
     'filename' is the C header/code file to parse.
     'platform' is the platform we should simulate.
+    'folders' is a set of all folders to -Include.
     'includes' is a set of filenames to #include.
     Returns the error if parsing failed, None if succeeded.
     """
     try:
-        text = cpp.parse_file(filename, platform, includes)
+        text = cpp.parse_file(filename, platform, folders, includes)
         ast = cparser.parse(text, filename)
         cparser.find_structs(ast, platform)
     except Exception as err:

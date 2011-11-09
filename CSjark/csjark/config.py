@@ -474,7 +474,8 @@ class Options:
         """Prepare options before parsing starts.."""
         # Map current platform to a platform configuration
         if not cls.platforms:
-            mapping = {'win': 'Win32', 'darwin': 'Macos', 'linux': 'Linux-x86'}
+            mapping = {'win': 'Win32', 'darwin': 'Macos',
+                       'linux': 'Linux-x86', 'sunos': 'Solaris-x86-64'}
             for key, value in mapping.items():
                 if sys.platform.startswith(key):
                     cls.platforms.add(Platform.mappings[value])

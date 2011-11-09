@@ -8,11 +8,12 @@ from subprocess import Popen, PIPE
 from config import Options
 
 
-def parse_file(filename, platform=None, includes=None):
+def parse_file(filename, platform=None, folders=None, includes=None):
     """Run a C header or code file through C preprocessor program.
 
     'filename' is the file to feed CPP.
     'platform' is the platform to simulate.
+    'folders' is directories to -Include.
     'includes' is a set of filename to #include.
     """
     # Just read the content of the file if we don't want to use cpp
@@ -20,6 +21,8 @@ def parse_file(filename, platform=None, includes=None):
         with open(filename, 'r') as f:
             return f.read()
 
+    if folders is None:
+        folders = set()
     if includes is None:
         includes = []
 
@@ -31,16 +34,19 @@ def parse_file(filename, platform=None, includes=None):
 
     # Add as include the folder the files are located in
     if os.path.dirname(filename):
-        path_list.append('-I%s' % os.path.dirname(filename))
+        folders.add(os.path.dirname(filename))
+
+    # Add all -Include cpp arguments
+    if folders or config.include_dirs:
+        folders.union(config.include_dirs)
+        path_list.extend('-I%s' % i for i in folders)
 
     # Define macros
     if platform is not None:
-        #path_list.append('-undef') # Remove system-specific defines
         path_list.extend(['-D%s=%s' % (i, j)
                 for i, j in platform.macros.items()])
 
     # Add any C preprocesser arguments from CLI or config
-    path_list.extend('-I%s' % i for i in config.include_dirs)
     path_list.extend('-D%s' % i for i in config.defines)
     path_list.extend('-U%s' % i for i in config.undefines)
     path_list.extend(config.arguments)
@@ -63,7 +69,10 @@ def parse_file(filename, platform=None, includes=None):
 
     # Call C preprocessor with args and file
     pipe = Popen(path_list, stdin=PIPE, stdout=PIPE, universal_newlines=True)
-    text = pipe.communicate(feed)[0]
+    if sys.platform.startswith('win'): # WTF Python, are you mad?
+        text = pipe.communicate(feed)[0]
+    else:
+        text = pipe.communicate(input=bytes(feed, 'ascii'))[0]
 
     return '\n'.join(post_cpp(text.split('\n')))
 
@@ -76,6 +85,9 @@ def post_cpp(lines):
     for i, line in enumerate(lines):
         if '#pragma' in line:
             lines[i] = line.split('#pragma', 1)[0]
+        if '__attribute__' in line:
+            lines[i] = line.split('__attribute__', 1)[0]
+    lines.append(';') # Ugly hack to avoid feeding pycparser an "empty" file
     return lines
 
 

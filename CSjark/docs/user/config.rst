@@ -1,18 +1,20 @@
-
-.. toctree::  
-   :maxdepth: 2  
-
 ===============
  Configuration
 ===============
 
 Because there exists distinct requirements for flexibility of generating dissectors, CSjark supports configuration for various parts of the program. First, general parameters for utility running can be set up. This can be for example settings of variable sizes for different platforms or other parameters that could determine generating dissectors regardless actual C header file. Second, each individual C struct can be treated in different way. For example, value of specific struct member can be checked for being within specified limits. 
 
+.. contents:: Contents
+   :depth: 4
+
 Configuration format
 --------------------
 
 The configuration files are written in YAML_ which is a data serialization format designed to be easy to read and write. The format of the files are described below. The configuration should be put in a ``filename.yml`` file and specified when running CSjark with the ``--config`` command line argument.
 
+Detailed specification can be found at `YAML website <http://www.yaml.org/spec/1.2/spec.html>`_.
+
+The only part of configuration that is held directly in the code is the platform specific setup (file ``platform.py``).
 
 Configuration definitions
 -------------------------
@@ -215,7 +217,7 @@ The conformance file implementation allows user to place the custom Lua code on 
     ``END_OF_CNF``                          End of the conformance file                                                                                                                                                       
     ====================================    =======================          
    
-Where ``id`` denotes definition or function identifier.                                                                                                                                                 
+Where ``id`` denotes C struct member name (``DEF_*``) or field name (``FUNC_*``).                                                                                                                                                 
                                                                                                                                                                                                                                  
 Example of such conformance file follows: ::                                                                                                                                                                                     
                                                                                                                                                                                                                                  
@@ -355,6 +357,8 @@ There are two ways to configure the trailers, specifiy the total number of trail
 Example:
 The example below shows an example with BER [#]_, which av 4 trailers with a size of 6 bytes.
 
+.. [#] Basic Encoding Rules
+
 ::
 
 	trailers:
@@ -363,17 +367,176 @@ The example below shows an example with BER [#]_, which av 4 trailers with a siz
 	  - size: 6
 
 
-Custom handling of datatypes
--------------------------------------------
+Custom handling of data types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The utility supports custom handling of specified data types, which also includes functionality to support time_t and nstime_t. All basic data types and struct members can be configured to be handled as a special case. The custom handeling must be done through a configuration file. 
+The utility supports custom handling of specified data types. Some variables in input C header may actually represent other values than its own type. This CSjark feature allows user to map types defined in C header to Wireshark field types. Also, it provides a method to change how the input field is displayed in Wireshark. The custom handling must be done through a configuration file.
+
+For example, this functionality can cause Wireshark to display ``time_t`` data type as ``absolute_time``. The displayed type is given by generated Lua dissector and functions of ``ProtoField`` class.
+
+List of available output types follows:
+
+``Integer types``
+    uint8, uint16, uint24, uint32, uint64, framenum
+
+``Other types``
+    float, double, string, stringz, bytes, bool, ipv4, ipv6, ether, oid, guid
+    
+For ``Integer`` types, there are some specific attributes that can be defined (see below_). More about each individual type can be found in `Wireshark reference`_.
+
+.. _Wireshark reference: http://www.wireshark.org/docs/wsug_html_chunked/lua_module_Proto.html#lua_class_ProtoField 
 
 
-Some variables may actually represent other values than its own type. 
-For example, this functionality supports redefinition of ``time_t`` data type to ``absolute_time``
+The section name in configuration file for custom data type handling is called ``customs``. This section can contain following attributes:
+
+- Required attributes
+    
+    =====================   ============
+    Attribute name          Value
+    =====================   ============
+    ``member`` | ``type``   Name of member or type for which is the configuration applied
+    ``field``               Displayed type (see above)
+    =====================   ============
+    
+- Optional attributes - all types
+    
+    ===============     ============
+    Attribute name      Value
+    ===============     ============
+    ``abbr``            Filter name of the field (the string that is used in filters)
+    ``name``            Actual name of the field
+    ``desc``            The description of the field (displayed on Wireshark statusbar)
+    ===============     ============
+
+.. _below:
+    
+- Optional attributes - Integer types only:
+    
+    ==================     ============
+    Attribute name         Value
+    ==================     ============
+    ``base``               Displayed representation - can be one of ``base.DEC``, ``base.HEX`` or ``base.OCT``
+    ``values``             List of ``key:value`` pairs representing the Integer value - e.g. ``{0: Monday, 1: Tuesday}``
+    ``mask``               Integer mask of this field    
+    ==================     ============
+
+Example of such a configuration file follows: ::
+
+    Structs:
+      - name: custom_type_handling
+        id: 1
+        customs:
+          - type: time_t
+            field: absolute_time
+          - member: day
+            field: uint32
+            abbr: day.name
+            name: Weekday name
+            base: base.DEC
+            values: { 0: Monday, 1: Tuesday, 2: Wednesday, 3: Thursday, 4: Friday}
+            mask: nil
+            desc: This day you will work a lot!!
+            
+and applies for example for this C header file: ::
+
+    #include <time.h>
+    
+    struct custom_type_handling {
+        time_t abs;
+        int day;
+    };
+
+Both struct members are redefined. First will be displayed as ``absolute_type`` according to its type (``time_t``), second one is changed because of the struct member name (``day``).
+
+Platform specific configuraion
+------------------------------
+
+To ensure that CSjark is usable as much as possible, platform specific
 
 
-.. [#] Basic Encoding Rules
+Entire platform setup is done via Python code, specifically ``platform.py``. This file contains following sections:
+
+1. Platform class definition including it's methods
+2. Default mapping of C type and their wireshark field type
+3. Default C type size in bytes
+4. Default alignment size in bytes
+5. Custom C type sizes for every platform which differ from default
+6. Custom alignment sizes for every platform which differ from default
+7. Platform-specific C preprocessor macros
+8. Platform registration method and calling for each platform
+
+      
+When defining new platform, following steps should be done. Referenced sections apply to ``platform.py`` sections listed above. All the new dictionary variables should have proper syntax of `Python dictionary <http://docs.python.org/release/3.1.3/tutorial/datastructures.html#dictionaries>`_:
+
+**Field sizes**
+    Define custom C type sizes in section 5. Create new dictionary with name in capital letters. Only those different from default (section 3) must be defined. 
+
+    ::
+        
+        NEW_PLATFORM_C_SIZE_MAP = {
+            'unsigned long': 8,
+            'unsigned long int': 8,
+            'long double': 16
+        }
+
+**Memory alignment**    
+    Define custom memory alignment sizes in section 6. Create new dictionary with name in capital letters. Only those different from default (section 4) must be defined. 
+    
+    ::
+    
+        NEW_PLATFORM_C_ALIGNMENT_MAP = {
+            'unsigned long': 8,
+            'unsigned long int': 8,
+            'long double': 16
+        }
+     
+**Macros**
+    Define dictionary of platform specific macros in section 7. These macros then can be used within C header files to define platform specific struct members etc. E.g.: 
+    
+    ::
+   
+        #if _WIN32
+            float num;
+        #elif __sparc
+            long double num;
+        #else
+            double num;
+
+
+    Example of such macros: 
+    
+    ::
+     
+        NEW_PLATFORM_MACROS = {
+            '__new_platform__': 1, '__new_platform': 1
+        }
+
+
+**Register platform**
+    In last section (8), the new platform must be registered. Basically, it means calling the constructor of Platform class. That has following parameters:
+    
+    ::
+        
+        Platform(name, flag, endian, macros=None, sizes=None, alignment=None)    
+
+    where
+
+    =========== ===
+    ``name``    name of the platform
+    ``flag``    unique integer value representing this platform
+    ``endian``  either ``Platform.big`` or ``Platform.little``
+    ``macros``  C preprocessor platform-specific macros like _WIN32
+    ``sizes``   dictionary which maps C types to their size in bytes
+    =========== ===    
+ 
+    Registering of the platform then might look as follows: ::
+    
+        # New platform
+        Platform('New-platform', 8, Platform.little,
+                 macros=NEW_PLATFORM_MACROS,
+                 sizes=NEW_PLATFORM_C_SIZE_MAP,
+                 alignment=NEW_PLATFORM_C_ALIGNMENT_MAP)
+     
+
 
 .. _YAML: http://www.yaml.org/
-

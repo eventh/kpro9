@@ -3,7 +3,8 @@
 A module for creating Wireshark dissectors from C structs.
 
 Usage:
-csjark.py [-h] [-v] [-d] [-s] [-f [header [header ...]]]
+
+    csjark.py [-h] [-v] [-d] [-s] [-f [header [header ...]]]
           [-c [config [config ...]]] [-o [output]] [-p] [-n] [-C [cpp]]
           [-i [header [header ...]]] [-I [directory [directory ...]]]
           [-D [name=definition [name=definition ...]]]
@@ -25,7 +26,7 @@ optional arguments:
   -p, --placeholders    Generate placeholder config file for unknown structs
 
 Example:
-"python csjark.py -v -nocpp headerfile.h configfile.yml"
+"python csjark.py -v --nocpp headerfile.h configfile.yml"
 """
 import sys
 import os

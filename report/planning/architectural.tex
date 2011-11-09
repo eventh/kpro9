@@ -13,7 +13,7 @@ The purpose of this document is to describe our architecture in a structured way
 This section is dedicated to the discussion of the architectural drivers.
 The team has chosen Modifiability and Testability as the quality attributes for this \gls{utility}. 
 
-The reason for using Modifiability is that the development team are not going to be the ones updating or maintaining the \gls{utility} after the completing the project. It is therefore important that the code is easy to understand, well documented and easy to modify. This will make it easier for our customer to later modifiy or extend the \gls{utility}.
+The reason for using Modifiability is that the development team is not going to be the ones updating or maintaining the \gls{utility} after completing the project. It is therefore important that the code is easy to understand, well documented and easy to modify. This will make it easier for our customer to later modifiy or extend the \gls{utility}.
 
 Testability is important since the \gls{utility} will be used for debugging by the customer.  Since it is not possible for the team to test the \glspl{dissector} in a real environment, it will be more important to focus on testing. This is to ensure that the final product is working correctly.
 
@@ -29,13 +29,13 @@ Using a specialized testing interface makes it possible to specify values for a 
 The goal of using modifiability tactics is to make it easier to extend and modify the software during the development and after the completion of a working product.
 
 \subsubsection{Anticipate Expected Changes}
-By trying to anticipate expected changes it is possible to make it easier for modules to be extended with new functionality later. It also makes it easier for the developers to anticipate the different ranges of input the modules are about be able to process. This is important for this project as it is being developed incrementally, with new functionality and code added every sprint.
+By trying to anticipate expected changes it is possible to make it easier for modules to be extended with new functionality later. It also makes it easier for the developers to anticipate the different ranges of input the modules are able to process. This is important for this project as it is being developed incrementally, with new functionality and code added every sprint.
 
 \subsubsection{Limit Possible Options}
 By limiting the range of possible modifications to the system it becomes easier to generalize the structure of different modules. This will in turn make it easier to constrict the wide ranging effect of new modifications to the system, giving the developers a clearer view over what a given change will actually do to the system. This is important for this project as the developers have a limited time window to implement the \gls{utility}, making it important to be able to limit the scope of the \gls{utility} while still being able to add the functionality required by the customer.
 
 \subsubsection{Generalizing Modules}
-Generalizing the modules of a system makes it possible to reuse older modules when doing modifications to the system. The more general a module, the more likely it is that a needed change to the system can be implemented by just adjusting the input to the system rather than having to modify existing or creating new modules.
+Generalizing the modules of a system makes it possible to reuse older modules when doing modifications to the system. The more general a module, the more likely it is that a needed change to the system can be implemented by just adjusting the input to the system, rather than having to modify existing or creating new modules.
 
 \subsubsection{Restrict Communication Paths}
 By restricting the number of modules that are able to collect data from a specific module, the less dependent the entire system becomes of that specific module. This makes it easier to swap out existing modules with new ones without having to make many widespread changes to the entire system. This is important for this project as the source code could change drastically after discovering new requirements in later sprints. By having a loose coupling we will minimize the amount of code that has to be rewritten after every sprint.
@@ -54,13 +54,13 @@ By using configuration files, it is possible to change the behaviour of the syst
 
 
 %------------------------------
-\section{Architectural Patters}
+\section{Architectural Patterns}
 %------------------------------
 This section presents the different architectural patterns used in the \gls{utility}
 
 \subsection{Pipe and Filter}
 %---------------------------
-The pipe and filter architectural pattern consists of a stream of data which in turn is processed sequentially by several filters in such a fashion that the output of one filter becomes the input of the other. It is a very flexible yet robust way of processing data, with support for adding more filters if needed for future applications and processes. As the \gls{utility} will only work on one piece of data that gradually changes, and is then converted into \Gls{lua}-code at the end, this seemed like a good and structured way processing data early on, while still being able to add new functionality furhter down the line.
+The pipe and filter architectural pattern consists of a stream of data which in turn is processed sequentially by several filters, in such a fashion that the output of one filter becomes the input of the other. It is a very flexible, yet robust way of processing data, with support for adding more filters if needed for future applications and processes. As the \gls{utility} will only work on one piece of data that gradually changes, and is then converted into \Gls{lua}-code at the end, this seemed like a good and structured way of processing data early on, while still being able to add new functionality furhter down the line.
 
 \begin{figure}[htb]
 	\includegraphics[width=\textwidth]{./planning/img/PipeAndFilter}
@@ -108,9 +108,9 @@ This view shown in \autoref{fig:logicalview}. Command line takes the arguments f
 %--------------------------------
 \section{Architectural Rationale}
 %--------------------------------
-The team decided to use the pipe and filter pattern as the architects felt that it was the only architectural pattern that would benefit the \gls{utility} without having to make it needlessly complex. The \gls{utility} was supposed to take \gls{header} files as input and then process the data from them several times until the end result was a list of \glspl{struct} and \glspl{member} that could be used to make \glspl{dissector} for \Gls{wireshark}. This seemed like an excellent application to use the pipe and filter pattern with, as it would then be easy to add new filters to the \gls{header} file for future increments of the development cycle without having to rewrite what had already been implemented in previous sprints.
+The team decided to use the pipe and filter pattern as the architects felt that it was the only architectural pattern that would benefit the \gls{utility} without having to make it needlessly complex. The \gls{utility} was supposed to take \gls{header} files as input and then process the data from them several times, until the end result was a list of \glspl{struct} and \glspl{member} that could be used to make \glspl{dissector} for \Gls{wireshark}. This seemed like an excellent application to use the pipe and filter pattern with, as it would then be easy to add new filters to the \gls{header} file for future increments of the development cycle without having to rewrite what had already been implemented in previous sprints.
 
-For the views the team decided to use a logical view, process view and deployment view. These views were chosen because the architects of the \gls{utility} felt that these views alone could represent the system sufficently without creating too much overhead for the readers of the document. The logical view supplies the reader with a more in depth view of what the system is comprised of, which is useful for developers who need to figure out the workings of the system. The process view also seemed important for the developers and the testers of the \gls{utility}, as it provides the reader with a more proper overview of the dataflow in the system. This makes it a lot easier to see which modules are run when and which external calls that dictates their behaviour. Lastly a deployment view was chosen to make it more clear for the reader of the document what the \gls{utility} really produces as output and what other external applications it has to cooperate with. 
+For the views the team decided to use a logical view, process view and deployment view. These views were chosen because the architects of the \gls{utility} felt that these views alone could represent the system sufficently without creating too much overhead for the readers of the document. The logical view supplies the reader with a more in depth view of what the system is comprised of, which is useful for developers who need to figure out the workings of the system. The process view also seemed important for the developers and the testers of the \gls{utility}, as it provides the reader with a more proper overview of the dataflow in the system. This makes it a lot easier to see which modules are run when, and to see which external calls dictate the modules' behaviour. Lastly a deployment view was chosen to make it more clear for the reader of the document what the \gls{utility} really produces as output and what other external applications it has to cooperate with. 
 
 %------------------------------
 \section{Changelog}
@@ -119,14 +119,14 @@ For the views the team decided to use a logical view, process view and deploymen
 
 \subsection{Sprint 1}
 %---------------------
-As sprint one was mostly concerned about getting the basic functionality in place, there were no changes done to the architecture.
+As we in sprint one was mostly concerned with getting the basic functionality in place, there were no changes done to the architecture.
 
 \subsection{Sprint 2}
 %----------------------
-During the second sprint it became apparent that we needed to structure the our code in a better and more organized way. If not, it would have been very hard to add new functionality to the \gls{utility} in a straight forward and logical way. We therefore decided to introduce the layered architectural pattern (\ref{sec:Layered}) as it is often used to resolve issues just as the ones we faced in sprint 2. We also decided to add metrics for code coverage as a tactic for testability, in order to improve our unit tests
+During the second sprint it became apparent that we needed to structure our code in a better and more organized way. If not, it would become very hard to add new functionality to the \gls{utility} in a straight forward and logical way. We therefore decided to introduce the layered architectural pattern (\ref{sec:Layered}), as it is often used to resolve issues just as the ones we faced in sprint 2. We also decided to add metrics for code coverage as a tactic for testability, in order to improve our unit tests
 
 \subsubsection{Code Coverage}
-By using a framework to see which parts and how much of code is actually being run during the unit tests, it becomes easier to improve the quality of the unit tests. It could also be used as a checklist to see if the ones creating the unit tests has implemented some functionality that does not undergo any testing.
+By using a framework to see which parts and how much of the code is actually being run during the unit tests, it becomes easier to improve the quality of the unit tests. It could also be used as a checklist to see if the ones creating the unit tests have implemented some functionality that is currently not beng tested.
 
 
 \subsection{Layered Architectural Pattern}

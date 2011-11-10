@@ -3,27 +3,38 @@
 A module for creating Wireshark dissectors from C structs.
 
 Usage:
-
     csjark.py [-h] [-v] [-d] [-s] [-f [header [header ...]]]
-          [-c [config [config ...]]] [-o [output]] [-p] [-n] [-C [cpp]]
-          [-i [header [header ...]]] [-I [directory [directory ...]]]
+          [-c [config [config ...]]] [-x [path [path ...]]]
+          [-o [output]] [-p] [-n] [-C [cpp]] [-i [header [header ...]]]
+          [-I [directory [directory ...]]]
           [-D [name=definition [name=definition ...]]]
           [-U [name [name ...]]] [-A [argument [argument ...]]]
           [header] [config]
 
+
 Generate Wireshark dissectors from C structs.
 
 positional arguments:
-  header                C file to parse
-  config                config file to parse
+  header                C header file to parse
+  config                yaml config file to parse
 
 optional arguments:
   -h, --help            show this help message and exit
   -v, --verbose         print detailed information
   -d, --debug           print debugging information
+  -s, --strict          only generate dissectors for known structs
   -n, --nocpp           disable C preprocessor
-  -s, --strict          Only generate dissectors for known structs
-  -p, --placeholders    Generate placeholder config file for unknown structs
+  -p, --placeholders    generate placeholder config file for unknown structs
+  -f, --file            C header or code file(s) to parse
+  -c, --config          configuration file(s) to parse
+  -x, --exclude         file or folders to exclude from parsing
+  -o, --output          write output to directory/file
+  -C, --CPP             which C preprocessor to use
+  -i, --include         process file as Cpp #include "file" directive
+  -I, --Includes        directories to be searched for Cpp includes
+  -D, --Define          predefine name as a Cpp macro
+  -U, --Undefine        cancel any previous Cpp definition of name
+  -A, --Additional      any additional C preprocessor arguments
 
 Example:
 "python csjark.py -v --nocpp headerfile.h configfile.yml"

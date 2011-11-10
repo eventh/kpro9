@@ -228,11 +228,17 @@ def parse_headers(headers):
 
     def print_status(tries=[]):
         """Print a status message with how many headers failed to parse."""
+        if not Options.verbose or not Options.debug:
+            return
         if tries and tries[-1] == 0:
             return
         tries.append(len(failed))
-        print("[%i] Failed to parse %i out of %i headers" % (
-                len(tries), tries[-1], len(headers)))
+        if tries[-1] == 0:
+            print("[%i] Successfully parsed all %i header file(s)" % (
+                    len(tries), len(headers)))
+        else:
+            print("[%i] Failed to parse %i out of %i header file(s)" % (
+                    len(tries), tries[-1], len(headers)))
 
     # First try, in the order given through the CLI
     for filename in headers:
@@ -401,8 +407,8 @@ def main():
     write_delegator_to_file()
     write_placeholders_to_file(protocols)
 
-    print("Successfully parsed %i file(s), created %i dissector(s)." % (
-            len(headers), len(protocols)))
+    print("Tried to parse %i files for %i platforms: Created %i dissectors"
+            % (len(headers), len(Options.platforms), len(protocols)))
 
 
 if __name__ == "__main__":

@@ -67,14 +67,14 @@ def parse_file(filename, platform=None, folders=None, includes=None):
         path_list.append(filename)
         feed = ''
 
+    # Missing universal newlines forces input to expect bytes
+    if sys.platform.startswith('sunos'):
+        feed = bytes(feed, 'ascii')
+
     # Call C preprocessor with args and file
-    with Popen(path_list, stdin=PIPE, stdout=PIPE, stderr=PIPE,
-            universal_newlines=True) as proc:
-        if sys.platform.startswith('sunos'):
-            # Missing universal newlines forces input to expect bytes
-            text, warnings = proc.communicate(input=bytes(feed, 'ascii'))
-        else:
-            text, warnings = proc.communicate(feed)
+    with Popen(path_list, stdin=PIPE, stdout=PIPE,
+            stderr=PIPE, universal_newlines=True) as proc:
+        text, warnings = proc.communicate(input=feed)
     if warnings:
         print(warnings.strip(), file=sys.stderr)
 

@@ -25,4 +25,10 @@ The goal of using testability tactics was making it easier to test the system af
 \subsubsection{Specialize Access Routes/Interfaces}
 Using a specialized testing interface makes it possible to specify values for a component independently from its normal execution. This will in turn make it possible to test parts of an unfinished module as well as making it easier to get a clear overview over what data is flowing through individual parts of the system. This is important for this project as the \gls{utility} must be able to run in a different environment than what the developers have access to. The testers must therefore be able to create input for each individual component of the system in order to ensure that it will work correctly with all kinds of input.
 
-The way this tactic got implemented in this project was the use of the Attest testing framework for making unit tests.
+We incorporated the use of this tactic by using the Attest testing framework when creating unit tests. By using attest we were able to create instances of and test parts and modules of the system independently with the exact input we wanted without having to run the entire utility. 
+
+\subsubsection{Code Coverage}
+By using a framework to see which parts and how much of the code is actually being run during the unit tests, it becomes easier to improve the quality of the unit tests. It could also be used as a checklist to see if the ones creating the unit tests have implemented some functionality that is currently not beng tested.
+
+We incorporated the use of this tactic by using the Coverage tool for python. WRITE MOAR ABOOT COVERAGE HEEREE
+

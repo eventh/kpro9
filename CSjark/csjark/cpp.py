@@ -68,33 +68,27 @@ def parse_file(filename, platform=None, folders=None, includes=None):
         feed = ''
 
     # Call C preprocessor with args and file
-    with Popen(path_list, stdin=PIPE, stdout=PIPE,
+    with Popen(path_list, stdin=PIPE, stdout=PIPE, stderr=PIPE,
             universal_newlines=True) as proc:
         if sys.platform.startswith('sunos'):
             # Missing universal newlines forces input to expect bytes
-            text = proc.communicate(input=bytes(feed, 'ascii'))[0]
+            text, warnings = proc.communicate(input=bytes(feed, 'ascii'))
         else:
-            text = proc.communicate(feed)[0]
+            text, warnings = proc.communicate(feed)
+    if warnings:
+        print(warnings.strip(), file=sys.stderr)
 
     return '\n'.join(post_cpp(text.split('\n')))
 
 
 def post_cpp(lines):
-    """Perform a post preprocessing step.
-
-    Should remove #pragma directives.
-    """
+    """Perform a post preprocessing step, removing unsupported C code."""
+    tokens = ('#pragma', '__extension__', '__attribute', '__inline__')
     for i, line in enumerate(lines):
-        if '#pragma' in line:
-            lines[i] = line.split('#pragma', 1)[0]
-        if '__attribute__' in line:
-            lines[i] = line.split('__attribute__', 1)[0]
-    lines.append(';') # Ugly hack to avoid feeding pycparser an "empty" file
-    return lines
-
-
-def pre_cpp(lines):
-    """Perform a pre preprocessing step."""
+        for token in tokens:
+            if token in line:
+                lines[i] = line.split(token, 1)[0]
+    lines.append(';\n') # Ugly hack to avoid feeding pycparser an "empty" file
     return lines
 
 

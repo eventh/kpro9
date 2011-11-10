@@ -200,45 +200,67 @@ def parse_args(args=None):
 
 def parse_headers(headers):
     """Parse 'headers' to create a Wireshark protocol dissector."""
-    def decode_error(error, platform):
+    folders = {os.path.dirname(i) for i in headers} # Folders to -Include
+    failed = [] # Filenames, platforms pairs we have failed to parse so far
+
+    def include_heuristics(filename, platform, error):
+        """Try to find missing includes from error message."""
+        include = None
         msg = str(error)
         if 'before: ' in msg:
             key = msg.rsplit('before: ', 1)[1].strip(), platform
-            return cparser.StructVisitor.all_known_types.get(key, None)
+            include = cparser.StructVisitor.all_known_types.get(key, None)
+        #print(filename, include)
+        if include is None:
+            return False, None
 
-    # Include a set of all folders with headers in them
-    folders = {os.path.dirname(i) for i in headers}
+        # Problem with typedef, TODO: improve this error handling
+        if os.path.normpath(filename) == os.path.normpath(include):
+            return False, None
+
+        new_error = create_dissector(filename, platform, folders, [include])
+        if new_error != error:
+            FileConfig.add_include(filename, include)
+            if new_error is None:
+                return True, None # Worked
+            return False, new_error # Try more
+        return False, None # Give up
+
+    def print_status(tries=[]):
+        """Print a status message with how many headers failed to parse."""
+        if tries and tries[-1] == 0:
+            return
+        tries.append(len(failed))
+        print("[%i] Failed to parse %i out of %i headers" % (
+                len(tries), tries[-1], len(headers)))
 
     # First try, in the order given through the CLI
-    failed = [] # Protocols we have failed to generate
     for filename in headers:
         for platform in Options.platforms:
             error = create_dissector(filename, platform, folders)
             if error is not None:
                 failed.append([filename, platform, error])
+    print_status()
 
-    # Second try, include the missing file
-    for i in reversed(range(len(failed))):
-        filename, platform, error = failed[i]
-        include = decode_error(error, platform)
-        if include is not None:
-            if os.path.normpath(filename) == os.path.normpath(include):
-                continue # Problem with typedef, impossibru!
-            new_error = create_dissector(
-                    filename, platform, folders, [include])
-            if new_error != error:
-                FileConfig.add_include(filename, include)
-                failed[i][2] = new_error
-            if new_error is None:
-                failed.pop(i)
+    # Try to include files based on decoding the error messages
+    work_list = failed[:]
+    for tmp in range(2, 5):
+        for i in reversed(range(len(work_list))):
+            status, new_error = include_heuristics(*work_list[i])
+            if not status and new_error is not None:
+                work_list[i][2] = new_error
+            else:
+                if status:
+                    failed.remove(work_list[i])
+                work_list.pop(i)
+        print_status()
 
-    '''
-    # Third try, include all who worked as it might help
+    # Try to include all who worked as it might help
     failed_names = [filename for filename, platform, error in failed]
     includes = [file for file in headers if file not in failed_names]
     for i in reversed(range(len(failed))):
         filename, platform, tmp = failed.pop(i)
-        error = create_dissector(filename, platform, includes)
+        error = create_dissector(filename, platform, folders, includes)
         if error is None:
             # Worked, record it in case anyone else needs this file
             for inc in includes:
@@ -246,9 +268,20 @@ def parse_headers(headers):
             includes.append(filename)
         else:
             failed.append([filename, platform, error])
-    '''
+    print_status()
 
-    # Potential for a fourth and fifth try
+    # Try to include files based on decoding the error messages
+    work_list = failed[:]
+    for tmp in range(5, 7):
+        for i in reversed(range(len(work_list))):
+            status, new_error = include_heuristics(*work_list[i])
+            if not status and new_error is not None:
+                work_list[i][2] = new_error
+            else:
+                if status:
+                    failed.remove(work_list[i])
+                work_list.pop(i)
+        print_status()
 
     # Give up!
     for filename, platform, error in failed:

@@ -1,0 +1,28 @@
+%========================================
+\chapter{Final Architectural Description}
+%========================================
+This chapter introduces the final architectural documents for the project. The team followed the definition of software architecture defined by Len Bass, Paul Clements and Rick Kazman: "The software architecture of a program or computing
+system is the structure of structures of the system, which comprise software elements, the externally visible properties of those elements, and the relationships between them."\cite{Bass2003}
+
+The purpose of this document is to describe our architecture in a structured way so that it can be used not only by the team, but also as an aid for other stakeholders who are trying to understand the system.
+
+%-------------------------------------
+\section{Architectural Drivers}
+%-------------------------------------
+This section is dedicated to the discussion of the architectural drivers that were discovered during the project.
+The team chose Modifiability and Testability as quality attributes, but it later on became apparent that some care should also be taken considering Preformance.
+
+The reason for choosing Modifiability was that the development team would be unable to update or maintain the \gls{utility} after completing this project. The code would also be distributed under a GPL which allows other developers to continue working on the utility and use it for their own applications in the future. It was therefore important that the code would be easy to understand, well documented and easy to modify. Not only will this promote the further development of the utility, but it would also make it easier for the customer to use and modify for their own purposes.
+
+Testability would also be an important quality attribute as the \gls{utility} would be used by the customer for debugging purposes. It would therefore be very important that the utility it self contained as few bugs as possible so that the customer could be sure that the output given by the utility would be able to help them in analyzing and debugging. The developers of this project were also unable to test any given \glspl{dissector} in a real environment, which made it even more necessary for the developers to focus on testing. This is to ensure that the final product works properly even without the developers having had taken a good look on the data the utility will have to process after going public.
+
+Preformance became somewhat of an issue for the utility during the project as it became apparent that the customer would have to run the utility on several thousand header files at once. It would therefore be important for the utility to be able to run through all of the customer's header files in a reasonable amount of time, which in this case would be that the utility should be able to run through several thousand header files over one night of being run in batch mode.
+
+\subsection{Testability Tactics}
+%------------------------------------
+The goal of using testability tactics was making it easier to test the system after finishing any given sprint, as well as generally raising the quality of the tests and the amount of coverage the tests give the system.
+
+\subsubsection{Specialize Access Routes/Interfaces}
+Using a specialized testing interface makes it possible to specify values for a component independently from its normal execution. This will in turn make it possible to test parts of an unfinished module as well as making it easier to get a clear overview over what data is flowing through individual parts of the system. This is important for this project as the \gls{utility} must be able to run in a different environment than what the developers have access to. The testers must therefore be able to create input for each individual component of the system in order to ensure that it will work correctly with all kinds of input.
+
+The way this tactic got implemented in this project was the use of the Attest testing framework for making unit tests.

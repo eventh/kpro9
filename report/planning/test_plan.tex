@@ -21,6 +21,9 @@ When it comes to software testing, we have 2 different types of tests available,
 %--------------------------
 White box testing is a method of software testing where you test internal structures or modules of an application, as opposed to its functions. White box testing requires the tester to have an internal perspective of the system, as well as sufficent programming skills. As the \gls{utility} was required to be able to function with a lot of different input, as well as being used as a debugging tool itself, we chose to have every developer on the team write unit tests for their own code, and then have someone else on the team do the testing of their code in order to ensure correctness. Also in order to get a proper overview over what and how many parts of the system that are covered by unit tests, the team decided to use a tool for measuring code coverage.
 
+\subsubsection{Attest}
+As a tool for creating white box unit tests the team decided to use the Attest testing framework for python code. To create unit tests using Attest, you start off by importing Tests, assert_hook and optionally contexts from attest. You then create a variable and initialize it to an instance of Tests which is the variable which will contain a list functions that each constitutes one test that is to be run. To feed your test instance with functions for testing you then have to mark these functions with a decorator and feed it the .tests function of the Tests instance. After creating a unit test in this fashion you can run all of your unit tests through Attest from the command line by typing "python -m attest". This runs all of your unit tests through Attest and returns a message telling the user how many assertions failed as well as what input made them fail. For more information read the user documentation of Attest. 
+
 
 %--------------------------
 \subsection{Black Box Testing}

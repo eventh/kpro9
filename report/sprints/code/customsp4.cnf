@@ -1,0 +1,4 @@
+#.FUNC_FOOTER pointer
+	-- Offset: {OFFSET}
+	-- Field value stored in lua variable: {VALUE}
+#.END

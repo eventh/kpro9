@@ -30,5 +30,27 @@ We incorporated the use of this tactic by using the Attest testing framework whe
 \subsubsection{Code Coverage}
 By using a framework to see which parts and how much of the code is actually being run during the unit tests, it becomes easier to improve the quality of the unit tests. It could also be used as a checklist to see if the ones creating the unit tests have implemented some functionality that is currently not beng tested.
 
-We incorporated the use of this tactic by using the Coverage tool for python. WRITE MOAR ABOOT COVERAGE HEEREE
+We incorporated the use of this tactic by using the Coverage tool for python. By using coverage we were able to measure the code coverage of the unit tests by having Coverage create a html table which showed which parts and percentage of the system actually underwent testing.
+
+\subsection{Modifiability Tactics}
+%-------------------------------------------
+The goal of using modifiability tactics were to make it easer to extend and modify the software during development as well as after completing the product.
+
+\subsubsection{Anticipate Expected Changes}
+By trying to anticipate expected changes it is possible to make it easier for modules to be extended with new functionality later. It also makes it easier for the developers to anticipate the different ranges of input the modules are able to process. This is important for this project as it is being developed incrementally, with new functionality and code added every sprint.
+
+\subsubsection{Limit Possible Options}
+By limiting the range of possible modifications to the system it becomes easier to generalize the structure of different modules. This will in turn make it easier to constrict the wide ranging effect of new modifications to the system, giving the developers a clearer view over what a given change will actually do to the system. This is important for this project as the developers have a limited time window to implement the \gls{utility}, making it important to be able to limit the scope of the \gls{utility} while still being able to add the functionality required by the customer.
+
+\subsubsection{Generalizing Modules}
+Generalizing the modules of a system makes it possible to reuse older modules when doing modifications to the system. The more general a module, the more likely it is that a needed change to the system can be implemented by just adjusting the input to the system, rather than having to modify existing or creating new modules.
+
+\subsubsection{Restrict Communication Paths}
+By restricting the number of modules that are able to collect data from a specific module, the less dependent the entire system becomes of that specific module. This makes it easier to swap out existing modules with new ones without having to make many widespread changes to the entire system. This is important for this project as the source code could change drastically after discovering new requirements in later sprints. By having a loose coupling we will minimize the amount of code that has to be rewritten after every sprint.
+
+\subsubsection{Using Configuration Files}
+By using configuration files, it is possible to change the behaviour of the system without having to do any changes to its code. It is very important that this system uses configuration files as this was a requirement from the customer, as well as making it a lot more flexible for the end user.
+
+
+
 

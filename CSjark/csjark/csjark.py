@@ -228,17 +228,15 @@ def parse_headers(headers):
 
     def print_status(tries=[]):
         """Print a status message with how many headers failed to parse."""
-        if not Options.verbose or not Options.debug:
-            return
         if tries and tries[-1] == 0:
             return
-        tries.append(len(failed))
+        tries.append(len({i for i,j,k in failed}))
         if tries[-1] == 0:
-            print("[%i] Successfully parsed all %i header file(s)" % (
-                    len(tries), len(headers)))
+            msg = 'Successfully parsed all %i' % len(headers)
         else:
-            print("[%i] Failed to parse %i out of %i header file(s)" % (
-                    len(tries), tries[-1], len(headers)))
+            msg = 'Failed to parse %i out of %i' % (tries[-1], len(headers))
+        print("[%i] %s header files (%i platforms)" % (
+                len(tries), msg, len(Options.platforms)))
 
     # First try, in the order given through the CLI
     for filename in headers:
@@ -293,6 +291,8 @@ def parse_headers(headers):
     for filename, platform, error in failed:
         print('Skipped "%s":%s as it raised %s' % (
                 filename, platform.name, repr(error)))
+
+    return len(failed)
 
 
 def create_dissector(filename, platform, folders=None, includes=None):
@@ -399,7 +399,7 @@ def main():
             headers.remove(filename)
 
     # Parse all headers to create protocols
-    parse_headers(headers)
+    failed = parse_headers(headers)
 
     # Write dissectors to disk
     protocols = cparser.StructVisitor.all_protocols
@@ -407,8 +407,13 @@ def main():
     write_delegator_to_file()
     write_placeholders_to_file(protocols)
 
-    print("Tried to parse %i files for %i platforms: Created %i dissectors"
-            % (len(headers), len(Options.platforms), len(protocols)))
+    # Write out a status message
+    if failed:
+        msg = 'Successfully parsed %i out of %i files' % (len(headers, failed))
+    else:
+        msg = 'Successfully parsed all %i files' % len(headers)
+    print("%s (%i platforms), created %i dissectors" % (
+            msg, len(Options.platforms), len(protocols)))
 
 
 if __name__ == "__main__":

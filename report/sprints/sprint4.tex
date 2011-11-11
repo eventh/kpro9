@@ -329,6 +329,8 @@ The addition of new requirements made a re-factoring necessary:
 %-----------------------
 \section{Implementation}
 %-----------------------
+\label{sec:sp4impl}
+
 The implementation in this sprint has mainly been bug fixing, and adding 
 features that the customers need to be able to run the utility on their code. 
 This section covers the the added functionality and the most important fixes 
@@ -352,7 +354,21 @@ utility never compiles the code.
 
 \subsection{Include Dependencies}
 %--------------------
-Include dependencies was the biggest issue in this sprint... 
+Include dependencies was the biggest issue in this sprint. The customer 
+include all their header-files in the code file, and they only are going to 
+generate Lua dissectors from header-file. The reason they only will genrate 
+from header-files is that some of the code is c++, and the size of all the 
+source code is about 1GB, which would take very long time to parse for a 
+utility like CSjark. 
+
+This problem is very difficult to solve, since the include directive is needed 
+to be able to parse header-files that depend on other header-files. To be able 
+to solve this problem, the utility have to find the includes that the 
+header-file depends on, and include them in the correct order, because the 
+included header-files can be dependent on each other.
+
+
+
 TODO: Not finished
 
 \subsection{Improve Generated \Gls{lua} Output}
@@ -410,9 +426,17 @@ dissector for this case, it must be possible to specify the size of the struct
 in a configuration file. When the sizes is specified it will be possible to 
 generate a struct that can display the defined members of the struct correctly 
 in Wireshark, for the parts that are not defined will only the hex value be 
-displayed.
+displayed. 
 
-TODO: Finish after writing about includes dependencies.
+This feature is added as a possible way to solve include dependencies that our 
+utility is not able to solve. The user of the utility will get an error 
+message when the utility is not able to find the include dependencies, and the 
+user may add the size of struct to be able to generate a dissector for struct. 
+An example of configuration of size for a struct, is shown in 
+\autoref{code:configsize}
+
+\lstset{language=C,caption={Configuration of struct size},label=code:configsize}
+\lstinputlisting[language=C]{./sprints/code/configsize.yml}
 
 \subsection{Support Offset and Value in Custom Lua Files}
 %--------------------

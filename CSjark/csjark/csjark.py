@@ -230,13 +230,15 @@ def parse_headers(headers):
         """Print a status message with how many headers failed to parse."""
         if tries and tries[-1] == 0:
             return
-        tries.append(len({i for i,j,k in failed}))
+        tries.append(len({i for i, j, k in failed}))
         if tries[-1] == 0:
             msg = 'Successfully parsed all %i' % len(headers)
         else:
             msg = 'Failed to parse %i out of %i' % (tries[-1], len(headers))
-        print("[%i] %s header files (%i platforms)" % (
+        print('[%i] %s header files (%i platforms)' % (
                 len(tries), msg, len(Options.platforms)))
+
+    print('[0] Attempting to parse %i header files' % len(headers))
 
     # First try, in the order given through the CLI
     for filename in headers:
@@ -292,8 +294,7 @@ def parse_headers(headers):
         print('Skipped "%s":%s as it raised %s' % (
                 filename, platform.name, repr(error)))
 
-    return len(failed)
-
+    return len({i for i, j, k in failed})
 
 def create_dissector(filename, platform, folders=None, includes=None):
     """Parse 'filename' to create a Wireshark protocol dissector.
@@ -412,7 +413,7 @@ def main():
         msg = 'Successfully parsed %i out of %i files' % (len(headers, failed))
     else:
         msg = 'Successfully parsed all %i files' % len(headers)
-    print("%s (%i platforms), created %i dissectors" % (
+    print("%s for %i platforms, created %i dissectors" % (
             msg, len(Options.platforms), len(protocols)))
 
 

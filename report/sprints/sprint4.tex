@@ -330,8 +330,9 @@ The addition of new requirements made a re-factoring necessary:
 \section{Implementation}
 %-----------------------
 The implementation in this sprint has mainly been bug fixing, and adding 
-features that the customers need to be able to run the utility on their code.
-TODO: Not finished
+features that the customers need to be able to run the utility on their code. 
+This section covers the the added functionality and the most important fixes 
+in this sprint.
 
 \subsection{Include Unsupported System-\glspl{header}}
 %--------------------
@@ -363,15 +364,22 @@ TODO
 
 \subsection{Fixed Proto Fields for Arrays}
 %--------------------
-TODO
+After adding support for complex arrays in sprint 3, some bugs occured in the 
+proto fields for arrays. The name for these proto field was fixed, so it is 
+possible to filter and search for values in arrays. 
 
 \subsection{CLI Support for Include Folders}
 %--------------------
 TODO
 
-\subsection{CLI Support for C Macros}
+\subsection{CLI Support for C Macro Definitions}
 %--------------------
-TODO
+The utility supports C Macro definitions as arguments from the CLI. A macro 
+definition is also known as \emph{\#define}. This feature was added since it 
+should be possible to add macro definitions to the preprosessor, instead of 
+modifing several header-files. During a run of the utility with macro 
+definitions specified, the definitions will be given for all the parsed 
+header-files.
 
 \subsection{Support Multiple Dissector ID }
 %--------------------
@@ -385,13 +393,23 @@ struct, and the Lua-dissector will add all message ID's to the dissector table.
 %--------------------
 TODO
 
-\subsection{CLI Support for C Macros}
-%--------------------
-TODO
-
 \subsection{Support Offset and Value in Custom Lua Files}
 %--------------------
-TODO
+After feedback from the customer it was needed to add some more features to 
+the handling of custom lua files. This feature was that it should be possible 
+to add new proto fields to the dissector protocol, with correct offset value 
+and correct Lua variable. To be able to do this, it was necessary to add a 
+variables for offset and value in the conformance file. Use of the Lua 
+variable and offset value is only possible in the functionality part of the 
+Lua dissector. \autoref{code:customcnfsp4} is an example of how value and 
+offset can be used, and \autoref{code:customluasp4} shows the result in the Lua 
+dissector.
+
+\lstset{language=C,caption={Custom Lua: offset and value},label=code:customcnfsp4}
+\lstinputlisting[language=C]{./sprints/code/customsp4.cnf}
+
+\lstset{language=C,caption={Custom Lua: Lua code for value and offset},label=code:customluasp4}
+\lstinputlisting[language=C]{./sprints/code/customsp4.lua}
 
 \subsection{Support Array of Pointers}
 %--------------------

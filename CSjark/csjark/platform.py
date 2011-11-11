@@ -15,6 +15,7 @@ class Platform:
     little = 'little'
 
     mappings = {} # Map platform name to instance
+    flags = {} # Map platform flag to platform
 
     def __init__(self, name, flag, endian,
                 macros=None, sizes=None, alignment=None):
@@ -26,6 +27,8 @@ class Platform:
         'macros' is C preprocessor platform-specific macros like _WIN32
         'sizes' is a dict which maps C types to their size in bytes
         """
+        if flag in Platform.flags:
+            raise Exception('%i is already used by another platform' % flag)
         if macros is None:
             macros = {}
         if sizes is None:
@@ -33,8 +36,9 @@ class Platform:
         if alignment is None:
             alignment = {}
         Platform.mappings[name] = self
-        self.name = name
+        Platform.flags[flag] = self
         self.flag = flag
+        self.name = name
         self.endian = endian
         self.macros = macros
         self.header = None

@@ -6,7 +6,7 @@ TODO
 %------------------------
 \section{Sprint Planning}
 %------------------------
-The fourth sprint will be the last iteration of this project. Because it is very important to make the \gls{utility} work properly on Thales' source code, most of the sprint work hours will be used on testing and bugfixing. Now the \gls{utility} fails on most of the \glspl{struct}; Stig tried to generate \glspl{dissector} for 580 \glspl{struct}, and only 4 of them succeeded. It will probably just take some small tweaks to make it work for most of the \glspl{struct}.
+The fourth sprint will be the last iteration of this project. Because it is very important to make the \gls{utility} work properly on Thales' source code, most of the sprint work hours will be used on testing and bugfixing. Now the \gls{utility} fails on most of the \glspl{struct}; the customer tried to generate \glspl{dissector} for 580 \glspl{struct}, and only 4 of them succeeded. It will probably just take some small tweaks to make it work for most of the \glspl{struct}.
 
 We know that some of our earlier implementation do not work as intended or are incomplete. The customer has given us feedback on the fulfilled requirements, and pointed out what needs to be improved. These are important work items that were added to this sprint backlog \ref{sp4:backlog}. In addition, we received new requirements that the customer would like us to implement, as they add some convenient functionalities for them. For the optional requirements that we might not have time to implement, we have agreed to write a specification on how to implement them. 
 
@@ -324,7 +324,7 @@ The utility lacked the last, but also most essential implementation at the start
 %class diagram
 The addition of new requirements made a re-factoring necessary:
 \begin{itemize}
-\item The need for custom handling of C preprocessor steps on C header files have become so comprehensive, that we have decided to create our own module for it.
+\item The need for custom handling of \Gls{c} preprocessor steps on \Gls{c} header files have become so comprehensive, that we have decided to create our own module for it.
 \item Field specific classes now have their own module.   
 \end{itemize}  
 
@@ -335,40 +335,40 @@ The addition of new requirements made a re-factoring necessary:
 \label{sec:sp4impl}
 
 The implementation in this sprint has mainly been bug fixing, and adding 
-features that the customers need to be able to run the utility on their code. 
-This section covers the the added functionality and the most important fixes 
+features that the customer needs to be able to run the \gls{utility} on their code. 
+This section covers the added functionality and the most important fixes 
 in this sprint.
 
 \subsection{Include Unsupported System-\glspl{header}}
 %--------------------
-To be able to parse the customers code, it was added additional 
+To be able to parse the customer's code, it was added additional 
 system-headers to the ''fake\_libc\_include''. ''fake\_libc\_include'' is a fake 
 library that is used to support...... 
 TODO:  Not finished
 
 \subsection{Ignore \#pragma Directives}
 %--------------------
-Pragma directive is a preprocessor directive that is used to give options to 
+Pragma directive is a \gls{preprocessor} directive that is used to give options to 
 the compiler. This can for example be used to ignore warnings or give the 
-compiler version-information of the code. Since the pycparser library do not 
-support pragma directives, these lines in the c-code is removed before the 
-preprocessing. Removing these lines will not affect the utility, since the 
-utility never compiles the code.
+compiler version-information of the code. Since the pycparser \gls{library} do not 
+support pragma directives, these lines in the \Gls{c}-code is removed before the 
+preprocessing. Removing these lines will not affect the \gls{utility}, since the 
+\gls{utility} never compiles the code.
 
 \subsection{Include Dependencies}
 %--------------------
 Include dependencies was the biggest issue in this sprint. The customer 
-include all their header-files in the code file, and they only are going to 
-generate Lua dissectors from header-file. The reason they only will genrate 
-from header-files is that some of the code is c++, and the size of all the 
+include all their \gls{header}-files in the code file, and they only are going to 
+generate \Gls{lua} \glspl{dissector} from \gls{header}-files. The reason they only will generate 
+from \gls{header}-files is that some of the code is \gls{c++}, and the size of the entire 
 source code is about 1GB, which would take very long time to parse for a 
-utility like CSjark. 
+\gls{utility} like CSjark. 
 
 This problem is very difficult to solve, since the include directive is needed 
-to be able to parse header-files that depend on other header-files. To be able 
-to solve this problem, the utility have to find the includes that the 
-header-file depends on, and include them in the correct order, because the 
-included header-files can be dependent on each other.
+to be able to parse \gls{header}-files that depend on other \gls{header}-files. To be able 
+to solve this problem, the \gls{utility} have to find the includes that the 
+\gls{header}-file depends on, and include them in the correct order, because the 
+included \gls{header}-files can be dependent on each other.
 
 
 
@@ -376,13 +376,13 @@ TODO: Not finished
 
 \subsection{Improve Generated \Gls{lua} Output}
 %--------------------
-To improve the performance of the Lua dissectors in Wireshark, it was 
-necessary to change how the different platforms was handled in the Lua 
-dissector. Until this sprint the utility generated one dissector table for 
-each platform. To make the dissectors more efficient in Wireshark, it was 
-changed to only have one dissector table for all the dissectors, and call 
-different function for each of the platform. To change this the dissector 
-module in CSjark was modified to generate the dissectors correctly. By fixing 
+To improve the performance of the \Gls{lua} \glspl{dissector} in \Gls{wireshark}, it was 
+necessary to change how the different platforms were handled in the \Gls{lua} 
+\gls{dissector}. Until this sprint the \gls{utility} generated one \gls{dissector} table for 
+each platform. To make the \glspl{dissector} more efficient in \Gls{wireshark}, it was 
+changed to only have one \gls{dissector} table for all the \glspl{dissector}, and call 
+different functions for each of the platforms. To change this the \gls{dissector} 
+module in CSjark was modified to generate the \glspl{dissector} correctly. By fixing 
 this issue, it was also possible to use the autocomplete feature in the 
 expression field for filter and search.
 
@@ -390,68 +390,68 @@ expression field for filter and search.
 %--------------------
 TODO
 
-\subsection{Fixed Proto Fields for Arrays}
+\subsection{Fixed Proto Fields for \Glspl{array}}
 %--------------------
-After adding support for complex arrays in sprint 3, some bugs occured in the 
-proto fields for arrays. The name for these proto field was fixed, so it is 
-possible to filter and search for values in arrays. 
+After adding support for complex \glspl{array} in sprint 3, some bugs occured in the 
+proto fields for \glspl{array}. The names for these proto fields were fixed, so it is 
+possible to filter and search for values in \glspl{array}. 
 
-\subsection{CLI Support for Include Folders}
+\subsection{\gls{cli} Support for Include Folders}
 %--------------------
 Support for specifing include folders was implemented in this sprint. This is 
-given as an argument to the CLI with  \emph{-I} or \emph{-Includes} followed 
+given as an argument to the \gls{cli} with  \emph{-I} or \emph{-Includes} followed 
 by the folders to include. The folders included will be added as an argument 
-to the preprocessor, so the preprocessor can search for files in these 
-folders, when a file is given in a include directive(\#include). 
+to the \gls{preprocessor}, so the \gls{preprocessor} can search for files in these 
+folders, when a file is given in a include directive(\gls{include}). 
 
-\subsection{CLI Support for C Macro Definitions}
+\subsection{\gls{cli} Support for \Gls{c} Macro Definitions}
 %--------------------
-The utility supports C Macro definitions as arguments from the CLI. A macro 
-definition is also known as \emph{\#define}. This feature was added since it 
-should be possible to add macro definitions to the preprosessor, instead of 
-modifing several header-files. During a run of the utility with macro 
+The \gls{utility} supports \Gls{c} Macro definitions as arguments from the \gls{cli}. A macro 
+definition is also known as \emph{\gls{define}}. This feature was added since it 
+should be possible to add macro definitions to the \gls{preprocessor}, instead of 
+modifing several \gls{header}-files. During a run of the \gls{utility} with macro 
 definitions specified, the definitions will be given for all the parsed 
-header-files.
+\gls{header}-files.
 
-\subsection{Support Multiple Dissector ID }
+\subsection{Support Multiple \gls{dissector} ID }
 %--------------------
-The dissector ID for dissectors was modified in this sprint, so that a struct 
-can have multiple dissectors. This was done since a struct can have multiple 
+The \gls{dissector} ID for \glspl{dissector} was modified in this sprint, so that a \gls{struct} 
+can have multiple \glspl{dissector}. This was done since a \gls{struct} can have multiple 
 message ID's, in the system that the customer uses. After this fix it is 
 possible to add a list of message ID's to the configuration file of the 
-struct, and the Lua-dissector will add all message ID's to the dissector table.
+\gls{struct}, and the \Gls{lua}-\gls{dissector} will add all message ID's to the \gls{dissector} table.
 
 \subsection{Configuration of Size for Unknown Structs}
 %--------------------
-Header-files that the utility parses, may have have nested struct that is not 
-defined in any other header file. To make the it possible to generate a 
-dissector for this case, it must be possible to specify the size of the struct 
-in a configuration file. When the sizes is specified it will be possible to 
-generate a struct that can display the defined members of the struct correctly 
-in Wireshark, for the parts that are not defined will only the hex value be 
+\Gls{header}-files that the \gls{utility} parses, may have have nested \gls{struct} that is not 
+defined in any other \gls{header} file. To make the it possible to generate a 
+\gls{dissector} for this case, it must be possible to specify the size of the \gls{struct} 
+in a configuration file. When the sizes are specified it will be possible to 
+generate a \gls{struct} that can display the defined \glspl{member} of the \gls{struct} correctly 
+in the \gls{utility}, for the parts that are not defined only the hex value will be 
 displayed. 
 
 This feature is added as a possible way to solve include dependencies that our 
-utility is not able to solve. The user of the utility will get an error 
-message when the utility is not able to find the include dependencies, and the 
-user may add the size of struct to be able to generate a dissector for struct. 
-An example of configuration of size for a struct, is shown in 
+\gls{utility} is not able to solve. The user of the \gls{utility} will get an error 
+message when the \gls{utility} is not able to find the include dependencies, and the 
+user may add the size of \gls{struct} to be able to generate a \gls{dissector} for \gls{struct}. 
+An example of configuration of size for a \gls{struct}, is shown in 
 \autoref{code:configsize}
 
 \lstset{language=C,caption={Configuration of struct size},label=code:configsize}
 \lstinputlisting[language=C]{./sprints/code/configsize.yml}
 
-\subsection{Support Offset and Value in Custom Lua Files}
+\subsection{Support Offset and Value in Custom \Gls{lua} Files}
 %--------------------
 After feedback from the customer it was needed to add some more features to 
-the handling of custom lua files. This feature was that it should be possible 
-to add new proto fields to the dissector protocol, with correct offset value 
-and correct Lua variable. To be able to do this, it was necessary to add a 
-variables for offset and value in the conformance file. Use of the Lua 
+the handling of custom \Gls{lua} files. This feature was that it should be possible 
+to add new proto fields to the \gls{dissector} \Gls{wireshark}, with correct offset value 
+and correct \Gls{lua} variable. To be able to do this, it was necessary to add a 
+variables for offset and value in the conformance file. Use of the \Gls{lua} 
 variable and offset value is only possible in the functionality part of the 
-Lua dissector. \autoref{code:customcnfsp4} is an example of how value and 
-offset can be used, and \autoref{code:customluasp4} shows the result in the Lua 
-dissector.
+\Gls{lua} \gls{dissector}. \autoref{code:customcnfsp4} is an example of how value and 
+offset can be used, and \autoref{code:customluasp4} shows the result in the \Gls{lua} 
+\gls{dissector}.
 
 \lstset{language=C,caption={Custom Lua: offset and value},label=code:customcnfsp4}
 \lstinputlisting[language=C]{./sprints/code/customsp4.cnf}
@@ -463,33 +463,33 @@ dissector.
 %--------------------
 A pointer is a variable that contains the memory address for a variable. 
 Support for arrays of pointers was added so the array can be correctly 
-displayed in Wireshark, with correct sizes for different platforms.
+displayed in \Gls{wireshark}, with correct sizes for different platforms.
 
 TODO: Remove this subsection if not implemented
 
 \subsection{Autogenerate Configuration Files}
 %--------------------
 The autogeneration of configuration file is a simple feature, that could save 
-the user of the utility some time, since the essential part of the 
-configuration file is generated automatic. The utility will only create a new 
-file, containg the name of the struct and line to specifiy the ID for the 
-dissector. To generate the configuration file, the utility must be run with 
+the user of the \gls{utility} some time, since the essential part of the 
+configuration file is generated automatically. The \gls{utility} will only create a new 
+file, containg the name of the \gls{struct} and line to specifiy the ID for the 
+\gls{dissector}. To generate the configuration file, the \gls{utility} must be run with 
 \emph{-p} or \emph{--placeholders} as an option. 
 
-\subsection{Only Generate Dissectors for Structs with Valid ID}
+\subsection{Only Generate \glspl{dissector} for Structs with Valid ID}
 %--------------------
-Since sprint 2 the utility has been generating dissectors for all header-files 
-found in a folder, when running in batch. This has been fixed, so the utility 
-only generates dissectors, for structs that have a configuration file with an 
-ID, and for structs that depends on other structs. This will speed up the 
-generation of dissectors, since it only generates dissectors that Wireshark 
+Since sprint 2 the \gls{utility} has been generating \glspl{dissector} for all \gls{header}-files 
+found in a folder, when running in \gls{batch mode}. This has been fixed, so the \gls{utility} 
+only generates \glspl{dissector} for \glspl{struct} that have a configuration file with an 
+ID, and for \glspl{struct} that depend on other \glspl{struct}. This will speed up the 
+generation of \glspl{dissector}, since it only generates \glspl{dissector} that \Gls{wireshark} 
 can use.
 
-\subsection{Guess Dissector From Packet Size}
+\subsection{Guess \gls{dissector} From Packet Size}
 %--------------------
 TODO: Not implemented yet
 
-\subsection{CLI Support to Exclude Files or Folders}
+\subsection{\gls{cli} Support to Exclude Files or Folders}
 %--------------------
 TODO
 

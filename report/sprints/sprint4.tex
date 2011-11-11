@@ -316,7 +316,14 @@ The sprint design this sprint will not be as comprehensive as the design in the 
 
 \subsection{System overview}
 %-----------------------
-The utility lack the last, but also most essential implementation; handling of Thales source code.   
+The utility lacked the last, but also most essential implementation at the start of fourth sprint; handling of the customer's source code.
+
+%class diagram
+The addition of new requirements made a re-factoring necessary:
+\begin{itemize}
+\item The need for custom handling of C preprocessor steps on C header files have become so comprehensive, that we have decided to create our own module for it.
+\item Field specific classes now have their own module.   
+\end{itemize}  
 
 
 %-----------------------

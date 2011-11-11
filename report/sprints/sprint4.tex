@@ -356,7 +356,15 @@ TODO
 
 \subsection{Improve Generated \Gls{lua} Output}
 %--------------------
-TODO
+To improve the performance of the Lua dissectors in Wireshark, it was 
+necessary to change how the different platforms was handled in the Lua 
+dissector. Until this sprint the utility generated one dissector table for 
+each platform. To make the dissectors more efficient in Wireshark, it was 
+changed to only have one dissector table for all the dissectors, and call 
+different function for each of the platform. To change this the dissector 
+module in CSjark was modified to generate the dissectors correctly. By fixing 
+this issue, it was also possible to use the autocomplete feature in the 
+expression field for filter and search.
 
 \subsection{Support Subfolders in Batch Mode}
 %--------------------
@@ -437,9 +445,13 @@ can use.
 
 TODO: Not implemented yet
 
-\subsection{Guess dissector from packet size}
+\subsection{Guess Dissector From Packet Size}
 %--------------------
 TODO: Not implemented yet
+
+\subsection{CLI Support to Exclude Files or Folders}
+%--------------------
+TODO
 
 %-----------------------
 \section{Sprint Testing}

@@ -380,11 +380,18 @@ This problem is very difficult to solve, since the include directive is needed
 to be able to parse \gls{header}-files that depend on other \gls{header}-files. To be able 
 to solve this problem, the \gls{utility} have to find the includes that the 
 \gls{header}-file depends on, and include them in the correct order, because the 
-included \gls{header}-files can be dependent on each other.
+included \gls{header}-files can be dependent on each other. Another problem is 
+that the parser library we use will raise an exception, this mean that the 
+utility will have to solve the problem from the error message that is given 
+from the parser.
 
+The way CSjark solve this problem is to parse all the header-files. After one 
+attempt of parsing all header-files, the utility will parse the error messages 
+from pycparser library. From these error messages, the utility will try to 
+find the missing includes, by going through the abstract syntax tree from the 
+header-files that was parsed successfully in the first attempt. 
 
-
-TODO: Not finished
+TODO: Not finished, will be changed
 
 \subsection{Improve Generated \Gls{lua} Output}
 %--------------------
@@ -512,13 +519,16 @@ TODO
 %-----------------------
 \label{sec:sp4test}
 
+
 %--------------------------
 \section{Customer Feedback}
 %--------------------------
 \label{sec:sp4feedback}
 
+
 %--------------------------
 \section{Sprint Evaluation}
 %--------------------------
 \label{sec:sp4eval}
+
 

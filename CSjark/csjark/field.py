@@ -1,6 +1,7 @@
 """
 TODO
 """
+import string
 from platform import Platform
 
 
@@ -55,7 +56,7 @@ class Field:
     )
 
     def __init__(self, name, type, size, alignment, endian):
-        """Create a new Field instance.
+        """Create a new Wireshark ProtoField instance.
 
         'name' the name of the field
         'type' the ProtoField type
@@ -178,7 +179,7 @@ class Field:
 
         # Store the subtree node in a lua variable
         if not store and (self.range_validation or self.list_validation):
-            store = '%s_node' % self.name
+            store = '%s_node' % self._name
         if store:
             self._node_var = create_lua_var(store)
             store = 'local {var} = '.format(var=self._node_var)
@@ -192,7 +193,7 @@ class Field:
 
         # Add misc validations
         if self.range_validation or self.list_validation:
-            self._store_value() # Store value first
+            data.append(self._store_value()) # Store value first
         if self.range_validation is not None:
             data.append(self._create_range_validation())
         if self.list_validation is not None:
@@ -210,7 +211,7 @@ class Field:
             offset = self.offset
         self._value_var = create_lua_var(var)
 
-        store = 'local {var} = buffer({offset}, {size}):{type}()'
+        store = '\tlocal {var} = buffer({offset}, {size}):{type}()'
         return store.format(var=self._value_var, offset=offset,
                             size=self.size, type=self.func_type)
 
@@ -223,15 +224,15 @@ class Field:
         def create_test(field, value, test, warn):
             return '\tif (%s %s %s) then\n\t\t%s:add_expert_info('\
                     'PI_MALFORMED, PI_WARN, "Should be %s %s")\n\tend' % (
-                            field._value_var, value_var, test,
-                            value, field._node_var, warn, value)
+                            field._value_var, test, value,
+                            field._node_var, warn, value)
 
         min, max = self.range_validation
         data = []
         if min is not None:
-            data.append(create_test(field, min, '<', 'larger than'))
+            data.append(create_test(self, min, '<', 'larger than'))
         if max is not None:
-            data.append(create_test(field, max, '>', 'smaller than'))
+            data.append(create_test(self, max, '>', 'smaller than'))
         return '\n'.join(data)
 
     def set_list_validation(self, values, strict=True):
@@ -240,14 +241,14 @@ class Field:
             self.values = create_lua_valuestring(values)
             return
 
-        self.values = create_lua_var('%s_valuestring' % self.name)
+        self.values = create_lua_var('%s_valuestring' % self._name)
         self._valuestring_values = create_lua_valuestring(values)
         self.list_validation = ', '.join(str(i) for i in sorted(values.keys()))
 
     def _create_list_validation(self):
         """Create code which validates fields value in valuestring."""
         return '\tif (%s[%s] == nil) then\n\t\t%s:add_expert_info('\
-                'PI_MALFORMED, PI_WARN, "Should be in (%s)")\n\tend' % (
+                'PI_MALFORMED, PI_WARN, "Should be in [%s]")\n\tend' % (
                         self.values, self._value_var,
                         self._node_var, self.list_validation)
 
@@ -261,6 +262,107 @@ class Field:
         return offset + padding
 
 
+class ProtocolField(Field):
+    """TODO!!"""
+
+    def __init__(self, name, proto):
+        super().__init__(name, proto.name, proto.size,
+                         proto.alignment, proto.endian)
+        self.proto = proto
+
+    def get_definition(self):
+        pass
+
+    def get_code(self, offset, store=None, tree='subtree'):
+        self.offset = offset
+        t = '\tpinfo.private.caller_name = "{name}"\n'\
+            '\tDissector.get("{proto}"):call(buffer({offset}, '\
+            '{size}):tvb(), pinfo, {tree})'
+        return t.format(name=self.name, proto=self.proto.longname,
+                offset=offset, size=self.size, tree=tree)
+
+
+class FieldsCollection(Field):
+
+    def __init__(self, *args, **vargs):
+        super().__init__(*args, **vargs)
+        self.fields = []
+
+    def push_modifiers(self):
+        pass
+
+    def get_definition(self):
+        data = []
+        if self.comment:
+            data.append(self.comment)
+        data.append(super().get_definition())
+        for field in self.fields:
+            data.append(field.get_definition())
+        return '\n'.join(data)
+
+    def get_code(self, offset, store=None, tree='subtree'):
+        data = []
+        if self.comment:
+            data.append('\t%s' % self.comment)
+        data.append(super().get_code(offset, store=store, tree=tree))
+        subtree = store
+        for field in self.fields:
+            data.append(field.get_code(offset, tree=subtree))
+        return '\n'.join(data)
+
+
+class BitField(FieldsCollection):
+
+    def __init__(self, bits, name, type, size, alignment, endian):
+        # Convert type to unsigned if int
+        if 'int' in type and not type.startswith('u'):
+            type = 'u%s' % type
+
+        # Create bitstring tree field
+        super().__init__(name, type, size, alignment, endian)
+        self.base = 'base.HEX'
+        self.comment = '-- Bitstring definitions for %s' % name
+
+        # Create fields
+        for i, j, name, values in bits:
+            field = Field(name, type, size, alignment, endian)
+            field.abbr_prefix = self.name + '.'
+            field.var_prefix = self.variable + '_'
+            field.values = create_lua_valuestring(values)
+
+            # Create a mask for the bits
+            tmp = [0] * self.size * 8
+            for k in range(j):
+                tmp[-(i+k)] = 1
+            field.mask = '0x%x' % int(''.join(str(i) for i in tmp), 2)
+
+            self.fields.append(field)
+
+        self._name = '%s (bitstring)' % self.name
+
+    def get_code(self, offset, store=None, tree='subtree'):
+        if not store:
+            store = 'bittree'
+        return super().get_code(offset, store=store, tree=tree)
+
+
 if __name__ == '__main__':
     print("testing")
+    '''
+    f = Field('enum', 'int32', 4, 0, Platform.little)
+    f.var_prefix = 'f.'
+    f.name_postfix = '.what?'
+    f.abbr_prefix = 'swead'
+    f.set_list_validation(dict(enumerate('ABCDE')))
+    f.set_range_validation(5, 15)
+    print(f.get_definition())
+    print(f.get_code(12))
+    '''
+    bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
+            (2, 1, 'B', {0: 'No', 1: 'Yes'}),
+            (3, 1, 'G', {0: 'No', 1: 'Yes'})]
+    f = BitField(bits, 'bitname', 'int32', 4, 4, Platform.little)
+    f.var_prefix = 'f.'
+    print(f.get_definition())
+    print(f.get_code(12))
 

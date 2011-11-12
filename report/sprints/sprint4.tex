@@ -316,21 +316,24 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 \section{System Design}
 %----------------------
 \label{sec:sp4design}
-The utility lacked the last, but also most essential implementation at the start of fourth sprint; ability to run customer's source code flawless. To achieve this we had to add functionality to support custom cases and the possibility for automatic configuration. The sprint design this sprint will not be as comprehensive as the design in the prior sprints. This is because of two reasons:
+The utility lacked the last, but also most essential implementation at the start of fourth sprint; ability to run customer's source code flawless. To achieve this we had to add functionality to support custom cases and the possibility for automatic configuration.
+
+The sprint design this sprint will not be as comprehensive as the design in the prior sprints. This is because of two reasons:
 \begin{itemize}
-	\item This is the last sprint, if we are to implement many new features we must also have time to test and write documentation for them, which we do not have.
-	\item The existing features have to be extensively tested and documented before the project is over, leaving little time for other work. Testing and bugfixing will usually not result in major changes in the design.
+	\item This was the last sprint, if we were to implement many new features we also had to use time for testing and writing documentation for them, which we did not have.
+	\item The existing features had to be extensively tested and documented before the project was over, leaving little time for other work. Testing and bug fixing was essential this sprint.
 \end{itemize}
-
-After three sprints, the design is to a large degree set. Re-factoring introduced some new modules, but it was just to make the code more logic and to distribute it so testing can be done more easily. This is described in the system overview section.
-
+After three sprints, the design was to a large degree set. Re-factoring introduced some new modules, but it was just to make the code more logic and to distribute it so testing can be done more easily. This is described in the system overview section.
 
 \subsection{System overview}
 %-----------------------
-
-
+The addition of new requirements from the customer resulted in changes in the utility's system overview. The need for more custom handling ended in a re-factoring of the code. This is visible in the class diagram REF, which was extended from the third sprint. Two new modules was added, cpp and fields. These are described below. 
 %class diagram
-The addition of new requirements made a re-factoring necessary:
+\subsubsection{ccp module}
+The need for preprocessing C files before they are parsed have become so comprehensive, that we decided to create a dedicated module for it. All the existing cpp concerned code was relocated, joint with the new implementation. Requirements in the sprint backlog (REF?) made it necessary to have more functionality regarding the preprocessor step.   
+
+\subsubsection{fields module}
+
 \begin{itemize}
 \item The need for custom handling of \Gls{c} preprocessor steps on \Gls{c} header files have become so comprehensive, that we have decided to create our own module for it.
 \item Field specific classes now have their own module.   

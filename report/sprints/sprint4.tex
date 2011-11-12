@@ -1,11 +1,18 @@
 %=================
 \chapter{Sprint 4}
 %=================
-TODO
+This chapter contains the description of the work done in sprint 4. The 
+chapter is diveded into sprint planning in \autoref{sec:sp4planning}, design 
+done during the sprint in \autoref{sec:sp4design}, the implementation in 
+\autoref{sec:sp4impl}, the result of the sprint testing in 
+\autoref{sec:sp4test}, feedback the customer gave us during the sprint in 
+\autoref{sec:sp4feedback} and evaluation of the sprint in 
+\autoref{sec:sp4eval}.
 
 %------------------------
 \section{Sprint Planning}
 %------------------------
+\label{sec:sp4planning}
 The fourth sprint will be the last iteration of this project. Because it is very important to make the \gls{utility} work properly on Thales' source code, most of the sprint work hours will be used on testing and bugfixing. Now the \gls{utility} fails on most of the \glspl{struct}; the customer tried to generate \glspl{dissector} for 580 \glspl{struct}, and only 4 of them succeeded. It will probably just take some small tweaks to make it work for most of the \glspl{struct}.
 
 We know that some of our earlier implementation do not work as intended or are incomplete. The customer has given us feedback on the fulfilled requirements, and pointed out what needs to be improved. These are important work items that were added to this sprint backlog \ref{sp4:backlog}. In addition, we received new requirements that the customer would like us to implement, as they add some convenient functionalities for them. For the optional requirements that we might not have time to implement, we have agreed to write a specification on how to implement them. 
@@ -308,6 +315,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 %----------------------
 \section{System Design}
 %----------------------
+\label{sec:sp4design}
 The sprint design this sprint will not be as comprehensive as the design in the prior sprints. This is because of two reasons:
 \begin{itemize}
 	\item This is the last sprint, if we are to implement many new features we must also have time to test and write documentation for them, which we do not have.
@@ -341,10 +349,13 @@ in this sprint.
 
 \subsection{Include Unsupported System-\glspl{header}}
 %--------------------
-To be able to parse the customer's code, it was added additional 
-system-headers to the ''fake\_libc\_include''. ''fake\_libc\_include'' is a fake 
-library that is used to support...... 
-TODO:  Not finished
+CSjark must be able to support both Windows and Solaris operating system. To 
+be able to generate dissectors from header-files, it was necessary to add 
+system specific header-files for Windows and Solaris. This is done by adding 
+the system-headers to the ''fake\_libc\_include''. ''fake\_libc\_include'' is 
+a fake library for standard header-files, that only contains default typedefs 
+and default defines. Most of the header-files in the fake library are empty, 
+so the preprocessor can find the files that are included.
 
 \subsection{Ignore \#pragma Directives}
 %--------------------
@@ -388,7 +399,8 @@ expression field for filter and search.
 
 \subsection{Support Subfolders in Batch Mode}
 %--------------------
-TODO
+A bug was fixed in batch mode, the problem was that subfolders was not support 
+on other system than Windows. This was fixed so it now works on all platforms.
 
 \subsection{Fixed Proto Fields for \Glspl{array}}
 %--------------------
@@ -465,7 +477,7 @@ A pointer is a variable that contains the memory address for a variable.
 Support for arrays of pointers was added so the array can be correctly 
 displayed in \Gls{wireshark}, with correct sizes for different platforms.
 
-TODO: Remove this subsection if not implemented
+Remove this subsection if it is not implemented
 
 \subsection{Autogenerate Configuration Files}
 %--------------------
@@ -487,7 +499,8 @@ can use.
 
 \subsection{Guess \gls{dissector} From Packet Size}
 %--------------------
-TODO: Not implemented yet
+
+TODO: 
 
 \subsection{\gls{cli} Support to Exclude Files or Folders}
 %--------------------
@@ -496,15 +509,15 @@ TODO
 %-----------------------
 \section{Sprint Testing}
 %-----------------------
-
+\label{sec:sp4test}
 
 %--------------------------
 \section{Customer Feedback}
 %--------------------------
-
+\label{sec:sp4feedback}
 
 %--------------------------
 \section{Sprint Evaluation}
 %--------------------------
-
+\label{sec:sp4eval}
 

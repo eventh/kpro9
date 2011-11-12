@@ -311,6 +311,137 @@ class FieldsCollection(Field):
         return '\n'.join(data)
 
 
+class ArrayField(Field):
+    def __init__(self, proto, name, type, base_size, alignment_size, depth, enum_members=None):
+        self.base_size = base_size
+        self.depth = depth
+        array_size = 1
+        for size in self.depth:
+            array_size *= size
+
+        self.elements = depth.pop()
+        if not depth:
+            self.field = self._make_field(proto, name, type, base_size,
+                                          alignment_size, enum_members)
+        else:
+            self.field = ArrayField(proto, name, type, base_size,
+                                    alignment_size, depth)
+
+        if isinstance(type, Protocol) or isinstance(type, UnionProtocol):
+            super().__init__(proto, name, type.name, array_size * base_size,
+                             alignment_size)
+        else:
+            super().__init__(proto, name, proto.platform.map_type(type),
+                             array_size * base_size, alignment_size)
+
+    def _make_field(self, proto, name, type, size, alignment_size,
+                    enum_members):
+        if isinstance(type, Protocol) or isinstance(type, UnionProtocol):
+            return ProtocolField(proto, name, type)
+
+        ctype = proto.platform.map_type(type)
+        if enum_members != None:
+            return EnumField(proto, name, ctype, size, alignment_size,
+                             enum_members)
+
+        if proto.conf:
+            bits, enums, ranges, customs = proto.conf.get_field_attributes(name,
+                                                                           type)
+
+            ctype = proto.platform.map_type(type)
+
+            # Custom field rules
+            if customs:
+                custom = customs[0]
+                if(custom.size != size or custom.alignment_size != alignment_size):
+                    raise "Error: todo"
+                field = Field(proto, name, custom.field, size, alignment_size)
+                field.abbr = custom.abbr
+                field.base = custom.base
+                if custom.values:
+                    field.values = create_lua_valuestring(custom.values)
+                    field.mask = custom.mask
+                    field.desc = custom.desc
+                    return field
+
+                # Bitstring rules
+                if bits:
+                    return BitField(proto, name, ctype, size, alignment_size,
+                                    bits[0].bits)
+
+                # Enum rules
+                if enums:
+                    rule = enums[0]
+                    return EnumField(proto, name, ctype, size, alignment_size,
+                                     rule.values, rule.strict)
+                # Range
+                if ranges:
+                    rule = ranges[0]
+                    return RangeField(proto, name, ctype, size, alignment_size,
+                                      rule.min, rule.max)
+
+        return Field(proto, name, ctype, size, alignment_size)
+
+    def get_definition(self, sequence=None):
+        var = self.var
+        abbr = self.abbr
+        if sequence is None:
+            sequence = []
+        else:
+            postfix = self.get_array_postfix(sequence)
+            var = '%s_%s' % (self.var, postfix)
+            abbr = '%s_%s' % (self.abbr, postfix)
+
+        data = ['']
+        if not sequence:
+            data = ['-- Array definition for %s' % self.name]
+
+        type_ = self.type
+        if type_ not in ('string', 'stringz'):
+            type_ = 'bytes'
+
+        # This subtree definition
+        data.append(self._create_field(var, type_, abbr, self.name))
+
+        for i in range(0, self.elements):
+            definition = self.field.get_definition(sequence + [i])
+            if definition:
+                data.append(definition)
+
+        return '\n'.join(data)
+
+    def get_code(self, offset, tree='arraytree', parent='subtree', sequence=None):
+        data = []
+        var = self.var
+        if sequence is None:
+            sequence = []
+            data = ['\t-- Array handling for %s' % self.name]
+
+        if sequence == []:
+            t = '\tlocal {tree} = {parent}:{add}("{name}: {type} array", buffer({off}, {size}))'
+            data.append(t.format(tree=tree, parent=parent, name=self.name,
+                                 type=self.type, add=self.add_var, var=var,
+                                 off=offset, size=self.size))
+        else:
+            index = self.get_array_index_postfix(sequence)
+            var = '%s_%s' % (var, self.get_array_postfix(sequence))
+            t = '\tlocal {tree} = {parent}:{add}("{name}{index}: {type} array", buffer({off}, {size}))'
+            data.append(t.format(name=self.name, tree=tree, parent=parent,
+                                 type=self.type, index = index,
+                                 add=self.add_var, var=var, off=offset,
+                                 size=self.size))
+
+        for i in range(0, self.elements):
+            if  isinstance(self.field, ArrayField):
+                data.append(self.field.get_code(offset, 'sub' + tree, tree, sequence + [i]))
+                offset += self.field.size
+            else:
+                data.append(self.field.get_code(offset, None, sequence + [i], tree))
+                offset += self.field.size
+
+        return '\n'.join(data)
+
+
 class BitField(FieldsCollection):
 
     def __init__(self, bits, name, type, size, alignment, endian):

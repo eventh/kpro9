@@ -316,18 +316,19 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 \section{System Design}
 %----------------------
 \label{sec:sp4design}
+The utility lacked the last, but also most essential implementation at the start of fourth sprint; ability to run customer's source code flawless. 
 The sprint design this sprint will not be as comprehensive as the design in the prior sprints. This is because of two reasons:
 \begin{itemize}
 	\item This is the last sprint, if we are to implement many new features we must also have time to test and write documentation for them, which we do not have.
 	\item The existing features have to be extensively tested and documented before the project is over, leaving little time for other work. Testing and bugfixing will usually not result in major changes in the design.
 \end{itemize}
 
-After three sprints, the design is to a large degree set. Re-factoring introduced some new modules, but it was just to make the code more logic and to distribute it so testing can be done more easily. This is described in the system overview section. 
+After three sprints, the design is to a large degree set. Re-factoring introduced some new modules, but it was just to make the code more logic and to distribute it so testing can be done more easily. This is described in the system overview section.
 
 
 \subsection{System overview}
 %-----------------------
-The utility lacked the last, but also most essential implementation at the start of fourth sprint; handling of the customer's source code.
+
 
 %class diagram
 The addition of new requirements made a re-factoring necessary:

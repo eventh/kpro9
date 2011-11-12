@@ -1,0 +1,56 @@
+%========================================
+\chapter{Final Architectural Description}
+%========================================
+This chapter introduces the final architectural documents for the project. The team followed the definition of software architecture defined by Len Bass, Paul Clements and Rick Kazman: "The software architecture of a program or computing
+system is the structure of structures of the system, which comprise software elements, the externally visible properties of those elements, and the relationships between them."\cite{Bass2003}
+
+The purpose of this document is to describe our architecture in a structured way so that it can be used not only by the team, but also as an aid for other stakeholders who are trying to understand the system.
+
+%-------------------------------------
+\section{Architectural Drivers}
+%-------------------------------------
+This section is dedicated to the discussion of the architectural drivers that were discovered during the project.
+The team chose Modifiability and Testability as quality attributes, but it later on became apparent that some care should also be taken considering Preformance.
+
+The reason for choosing Modifiability was that the development team would be unable to update or maintain the \gls{utility} after completing this project. The code would also be distributed under a GPL which allows other developers to continue working on the utility and use it for their own applications in the future. It was therefore important that the code would be easy to understand, well documented and easy to modify. Not only will this promote the further development of the utility, but it would also make it easier for the customer to use and modify for their own purposes.
+
+Testability would also be an important quality attribute as the \gls{utility} would be used by the customer for debugging purposes. It would therefore be very important that the utility it self contained as few bugs as possible so that the customer could be sure that the output given by the utility would be able to help them in analyzing and debugging. The developers of this project were also unable to test any given \glspl{dissector} in a real environment, which made it even more necessary for the developers to focus on testing. This is to ensure that the final product works properly even without the developers having had taken a good look on the data the utility will have to process after going public.
+
+Preformance became somewhat of an issue for the utility during the project as it became apparent that the customer would have to run the utility on several thousand header files at once. It would therefore be important for the utility to be able to run through all of the customer's header files in a reasonable amount of time, which in this case would be that the utility should be able to run through several thousand header files over one night of being run in batch mode.
+
+\subsection{Testability Tactics}
+%------------------------------------
+The goal of using testability tactics was making it easier to test the system after finishing any given sprint, as well as generally raising the quality of the tests and the amount of coverage the tests give the system.
+
+\subsubsection{Specialize Access Routes/Interfaces}
+Using a specialized testing interface makes it possible to specify values for a component independently from its normal execution. This will in turn make it possible to test parts of an unfinished module as well as making it easier to get a clear overview over what data is flowing through individual parts of the system. This is important for this project as the \gls{utility} must be able to run in a different environment than what the developers have access to. The testers must therefore be able to create input for each individual component of the system in order to ensure that it will work correctly with all kinds of input.
+
+We incorporated the use of this tactic by using the Attest testing framework when creating unit tests. By using attest we were able to create instances of and test parts and modules of the system independently with the exact input we wanted without having to run the entire utility. 
+
+\subsubsection{Code Coverage}
+By using a framework to see which parts and how much of the code is actually being run during the unit tests, it becomes easier to improve the quality of the unit tests. It could also be used as a checklist to see if the ones creating the unit tests have implemented some functionality that is currently not beng tested.
+
+We incorporated the use of this tactic by using the Coverage tool for python. By using coverage we were able to measure the code coverage of the unit tests by having Coverage create a html table which showed which parts and percentage of the system actually underwent testing.
+
+\subsection{Modifiability Tactics}
+%-------------------------------------------
+The goal of using modifiability tactics were to make it easer to extend and modify the software during development as well as after completing the product.
+
+\subsubsection{Anticipate Expected Changes}
+By trying to anticipate expected changes it is possible to make it easier for modules to be extended with new functionality later. It also makes it easier for the developers to anticipate the different ranges of input the modules are able to process. This is important for this project as it is being developed incrementally, with new functionality and code added every sprint.
+
+\subsubsection{Limit Possible Options}
+By limiting the range of possible modifications to the system it becomes easier to generalize the structure of different modules. This will in turn make it easier to constrict the wide ranging effect of new modifications to the system, giving the developers a clearer view over what a given change will actually do to the system. This is important for this project as the developers have a limited time window to implement the \gls{utility}, making it important to be able to limit the scope of the \gls{utility} while still being able to add the functionality required by the customer.
+
+\subsubsection{Generalizing Modules}
+Generalizing the modules of a system makes it possible to reuse older modules when doing modifications to the system. The more general a module, the more likely it is that a needed change to the system can be implemented by just adjusting the input to the system, rather than having to modify existing or creating new modules.
+
+\subsubsection{Restrict Communication Paths}
+By restricting the number of modules that are able to collect data from a specific module, the less dependent the entire system becomes of that specific module. This makes it easier to swap out existing modules with new ones without having to make many widespread changes to the entire system. This is important for this project as the source code could change drastically after discovering new requirements in later sprints. By having a loose coupling we will minimize the amount of code that has to be rewritten after every sprint.
+
+\subsubsection{Using Configuration Files}
+By using configuration files, it is possible to change the behaviour of the system without having to do any changes to its code. It is very important that this system uses configuration files as this was a requirement from the customer, as well as making it a lot more flexible for the end user.
+
+
+
+

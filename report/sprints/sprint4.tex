@@ -1,12 +1,19 @@
 %=================
 \chapter{Sprint 4}
 %=================
-TODO
+This chapter contains the description of the work done in sprint 4. The 
+chapter is diveded into sprint planning in \autoref{sec:sp4planning}, design 
+done during the sprint in \autoref{sec:sp4design}, the implementation in 
+\autoref{sec:sp4impl}, the result of the sprint testing in 
+\autoref{sec:sp4test}, feedback the customer gave us during the sprint in 
+\autoref{sec:sp4feedback} and evaluation of the sprint in 
+\autoref{sec:sp4eval}.
 
 %------------------------
 \section{Sprint Planning}
 %------------------------
-The fourth sprint will be the last iteration of this project. Because it is very important to make the \gls{utility} work properly on Thales' source code, most of the sprint work hours will be used on testing and bugfixing. Now the \gls{utility} fails on most of the \glspl{struct}; Stig tried to generate \glspl{dissector} for 580 \glspl{struct}, and only 4 of them succeeded. It will probably just take some small tweaks to make it work for most of the \glspl{struct}.
+\label{sec:sp4planning}
+The fourth sprint will be the last iteration of this project. Because it is very important to make the \gls{utility} work properly on Thales' source code, most of the sprint work hours will be used on testing and bugfixing. Now the \gls{utility} fails on most of the \glspl{struct}; the customer tried to generate \glspl{dissector} for 580 \glspl{struct}, and only 4 of them succeeded. It will probably just take some small tweaks to make it work for most of the \glspl{struct}.
 
 We know that some of our earlier implementation do not work as intended or are incomplete. The customer has given us feedback on the fulfilled requirements, and pointed out what needs to be improved. These are important work items that were added to this sprint backlog \ref{sp4:backlog}. In addition, we received new requirements that the customer would like us to implement, as they add some convenient functionalities for them. For the optional requirements that we might not have time to implement, we have agreed to write a specification on how to implement them. 
 
@@ -308,55 +315,219 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 %----------------------
 \section{System Design}
 %----------------------
+\label{sec:sp4design}
+The sprint design this sprint will not be as comprehensive as the design in the prior sprints. This is because of two reasons:
+\begin{itemize}
+	\item This is the last sprint, if we are to implement many new features we must also have time to test and write documentation for them, which we do not have.
+	\item The existing features have to be extensively tested and documented before the project is over, leaving little time for other work. Testing and bugfixing will usually not result in major changes in the design.
+\end{itemize}
+
+After three sprints, the design is to a large degree set. Re-factoring introduced some new modules, but it was just to make the code more logic and to distribute it so testing can be done more easily. This is described in the system overview section. 
+
+
+\subsection{System overview}
+%-----------------------
+The utility lacked the last, but also most essential implementation at the start of fourth sprint; handling of the customer's source code.
+
+%class diagram
+The addition of new requirements made a re-factoring necessary:
+\begin{itemize}
+\item The need for custom handling of \Gls{c} preprocessor steps on \Gls{c} header files have become so comprehensive, that we have decided to create our own module for it.
+\item Field specific classes now have their own module.   
+\end{itemize}  
 
 
 %-----------------------
 \section{Implementation}
 %-----------------------
+\label{sec:sp4impl}
+
 The implementation in this sprint has mainly been bug fixing, and adding 
-features that the customers need to be able to run the utility on their code.
-TODO: Not finished
+features that the customer needs to be able to run the \gls{utility} on their code. 
+This section covers the added functionality and the most important fixes 
+in this sprint.
 
 \subsection{Include Unsupported System-\glspl{header}}
 %--------------------
-To be able to parse the customers code, it was added additional 
-system-headers to the ''fake\_libc\_include''. ''fake\_libc\_include'' is a fake 
-library that is used to support...... 
-TODO:  Not finished
+CSjark must be able to support both Windows and Solaris operating system. To 
+be able to generate dissectors from header-files, it was necessary to add 
+system specific header-files for Windows and Solaris. This is done by adding 
+the system-headers to the ''fake\_libc\_include''. ''fake\_libc\_include'' is 
+a fake library for standard header-files, that only contains default typedefs 
+and default defines. Most of the header-files in the fake library are empty, 
+so the preprocessor can find the files that are included.
 
 \subsection{Ignore \#pragma Directives}
 %--------------------
-Pragma directive is a preprocessor directive that is used to give options to 
+Pragma directive is a \gls{preprocessor} directive that is used to give options to 
 the compiler. This can for example be used to ignore warnings or give the 
-compiler version-information of the code. Since the pycparser library do not 
-support pragma directives, these lines in the c-code is removed before the 
-preprocessing. Removing these lines will not affect the utility, since the 
-utility never compiles the code.
+compiler version-information of the code. Since the pycparser \gls{library} do not 
+support pragma directives, these lines in the \Gls{c}-code is removed before the 
+preprocessing. Removing these lines will not affect the \gls{utility}, since the 
+\gls{utility} never compiles the code.
+
+\subsection{Include Dependencies}
+%--------------------
+Include dependencies was the biggest issue in this sprint. The customer 
+include all their \gls{header}-files in the code file, and they only are going to 
+generate \Gls{lua} \glspl{dissector} from \gls{header}-files. The reason they only will generate 
+from \gls{header}-files is that some of the code is \gls{c++}, and the size of the entire 
+source code is about 1GB, which would take very long time to parse for a 
+\gls{utility} like CSjark. 
+
+This problem is very difficult to solve, since the include directive is needed 
+to be able to parse \gls{header}-files that depend on other \gls{header}-files. To be able 
+to solve this problem, the \gls{utility} have to find the includes that the 
+\gls{header}-file depends on, and include them in the correct order, because the 
+included \gls{header}-files can be dependent on each other. Another problem is 
+that the parser library we use will raise an exception, this mean that the 
+utility will have to solve the problem from the error message that is given 
+from the parser.
+
+The way CSjark solve this problem is to parse all the header-files. After one 
+attempt of parsing all header-files, the utility will parse the error messages 
+from pycparser library. From these error messages, the utility will try to 
+find the missing includes, by going through the abstract syntax tree from the 
+header-files that was parsed successfully in the first attempt. 
+
+TODO: Not finished, will be changed
 
 \subsection{Improve Generated \Gls{lua} Output}
 %--------------------
-TODO
+To improve the performance of the \Gls{lua} \glspl{dissector} in \Gls{wireshark}, it was 
+necessary to change how the different platforms were handled in the \Gls{lua} 
+\gls{dissector}. Until this sprint the \gls{utility} generated one \gls{dissector} table for 
+each platform. To make the \glspl{dissector} more efficient in \Gls{wireshark}, it was 
+changed to only have one \gls{dissector} table for all the \glspl{dissector}, and call 
+different functions for each of the platforms. To change this the \gls{dissector} 
+module in CSjark was modified to generate the \glspl{dissector} correctly. By fixing 
+this issue, it was also possible to use the autocomplete feature in the 
+expression field for filter and search.
 
 \subsection{Support Subfolders in Batch Mode}
 %--------------------
-TODO
+A bug was fixed in batch mode, the problem was that subfolders was not support 
+on other system than Windows. This was fixed so it now works on all platforms.
 
-\subsection{Support for Customer Examples}
+\subsection{Fixed Proto Fields for \Glspl{array}}
+%--------------------
+After adding support for complex \glspl{array} in sprint 3, some bugs occured in the 
+proto fields for \glspl{array}. The names for these proto fields were fixed, so it is 
+possible to filter and search for values in \glspl{array}. 
+
+\subsection{\gls{cli} Support for Include Folders}
+%--------------------
+Support for specifing include folders was implemented in this sprint. This is 
+given as an argument to the \gls{cli} with  \emph{-I} or \emph{-Includes} followed 
+by the folders to include. The folders included will be added as an argument 
+to the \gls{preprocessor}, so the \gls{preprocessor} can search for files in these 
+folders, when a file is given in a include directive(\gls{include}). 
+
+\subsection{\gls{cli} Support for \Gls{c} Macro Definitions}
+%--------------------
+The \gls{utility} supports \Gls{c} Macro definitions as arguments from the \gls{cli}. A macro 
+definition is also known as \emph{\gls{define}}. This feature was added since it 
+should be possible to add macro definitions to the \gls{preprocessor}, instead of 
+modifing several \gls{header}-files. During a run of the \gls{utility} with macro 
+definitions specified, the definitions will be given for all the parsed 
+\gls{header}-files.
+
+\subsection{Support Multiple \gls{dissector} ID }
+%--------------------
+The \gls{dissector} ID for \glspl{dissector} was modified in this sprint, so that a \gls{struct} 
+can have multiple \glspl{dissector}. This was done since a \gls{struct} can have multiple 
+message ID's, in the system that the customer uses. After this fix it is 
+possible to add a list of message ID's to the configuration file of the 
+\gls{struct}, and the \Gls{lua}-\gls{dissector} will add all message ID's to the \gls{dissector} table.
+
+\subsection{Configuration of Size for Unknown Structs}
+%--------------------
+\Gls{header}-files that the \gls{utility} parses, may have have nested \gls{struct} that is not 
+defined in any other \gls{header} file. To make the it possible to generate a 
+\gls{dissector} for this case, it must be possible to specify the size of the \gls{struct} 
+in a configuration file. When the sizes are specified it will be possible to 
+generate a \gls{struct} that can display the defined \glspl{member} of the \gls{struct} correctly 
+in the \gls{utility}, for the parts that are not defined only the hex value will be 
+displayed. 
+
+This feature is added as a possible way to solve include dependencies that our 
+\gls{utility} is not able to solve. The user of the \gls{utility} will get an error 
+message when the \gls{utility} is not able to find the include dependencies, and the 
+user may add the size of \gls{struct} to be able to generate a \gls{dissector} for \gls{struct}. 
+An example of configuration of size for a \gls{struct}, is shown in 
+\autoref{code:configsize}
+
+\lstset{language=C,caption={Configuration of struct size},label=code:configsize}
+\lstinputlisting[language=C]{./sprints/code/configsize.yml}
+
+\subsection{Support Offset and Value in Custom \Gls{lua} Files}
+%--------------------
+After feedback from the customer it was needed to add some more features to 
+the handling of custom \Gls{lua} files. This feature was that it should be possible 
+to add new proto fields to the \gls{dissector} \Gls{wireshark}, with correct offset value 
+and correct \Gls{lua} variable. To be able to do this, it was necessary to add a 
+variables for offset and value in the conformance file. Use of the \Gls{lua} 
+variable and offset value is only possible in the functionality part of the 
+\Gls{lua} \gls{dissector}. \autoref{code:customcnfsp4} is an example of how value and 
+offset can be used, and \autoref{code:customluasp4} shows the result in the \Gls{lua} 
+\gls{dissector}.
+
+\lstset{language=C,caption={Custom Lua: offset and value},label=code:customcnfsp4}
+\lstinputlisting[language=C]{./sprints/code/customsp4.cnf}
+
+\lstset{language=C,caption={Custom Lua: Lua code for value and offset},label=code:customluasp4}
+\lstinputlisting[language=C]{./sprints/code/customsp4.lua}
+
+\subsection{Support Array of Pointers}
+%--------------------
+A pointer is a variable that contains the memory address for a variable. 
+Support for arrays of pointers was added so the array can be correctly 
+displayed in \Gls{wireshark}, with correct sizes for different platforms.
+
+Remove this subsection if it is not implemented
+
+\subsection{Autogenerate Configuration Files}
+%--------------------
+The autogeneration of configuration file is a simple feature, that could save 
+the user of the \gls{utility} some time, since the essential part of the 
+configuration file is generated automatically. The \gls{utility} will only create a new 
+file, containg the name of the \gls{struct} and line to specifiy the ID for the 
+\gls{dissector}. To generate the configuration file, the \gls{utility} must be run with 
+\emph{-p} or \emph{--placeholders} as an option. 
+
+\subsection{Only Generate \glspl{dissector} for Structs with Valid ID}
+%--------------------
+Since sprint 2 the \gls{utility} has been generating \glspl{dissector} for all \gls{header}-files 
+found in a folder, when running in \gls{batch mode}. This has been fixed, so the \gls{utility} 
+only generates \glspl{dissector} for \glspl{struct} that have a configuration file with an 
+ID, and for \glspl{struct} that depend on other \glspl{struct}. This will speed up the 
+generation of \glspl{dissector}, since it only generates \glspl{dissector} that \Gls{wireshark} 
+can use.
+
+\subsection{Guess \gls{dissector} From Packet Size}
+%--------------------
+
+TODO: 
+
+\subsection{\gls{cli} Support to Exclude Files or Folders}
 %--------------------
 TODO
 
 %-----------------------
 \section{Sprint Testing}
 %-----------------------
+\label{sec:sp4test}
 
 
 %--------------------------
 \section{Customer Feedback}
 %--------------------------
+\label{sec:sp4feedback}
 
 
 %--------------------------
 \section{Sprint Evaluation}
 %--------------------------
+\label{sec:sp4eval}
 
 

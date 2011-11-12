@@ -421,6 +421,7 @@ class Options:
     generate_placeholders = False
     use_cpp = True
     cpp_path = None
+    excludes = []
 
     # Utility options
     platforms = set() # Set of platforms to support in dissectors
@@ -442,29 +443,36 @@ class Options:
     def update(cls, obj):
         """Update the options from a config yaml file."""
         # Handle platform options
-        if 'platforms' in obj:
-            for name in obj['platforms']:
+        platforms = obj.get('platforms', None)
+        if platforms:
+            for name in platforms:
                 if name in Platform.mappings:
                     cls.platforms.add(Platform.mappings[name])
                 else:
                     raise ConfigError('Unknown platform %s' % name)
 
-        # Handle boolean options
-        cls.verbose = obj.get('verbose', cls.verbose)
-        cls.debug = obj.get('debug', cls.debug)
-        cls.strict = obj.get('strict', cls.strict)
-        cls.output_dir = obj.get('output_dir', cls.output_dir)
-        cls.output_file = obj.get('output_file', cls.output_file)
+        # Read and update options
+        members = ('verbose', 'debug', 'strict', 'output_dir',
+                   'output_file', 'use_cpp', 'cpp_path')
+        for member in members:
+            value = obj.get(member, None)
+            if value is not None:
+                setattr(cls, member, value)
+
+        # Handle exclude arguments, files and folders to NOT parse
+        excludes = obj.get('excludes', None)
+        if excludes:
+            cls.excludes.extend(os.path.normpath(i) for i in excludes)
 
         # Handle C preprocessor arguments
-        cls.use_cpp = obj.get('use_cpp', cls.use_cpp)
-        cls.cpp_path = obj.get('cpp_path', cls.cpp_path)
-        if 'default' in obj:
-            cls.default.update(obj['default'])
+        default = obj.get('default', None)
+        if default:
+            cls.default.update(default)
 
         # Handle files configuration
-        if 'files' in obj:
-            for file_obj in obj['files']:
+        files = obj.get('files', None)
+        if files:
+            for file_obj in files:
                 name = str(file_obj['name'])
                 cls.files[name] = FileConfig(name)
                 cls.files[name].update(file_obj)
@@ -474,7 +482,8 @@ class Options:
         """Prepare options before parsing starts.."""
         # Map current platform to a platform configuration
         if not cls.platforms:
-            mapping = {'win': 'Win32', 'darwin': 'Macos', 'linux': 'Linux-x86'}
+            mapping = {'win': 'Win32', 'darwin': 'Macos',
+                       'linux': 'Linux-x86', 'sunos': 'Solaris-x86-64'}
             for key, value in mapping.items():
                 if sys.platform.startswith(key):
                     cls.platforms.add(Platform.mappings[value])
@@ -517,30 +526,60 @@ class Options:
             conf.id = ids
 
         # Protocol's optional description
-        if 'description' in obj:
-            conf.description = obj['description']
+        description = obj.get('description', None)
+        if description is not None:
+            conf.description = description
 
         # Protocol's optional conformance file
-        if 'cnf' in obj:
-            conf.cnf = ConformanceFile(conf, obj['cnf'], filename)
+        cnf = obj.get('cnf', None)
+        if cnf:
+            conf.cnf = ConformanceFile(conf, cnf, filename)
 
         # Handle rules
         types = {'bitstrings': Bitstring, 'enums': Enum, 'ranges': Range,
                  'trailers': Trailer, 'customs': Custom}
         for name, type_ in types.items():
-            if name in obj:
-                for rule in obj[name]:
+            rules = obj.get(name, None)
+            if rules is not None:
+                for rule in rules:
                     type_(conf, rule)
 
 
 def generate_placeholders(protocols):
     """Generate placeholder config for unknown structs."""
     def placeholder(proto):
-        return 'name: %s #%s\n    id:\n' % (proto.name, proto._coord.file)
-    protos = {p.name:p for key, p in protocols.items()}
-    data = [placeholder(i) for i in protos.values() if i.conf is None]
-    output = 'Structs:%s' % '\n  - '.join([''] + data)
-    return output, len(data)
+        return '  - name: %s #%s' % (proto.name, proto._coord.file)
+    structs = '''
+    id:
+    description:
+    ranges:
+    enums:
+    bitstrings:
+    trailers:'''
+    protos = {p.name: p for key, p in protocols.items()}
+    data = ['%s%s\n' % (placeholder(i), structs)
+            for i in protos.values() if i.conf is None]
+    preample = '''\
+Options:
+    platforms: []
+    verbose:
+    debug:
+    strict:
+    excludes:
+    use_cpp:
+    cpp_path:
+    default:
+        include_dirs: []
+        includes: []
+        defines: []
+        undefines: []
+        arguments: []
+    files:
+      - name:
+
+Structs:
+'''
+    return '%s%s' % (preample, '\n'.join(data)), len(data)
 
 
 def parse_file(filename, only_text=None):
@@ -550,6 +589,8 @@ def parse_file(filename, only_text=None):
     else:
         with open(filename, 'r') as f:
             obj = yaml.safe_load(f)
+    if obj is None:
+        return # Empty yaml file
 
     # Deal with utility options
     options = obj.get('Options', None)

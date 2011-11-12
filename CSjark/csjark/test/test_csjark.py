@@ -41,7 +41,7 @@ def cli_headerfile_and_configfile(cli):
     """Test the default commandline interface flags"""
     header = os.path.join(os.path.dirname(__file__), 'cpp.h')
     include = os.path.join(os.path.dirname(__file__), 'include.h')
-    config = os.path.join(os.path.dirname(__file__), 'test.yml')
+    config = os.path.join(os.path.dirname(__file__), 'sprint2.yml')
     assert os.path.isfile(config)
     headers, configs = csjark.parse_args(
             [header, '--verbose', '-d', '-f', include, '--config', config])
@@ -81,7 +81,7 @@ def cli_flag_nocpp(cli):
 @cli.test
 def cli_file_dont_existing(cli):
     """Test if a file is missing"""
-    config = os.path.join(os.path.dirname(__file__), 'test.yml')
+    config = os.path.join(os.path.dirname(__file__), 'sprint2.yml')
     with contexts.capture_output() as (out, err):
         with contexts.raises(SystemExit) as error:
             headers, configs = csjark.parse_args(['404.h', config])

@@ -8,11 +8,12 @@ from subprocess import Popen, PIPE
 from config import Options
 
 
-def parse_file(filename, platform=None, includes=None):
+def parse_file(filename, platform=None, folders=None, includes=None):
     """Run a C header or code file through C preprocessor program.
 
     'filename' is the file to feed CPP.
     'platform' is the platform to simulate.
+    'folders' is directories to -Include.
     'includes' is a set of filename to #include.
     """
     # Just read the content of the file if we don't want to use cpp
@@ -20,6 +21,8 @@ def parse_file(filename, platform=None, includes=None):
         with open(filename, 'r') as f:
             return f.read()
 
+    if folders is None:
+        folders = set()
     if includes is None:
         includes = []
 
@@ -31,16 +34,19 @@ def parse_file(filename, platform=None, includes=None):
 
     # Add as include the folder the files are located in
     if os.path.dirname(filename):
-        path_list.append('-I%s' % os.path.dirname(filename))
+        folders.add(os.path.dirname(filename))
+
+    # Add all -Include cpp arguments
+    if folders or config.include_dirs:
+        folders.union(config.include_dirs)
+        path_list.extend('-I%s' % i for i in folders)
 
     # Define macros
     if platform is not None:
-        #path_list.append('-undef') # Remove system-specific defines
         path_list.extend(['-D%s=%s' % (i, j)
                 for i, j in platform.macros.items()])
 
     # Add any C preprocesser arguments from CLI or config
-    path_list.extend('-I%s' % i for i in config.include_dirs)
     path_list.extend('-D%s' % i for i in config.defines)
     path_list.extend('-U%s' % i for i in config.undefines)
     path_list.extend(config.arguments)
@@ -61,26 +67,28 @@ def parse_file(filename, platform=None, includes=None):
         path_list.append(filename)
         feed = ''
 
+    # Missing universal newlines forces input to expect bytes
+    if sys.platform.startswith('sunos'):
+        feed = bytes(feed, 'ascii')
+
     # Call C preprocessor with args and file
-    pipe = Popen(path_list, stdin=PIPE, stdout=PIPE, universal_newlines=True)
-    text = pipe.communicate(feed)[0]
+    with Popen(path_list, stdin=PIPE, stdout=PIPE,
+            stderr=PIPE, universal_newlines=True) as proc:
+        text, warnings = proc.communicate(input=feed)
+    if warnings:
+        print(warnings.strip(), file=sys.stderr)
 
     return '\n'.join(post_cpp(text.split('\n')))
 
 
 def post_cpp(lines):
-    """Perform a post preprocessing step.
-
-    Should remove #pragma directives.
-    """
+    """Perform a post preprocessing step, removing unsupported C code."""
+    tokens = ('#pragma', '__extension__', '__attribute', '__inline__')
     for i, line in enumerate(lines):
-        if '#pragma' in line:
-            lines[i] = line.split('#pragma', 1)[0]
-    return lines
-
-
-def pre_cpp(lines):
-    """Perform a pre preprocessing step."""
+        for token in tokens:
+            if token in line:
+                lines[i] = line.split(token, 1)[0]
+    lines.append(';\n') # Ugly hack to avoid feeding pycparser an "empty" file
     return lines
 
 

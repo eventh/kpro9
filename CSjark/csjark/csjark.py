@@ -3,27 +3,38 @@
 A module for creating Wireshark dissectors from C structs.
 
 Usage:
-
     csjark.py [-h] [-v] [-d] [-s] [-f [header [header ...]]]
-          [-c [config [config ...]]] [-o [output]] [-p] [-n] [-C [cpp]]
-          [-i [header [header ...]]] [-I [directory [directory ...]]]
+          [-c [config [config ...]]] [-x [path [path ...]]]
+          [-o [output]] [-p] [-n] [-C [cpp]] [-i [header [header ...]]]
+          [-I [directory [directory ...]]]
           [-D [name=definition [name=definition ...]]]
           [-U [name [name ...]]] [-A [argument [argument ...]]]
           [header] [config]
 
+
 Generate Wireshark dissectors from C structs.
 
 positional arguments:
-  header                C file to parse
-  config                config file to parse
+  header                C header file to parse
+  config                yaml config file to parse
 
 optional arguments:
   -h, --help            show this help message and exit
   -v, --verbose         print detailed information
   -d, --debug           print debugging information
+  -s, --strict          only generate dissectors for known structs
   -n, --nocpp           disable C preprocessor
-  -s, --strict          Only generate dissectors for known structs
-  -p, --placeholders    Generate placeholder config file for unknown structs
+  -p, --placeholders    generate placeholder config file for unknown structs
+  -f, --file            C header or code file(s) to parse
+  -c, --config          configuration file(s) to parse
+  -x, --exclude         file or folders to exclude from parsing
+  -o, --output          write output to directory/file
+  -C, --CPP             which C preprocessor to use
+  -i, --include         process file as Cpp #include "file" directive
+  -I, --Includes        directories to be searched for Cpp includes
+  -D, --Define          predefine name as a Cpp macro
+  -U, --Undefine        cancel any previous Cpp definition of name
+  -A, --Additional      any additional C preprocessor arguments
 
 Example:
 "python csjark.py -v --nocpp headerfile.h configfile.yml"
@@ -47,10 +58,10 @@ def parse_args(args=None):
             description='Generate Wireshark dissectors from C structs.')
 
     # A single C header file
-    parser.add_argument('header', nargs='?', help='C file to parse')
+    parser.add_argument('header', nargs='?', help='C header file to parse')
 
     # A single config file
-    parser.add_argument('config', nargs='?', help='config file to parse')
+    parser.add_argument('config', nargs='?', help='yaml config file to parse')
 
     # Verbose flag
     parser.add_argument('-v', '--verbose', action='store_true',
@@ -63,15 +74,19 @@ def parse_args(args=None):
     # Strict flag, not in use yet
     parser.add_argument('-s', '--strict', action='store_true',
             default=Options.strict,
-            help='Only generate dissectors for known structs')
+            help='only generate dissectors for known structs')
 
     # A list of C header files
     parser.add_argument('-f', '--file', metavar='header',
             default=[], nargs='*', help='C header or code file(s) to parse')
 
-    # Configuration file
+    # A list of configuration files
     parser.add_argument('-c', '--config', metavar='config', dest='configs',
             default=[], nargs='*', help='configuration file(s) to parse')
+
+    # A list of files or folders to ignore
+    parser.add_argument('-x', '--exclude', metavar='path', default=[],
+            nargs='*', help='file or folders to exclude from parsing')
 
     # Write output to destination file
     parser.add_argument('-o', '--output', metavar='output',
@@ -80,7 +95,7 @@ def parse_args(args=None):
     # Generate placeholder config files
     parser.add_argument('-p', '--placeholders', action='store_true',
             default=Options.generate_placeholders,
-            help='Generate placeholder config file for unknown structs')
+            help='generate placeholder config file for unknown structs')
 
     # No CPP flag
     parser.add_argument('-n', '--nocpp', action='store_false', dest='nocpp',
@@ -88,27 +103,27 @@ def parse_args(args=None):
 
     # Argument for specifying which CPP to use
     parser.add_argument('-C', '--CPP', metavar='cpp',
-            nargs='?', help='Which C preprocessor to use')
+            nargs='?', help='which C preprocessor to use')
 
     # CPP include arguments
     parser.add_argument('-i', '--include', metavar='header', default=[],
-            nargs='*', help='Process file as Cpp #include "file" directive')
+            nargs='*', help='process file as Cpp #include "file" directive')
 
     # CPP Includes directories arguments
     parser.add_argument('-I', '--Includes', metavar='directory', default=[],
-            nargs='*', help='Directories to be searched for Cpp includes')
+            nargs='*', help='directories to be searched for Cpp includes')
 
     # CPP Define macro arguments
     parser.add_argument('-D', '--Define', metavar='name=definition',
-            default=[], nargs='*', help='Predefine name as a Cpp macro')
+            default=[], nargs='*', help='predefine name as a Cpp macro')
 
     # CPP Undefine macro arguments
     parser.add_argument('-U', '--Undefine', metavar='name', default=[],
-            nargs='*', help='Cancel any previous Cpp definition of name')
+            nargs='*', help='cancel any previous Cpp definition of name')
 
     # Additional CPP arguments
     parser.add_argument('-A', '--Additional', metavar='argument', default=[],
-            nargs='*', help='Any additional C preprocessor arguments')
+            nargs='*', help='any additional C preprocessor arguments')
 
     # Parse arguments
     if args is None:
@@ -120,6 +135,7 @@ def parse_args(args=None):
     Options.verbose = namespace.verbose
     Options.debug = namespace.debug
     Options.strict = namespace.strict
+    Options.excludes.extend(os.path.normpath(i) for i in namespace.exclude)
     Options.generate_placeholders = namespace.placeholders
     Options.use_cpp = namespace.nocpp
     Options.cpp_path = namespace.CPP
@@ -160,19 +176,23 @@ def parse_args(args=None):
         print('Unknown file(s): %s' % ', '.join(missing))
         sys.exit(2)
 
-    # Add files if headers or configs contain folders
+    # Recursively search folders for C header and config files
     def files_in_folder(var, file_extensions):
-        i = 0
-        while i < len(var):
-            if os.path.isdir(var[i]):
-                folder = var.pop(i)
-                var.extend(os.path.join(folder, path) for path in
-                        os.listdir(folder) if os.path.isdir(path)
-                        or os.path.splitext(path)[1] in file_extensions)
-            else:
-                i += 1
+        folders = [folder for folder in var if os.path.isdir(folder)]
+        while len(folders):
+            folder = folders.pop()
+            if folder in var:
+                var.remove(folder)
+            for path in os.listdir(folder):
+                full_path = os.path.normpath(os.path.join(folder, path))
+                if full_path in Options.excludes:
+                    continue
+                if os.path.isdir(full_path):
+                    folders.append(full_path)
+                elif os.path.splitext(path)[1] in file_extensions:
+                    var.append(full_path)
 
-    files_in_folder(headers, ('.h', '.hpp', '.c'))
+    files_in_folder(headers, ('.h', '.hpp'))
     files_in_folder(configs, ('.yml', ))
 
     return headers, configs
@@ -180,40 +200,73 @@ def parse_args(args=None):
 
 def parse_headers(headers):
     """Parse 'headers' to create a Wireshark protocol dissector."""
-    def decode_error(error, platform):
+    folders = {os.path.dirname(i) for i in headers} # Folders to -Include
+    failed = [] # Filenames, platforms pairs we have failed to parse so far
+
+    def include_heuristics(filename, platform, error):
+        """Try to find missing includes from error message."""
+        include = None
         msg = str(error)
         if 'before: ' in msg:
             key = msg.rsplit('before: ', 1)[1].strip(), platform
-            return cparser.StructVisitor.all_known_types.get(key, None)
+            include = cparser.StructVisitor.all_known_types.get(key, None)
+        #print(filename, include)
+        if include is None:
+            return False, None
+
+        # Problem with typedef, TODO: improve this error handling
+        if os.path.normpath(filename) == os.path.normpath(include):
+            return False, None
+
+        new_error = create_dissector(filename, platform, folders, [include])
+        if new_error != error:
+            FileConfig.add_include(filename, include)
+            if new_error is None:
+                return True, None # Worked
+            return False, new_error # Try more
+        return False, None # Give up
+
+    def print_status(tries=[]):
+        """Print a status message with how many headers failed to parse."""
+        if tries and tries[-1] == 0:
+            return
+        tries.append(len({i for i, j, k in failed}))
+        if tries[-1] == 0:
+            msg = 'Successfully parsed all %i' % len(headers)
+        else:
+            msg = 'Failed to parse %i out of %i' % (tries[-1], len(headers))
+        print('[%i] %s header files (%i platforms)' % (
+                len(tries), msg, len(Options.platforms)))
+
+    print('[0] Attempting to parse %i header files' % len(headers))
 
     # First try, in the order given through the CLI
-    failed = [] # Protocols we have failed to generate
     for filename in headers:
         for platform in Options.platforms:
-            error = create_dissector(filename, platform)
+            error = create_dissector(filename, platform, folders)
             if error is not None:
                 failed.append([filename, platform, error])
+    print_status()
 
-    # Second try, include the missing file
-    for i in reversed(range(len(failed))):
-        filename, platform, error = failed[i]
-        include = decode_error(error, platform)
-        if include is not None:
-            if os.path.normpath(filename) == os.path.normpath(include):
-                continue # Problem with typedef, impossibru!
-            new_error = create_dissector(filename, platform, [include])
-            if new_error != error:
-                FileConfig.add_include(filename, include)
-                failed[i][2] = new_error
-            if new_error is None:
-                failed.pop(i)
+    # Try to include files based on decoding the error messages
+    work_list = failed[:]
+    for tmp in range(2, 5):
+        for i in reversed(range(len(work_list))):
+            status, new_error = include_heuristics(*work_list[i])
+            if not status and new_error is not None:
+                work_list[i][2] = new_error
+            else:
+                if status:
+                    failed.remove(work_list[i])
+                work_list.pop(i)
+        print_status()
 
-    # Third try, include all who worked as it might help
+    # Try to include all who worked as it might help
     failed_names = [filename for filename, platform, error in failed]
     includes = [file for file in headers if file not in failed_names]
     for i in reversed(range(len(failed))):
         filename, platform, tmp = failed.pop(i)
-        error = create_dissector(filename, platform, includes)
+        error = create_dissector(filename, platform, folders, includes)
         if error is None:
             # Worked, record it in case anyone else needs this file
             for inc in includes:
@@ -221,25 +274,39 @@ def parse_headers(headers):
             includes.append(filename)
         else:
             failed.append([filename, platform, error])
+    print_status()
 
-    # Potential for a fourth and fifth try
+    # Try to include files based on decoding the error messages
+    work_list = failed[:]
+    for tmp in range(5, 7):
+        for i in reversed(range(len(work_list))):
+            status, new_error = include_heuristics(*work_list[i])
+            if not status and new_error is not None:
+                work_list[i][2] = new_error
+            else:
+                if status:
+                    failed.remove(work_list[i])
+                work_list.pop(i)
+        print_status()
 
     # Give up!
     for filename, platform, error in failed:
         print('Skipped "%s":%s as it raised %s' % (
                 filename, platform.name, repr(error)))
 
+    return len({i for i, j, k in failed})
 
-def create_dissector(filename, platform, includes=None):
+def create_dissector(filename, platform, folders=None, includes=None):
     """Parse 'filename' to create a Wireshark protocol dissector.
 
     'filename' is the C header/code file to parse.
     'platform' is the platform we should simulate.
+    'folders' is a set of all folders to -Include.
     'includes' is a set of filenames to #include.
     Returns the error if parsing failed, None if succeeded.
     """
     try:
-        text = cpp.parse_file(filename, platform, includes)
+        text = cpp.parse_file(filename, platform, folders, includes)
         ast = cparser.parse(text, filename)
         cparser.find_structs(ast, platform)
     except Exception as err:
@@ -327,8 +394,13 @@ def main():
         config.parse_file(filename)
     Options.prepare_for_parsing()
 
+    # Remove excluded headers
+    for path in set(Options.excludes):
+        for filename in [i for i in headers if i.startswith(path)]:
+            headers.remove(filename)
+
     # Parse all headers to create protocols
-    parse_headers(headers)
+    failed = parse_headers(headers)
 
     # Write dissectors to disk
     protocols = cparser.StructVisitor.all_protocols
@@ -336,8 +408,13 @@ def main():
     write_delegator_to_file()
     write_placeholders_to_file(protocols)
 
-    print("Successfully parsed %i file(s), created %i dissector(s)." % (
-            len(headers), len(protocols)))
+    # Write out a status message
+    if failed:
+        msg = 'Successfully parsed %i out of %i files' % (len(headers, failed))
+    else:
+        msg = 'Successfully parsed all %i files' % len(headers)
+    print("%s for %i platforms, created %i dissectors" % (
+            msg, len(Options.platforms), len(protocols)))
 
 
 if __name__ == "__main__":

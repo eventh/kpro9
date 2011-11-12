@@ -15,6 +15,7 @@ class Platform:
     little = 'little'
 
     mappings = {} # Map platform name to instance
+    flags = {} # Map platform flag to platform
 
     def __init__(self, name, flag, endian,
                 macros=None, sizes=None, alignment=None):
@@ -26,6 +27,8 @@ class Platform:
         'macros' is C preprocessor platform-specific macros like _WIN32
         'sizes' is a dict which maps C types to their size in bytes
         """
+        if flag in Platform.flags:
+            raise Exception('%i is already used by another platform' % flag)
         if macros is None:
             macros = {}
         if sizes is None:
@@ -33,8 +36,9 @@ class Platform:
         if alignment is None:
             alignment = {}
         Platform.mappings[name] = self
-        self.name = name
+        Platform.flags[flag] = self
         self.flag = flag
+        self.name = name
         self.endian = endian
         self.macros = macros
         self.header = None
@@ -242,13 +246,13 @@ UNIX_C_ALIGNMENT_SIZE_MAP = {
 # Platform-specific C preprocessor macros
 WIN32_MACROS = {
         '_WIN32': 1, '__WIN32__': 1, '__TOS_WIN__': 1,
-        '__WINDOWS__': 1, 'MAX_PATH': 260,
+        '__WINDOWS__': 1, 'MAX_PATH': 260, 'sUNIX': 1,
 }
 
-SOLARIS_MACROS = {'sun': 1, '__sun': 1, 'PATH_MAX': 4096}
+SOLARIS_MACROS = {'sun': 1, '__sun': 1, 'PATH_MAX': 4096, 'sUNIX': 1}
 
 MACOS_MACROS = {
-    'macintosh': 1, 'Macintosh': 1,
+    'macintosh': 1, 'Macintosh': 1, 'sUNIX': 1,
     '__APPLE__': 1, '__MACH__': 1, 'PATH_MAX': 4096,
 }
 
@@ -280,7 +284,7 @@ def merge(a, *dicts):
 
 # Default platform
 Platform('default', 0, Platform.big,
-         macros={'PATH_MAX': 4096, 'MAX_PATH': 260})
+         macros={'sUNIX': 1, 'PATH_MAX': 4096, 'MAX_PATH': 260})
 
 # Windows 32 bit
 Platform('Win32', 1, Platform.little,

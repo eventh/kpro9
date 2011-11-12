@@ -1,0 +1,54 @@
+%=================
+\chapter{Introduction}
+%=================
+
+This chapter will give a brief introduction to CSjark.
+
+The first section will briefly explain Wireshark, dissectors and how dissectors are used in Wireshark.
+
+The second section will describe how Lua code is built by our utility. 
+The connection between Wireshark and the Lua structs protocol will also be explained.
+
+The third, and last section gives an overview of the entire process of debugging a C struct, from the parsing of the struct definition, through the
+generation of the dissector and to displaying it in dissected form in Wireshark.
+
+\section{Wireshark and dissectors}
+This section gives a brief introduction to Wireshark and dissectors.
+The first part describes what Wireshark is, and what it can be used for.
+The second part explains exactly what a dissector is, and how a dissector can be used to extend Wireshark.
+
+\subsection{Wireshark}
+Wireshark is a program used to analyze network traffic. A common usage scenario is when a person wants to troubleshoot network problems or
+look at the internal workings of a network protocol. An important feature of Wireshark is the ability to look at a live stream of packets sent through the network.
+It is also possible to filter and search on given packet attributes, which facilitates the debugging process.
+
+\subsection{Dissectors}
+Wireshark can be extended with a dissector. In short, a dissector detects the protocol type of a packet and tries to obtain as much information
+from the packet as possible. This information is then displayed in Wireshark, in addition to the name of the protocol.
+
+
+ A dissector knows the structure of the message and can represent it beautifully.
+
+\section{Automated generation of Lua dissectors}
+This section contains information on how Lua dissectors are generated.
+The first part explains in general what a Lua dissector does to dissect packets.
+The second part specifically explains how CSjark builds a Lua dissector.
+
+\subsection{How Lua dissectors are built}
+
+Proto - a new protocol in Wireshark. 'Protocols' can dissect a protocol.
+Proto.dissector - the function doing the dissecting
+ProtoField - a Protocol field, used when adding items to the dissection tree.
+Proto.fields - contains the different ProtoFields defined
+DissectorTable - a table with the subdissectors of a protocol
+
+\subsection{The Lua structs protocol}
+
+\section{Debugging C structs}
+
+CSjark 
+
+\subsection{Debugging C structs before CSjark}
+
+\subsection{Debugging C structs now}
+

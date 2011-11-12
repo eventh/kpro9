@@ -50,78 +50,6 @@ def create_lua_valuestring(dict_, wrap=True):
     return '{%s}' % ', '.join('[%i]=%s' % (i, j) for i, j in items)
 
 
-class EnumField(Field):
-    """A field representing an enum."""
-
-    def __init__(self, proto, name, type, size, alignment_size, values, strict=True):
-        """Create a new EnumField.
-
-        'proto' the Protocol which owns the field
-        'name' the name of the field
-        'type' the ProtoField type
-        'size' the size of the field in bytes
-        'values' is a dict mapping field values to names
-        'strict' adds validation of the fields value
-        """
-        super().__init__(proto, name, type, size, alignment_size)
-        self.values = create_lua_valuestring(values)
-        self.strict = strict
-
-        self.keys = ', '.join(str(i) for i in sorted(values.keys()))
-        self.func_type = self._get_func_type()
-        if self.strict:
-            self.values_var = create_lua_var('%s_values' % self.name)
-        else:
-            self.values_var = None
-        self.tree_var = create_lua_var(self.name)
-
-    def get_definition(self, sequence=None):
-        """Get the ProtoField definition for this field."""
-        variable_name = self.var
-        abbr = self.abbr
-        index = ''
-        if sequence is not None:
-            postfix = self.get_array_postfix(sequence)
-            variable_name = '%s_%s' % (self.var, postfix)
-            abbr = '%s_%s' % (abbr, postfix)
-            index = self.get_array_index_postfix(sequence)
-        data = []
-        if self.strict and (sequence == None or sequence[len(sequence) - 1] == 0):
-            data.append('local {var} = {values}'.format(
-                    var=self.values_var, values=self.values))
-        data.append(self._create_field(variable_name, self.type, abbr,
-                self.name + index, self.base, self.values_var, self.mask, self.desc))
-        return '\n'.join(data)
-
-    def get_code(self, offset, store=None, sequence=None, tree='subtree'):
-        """Get the code for dissecting this field."""
-        data = []
-        postfix = self.get_array_postfix(sequence)
-
-        # Local var definitions
-        if store is not None:
-            self.tree_var = store
-        if self.strict:
-            store = self.tree_var
-            if sequence is not None:
-                store = '%s_%s' % (store, postfix)
-
-        data.append(super().get_code(offset, store, sequence, tree))
-
-        # Add a test which validates the enum value
-        if self.strict:
-            tree_var = self.tree_var
-            if sequence is not None:
-                tree_var = '%s_%s' % (self.tree_var, postfix)
-            data.append('\tif (%s[buffer(%i, %i):%s()] == nil) then' % (
-                    self.values_var, offset, self.size, self.func_type))
-            data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, "%s")'
-                    % (create_lua_var(tree_var), 'Invalid value, not in (%s)' % self.keys))
-            data.append('\tend')
-
-        return '\n'.join(data)
-
-
 class ArrayField(Field):
     def __init__(self, proto, name, type, base_size, alignment_size, depth, enum_members=None):
         self.base_size = base_size
@@ -342,41 +270,6 @@ class BitField(Field):
                         add=self.add_var, var=bit_var, buff=buff))
 
         data.append('')
-        return '\n'.join(data)
-
-
-class RangeField(Field):
-    def __init__(self, proto, name, type, size, alignment_size, min, max):
-        super().__init__(proto, name, type, size, alignment_size)
-        self.min = min
-        self.max = max
-        self.func_type = self._get_func_type()
-
-    def get_code(self, offset, sequence=None, tree='subtree'):
-        """Get the code for dissecting this field."""
-        data = []
-        var = self.var
-        if sequence is not None:
-            var = '%s_%s' % (var, self.get_array_postfix(sequence))
-
-        # Local var definitions
-        t = '\tlocal {name} = {tree}:{add}({var}, buffer({off}, {size}))'
-        data.append(t.format(var=var, name=create_lua_var(self.name),
-                             tree=tree, add=self.add_var, off=offset, size=self.size))
-
-        # Test the value
-        def create_test(value, test, warn):
-            data.append('\tif (buffer(%i, %i):%s() %s %s) then' %
-                    (offset, self.size, self.func_type, test, value))
-            data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, '
-                            '"Should be %s %s")' % (create_lua_var(self.name), warn, value))
-            data.append('\tend')
-
-        if self.min is not None:
-            create_test(self.min, '<', 'larger than')
-        if self.max is not None:
-            create_test(self.max, '>', 'smaller than')
-
         return '\n'.join(data)
 
 

@@ -10,45 +10,7 @@ dissecting of messages to the specific protocol dissectors.
 import string
 
 from platform import Platform
-from field import Field
-
-
-# Reserved keywords in Lua, to avoid using them as variable names
-LUA_KEYWORDS = [
-    'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
-    'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
-    'return', 'then', 'true', 'until', 'while'
-]
-
-
-def create_lua_var(var, length=None):
-    """Return a valid lua variable name."""
-    valid = string.ascii_letters + string.digits + '_'
-    if length is None:
-        length = len(var)
-    var.replace(' ', '_')
-
-    i = 0
-    while i < len(var) and i < length:
-        if var[i] not in valid:
-            var = var[:i] + var[i+1:]
-        elif i == 0 and var[i] in string.digits:
-            var = var[:i] + var[i+1:]
-        else:
-            i += 1
-
-    if var in LUA_KEYWORDS:
-        var = '_%s' % var
-
-    return var.lower()
-
-
-def create_lua_valuestring(dict_, wrap=True):
-    """Convert a python dictionary to lua table."""
-    items = dict_.items()
-    if wrap:
-        items = [(i, '"%s"' % j) for i, j in items]
-    return '{%s}' % ', '.join('[%i]=%s' % (i, j) for i, j in items)
+from field import Field, create_lua_var, create_lua_valuestring
 
 
 class ArrayField(Field):

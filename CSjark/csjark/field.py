@@ -2,7 +2,36 @@
 TODO
 """
 from platform import Platform
-from dissector import create_lua_var
+
+
+# Reserved keywords in Lua, to avoid using them as variable names
+LUA_KEYWORDS = [
+    'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
+    'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
+    'return', 'then', 'true', 'until', 'while'
+]
+
+
+def create_lua_var(var, length=None):
+    """Return a valid lua variable name."""
+    valid = string.ascii_letters + string.digits + '_'
+    if length is None:
+        length = len(var)
+    var.replace(' ', '_')
+
+    i = 0
+    while i < len(var) and i < length:
+        if var[i] not in valid:
+            var = var[:i] + var[i+1:]
+        elif i == 0 and var[i] in string.digits:
+            var = var[:i] + var[i+1:]
+        else:
+            i += 1
+
+    if var in LUA_KEYWORDS:
+        var = '_%s' % var
+
+    return var.lower()
 
 
 def create_lua_valuestring(dict_, wrap=True):

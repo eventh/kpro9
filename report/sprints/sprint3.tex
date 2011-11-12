@@ -350,7 +350,7 @@ We will start out by hardcoding this into the source code, but in the end we wan
 An important feature is the support for different \gls{endian} handling. \Gls{endianness} defines how the bits are ordered in the \gls{struct}. It tells what bit is the most significant, and thereby the value that the bits represent. See the figure \ref{fig:endianness}.
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{./sprints/img/endianness}
-	\caption{\Gls{endianness}\label{fig:endianness}}
+	\caption{\Gls{endianness}\cite{Endianness} \label{fig:endianness}}
 \end{figure}
 \Gls{wireshark} has built-in support for reading big and little \gls{endian}, but we have to tell it to do so. When the \gls{dissector} module builds the abstract syntacs tree, it must call the platform module to see what \gls{endian} it shall use. In the class diagram the \gls{dissector} module imports the platform module, from there it gets the information it needs regarding the \gls{endianness}. 
 

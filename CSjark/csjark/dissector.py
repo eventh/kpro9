@@ -10,6 +10,7 @@ dissecting of messages to the specific protocol dissectors.
 import string
 
 from platform import Platform
+from field import Field
 
 
 # Reserved keywords in Lua, to avoid using them as variable names

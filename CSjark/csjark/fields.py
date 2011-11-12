@@ -2,7 +2,15 @@
 TODO
 """
 from platform import Platform
-from dissector import create_lua_var, create_lua_valuestring
+from dissector import create_lua_var
+
+
+def create_lua_valuestring(dict_, wrap=True):
+    """Convert a python dictionary to lua table."""
+    items = dict_.items()
+    if wrap:
+        items = [(i, '"%s"' % j) for i, j in items]
+    return '{%s}' % ', '.join('[%i]=%s' % (i, j) for i, j in items)
 
 
 class Field:
@@ -222,4 +230,8 @@ class Field:
             if padding >= self.alignment:
                 padding = 0
         return offset + padding
+
+
+if __name__ == '__main__':
+    print("testing")
 

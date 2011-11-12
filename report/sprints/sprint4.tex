@@ -330,15 +330,12 @@ After three sprints, the design was to a large degree set. Re-factoring introduc
 The addition of new requirements from the customer resulted in changes in the utility's system overview. The need for more custom handling ended in a re-factoring of the code. This is visible in the class diagram REF, which was extended from the third sprint. Two new modules was added, cpp and fields. These are described below. 
 %class diagram
 \subsubsection{ccp module}
-The need for preprocessing C files before they are parsed have become so comprehensive, that we decided to create a dedicated module for it. All the existing cpp concerned code was relocated, joint with the new implementation. Requirements in the sprint backlog (REF?) made it necessary to have more functionality regarding the preprocessor step.   
+The need for preprocessing C files before they are parsed have become so comprehensive, that we decided to create a dedicated module for it. All the existing cpp concerned code was relocated, and joint with the new implementation. Requirements in the sprint backlog (REF?) made it necessary to have more functionality regarding the preprocessor step. The customer have a \#pragma field in many of their header files, which the cpp have to strip of before proceeding to the parser. More about this in the implementation.
+%Write about methods ect. 
 
 \subsubsection{fields module}
-
-\begin{itemize}
-\item The need for custom handling of \Gls{c} preprocessor steps on \Gls{c} header files have become so comprehensive, that we have decided to create our own module for it.
-\item Field specific classes now have their own module.   
-\end{itemize}  
-
+Field specific classes were moved from the dissector module to its own fields module. For the same reason as the ccp module; the amount of code concerning fields became so great, that a own module was appropriate. 
+%Write about methods ect. 
 
 %-----------------------
 \section{Implementation}

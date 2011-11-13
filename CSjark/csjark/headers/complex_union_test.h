@@ -19,4 +19,3 @@ struct struct_with_complex_union {
     union union_test union_test_member;
 };
 
-    

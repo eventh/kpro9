@@ -54,6 +54,7 @@ class Protocol(ProtoTree):
         # Different lua variables
         self.var = create_lua_var('proto_%s' % name)
         self.field_var = 'f'
+        self._pushed = False
 
     @property
     def alignment(self):
@@ -82,6 +83,9 @@ class Protocol(ProtoTree):
 
     def push_modifiers(self):
         """Push prefixes and postfixes down to child fields."""
+        if self._pushed:
+            return
+        self._pushed = True
         for field in self.fields:
             field.var_prefix.insert(0, '%s.' % self.field_var)
             field.abbr_prefix.insert(0, self.name)
@@ -174,7 +178,7 @@ class Protocol(ProtoTree):
         sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
         check = '\tif pinfo.private.field_name then\n\t\t'\
             'subtree:set_text(pinfo.private.field_name .. ": {name}")'\
-            '\n\t\tpinfo.private.caller_def_name = nil\n\telse\n'\
+            '\n\t\tpinfo.private.field_name = nil\n\telse\n'\
             '\t\tpinfo.cols.info:append(" (" .. {var}.description .. ")")\n'\
             '\tend\n'
 

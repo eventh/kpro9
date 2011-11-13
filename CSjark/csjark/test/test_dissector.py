@@ -32,6 +32,7 @@ def create_enum_field():
     field = Field('enum', 'int32', 4, 0, Platform.big)
     field.set_list_validation(dict(enumerate('ABCDE')))
     proto.add_field(field)
+    proto.push_modifiers()
     yield proto.fields[0]
     del proto
 
@@ -40,8 +41,8 @@ def enum_def(field):
     """Test that EnumField generates valid defintion code."""
     assert field
     assert compare_lua(field.get_definition(), '''
-    local enum_values = {[0]="A", [1]="B", [2]="C", [3]="D", [4]="E"}
-    f.enum = ProtoField.int32("test.enum", "enum", nil, enum_values)
+    local enum_valuestring = {[0]="A", [1]="B", [2]="C", [3]="D", [4]="E"}
+    f.enum = ProtoField.int32("test.enum", "enum", nil, enum_valuestring)
     ''')
 
 @enums.test
@@ -49,9 +50,10 @@ def enum_code(field):
     """Test that EnumField generates correct code."""
     assert isinstance(field, Field)
     assert compare_lua(field.get_code(0), '''
-    local enum = subtree:add(f.enum, buffer(0, 4))
-    if (enum_values[buffer(0, 4):int()] == nil) then
-    enum:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1, 2, 3, 4)")
+    local enum_node = subtree:add(f.enum, buffer(0, 4))
+    local enum_value = buffer(0, 4):int()
+    if (enum_valuestring[enum_value] == nil) then
+    enum_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be in [0, 1, 2, 3, 4]")
     end
     ''')
 
@@ -67,6 +69,7 @@ def create_lua_keywords_field():
     field.set_list_validation(dict(enumerate('VWXYZ')))
     proto.add_field(field)
     proto.add_field(Field('in', 'float', 4, 0, Platform.big))
+    proto.push_modifiers()
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -75,8 +78,8 @@ def lua_keywords_def(field1, field2):
     """Test that Lua keyword handling generates valid defintion code."""
     assert field1 and field2
     assert compare_lua(field1.get_definition(), '''
-    local elseif_values = {[0]="V", [1]="W", [2]="X", [3]="Y", [4]="Z"}
-    f._elseif = ProtoField.int32("test.elseif", "elseif", nil, elseif_values)
+    local elseif_valuestring = {[0]="V", [1]="W", [2]="X", [3]="Y", [4]="Z"}
+    f._elseif = ProtoField.int32("test.elseif", "elseif", nil, elseif_valuestring)
     ''')
     assert compare_lua(field2.get_definition(), '''
     f._in = ProtoField.float("test.in", "in")
@@ -86,14 +89,13 @@ def lua_keywords_def(field1, field2):
 def lua_keywords_code(field1, field2):
     """Test that the Lua keywords are handled."""
     assert compare_lua(field1.get_code(0), '''
-    local _elseif = subtree:add(f._elseif, buffer(0, 4))
-    if (elseif_values[buffer(0, 4):int()] == nil) then
-    _elseif:add_expert_info(PI_MALFORMED, PI_WARN, "Invalid value, not in (0, 1, 2, 3, 4)")
+    local elseif_node = subtree:add(f._elseif, buffer(0, 4))
+    local elseif_value = buffer(0, 4):int()
+    if (elseif_valuestring[elseif_value] == nil) then
+    elseif_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be in [0, 1, 2, 3, 4]")
     end
     ''')
-    assert compare_lua(field2.get_code(0), '''
-    subtree:add(f._in, buffer(0, 4))
-    ''')
+    assert compare_lua(field2.get_code(0), 'subtree:add(f._in, buffer(0, 4))')
 
 
 # Test ArrayField
@@ -168,8 +170,9 @@ def create_protocol_field():
     proto = dissector.Protocol('test')
     proto_one = dissector.Protocol('proto_one')
     proto_two = dissector.Protocol('proto_two')
-    proto.add_protocol('test', proto_one)
-    proto.add_protocol('test2', proto_two)
+    proto.add_field(ProtocolField('test', proto_one))
+    proto.add_field(ProtocolField('test2', proto_two))
+    proto.push_modifiers()
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -186,11 +189,11 @@ def proto_field_code(one, two):
     assert isinstance(one, ProtocolField)
     assert isinstance(two, ProtocolField)
     assert compare_lua(one.get_code(0), '''
-    pinfo.private.caller_def_name = "test"
-    Dissector.get("default.proto_one"):call(buffer(0,0):tvb(), pinfo, subtree)
+    pinfo.private.field_name = "test"
+    Dissector.get("default.proto_one"):call(buffer(0, 0):tvb(), pinfo, subtree)
     ''')
     assert compare_lua(two.get_code(32), '''
-    pinfo.private.caller_def_name = "test2"
+    pinfo.private.field_name = "test2"
     Dissector.get("default.proto_two"):call(buffer(32,0):tvb(), pinfo, subtree)
     ''')
 
@@ -203,8 +206,9 @@ def create_union_protocol_field():
     proto = dissector.Protocol('test')
     union_proto_one = dissector.UnionProtocol('union_proto_one')
     union_proto_two = dissector.UnionProtocol('union_proto_two')
-    proto.add_protocol('test', union_proto_one)
-    proto.add_protocol('test2', union_proto_two)
+    proto.add_field(ProtocolField('test', union_proto_one))
+    proto.add_field(ProtocolField('test2', union_proto_two))
+    proto.push_modifiers()
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -221,11 +225,11 @@ def union_proto_field_code(one, two):
     assert isinstance(one, ProtocolField)
     assert isinstance(two, ProtocolField)
     assert compare_lua(one.get_code(0), '''
-    pinfo.private.caller_def_name = "test"
+    pinfo.private.field_name = "test"
     Dissector.get("default.union_proto_one"):call(buffer(0,0):tvb(), pinfo, subtree)
     ''')
     assert compare_lua(two.get_code(32), '''
-    pinfo.private.caller_def_name = "test2"
+    pinfo.private.field_name = "test2"
     Dissector.get("default.union_proto_two"):call(buffer(32,0):tvb(), pinfo, subtree)
     ''')
 
@@ -286,7 +290,9 @@ ranges = Tests()
 def create_range_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None)
-    proto.add_range('range', 'float', 4, 0, 0, 10)
+    proto.add_field(Field('range', 'float', 4, 0, Platform.big))
+    proto.fields[-1].set_range_validation(0, 10)
+    proto.push_modifiers()
     yield proto.fields[0]
     del proto
 
@@ -302,12 +308,13 @@ def ranges_def(field):
 def ranges_code(field):
     """Test that RangeField generates valid code."""
     assert compare_lua(field.get_code(0), '''
-    local range = subtree:add(f.range, buffer(0, 4))
-    if (buffer(0, 4):float() < 0) then
-    range:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0")
+    local range_node = subtree:add(f.range, buffer(0, 4))
+    local range_value = buffer(0, 4):float()
+    if (range_value < 0) then
+    range_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0")
     end
-    if (buffer(0, 4):float() > 10) then
-    range:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 10")
+    if (range_value > 10) then
+    range_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 10")
     end
     ''')
 
@@ -319,8 +326,9 @@ fields = Tests()
 def create_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None)
-    proto.add_field('one', 'float', 4, 0)
-    proto.add_field('two', 'string', 12, 0)
+    proto.add_field(Field('one', 'float', 4, 0, Platform.big))
+    proto.add_field(Field('two', 'string', 12, 0, Platform.big))
+    proto.push_modifiers()
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -349,7 +357,7 @@ protos = Tests()
 def create_protos():
     """Create a Protocol instance with some fields."""
     conf = Config('tester')
-    conf.id = [25, ]
+    conf.id = [25,]
     conf.description = 'This is a test'
 
     rules = [Trailer(conf, {'name': 'missing', 'member': 'missing', 'size': 0}),
@@ -358,12 +366,14 @@ def create_protos():
              Trailer(conf, {'name': 'ber', 'member': 'count'})]
 
     proto = dissector.Protocol('tester', conf)
-
-    proto.add_field('one', 'float', 4, 0)
-    proto.add_range('range', 'float', 4, 0, 0, 10)
-    proto.add_array('array', 'float', 4, 0, [1, 2, 3])
-    proto.add_array('str', 'string', 30, 0, [2])
-    proto.add_field('count', 'int32', 4, 0)
+    proto.add_field(Field('one', 'float', 4, 0, Platform.big))
+    proto.add_field(Field('range', 'float', 4, 0, Platform.big))
+    proto.fields[-1].set_range_validation(0, 10)
+    field = Field('array', 'float', 4, 0, Platform.big)
+    proto.add_field(ArrayField.create([1, 2, 3], field))
+    field = Field('str', 'string', 30, 0, Platform.big)
+    proto.add_field(ArrayField.create([2], field))
+    proto.add_field(Field('count', 'int32', 4, 0, Platform.big))
     yield proto
 
 @protos.test
@@ -373,7 +383,7 @@ def protos_id(proto):
     assert proto.id == [25]
     assert proto.description.startswith('This is a test')
     assert proto.var == 'proto_tester'
-    assert isinstance(proto.fields[0], dissector.Field)
+    assert isinstance(proto.fields[0], Field)
 
 @protos.test
 def protos_trailer(proto):
@@ -395,66 +405,51 @@ def protos_create_dissector(proto):
     local f = proto_tester.fields
     f.one = ProtoField.float("tester.one", "one")
     f.range = ProtoField.float("tester.range", "range")
-    -- Array definition for array
     f.array = ProtoField.bytes("tester.array", "array")
-    f.array_0 = ProtoField.bytes("tester.array_0", "array")
-    f.array_0_0 = ProtoField.bytes("tester.array_0_0", "array")
-    f.array_0_0_0 = ProtoField.float("tester.array_0_0_0", "array[0][0][0]")
-    f.array_0_1 = ProtoField.bytes("tester.array_0_1", "array")
-    f.array_0_1_0 = ProtoField.float("tester.array_0_1_0", "array[0][1][0]")
-    f.array_1 = ProtoField.bytes("tester.array_1", "array")
-    f.array_1_0 = ProtoField.bytes("tester.array_1_0", "array")
-    f.array_1_0_0 = ProtoField.float("tester.array_1_0_0", "array[1][0][0]")
-    f.array_1_1 = ProtoField.bytes("tester.array_1_1", "array")
-    f.array_1_1_0 = ProtoField.float("tester.array_1_1_0", "array[1][1][0]")
-    f.array_2 = ProtoField.bytes("tester.array_2", "array")
-    f.array_2_0 = ProtoField.bytes("tester.array_2_0", "array")
-    f.array_2_0_0 = ProtoField.float("tester.array_2_0_0", "array[2][0][0]")
-    f.array_2_1 = ProtoField.bytes("tester.array_2_1", "array")
-    f.array_2_1_0 = ProtoField.float("tester.array_2_1_0", "array[2][1][0]")
-    -- Array definition for str
+    f.array_0 = ProtoField.bytes("tester.array.0", "array[0]")
+    f.array_0_0 = ProtoField.bytes("tester.array.0.0", "array[0][0]")
+    f.array_0_0_0 = ProtoField.float("tester.array.0.0.0", "array[0][0][0]")
+    f.array_0_0_1 = ProtoField.float("tester.array.0.0.1", "array[0][0][1]")
+    f.array_0_0_2 = ProtoField.float("tester.array.0.0.2", "array[0][0][2]")
+    f.array_0_1 = ProtoField.bytes("tester.array.0.1", "array[0][1]")
+    f.array_0_1_0 = ProtoField.float("tester.array.0.1.0", "array[0][1][0]")
+    f.array_0_1_1 = ProtoField.float("tester.array.0.1.1", "array[0][1][1]")
+    f.array_0_1_2 = ProtoField.float("tester.array.0.1.2", "array[0][1][2]")
     f.str = ProtoField.string("tester.str", "str")
-    f.str_0 = ProtoField.string("tester.str_0", "str[0]")
-    f.str_1 = ProtoField.string("tester.str_1", "str[1]")
+    f.str_0 = ProtoField.string("tester.str.0", "str[0]")
+    f.str_1 = ProtoField.string("tester.str.1", "str[1]")
     f.count = ProtoField.int32("tester.count", "count")
     -- Dissector function for: tester
     function proto_tester.dissector(buffer, pinfo, tree)
     local subtree = tree:add(proto_tester, buffer())
-    if pinfo.private.caller_def_name then
-    subtree:set_text(pinfo.private.caller_def_name .. ": tester")
-    pinfo.private.caller_def_name = nil
+    if pinfo.private.field_name then
+    subtree:set_text(pinfo.private.field_name .. ": tester")
+    pinfo.private.field_name = nil
     else
     pinfo.cols.info:append(" (" .. proto_tester.description .. ")")
     end
     subtree:add(f.one, buffer(0, 4))
-    local range = subtree:add(f.range, buffer(4, 4))
-    if (buffer(4, 4):float() < 0) then
-    range:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0")
+    local range_node = subtree:add(f.range, buffer(4, 4))
+    local range_value = buffer(4, 4):float()
+    if (range_value < 0) then
+    range_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0")
     end
-    if (buffer(4, 4):float() > 10) then
-    range:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 10")
+    if (range_value > 10) then
+    range_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 10")
     end
-    -- Array handling for array
-    local arraytree = subtree:add("array: float array", buffer(8, 24))
-    local subarraytree = arraytree:add("array[0]: float array", buffer(8, 8))
-    local subsubarraytree = subarraytree:add("array[0][0]: float array", buffer(8, 4))
-    subsubarraytree:add(f.array_0_0_0, buffer(8, 4))
-    local subsubarraytree = subarraytree:add("array[0][1]: float array", buffer(12, 4))
-    subsubarraytree:add(f.array_0_1_0, buffer(12, 4))
-    local subarraytree = arraytree:add("array[1]: float array", buffer(16, 8))
-    local subsubarraytree = subarraytree:add("array[1][0]: float array", buffer(16, 4))
-    subsubarraytree:add(f.array_1_0_0, buffer(16, 4))
-    local subsubarraytree = subarraytree:add("array[1][1]: float array", buffer(20, 4))
-    subsubarraytree:add(f.array_1_1_0, buffer(20, 4))
-    local subarraytree = arraytree:add("array[2]: float array", buffer(24, 8))
-    local subsubarraytree = subarraytree:add("array[2][0]: float array", buffer(24, 4))
-    subsubarraytree:add(f.array_2_0_0, buffer(24, 4))
-    local subsubarraytree = subarraytree:add("array[2][1]: float array", buffer(28, 4))
-    subsubarraytree:add(f.array_2_1_0, buffer(28, 4))
-    -- Array handling for str
-    local arraytree = subtree:add("str: string array", buffer(32, 60))
-    arraytree:add(f.str_0, buffer(32, 30))
-    arraytree:add(f.str_1, buffer(62, 30))
+    local array = subtree:add(f.array, buffer(8, 24))
+    local subarray = array:add(f.array_0, buffer(8, 24))
+    local subsubarray = subarray:add(f.array_0_0, buffer(8, 12))
+    subsubarray:add(f.array_0_0_0, buffer(8, 4))
+    subsubarray:add(f.array_0_0_1, buffer(12, 4))
+    subsubarray:add(f.array_0_0_2, buffer(16, 4))
+    local subsubarray = subarray:add(f.array_0_1, buffer(20, 12))
+    subsubarray:add(f.array_0_1_0, buffer(20, 4))
+    subsubarray:add(f.array_0_1_1, buffer(24, 4))
+    subsubarray:add(f.array_0_1_2, buffer(28, 4))
+    local array = subtree:add(f.str, buffer(32, 60))
+    array:add(f.str_0, buffer(32, 30))
+    array:add(f.str_1, buffer(62, 30))
     subtree:add(f.count, buffer(92, 4))
     -- Trailers handling for struct: tester
     local trail_offset = 96

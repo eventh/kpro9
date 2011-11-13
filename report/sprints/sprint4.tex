@@ -527,81 +527,83 @@ folder containing all header files.
 \section{Customer Feedback}
 %--------------------------
 \label{sec:sp4feedback}
-This sprint we have mostly gotten feedback on implementation of requirements, and of new features that the customer would like in the utility. In addition they have given some thoughts on how to organize this sprint and of how to test some of the non functional requirements
-
-Process feedback (suggestions for sprint 4)
-
+This sprint we have mostly gotten feedback on implementation of requirements, and of new features that the customer would like in the utility. In addition they have given some thoughts on how to organize this sprint and of how to test some of the non functional requirements.
+%---------------------
+\subsection{Process Improvement Points}
 The customer would like the fourth and final sprint to be split into two one week sprints. The benefit of this is that the customer would have a stable version of the utility after the first sprint to test on their files. Considering the overhead of an additional sprint, both in planning, evaluation and documentation, the team and the customer instead agreed to keep the customer updated with the progress of the utility. The customer could then test the utility on their code when certain blocking features were done, and then give feedback of additional bugs.
-Implementation feedback
-
-Sub-dissectors
-
+%---------------------
+\subsection{Implementation Feedback}
+%-----------------------
+In this section we have listed the feedback from the customer regarding the implementation. These points have been considered and changes have been made to the implementation to fulfill the customers demands.
+\subsubsection{Sub-Dissectors}
 The customer wanted us to remove the platform sting when calling sub-dissectors, as it does not contain any useful information that is not already given (by the base dissector), while it clutters the Wireshark display.
-Custom lua files
-
+%---------------------
+\subsubsection{Custom Lua Files}
 The customer wanted a way to be able to fetch the buffer offset value to be able to both use it to pick specific parts of the message and modify it.
-Filter and search
-
+%---------------------
+\subsubsection{Filter and Search}
 The filter and search will not give automatic suggestions because we have the platform name as a prefix to the proto description. We should remove this to improve the search and filtering feature.
-FR3-A Support #include directives
-
+%---------------------
+\subsubsection{FR3-A Support \#include Directives}
 Need to be split up into one category for normal headers and one for system headers. The system headers will be platform specific and since we want to generate dissectors for all supported platforms, we need to fake them in order to satisfy the dependencies.
-FR3-C The utility shall support platform specific C macroes
-
-The utility raised an error because it got into an mutually exclusive #ifdef directive because we defined both Solaris v8 and v9. The customer only uses Solars v10, so the solution is just to remove Solaris v8.
-FR6-C Batch mode
-
+%---------------------
+\subsubsection{FR3-C The utility shall support platform specific C macroes}
+The utility raised an error because it got into an mutually exclusive \#ifdef directive because we defined both Solaris v8 and v9. The customer only uses Solars v10, so the solution is just to remove Solaris v8.
+%---------------------
+\subsubsection{FR6-C Batch Mode}
 A bug in batch mode prevents the utility from going into sub-folders of the folder specified on some platforms.
-FR6 The -I argument	 
-
+%---------------------
+\subsubsection{FR6 The -I argument}
 The -I argument (for extra includes) does not seem to work.
-New requirements
 
-FR4-D Support for the #pragma directive.
-
-The customer uses the #pragma directive to identify the version of the file. This will not affect the dissectors generated in any way. #pragma will, however, crash CSjark if they are not removed, so the solution is to pass over the files before parsing them to remove them from the file.
-
-Auto-generation of configuration files
+\subsection{New requirements}
+%----------------------------
+For the fourth sprint we were provided with new requirements. Here these requirements are listed and briefly explained. 
+\subsubsection{FR4-D Support for the \#pragma directive}
+The customer uses the \#pragma directive to identify the version of the file. This will not affect the dissectors generated in any way. \#pragma will, however, crash CSjark if they are not removed, so the solution is to pass over the files before parsing them to remove them from the file.
+%---------------------
+\subsubsection{Auto-generation of configuration files}
 The customer asked if we could make the utility auto-generate a template configuration file for each struct it can generate a dissector for. This would make it easier for the user to configure structs, as the user only needs to fill in an id number in most of the cases.
-Only generate useful dissectors
-
+%---------------------
+\subsubsection{Only generate useful dissectors}
 The customer wants a mode where the utility only generates dissectors for structs with an corresponding configuration file containing an id, and for structs and unions that are inside these structs.
-Finding missing includes
-
+%---------------------
+\subsubsection{Finding missing includes}
 Some of the header files that the customer wants to generate dissectors for depends on header files not directly included (the dependency might be included above an include to this header file inside a source file). These dependencies must be found so that the file may be parsed correctly. We cannot read the source files, that contains the correct includes, because the customer also has c++ files, which our parser does not support.
-Set a compile flag from the command line
-
+%---------------------
+\subsubsection{Set a compile flag from the command line}
 The customer want the utility to be able to take compile flags as command line arguments and then apply then to all the header files. This makes the customer able to supply flags specific to a certain compilation configuration without editing the source of the utility.
-Multiple message ID’s for one dissector
-
+%---------------------
+\subsubsection{Multiple message ID’s for one dissector}
 The utility should be able to support having multiple message ID’s that corresponds to the same struct. The configuration will then have to support a list of ID’s and the dissector will ned to add multiple entries in the dissector table for the same dissector. Multiple IDs make the customer able to signal for example what member in a union is the valid member.
-SRCCFG 1 Pick out doxygen commets for descriptions of struct members
-
+%---------------------
+\subsubsection{SRCCFG 1 Pick out doxygen commets for descriptions of struct members}
 The customer would like the utility to be able to read comments corresponding to the struct and use these for the description filed in the dissector. This feature would make the generated dissectors require less manual configuration.
-SRCCFG 2 Read int-enum configuration form the header files
-
+%---------------------
+\subsubsection{SRCCFG 2 Read int-enum configuration form the header files}
 Some of the integer members may really be intended to be used as an enum, with the numerical values corresponding to stings, along with the rest of the values the int can have being considered as invalid. Some of the headers contains defines that define these string and integer pairs. The customer would like the utility to be able to find these and encode it in a configuration file. The benefit is that the customer then does not have to configure this member manually.
-Marking uninitialized memory
-
+%---------------------
+\subsubsection{Marking uninitialized memory}
 In debug mode some compilers will fill uninitialized memory with a certain pattern. The customer wants the dissectors to be able to recognise such patterns and highlight them in Wireshark, so that it easier to see bugs related to memory management.
-Guess the dissector from packed size
-
+%---------------------
+\subsubsection{Guess the dissector from packed size}
 The customer want Wireshark to be able to guess what dissectors to use from the size of the packet. It could compare this size to the size the dissector expects. If multiple dissectors fit, it could try to display the message with all the fitting dissectors. This makes the customer able to use some dissectors without manually configuring the message ID for the struct it represents.
-A way to ignore headers in a specified folder
-
+%---------------------
+\subsubsection{A way to ignore headers in a specified folder}
 The customer wants a way to specify what folder to ignore in batch mode. This is to avoid complex headers that are irrelevant to the customers goal (does not include structs) and would require significantly more developer time on the tool to get though the parser.
-
-Non functional requirement agreement
-Testing on Sparc
-
+%---------------------
+\subsection{Non functional requirement agreement}
+%------------------------------
+We agreed on how some of the non functional requirements were to be tested, and the importance of them. 
+\subsubsection{Testing on Sparc}
 The customer thought code inspections would be enough to verify that the dissectors would work on sparc machines, since the team has no access to sparc machines to test them.
 
 The utility itself does not have to be able to run on a sparc machine.
-NR4 Testing user documentation on a person with Wireshark and C experience
-
+%---------------------
+\subsubsection{NR4 Testing user documentation on a person with Wireshark and C experience}
 The customer said that they have a person, with the relevant qualifications who, is willing to spend the hour necessary to test CSjark.
-NR5 Testing user documentation on a person without experience with Wireshark, but with some C experience.
-
+%---------------------
+\subsubsection{NR5 Testing user documentation on a person without experience with Wireshark, but with some C experience}
 The customer has previously specified that a person without prior knowledge of Wireshark, but with a good understanding of C should use about 5 hours to be able to use the utility. Due to the duration of this task it is, how every, unlikely that we find a person willing to do this test that meets the qualifications. The customer therefore said that we should not prioritize testing this requirement.
 
 

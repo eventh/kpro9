@@ -11,7 +11,8 @@ from operator import itemgetter
 import yaml
 
 from platform import Platform
-from dissector import Delegator, create_lua_valuestring, create_lua_var
+from dissector import Delegator
+from field import create_lua_valuestring, create_lua_var, Field, BitField
 
 
 class ConfigError(Exception):
@@ -46,13 +47,21 @@ class Config:
         rules.extend(self.types.get(type, []))
         return rules
 
-    def create_field(self, proto, name, ctype, size=None, alignment=None):
+    def create_field(self, proto, name, ctype, size, alignment, endian):
         """Create a field depending on rules."""
-        bits, enums, ranges, customs = self.get_field_attributes(name, ctype)
+        # Sort the rules
+        types = (Bitstring, Enum, Range, Custom)
+        values = [[], [], [], []]
+        for rule in self.get_rules(name, ctype):
+            for i, tmp in enumerate(types):
+                if isinstance(rule, tmp):
+                    values[i].append(rule)
+        bits, enums, ranges, customs = values
 
         # Custom field rules
         if customs:
-            return customs[0].create(proto, name, ctype, size, alignment)
+            return customs[0].create(proto, name,
+                    ctype, size, alignment, endian)
 
         # If size is None and not customs rule, we are in trouble.
         if size is None:
@@ -64,30 +73,20 @@ class Config:
 
         # Bitstring rules
         if bits:
-            return proto.add_bit(name, type_, size, alignment, bits[0].bits)
+            return proto.add_field(BitField(bits[0].bits,
+                    name, type_, size, alignment, endian))
+
+        field = proto.add_field(Field(name, type_, size, alignment, endian))
 
         # Enum rules
-        if enums:
-            rule = enums[0]
-            return proto.add_enum(name, type_, size, alignment, rule.values, rule.strict)
+        for rule in enums:
+            field.set_list_validation(rule.values, rule.strict)
 
         # Range rules
-        if ranges:
-            rule = ranges[0]
-            return proto.add_range(name, type_, size, alignment, rule.min, rule.max)
+        for rule in ranges:
+            field.set_range_validation(rule.min, rule.max)
 
-        # Create basic Field if no rules fired
-        return proto.add_field(name, type_, size, alignment)
-
-    def get_field_attributes(self, name, ctype):
-        # Sort the rules
-        types = (Bitstring, Enum, Range, Custom)
-        values = [[], [], [], []]
-        for rule in self.get_rules(name, ctype):
-            for i, tmp in enumerate(types):
-                if isinstance(rule, tmp):
-                    values[i].append(rule)
-        return values
+        return field
 
 
 class BaseRule:
@@ -225,7 +224,7 @@ class Custom(BaseRule):
         self.mask = obj.get('mask', None)
         self.desc = obj.get('desc', None)
 
-    def create(self, proto, name, ctype, size, alignment):
+    def create(self, proto, name, ctype, size, alignment, endian):
         if self.size is not None:
             size = self.size
         else:

@@ -3,16 +3,15 @@ A module for parsing C files, and searching AST for struct definitions.
 
 Requires PLY and pycparser.
 """
-import sys
 import os
 import operator
 
-import pycparser
 from pycparser import c_ast, c_parser, plyparser
 
 from config import Options
 from platform import Platform
 from dissector import Protocol, UnionProtocol
+from field import Field, ArrayField, ProtocolField
 
 
 class ParseError(plyparser.ParseError):
@@ -198,6 +197,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def handle_array_decl(self, node, depth=None):
         """Find the depth and size of the array."""
+        return
         if depth is None:
             depth = []
         child = node.children()[0]
@@ -255,15 +255,15 @@ class StructVisitor(c_ast.NodeVisitor):
     def handle_protocol(self, proto, name, proto_name):
         """Add an protocol field or union field to the protocol."""
         sub_proto = StructVisitor.all_protocols[(proto_name, self.platform)]
-        return proto.add_protocol(name, sub_proto)
+        return proto.add_field(ProtocolField(name, sub_proto))
 
     def handle_array(self, proto, name, ctype, size,
             alignment, depth, enum_members=None):
         """Add an ArrayField to the protocol."""
         if not depth:
             return self.handle_field(proto, name, ctype, size, alignment)
-
-        return proto.add_array(name, ctype, size, alignment, depth, enum_members)
+        field = Field(name, ctype, size, alignment, self.platform.endian)
+        return proto.add_field(ArrayField.create(depth, field))
 
     def handle_pointer(self, node, proto):
         """Find member details in a pointer declaration."""
@@ -277,8 +277,9 @@ class StructVisitor(c_ast.NodeVisitor):
         type = self.map_type('enum')
         size = self.size_of('enum')
         alignment = self.alignment('enum')
-
-        return proto.add_enum(name, type, size, alignment, self.enums[enum])
+        field = Field(name, type, size, alignment, self.platform.endian)
+        field.set_list_validation(self.enums[enum])
+        return proto.add_field(field)
 
     def handle_field(self, proto, name, ctype, size=None, alignment=None):
         """Add a field representing the struct member to the protocol."""
@@ -288,14 +289,17 @@ class StructVisitor(c_ast.NodeVisitor):
             except ValueError :
                 alignment = size # Assume that the alignment is the same as the size
 
+        endian = self.platform.endian
         if proto.conf is None:
             if size is None:
                 size = self.size_of(ctype)
             if size is None:
                 raise ParseError('Unknown alignment for type %s' % ctype)
-            return proto.add_field(name, self.map_type(ctype), size, alignment)
+            return proto.add_field(Field(
+                    name, self.map_type(ctype), size, alignment, endian))
         else:
-            return proto.conf.create_field(proto, name, ctype, size, alignment)
+            return proto.conf.create_field(proto, name,
+                    ctype, size, alignment, endian)
 
     def _find_protocol(self, node):
         """Check if the protocol already exists."""

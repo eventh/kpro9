@@ -8,7 +8,7 @@ Also contains the class which generates a dissector for delegating
 dissecting of messages to the specific protocol dissectors.
 """
 from platform import Platform
-from field import create_lua_var
+from field import create_lua_var, Field
 
 
 class Protocol:
@@ -54,9 +54,15 @@ class Protocol:
         self.var = create_lua_var('proto_%s' % name)
         self.field_var = 'f'
 
+    def push_modifiers(self):
+        for field in self.fields:
+            field.var_prefix.insert(0, '%s.' % self.field_var)
+            field.push_modifiers()
+
     def create(self):
         """Returns all the code for dissecting this protocol."""
         # Create dissector content
+        self.push_modifiers()
         self._header_defintion()
         self._fields_definition()
         self._dissector_func()
@@ -87,7 +93,7 @@ class Protocol:
         return max([0] + [f.alignment_size
                         for f in self.fields if f.alignment_size])
 
-    def _add(self, field):
+    def add_field(self, field):
         """Add a field to the protocol, returns the field."""
         self.fields.append(field)
         return field
@@ -287,15 +293,24 @@ class Delegator(Protocol):
         self.msg_var = create_lua_var('msg_node')
 
         # Add fields, don't change sizes!
+        endian = Platform.big
+        self.add_field(Field('Version', 'uint8', 1, 0, endian))
+
         values = {p.flag: p.name for name, p in self.platforms.items()}
-        self.add_field('Version', 'uint8', 1, 0)
-        self.add_enum('Flags', 'uint8', 1, 0, values)
-        self.add_enum('Message', 'uint16', 2, 0, {}, strict=False)
-        self.add_field('Message length', 'uint32', 4, 0)
+        field = Field('Flags', 'uint8', 1, 0, endian)
+        field.set_list_validation(values)
+        self.add_field(field)
+
+        field = Field('Message', 'uint16', 2, 0, endian)
+        field.set_list_validation({}, strict=False)
+        self.add_field(field)
+
+        self.add_field(Field('Message length', 'uint32', 4, 0, endian))
         self._version, self._flags, self._msg_id, self._length = self.fields
 
     def create(self):
         """Returns all the code for dissecting this protocol."""
+        self.push_modifiers()
         self._header_defintion()
         self._fields_definition()
         self._register_function()
@@ -346,10 +361,8 @@ class Delegator(Protocol):
         self.data.extend([t, ''])
 
         # Find message id and flag
-        flags_var = create_lua_var('flags')
-        msg_var = create_lua_var('message_id')
-        self.data.append('\t' + self._flags._create_value_var(flags_var))
-        self.data.append('\t' + self._msg_id._create_value_var(msg_var))
+        msg_var = create_lua_var('id')
+        self.data.append(self._msg_id._store_value(msg_var))
 
         # Validate message id
         t = '\tif ({ids}[{msg}] == nil) then\n\t\t{node}:add_expert_info'\
@@ -363,6 +376,7 @@ class Delegator(Protocol):
             '\n\t\tlocal name = {flags}[{flag}] .. "." .. {ids}[{msg}]'\
             '\n\t\t{table}:try(name, buffer(4):tvb(), pinfo, tree)'\
             '\n\tend\nend'
-        self.data.append(t.format(flags=self._flags.values_var, msg=msg_var,
-                flag=flags_var, ids=self.id_table, table=self.table_var))
+        self.data.append(t.format(
+                flags=self._flags.values, msg=msg_var, table=self.table_var,
+                flag=self._flags._value_var, ids=self.id_table))
 

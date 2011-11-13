@@ -258,9 +258,9 @@ class StructVisitor(c_ast.NodeVisitor):
         """Add an ArrayField to the protocol."""
         if name is not None:
             field.name = name
-        if not depth:
-            return field
-        return proto.add_field(ArrayField.create(depth, field))
+        if depth:
+            field = ArrayField.create(depth, field)
+        return proto.add_field(field)
 
     def handle_pointer(self, node, proto):
         """Find member details in a pointer declaration."""

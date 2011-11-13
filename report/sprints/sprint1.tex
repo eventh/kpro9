@@ -9,6 +9,7 @@ the results from the tests. The feedback the team has got from the customer
 during the sprint is listed in \autoref{sec:sp1:feedback}, and the evaluation 
 of the first sprint is covered in \autoref{sec:sp1:eval}.
 
+
 %------------------------
 \section{Sprint Planning}
 %------------------------
@@ -204,6 +205,7 @@ estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
 	\bottomrule
 \end{tabularx}
 \end{table}
+
 
 %----------------------
 \section{System Design}
@@ -417,6 +419,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 \end{tabularx}}
 \end{table}
 
+
 %-----------------------
 \section{Implementation}
 %-----------------------
@@ -521,6 +524,7 @@ user with a message and description, this make it easier for debugging.
 	\caption{\Gls{wireshark} \gls{dissector}\label{fig:sp1rangerule}}
 \end{figure}
 
+
 %-----------------------
 \section{Sprint Testing}
 %-----------------------
@@ -531,7 +535,8 @@ results.
 \subsection{Tests}
 %-----------------
 During the sprint the team executed a total of 7 test cases with names as seen
-below. Test cases executed:
+below. The test cases can be found in \autoref{sec:testcases}. 
+Test cases executed in this sprint:
 \begin{itemize}
 	\item TID01 - Supporting parameters for \Gls{c}-\gls{header} file. \autoref{tab:TID01}
 	\item TID02 - Supporting basic data types. \autoref{tab:TID02}
@@ -660,6 +665,8 @@ core functionality in place it only took three lines of code to fix this issue.
 \section{Customer Feedback}
 %--------------------------
 \label{sec:sp1:feedback}
+This section covers the feedback we got from the customer before and after the first sprint.
+
 \subsection{Pre-sprint}
 %----------------------
 The customer had no objections to the contents of the first sprint, but was not
@@ -687,7 +694,7 @@ This section contains the team evaluation of the first sprint.
 
 \subsection{Review}
 %------------------
-The first sprint is over and the team has implemented a working \gls{utility}. During
+The first sprint is over and the team has implemented a working \gls{utility} for simple structs. During
 the sprint planning we decided which requirements from the product backlog that
 we were to fulfill during the first sprint. The product backlog contains a
 prioritized list of requirements. We decided to include the requirements that
@@ -707,8 +714,8 @@ documentation for all files and unit test for the \gls{dissector} file. This wor
 postponed till the second sprint.
 
 The first sprint resulted in a solid core for our project. The customer was
-happy with the first demo they got, the \gls{utility} even run on Mac (which was
-overwhelming for Stig). We feel that we have a good start and are confident
+happy with the first demo they got, the \gls{utility} even run on Mac.
+ We feel that we have a good start and are confident
 that we will be able to give the customer the product that they want in the
 end.
 
@@ -747,7 +754,7 @@ probably be part of the next sprint.
 		\item to free up so many hours, and still have time to do other subjects
 	\end{itemize}
 	\item Hard to find time for meeting/work where all team member was able to meet
-	\item One member of the team got sick
+	\item One member of the team was sick for a week
 	\item We did not document the process and work during the first sprint well enough, which was a burden at the end of the sprint
 	\item We did perhaps not understand \Gls{scrum} properly, which resulted in extra work
 \end{itemize}
@@ -777,16 +784,15 @@ documentation is already done before the sprint evaluation.
 
 \subsubsection{Split Coding and Report Writing Between Team Members} 
 Not all the team members have to do coding. It is important to maintain a
-steady progress making the project report (which our grade evaluation is based
-on), while doing the implementation. Responsibilities for coding and report
-will be assigned next sprint. 
+steady progress making the project report, while doing the implementation. 
+Responsibilities for coding and report will be assigned next sprint. 
 
 \subsection{Barriers}
 %--------------------
 Some of the team member have experienced some technical difficulties with their
 Git client, and others had problems setting up PyCharm. Problems rose as we
 realized that it would be hard setting up the programs on different
-platforms (Windows and Mac).
+platforms.
 
 We had problems with \Gls{c} \gls{parser} \gls{library}, \gls{pycparser}, which did not support \_Bool
 type, specified in the \GLS{C99} standard. A patch for this was written by Even, and

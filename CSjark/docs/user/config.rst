@@ -1,3 +1,6 @@
+..
+    header  = - ~ ^ #
+
 ===============
  Configuration
 ===============
@@ -331,9 +334,29 @@ This conformance file when run with this C header code: ::
     
     delegator_register_proto(proto_custom_lua, "Win32", "custom_lua", 1)
           
+Support for Offset and Value in Lua Files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Via `External Lua dissectors`_ CSjark also provides a way to add new proto fields to the dissector in Wireshark, with correct offset value and correct Lua variable.
 
+To access the fields value and offset, ``{OFFSET}`` and ``{VALUE}`` strings may be put into the conformance file as shown below: ::
 
+    #.FUNC_FOOTER pointer
+    	-- Offset: {OFFSET}
+    	-- Field value stored in lua variable: {VALUE}
+    #.END
+
+Adding the offset and variable value is only possible in the parts that change the code of Lua functions, i.e. ``FUNC_HEADER``, ``FUNC_BODY`` and ``FUNC_FOOTER``.
+
+Above listed example leads to following Lua code: ::
+    
+    local field_value_var = subtree:add(f.pointer, buffer(56,4))
+        −− Offset: 56
+        −− Field value stored in lua variable: field_value_var
+        
+.. note::
+    The value of the referenced variable can be used after it is defined.
+            
 
 Configuration of various trailers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

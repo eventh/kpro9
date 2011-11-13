@@ -226,7 +226,7 @@ class StructVisitor(c_ast.NodeVisitor):
                 token, base = self.aliases[ctype]
                 if token in ('struct', 'union'):
                     subproto = self.all_protocols[base, self.platform]
-                    return child.declname, subproto, subproto.get_size(), subproto.get_alignment_size(), depth, None
+                    return child.declname, subproto, subproto.size, subproto.alignment, depth, None
                 elif token == 'enum':
                     return child.declname, token, self.size_of(token), self.alignment(token), depth, self.enums[ctype]
                 elif token == 'array':
@@ -246,7 +246,7 @@ class StructVisitor(c_ast.NodeVisitor):
         # Union and struct
         elif isinstance(child.children()[0], c_ast.Union) or isinstance(child.children()[0], c_ast.Struct):
             subproto = self.all_protocols[child.children()[0].name, self.platform]
-            return child.declname, subproto, subproto.get_size(), subproto.get_alignment_size(), depth, None
+            return child.declname, subproto, subproto.size, subproto.alignment, depth, None
         # Error
         else:
             raise ParseError('Unknown type in array declaration: %s' % repr(child.children()[0]))
@@ -261,7 +261,8 @@ class StructVisitor(c_ast.NodeVisitor):
         """Add an ArrayField to the protocol."""
         if not depth:
             return self.handle_field(proto, name, ctype, size, alignment)
-        field = Field(name, ctype, size, alignment, self.platform.endian)
+        type = self.map_type(ctype)
+        field = Field(name, type, size, alignment, self.platform.endian)
         return proto.add_field(ArrayField.create(depth, field))
 
     def handle_pointer(self, node, proto):

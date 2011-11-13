@@ -8,10 +8,10 @@ Also contains the class which generates a dissector for delegating
 dissecting of messages to the specific protocol dissectors.
 """
 from platform import Platform
-from field import create_lua_var, Field
+from field import create_lua_var, ProtoTree, Field
 
 
-class Protocol:
+class Protocol(ProtoTree):
     """A Protocol is a collection of fields and code.
 
     It's used to generate Wireshark dissectors written in Lua, for
@@ -30,6 +30,7 @@ class Protocol:
         if platform is None:
             platform = Platform.mappings['default']
         self.platform = platform
+        self.endian = platform.endian
         self.name = name
         self.longname = '%s.%s' % (platform.name.lower(), self.name.lower())
         self.conf = conf
@@ -54,10 +55,20 @@ class Protocol:
         self.var = create_lua_var('proto_%s' % name)
         self.field_var = 'f'
 
-    def push_modifiers(self):
+    @property
+    def alignment(self):
+        """Find the alignment size of the fields in the protocol."""
+        return max([0] + [f.alignment for f in self.fields])
+
+    @property
+    def size(self):
+        """Find the size of the fields in the protocol."""
+        size = 0
         for field in self.fields:
-            field.var_prefix.insert(0, '%s.' % self.field_var)
-            field.push_modifiers()
+            if field.size:
+                size = self.get_padded_offset(field, size)
+                size += field.size
+        return self.pad_struct_size(size)
 
     def create(self):
         """Returns all the code for dissecting this protocol."""
@@ -69,29 +80,27 @@ class Protocol:
         self._register_dissector()
         return '\n'.join(self.data)
 
-    def get_size(self):
-        """Find the size of the fields in the protocol."""
-        size = 0
+    def push_modifiers(self):
+        """Push prefixes and postfixes down to child fields."""
         for field in self.fields:
-            if field.size:
-                size = field.get_padded_offset(size)
-                size += field.size
+            field.var_prefix.insert(0, '%s.' % self.field_var)
+            field.push_modifiers()
 
-        return self.pad_struct_size(size)
+    def get_padded_offset(self, field, offset):
+        padding = 0
+        if field.alignment:
+            padding = field.alignment - offset % field.alignment
+            if padding >= field.alignment:
+                padding = 0
+        return offset + padding
 
     def pad_struct_size(self, original_size):
-        alignment_size = self.get_alignment_size()
         padding = 0
-        if alignment_size != 0:
-            padding = alignment_size - original_size % alignment_size
-            if padding >= alignment_size:
+        if self.alignment:
+            padding = (self.alignment - original_size) % self.alignment
+            if padding >= self.alignment:
                 padding = 0
         return original_size + padding
-
-    def get_alignment_size(self):
-        """Find the alignment size of the fields in the protocol."""
-        return max([0] + [f.alignment_size
-                        for f in self.fields if f.alignment_size])
 
     def add_field(self, field):
         """Add a field to the protocol, returns the field."""
@@ -139,7 +148,7 @@ class Protocol:
         """Add the code from each field into dissector function."""
         offset = 0
         for field in self.fields:
-            offset = field.get_padded_offset(offset)
+            offset = self.get_padded_offset(field, offset)
             code = field.get_code(offset)
 
             if self.conf and self.conf.cnf: # Conformance file code
@@ -170,7 +179,7 @@ class Protocol:
 
         self.data.append(func_diss.format(var=self.var))
         self.data.append(sub_tree.format(
-                add=self._get_tree_add(), var=self.var))
+                add=self.add_var, var=self.var))
         self.data.append(check.format(var=self.var, name=self.name))
 
         offset = self._fields_code()
@@ -210,7 +219,7 @@ class Protocol:
                 fields = [i for i in self.fields if i.name == rule.member]
                 if not fields:
                     continue # rule.member don't exists in the struct
-                func = fields[0]._get_func_type()
+                func = fields[0].func_type
 
                 count = 'trail_count'
                 t = '\tlocal {var} = buffer({off}, {size}):{func}()'
@@ -243,26 +252,21 @@ class Protocol:
             if rule.member is not None or count > 1:
                 self.data.append('\tend') # End for loop
 
-    def _get_tree_add(self):
-        """Get the endian specific function for adding a item to a tree."""
-        if self.platform and self.platform.endian == Platform.little:
-            return 'add_le'
-        return 'add'
-
 
 class UnionProtocol(Protocol):
     def __init__(self, name, conf=None, platform=None):
         super().__init__(name, conf, platform)
 
-    def get_size(self):
+    @property
+    def size(self):
         """Find the size of the fields in the protocol."""
         return self.pad_struct_size(max(
-                [0] + [field.size for field in self.fields if field.size]))
+                [0] + [field.size for field in self.fields]))
 
     def _fields_code(self):
         """Add the code from each field into dissector function."""
         super()._fields_code(union=True)
-        return self.get_size()
+        return self.size
 
 
 class Delegator(Protocol):

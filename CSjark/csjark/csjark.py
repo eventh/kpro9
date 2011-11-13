@@ -410,7 +410,8 @@ def main():
 
     # Write out a status message
     if failed:
-        msg = 'Successfully parsed %i out of %i files' % (len(headers, failed))
+        count = len(headers) - failed
+        msg = 'Successfully parsed %i out of %i files' % (count, len(headers))
     else:
         msg = 'Successfully parsed all %i files' % len(headers)
     print("%s for %i platforms, created %i dissectors" % (

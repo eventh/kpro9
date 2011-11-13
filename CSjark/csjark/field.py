@@ -60,6 +60,13 @@ class BaseField:
         self.alignment = alignment
         self.endian = endian
 
+    @property
+    def add_var(self):
+        """Get the endian specific function for adding a item to a tree."""
+        if self.endian == Platform.little:
+            return 'add_le'
+        return 'add'
+
     def push_modifiers(self):
         """Push prefixes and postfixes down to child fields."""
         pass
@@ -71,6 +78,10 @@ class BaseField:
     def get_code(self, offset, store=None, tree='subtree'):
         """Get the code for dissecting this field."""
         pass
+
+
+class ProtoTree(BaseField):
+    pass
 
 
 class Field(BaseField):
@@ -132,13 +143,6 @@ class Field(BaseField):
         if self.var_postfix:
             var = '%s_%s' % (var, '_'.join(self.var_postfix))
         return var.replace('._', '.')
-
-    @property
-    def add_var(self):
-        """Get the endian specific function for adding a item to a tree."""
-        if self.endian == Platform.little:
-            return 'add_le'
-        return 'add'
 
     @property
     def func_type(self):
@@ -278,15 +282,6 @@ class Field(BaseField):
                 'PI_MALFORMED, PI_WARN, "Should be in [%s]")\n\tend' % (
                         self.values, self._value_var,
                         self._node_var, self.list_validation)
-
-    def get_padded_offset(self, offset):
-        """TODO: move this to where its actually used."""
-        padding = 0
-        if self.alignment:
-            padding = self.alignment - offset % self.alignment
-            if padding >= self.alignment:
-                padding = 0
-        return offset + padding
 
 
 class Subtree(Field):

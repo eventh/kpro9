@@ -1,0 +1,85 @@
+%==================================================
+% This is for generating a standalone sprint 1 plan
+%==================================================
+%\def\sphinxdocclass{report}
+\documentclass[a4paper, 11pt]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx} % support graphics
+\usepackage{hyperref} % links in the document
+\usepackage{float} % position of figures
+\usepackage{paralist} % inline lists
+\usepackage{verbatim} % multiline comments
+\usepackage[table]{xcolor} % table row coloring
+\usepackage{booktabs} % Professional tables
+\usepackage{tabularx} % Simple column stretching
+\usepackage{multirow} % Row spanning
+\usepackage{wrapfig} % Wrap text around figures
+\usepackage{array}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+\usepackage[style=treenoname,subentrycounter,numberedsection, 
+        section=chapter, acronym]{glossaries}
+% new for userdoc
+% \usepackage{times}
+% \usepackage{longtable}
+% \usepackage{sphinx}
+% \usepackage[Bjarne]{fncychap}
+% \usepackage[T1]{fontenc}
+% \DeclareUnicodeCharacter{00A0}{\nobreakspace}
+% \usepackage{fancyvrb}
+% \usepackage{fancybox}
+% \usepackage{subsections}
+% \setcounter{secnumdepth}{5}
+\usepackage{standalone}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\definecolor{listinggray}{gray}{0.9}
+\definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
+
+\lstset{
+    backgroundcolor=\color{lbcolor},
+    tabsize=4,
+    rulecolor=,
+    language=C,
+    basicstyle=\footnotesize,
+    upquote=true,
+    aboveskip={1.5\baselineskip},
+    columns=fixed,
+    showstringspaces=false,
+    extendedchars=true,
+    breaklines=true,
+    prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+    frame=single,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    identifierstyle=\ttfamily,
+    keywordstyle=\color[rgb]{0,0,1},
+    commentstyle=\color[rgb]{0.133,0.545,0.133},
+    stringstyle=\color[rgb]{0.627,0.126,0.941},
+}
+
+\include{./appendices/manual_hdr}
+
+% Configure links in pdfs
+\hypersetup{
+    bookmarksopen=false, % Hide bookmarks menu
+    colorlinks=true, % Don't wrap links in colored boxes
+}
+
+\title{User and Developer Manual}
+\author{Kpro group 9}
+\date{\today}
+
+\begin{document}
+%\maketitle
+%\tableofcontents
+\begin{standalone}
+    \input{./appendices/CSjark}
+\end{standalone}
+\end{document}
+

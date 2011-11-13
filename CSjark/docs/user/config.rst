@@ -163,16 +163,23 @@ This example specifies a bitstring for all data types of short. ::
 Dissector ID
 ~~~~~~~~~~~~~~~~~~
 
-In every struct-packet that Wireshark captures, there is a header. One of the fields in the header, the id field, specifies which dissector that should be loaded to dissect the actual struct. This field can be specified in the configuration file. If no configfile is given, the packet will be assigned a default dissector.  
+In every struct-packet that Wireshark captures, there is a header. One of the fields in the header, the ``id`` field, specifies which dissector should be loaded to dissect the actual struct. This field can be specified in the configuration file. If no configuration file is given, the packet will be assigned a default dissector.  
 
 This is an example of the specification ::
 
     Structs: 
-	   − name: structname 
-	     id: 10 
+        − name: structname 
+	      id: 10 
+	     
+One struct can be also dissected by multiple different dissectors. Therefore, it can contain a whole list of dissector ID's, that can process the struct. ::
 
+    Structs:
+        - name: structname
+          id: [12, 43, 3498]
+          
+.. note::
+    The ``id`` must be an integer between 0 and 65535.	     
 
-*Insert when implemented*
 
 External Lua dissectors
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -536,7 +543,7 @@ When defining new platform, following steps should be done. Referenced sections 
                  macros=NEW_PLATFORM_MACROS,
                  sizes=NEW_PLATFORM_C_SIZE_MAP,
                  alignment=NEW_PLATFORM_C_ALIGNMENT_MAP)
-     
+
 
 
 .. _YAML: http://www.yaml.org/

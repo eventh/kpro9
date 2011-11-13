@@ -26,7 +26,7 @@ In this planning meeting we will try to have more descriptive work items in the 
 \label{sec:sp2:planning}
 The first sprint resulted in a solid core for the \gls{utility}. During the next sprint iteration, the core will be extended with more advanced functionality. After this sprint, the \gls{utility} will have most of the functionalities it need to work in a real environment, and will probably be able to aid Thales in some of their operations.
 
-Not yet understanding the complexity of all the requirements in the sprint backlog, the team ended in up with an uncertain person-hours estimate for some work objects. Time will tell if we understood the complexity and assigned enough hours to implement it. The more complex, but not so critical functionalities will be part of sprint 3 and 4.   
+Since it is difficult to the understand the complexity of all the requirements in the sprint backlog, the team ended in up with an uncertain person-hours estimate for some work objects. After the sprint is finished, we will see if we understood the complexity, and assigned enough hours to implement it. The more complex, but not so critical functionalities will be part of sprint 3 and 4.   
 
 \subsection{Duration}
 %--------------------
@@ -550,7 +550,7 @@ in this sprint, and will be finished in sprint 3.
 
 \subsection{\Gls{dissector} ID}
 %----------------------
-All \gls{struct}-\glspl{packet} that \Gls{wireshark} captures, has a \gls{header}, one of the fields in 
+All luastructs-\glspl{packet} that \Gls{wireshark} captures, has a \gls{header}, one of the fields in 
 the \gls{header} is the message id. This id is used to load the the correct 
 \gls{dissector} when a \gls{packet} is captured. Each \gls{dissector} should have a unique id, 
 to avoid possible conflicts. This functionallity is implemented and the 
@@ -578,7 +578,7 @@ generates \glspl{dissector} from the folder ''\gls{header}/'' and configurations
 \begin{figure}[ht]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/csjark_folder}
-	\caption{\Glspl{array} in \Gls{wireshark}\label{fig:csjarkfolder}}
+	\caption{Usage of \Gls{wireshark}\label{fig:csjarkfolder}}
 \end{figure}
 
 \subsection{Support Custom Handling of Specified Data Types}

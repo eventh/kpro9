@@ -1,3 +1,6 @@
+..
+    header  = - ~ ^ #
+
 ===============
  Configuration
 ===============
@@ -163,16 +166,23 @@ This example specifies a bitstring for all data types of short. ::
 Dissector ID
 ~~~~~~~~~~~~~~~~~~
 
-In every struct-packet that Wireshark captures, there is a header. One of the fields in the header, the id field, specifies which dissector that should be loaded to dissect the actual struct. This field can be specified in the configuration file. If no configfile is given, the packet will be assigned a default dissector.  
+In every struct-packet that Wireshark captures, there is a header. One of the fields in the header, the ``id`` field, specifies which dissector should be loaded to dissect the actual struct. This field can be specified in the configuration file. If no configuration file is given, the packet will be assigned a default dissector.  
 
 This is an example of the specification ::
 
     Structs: 
-	   − name: structname 
-	     id: 10 
+        − name: structname 
+	      id: 10 
+	     
+One struct can be also dissected by multiple different dissectors. Therefore, it can contain a whole list of dissector ID's, that can process the struct. ::
 
+    Structs:
+        - name: structname
+          id: [12, 43, 3498]
+          
+.. note::
+    The ``id`` must be an integer between 0 and 65535.	     
 
-*Insert when implemented*
 
 External Lua dissectors
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -324,9 +334,29 @@ This conformance file when run with this C header code: ::
     
     delegator_register_proto(proto_custom_lua, "Win32", "custom_lua", 1)
           
+Support for Offset and Value in Lua Files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Via `External Lua dissectors`_ CSjark also provides a way to add new proto fields to the dissector in Wireshark, with correct offset value and correct Lua variable.
 
+To access the fields value and offset, ``{OFFSET}`` and ``{VALUE}`` strings may be put into the conformance file as shown below: ::
 
+    #.FUNC_FOOTER pointer
+    	-- Offset: {OFFSET}
+    	-- Field value stored in lua variable: {VALUE}
+    #.END
+
+Adding the offset and variable value is only possible in the parts that change the code of Lua functions, i.e. ``FUNC_HEADER``, ``FUNC_BODY`` and ``FUNC_FOOTER``.
+
+Above listed example leads to following Lua code: ::
+    
+    local field_value_var = subtree:add(f.pointer, buffer(56,4))
+        −− Offset: 56
+        −− Field value stored in lua variable: field_value_var
+        
+.. note::
+    The value of the referenced variable can be used after it is defined.
+            
 
 Configuration of various trailers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -536,7 +566,7 @@ When defining new platform, following steps should be done. Referenced sections 
                  macros=NEW_PLATFORM_MACROS,
                  sizes=NEW_PLATFORM_C_SIZE_MAP,
                  alignment=NEW_PLATFORM_C_ALIGNMENT_MAP)
-     
+
 
 
 .. _YAML: http://www.yaml.org/

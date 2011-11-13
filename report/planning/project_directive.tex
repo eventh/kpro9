@@ -40,13 +40,13 @@ She will be assisted by Maria Carolina Passos. Their contact information can be 
 Thales currently uses \Gls{wireshark} to analyze traffic data between different network nodes, for example, \Gls{ip} \glspl{packet} sent between a client and a server.
 They want us to extend the functionality of \Gls{wireshark}, so that they could use it to monitor internal data between \glspl{process}. The extended functionality will be automatic generation of \Gls{lua}-\glspl{dissector} from \Gls{c}-\gls{header} files.
 
-Before, when Thales wanted to debug with \Gls{wireshark}, they had to write the \glspl{dissector} manually. Their hope is therefore that our tool can save them valuable time.
+Before, when Thales wanted to debug inter-process communication with \Gls{wireshark}, they had to write the \glspl{dissector} manually. Their hope is therefore that our tool can save them valuable time.
 
 %--------------------------
 \section{Project Objective}
 %--------------------------
 The objective from the customer is to design a \gls{utility} that will be able to generate \Gls{lua} code for dissecting the \gls{binary} representation of \Gls{c}/\Gls{c++} \glspl{struct}, allowing \Gls{wireshark} to display, filter, and search through the data.
- The \gls{utility} needs to support a flexible configuration, as this will make it useable for complex and specific \gls{header} files. 
+ The \gls{utility} needs to support a flexible configuration, as this will make it more useable for debugging in \Gls{wireshark}. 
 The code and configuration should be well documented, making it easy for Thales to use and extend the tool as they see fit.
 
 The objective from \Gls{ntnu}'s point of view is that we acquire practical experience in executing all phases of a bigger \Gls{it}-project and learn

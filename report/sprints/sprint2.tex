@@ -1,10 +1,20 @@
 %=================
 \chapter{Sprint 2}
 %=================
+This chapter descriptes the results and process of sprint 2. In 
+\autoref{sec:sp2:pre} the planed changes from the first sprint is explained, 
+the planning of this sprint is covered in \autoref{sec:sp2:planning}, and the 
+design of the first sprint is explained in \autoref{sec:sp2:design}. To give a 
+better understanding of the requirements, \autoref{sec:sp2:impl} explains the 
+features implemented in this sprint. The results from the tests done is 
+described in \autoref{sec:sp2:test}. The feedback from the customer is covered 
+in \autoref{sec:sp2:feedback}. In \autoref{sec:sp2:eval} the results from the 
+sprint retrospective is covered.
 
 %-------------------
 \section{Pre-sprint}
 %-------------------
+\label{sec:sp2:pre}
 Sprint 1 gave the desired result, but the team was not satisfied with the way the \Gls{scrum} process was conducted, especially the sprint planning. In sprint 1 retrospect we decided to conform more to, in our mind, proper Scrum. We will apply experience and advice from the first sprint, to get a better process. 
 
 In this planning meeting we will try to have more descriptive work items in the sprint backlog. This will ease the process of design, implementation, testing and documentation of the \gls{utility}, and we do not have to redo any parts that will end up in the report in order to assist the reader. We focus on good user stories to ensure that the elements are of a low enough level.
@@ -13,6 +23,7 @@ In this planning meeting we will try to have more descriptive work items in the 
 %------------------------
 \section{Sprint Planning}
 %------------------------
+\label{sec:sp2:planning}
 The first sprint resulted in a solid core for the \gls{utility}. During the next sprint iteration, the core will be extended with more advanced functionality. After this sprint, the \gls{utility} will have most of the functionalities it need to work in a real environment, and will probably be able to aid Thales in some of their operations.
 
 Not yet understanding the complexity of all the requirements in the sprint backlog, the team ended in up with an uncertain person-hours estimate for some work objects. Time will tell if we understood the complexity and assigned enough hours to implement it. The more complex, but not so critical functionalities will be part of sprint 3 and 4.   
@@ -374,6 +385,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 %----------------------
 \section{System Design}
 %----------------------
+\label{sec:sp2:design}
 For sprint 2 the team decided to refactor some of the code in order to make it easier to read and to split the functionalities of the \gls{utility} in such a way that it reduces coupling within the system. Some new functionality was also added on the \gls{parser} side in order to get the \gls{utility} to recognize the datatypes mentioned in the sprint 2 backlog. This new functionality is represented by the addition of new classes in the \gls{dissector} and config modules. These classes include the BitField, ArrayField, EnumField and ProtocolField classes, which contain the functionality required to handle Bitstrings, \glspl{array}, \glspl{enum} and \glspl{struct} within \glspl{struct} respectively. The classes added to the config module include the Trailer, Bitstring, Custom and Enum classes which handles the configuration needs for \glspl{struct} with \gls{trailers}, \glspl{bit string}, custom handling of data types and \glspl{enum} respectively. Other than that, there were no other changes or additions made to the design during sprint 2.
 
 \subsection{Utility}
@@ -389,7 +401,7 @@ For sprint 2 the team decided to refactor some of the code in order to make it e
 %----------------------
 \section{Implementation}
 %----------------------
-
+\label{sec:sp2:impl}
 In the previous sprint we focused on creating a naive implementation of the 
 \gls{utility}. In this sprint the focus was on implementing data types for the 
 \Gls{c} programming language and making it possible to configure more options on how 
@@ -607,6 +619,7 @@ csjark supports.
 %-----------------------
 \section{Sprint Testing}
 %-----------------------
+\label{sec:sp2:test}
 This section introduces the tests preformed during the sprint and their results. For sprint 2 it was also decided that the larger unit tests should also be documented and added to the test documents.
 
 %subsection{Tests}
@@ -794,6 +807,7 @@ The following list contains the unit tests used in the second sprint and the cod
 %--------------------------
 \section{Customer Feedback}
 %--------------------------
+\label{sec:sp2:feedback}
 \subsection{Requirement changes and feedback}
 In sprint 2 we were able to demonstrate many of the requirements for the customer, and as a result we got some feedback of some changes and refinements that the customer wants. The customer also added some new features they would like to have. The changes and additions are listed below.
 
@@ -861,6 +875,7 @@ The customer is satisfied with the progress of the \gls{utility} and is so far p
 %--------------------------
 \section{Sprint Evaluation}
 %--------------------------
+\label{sec:sp2:eval}
 This section contains the team evaluation of the second sprint.
 
 \subsection{Review}

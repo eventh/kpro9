@@ -45,6 +45,25 @@ def create_lua_valuestring(dict_, wrap=True):
 
 
 class BaseField:
+    """Interface for Fields and list of Fields."""
+
+    def __init__(self, name, type, size, alignment, endian):
+        """Create a new Wireshark ProtoField instance.
+
+        'name' the name of the field
+        'type' the ProtoField type
+        'size' the size of the field in bytes
+        'alignment' the alignment of the field in bytes
+        'endian' the endianess of the platform
+        """
+        self.type = type
+        self.size = size
+        self.alignment = alignment
+        self.endian = endian
+        self._name = name
+        self._var = create_lua_var(name)
+        self._abbr = name.replace(' ', '_')
+
     def get_definition(self):
         """Get the ProtoField definition for this field."""
         pass
@@ -54,6 +73,7 @@ class BaseField:
         pass
 
     def push_modifiers(self):
+        """Push prefixes and postfixes down to child fields."""
         pass
 
 
@@ -82,14 +102,7 @@ class Field(BaseField):
             setattr(self, member, None)
         for member in self.prefixes + self.postfixes:
             setattr(self, member, [])
-
-        self._name = name
-        self._var = create_lua_var(name)
-        self._abbr = name.replace(' ', '_')
-        self.type = type
-        self.size = size
-        self.alignment = alignment
-        self.endian = endian
+        super().__init__(name, type, size, alignment, endian)
 
     @property
     def name(self):
@@ -116,10 +129,10 @@ class Field(BaseField):
         """Get the variable to store the field in."""
         var = self._var
         if self.var_prefix:
-            var = '%s.%s' % ('.'.join(self.var_prefix), var)
+            var = '%s_%s' % ('_'.join(self.var_prefix), var)
         if self.var_postfix:
-            var = '%s.%s' % (var, '.'.join(self.var_postfix))
-        return var
+            var = '%s_%s' % (var, '_'.join(self.var_postfix))
+        return var.replace('._', '.')
 
     @property
     def add_var(self):
@@ -295,21 +308,22 @@ class ProtocolField(Field):
                 offset=offset, size=self.size, tree=tree)
 
 
-class FieldsCollection(Field):
-
+class Subtree(Field):
     def __init__(self, tree, *args, **vargs):
         super().__init__(*args, **vargs)
         self.tree = tree
         self.comment = None
         self.fields = []
 
+        # Union and bitstrings don't want each field to increase offset
+        self._increase_offset = True
+
     def push_modifiers(self):
+        """Push prefixes and postfixes down to child fields."""
         for field in self.fields:
-            for member in self.prefixes:
+            for member in self.prefixes + self.postfixes:
                 setattr(field, member,
                         getattr(self, member) + getattr(field, member))
-            for member in self.postfixes:
-                getattr(field, member).extend(getattr(self, member))
 
     def get_definition(self):
         data = []
@@ -327,11 +341,12 @@ class FieldsCollection(Field):
         data.append(super().get_code(offset, store=self.tree))
         for field in self.fields:
             data.append(field.get_code(offset, tree=self.tree))
-            offset += field.size
+            if self._increase_offset:
+                offset += field.size
         return '\n'.join(data)
 
 
-class ArrayField(FieldsCollection):
+class ArrayField(Subtree):
     def __init__(self, elements, field):
         type = field.type
         if type not in ('string', 'stringz'):
@@ -343,6 +358,7 @@ class ArrayField(FieldsCollection):
             self.fields.append(copy.deepcopy(field))
 
     def push_modifiers(self):
+        """Push prefixes and postfixes down to child fields."""
         super().push_modifiers()
         for i, field in enumerate(self.fields):
             field.var_postfix.append(str(i))
@@ -350,11 +366,11 @@ class ArrayField(FieldsCollection):
             field.name_postfix.append('[%i]' % i)
 
 
-class ArrayTree(FieldsCollection):
+class ArrayTree(Subtree):
     pass
 
 
-class BitField(FieldsCollection):
+class BitField(Subtree):
     def __init__(self, bits, name, type, size, alignment, endian):
         # Convert type to unsigned if int
         if 'int' in type and not type.startswith('u'):
@@ -381,16 +397,7 @@ class BitField(FieldsCollection):
             self.fields.append(field)
 
         self._name = '%s (bitstring)' % self.name
-
-    def get_code(self, offset):
-        data = []
-        if self.comment:
-            data.append('\t%s' % self.comment)
-        data.append(super(FieldsCollection, self).get_code(
-                offset, store=self.tree))
-        for field in self.fields:
-            data.append(field.get_code(offset, tree=self.tree))
-        return '\n'.join(data)
+        self._increase_offset = False
 
 
 if __name__ == '__main__':
@@ -409,12 +416,13 @@ if __name__ == '__main__':
             (2, 1, 'B', {0: 'No', 1: 'Yes'}),
             (3, 1, 'G', {0: 'No', 1: 'Yes'})]
     f = BitField(bits, 'bitname', 'int32', 4, 4, Platform.little)
-    f.var_prefix.append('f')
+    f.var_prefix.append('f.')
     f.push_modifiers()
     print(f.get_definition())
     print(f.get_code(12))
     f = Field('arr', 'float', 4, 0, Platform.big)
     arr = ArrayField(10, f)
+    arr.var_prefix.append('f.')
     arr.push_modifiers()
     print(arr.get_definition())
     print(arr.get_code(12))

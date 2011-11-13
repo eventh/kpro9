@@ -84,6 +84,7 @@ class Protocol(ProtoTree):
         """Push prefixes and postfixes down to child fields."""
         for field in self.fields:
             field.var_prefix.insert(0, '%s.' % self.field_var)
+            field.abbr_prefix.insert(0, self.name)
             field.push_modifiers()
 
     def get_padded_offset(self, field, offset):

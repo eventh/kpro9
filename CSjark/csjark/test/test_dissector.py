@@ -7,7 +7,9 @@ import sys, os
 from attest import Tests, assert_hook, contexts
 
 import dissector
+from field import Field, ArrayField, ProtocolField, BitField
 from config import Config, Trailer
+from platform import Platform
 
 
 def compare_lua(code, template, write_to_file=''):
@@ -27,7 +29,9 @@ enums = Tests()
 def create_enum_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None)
-    proto.add_enum('enum', 'int32', 4, 0, dict(enumerate('ABCDE')))
+    field = Field('enum', 'int32', 4, 0, Platform.big)
+    field.set_list_validation(dict(enumerate('ABCDE')))
+    proto.add_field(field)
     yield proto.fields[0]
     del proto
 
@@ -43,7 +47,7 @@ def enum_def(field):
 @enums.test
 def enum_code(field):
     """Test that EnumField generates correct code."""
-    assert isinstance(field, dissector.EnumField)
+    assert isinstance(field, Field)
     assert compare_lua(field.get_code(0), '''
     local enum = subtree:add(f.enum, buffer(0, 4))
     if (enum_values[buffer(0, 4):int()] == nil) then
@@ -59,8 +63,10 @@ lua_keywords = Tests()
 def create_lua_keywords_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None)
-    proto.add_enum('elseif', 'int32', 4, 0, dict(enumerate('VWXYZ')))
-    proto.add_field('in', 'float', 4, 0)
+    field = Field('elseif', 'int32', 4, 0, Platform.big)
+    field.set_list_validation(dict(enumerate('VWXYZ')))
+    proto.add_field(field)
+    proto.add_field(Field('in', 'float', 4, 0, Platform.big))
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -97,8 +103,11 @@ arrays = Tests()
 def create_array_field():
     """Create a Protocol instance with some fields."""
     proto = dissector.Protocol('test', None)
-    proto.add_array('arr', 'float', 4, 0, [2, 3])
-    proto.add_array('str', 'string', 30, 0, [2])
+    field = Field('arr', 'float', 4, 0, Platform.big)
+    proto.add_field(ArrayField.create([2, 3], field))
+    field = Field('str', 'string', 30, 0, Platform.big)
+    proto.add_field(ArrayField.create([2], field))
+    proto.push_modifiers()
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -107,52 +116,46 @@ def arrays_def(one, two):
     """Test that ArrayField generates valid defintion code."""
     assert one and two
     assert compare_lua(one.get_definition(), '''
-    -- Array definition for arr
     f.arr = ProtoField.bytes("test.arr", "arr")
-    f.arr_0 = ProtoField.bytes("test.arr_0", "arr")
-    f.arr_0_0 = ProtoField.float("test.arr_0_0", "arr[0][0]")
-    f.arr_0_1 = ProtoField.float("test.arr_0_1", "arr[0][1]")
-    f.arr_1 = ProtoField.bytes("test.arr_1", "arr")
-    f.arr_1_0 = ProtoField.float("test.arr_1_0", "arr[1][0]")
-    f.arr_1_1 = ProtoField.float("test.arr_1_1", "arr[1][1]")
-    f.arr_2 = ProtoField.bytes("test.arr_2", "arr")
-    f.arr_2_0 = ProtoField.float("test.arr_2_0", "arr[2][0]")
-    f.arr_2_1 = ProtoField.float("test.arr_2_1", "arr[2][1]")
+    f.arr_0 = ProtoField.bytes("test.arr.0", "arr[0]")
+    f.arr_0_0 = ProtoField.float("test.arr.0.0", "arr[0][0]")
+    f.arr_0_1 = ProtoField.float("test.arr.0.1", "arr[0][1]")
+    f.arr_0_2 = ProtoField.float("test.arr.0.2", "arr[0][2]")
+    f.arr_1 = ProtoField.bytes("test.arr.1", "arr[1]")
+    f.arr_1_0 = ProtoField.float("test.arr.1.0", "arr[1][0]")
+    f.arr_1_1 = ProtoField.float("test.arr.1.1", "arr[1][1]")
+    f.arr_1_2 = ProtoField.float("test.arr.1.2", "arr[1][2]")
     ''')
     assert compare_lua(two.get_definition(), '''
-    -- Array definition for str
     f.str = ProtoField.string("test.str", "str")
-    f.str_0 = ProtoField.string("test.str_0", "str[0]")
-    f.str_1 = ProtoField.string("test.str_1", "str[1]")
+    f.str_0 = ProtoField.string("test.str.0", "str[0]")
+    f.str_1 = ProtoField.string("test.str.1", "str[1]")
     ''')
 
 @arrays.test
 def arrays_code(one, two):
     """Test that ArrayField generates correct code."""
-    assert isinstance(one, dissector.ArrayField)
+    assert isinstance(one, ArrayField)
     assert compare_lua(one.get_code(0), '''
-    -- Array handling for arr
-    local arraytree = subtree:add("arr: float array", buffer(0, 24))
-    local subarraytree = arraytree:add("arr[0]: float array", buffer(0, 8))
-    subarraytree:add(f.arr_0_0, buffer(0, 4))
-    subarraytree:add(f.arr_0_1, buffer(4, 4))
-    local subarraytree = arraytree:add("arr[1]: float array", buffer(8, 8))
-    subarraytree:add(f.arr_1_0, buffer(8, 4))
-    subarraytree:add(f.arr_1_1, buffer(12, 4))
-    local subarraytree = arraytree:add("arr[2]: float array", buffer(16, 8))
-    subarraytree:add(f.arr_2_0, buffer(16, 4))
-    subarraytree:add(f.arr_2_1, buffer(20, 4))
+    local array = subtree:add(f.arr, buffer(0, 24))
+    local subarray = array:add(f.arr_0, buffer(0, 12))
+    subarray:add(f.arr_0_0, buffer(0, 4))
+    subarray:add(f.arr_0_1, buffer(4, 4))
+    subarray:add(f.arr_0_2, buffer(8, 4))
+    local subarray = array:add(f.arr_1, buffer(12, 12))
+    subarray:add(f.arr_1_0, buffer(12, 4))
+    subarray:add(f.arr_1_1, buffer(16, 4))
+    subarray:add(f.arr_1_2, buffer(20, 4))
     ''')
 
 @arrays.test
 def arrays_str(one, two):
     """Test that ArrayField generates code for char array."""
-    assert isinstance(two, dissector.ArrayField)
+    assert isinstance(two, ArrayField)
     assert compare_lua(two.get_code(0), '''
-    -- Array handling for str
-    local arraytree = subtree:add("str: string array", buffer(0, 60))
-    arraytree:add(f.str_0, buffer(0, 30))
-    arraytree:add(f.str_1, buffer(30, 30))
+    local array = subtree:add(f.str, buffer(0, 60))
+    array:add(f.str_0, buffer(0, 30))
+    array:add(f.str_1, buffer(30, 30))
     ''')
 
 
@@ -180,8 +183,8 @@ def proto_field_def(one, two):
 @protofields.test
 def proto_field_code(one, two):
     """Test that ProtocolField generates correct code."""
-    assert isinstance(one, dissector.ProtocolField)
-    assert isinstance(two, dissector.ProtocolField)
+    assert isinstance(one, ProtocolField)
+    assert isinstance(two, ProtocolField)
     assert compare_lua(one.get_code(0), '''
     pinfo.private.caller_def_name = "test"
     Dissector.get("default.proto_one"):call(buffer(0,0):tvb(), pinfo, subtree)
@@ -215,8 +218,8 @@ def union_proto_field_def(one, two):
 @union_protofields.test
 def union_proto_field_code(one, two):
     """Test that ProtocolField generates correct code."""
-    assert isinstance(one, dissector.ProtocolField)
-    assert isinstance(two, dissector.ProtocolField)
+    assert isinstance(one, ProtocolField)
+    assert isinstance(two, ProtocolField)
     assert compare_lua(one.get_code(0), '''
     pinfo.private.caller_def_name = "test"
     Dissector.get("default.union_proto_one"):call(buffer(0,0):tvb(), pinfo, subtree)
@@ -236,8 +239,9 @@ def create_bit_field():
     bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
             (2, 1, 'B', {0: 'No', 1: 'Yes'}),
             (3, 1, 'G', {0: 'No', 1: 'Yes'})]
-    proto.add_bit('bit1', 'int32', 4, 0, bits)
-    proto.add_bit('bit2', 'uint16', 2, 0, bits)
+    proto.add_field(BitField(bits, 'bit1', 'int32', 4, 0, Platform.big))
+    proto.add_field(BitField(bits, 'bit2', 'uint16', 2, 0, Platform.big))
+    proto.push_modifiers()
     yield proto.fields[0], proto.fields[1]
     del proto
 
@@ -246,38 +250,28 @@ def bitfield_def(one, two):
     """Test that BitField generates valid defintion code."""
     assert one and two
     assert compare_lua(one.get_definition(), '''
-    -- Bitstring definitions for bit1
     f.bit1 = ProtoField.uint32("test.bit1", "bit1 (bitstring)", base.HEX)
-    f.bit1_r = ProtoField.uint32("test.bit1.R",
-            "R", nil, {[0]="No", [1]="Yes"}, 0x1)
-    f.bit1_b = ProtoField.uint32("test.bit1.B",
-            "B", nil, {[0]="No", [1]="Yes"}, 0x2)
-    f.bit1_g = ProtoField.uint32("test.bit1.G",
-            "G", nil, {[0]="No", [1]="Yes"}, 0x4)
+    f.bit1_r = ProtoField.uint32("test.bit1.R", "R", nil, {[0]="No", [1]="Yes"}, 0x1)
+    f.bit1_b = ProtoField.uint32("test.bit1.B", "B", nil, {[0]="No", [1]="Yes"}, 0x2)
+    f.bit1_g = ProtoField.uint32("test.bit1.G", "G", nil, {[0]="No", [1]="Yes"}, 0x4)
     ''')
     assert compare_lua(two.get_definition(), '''
-    -- Bitstring definitions for bit2
     f.bit2 = ProtoField.uint16("test.bit2", "bit2 (bitstring)", base.HEX)
-    f.bit2_r = ProtoField.uint16("test.bit2.R",
-            "R", nil, {[0]="No", [1]="Yes"}, 0x1)
-    f.bit2_b = ProtoField.uint16("test.bit2.B",
-            "B", nil, {[0]="No", [1]="Yes"}, 0x2)
-    f.bit2_g = ProtoField.uint16("test.bit2.G",
-            "G", nil, {[0]="No", [1]="Yes"}, 0x4)
+    f.bit2_r = ProtoField.uint16("test.bit2.R", "R", nil, {[0]="No", [1]="Yes"}, 0x1)
+    f.bit2_b = ProtoField.uint16("test.bit2.B", "B", nil, {[0]="No", [1]="Yes"}, 0x2)
+    f.bit2_g = ProtoField.uint16("test.bit2.G", "G", nil, {[0]="No", [1]="Yes"}, 0x4)
     ''')
 
 @bits.test
 def bitfield_code(one, two):
     """Test that BitField generates valid code."""
     assert compare_lua(one.get_code(0), '''
-    -- Bitstring handling for bit1
     local bittree = subtree:add(f.bit1, buffer(0, 4))
     bittree:add(f.bit1_r, buffer(0, 4))
     bittree:add(f.bit1_b, buffer(0, 4))
     bittree:add(f.bit1_g, buffer(0, 4))
     ''')
     assert compare_lua(two.get_code(4), '''
-    -- Bitstring handling for bit2
     local bittree = subtree:add(f.bit2, buffer(4, 2))
     bittree:add(f.bit2_r, buffer(4, 2))
     bittree:add(f.bit2_b, buffer(4, 2))

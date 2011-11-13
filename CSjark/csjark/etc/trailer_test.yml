@@ -1,16 +1,12 @@
 Structs:
-  - name: trailer_test
+  - name: trailer_test2
     id: 66
     trailers:
-      #- name: ber # Name of the protocol
-      #  count: 3 # Number of trailers
-      #  member: # Struct member with amount of trailers
-      #  size: 8 # Size of the buffer to feed to each of the protocol
+      - name: ber # Name of the protocol
+        member: asn1_count # Struct member with amount of trailers
+        size: 6 # Size of the buffer to feed to each of the protocol
       - name: ber
-        member: asn1_count
-        size: 6
-      - name: ber
-        count: 1
+        count: 1 # Number of trailers
         size: 5
       - name: ber
         count: 2

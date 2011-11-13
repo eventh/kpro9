@@ -122,7 +122,7 @@ def find_enum_types(fields):
     """Test that we find structs which has enums as members."""
     enum = fields[3]
     assert enum.name == 'enumtest'
-    assert enum.values == '{[0]="RED", [10]="RED", [3]="GREEN", [4]="YELLOW"}'
+    assert enum._valuestring_values == '{[0]="RED", [10]="RED", [3]="GREEN", [4]="YELLOW"}'
     assert enum.type == 'uint32' and enum.size == 4
 
 @find_structs.test
@@ -130,7 +130,7 @@ def find_array_types(fields):
     """Test that we find structs which has arrays as members."""
     a, b = fields[4:6]
     assert a.name == 'str' and b.name == 'd'
-    assert a.type == 'string' and b.type == 'float'
+    assert a.type == 'string' and b.type == 'bytes'
     assert a.size == 30 and b.size == 12
 
 @find_structs.test
@@ -146,7 +146,7 @@ def find_struct_array_math(fields):
     """Test that expressions in array declarations are evaluated."""
     arr = fields[7]
     assert arr.name == 'oprs'
-    assert arr.type == 'uint16'
+    assert arr.type == 'bytes'
     assert arr.size == 16
 
 @find_structs.test
@@ -156,7 +156,7 @@ def find_struct_typedef_enum(fields):
     assert enum
     assert enum.name == 'day'
     assert enum.type == 'uint32'
-    assert enum.values and enum.keys
+    assert enum.values and enum.list_validation
     assert enum.func_type == 'uint'
 
 @find_structs.test

@@ -78,10 +78,9 @@ class Platform:
 
     def alignment_size_of(self, ctype):
         """Find the alignment size of a C type in bytes."""
-        if ctype in self.alignments.keys():
+        if ctype in self.alignments:
             return self.alignments[ctype]
-        else:
-            raise ValueError('No known alignment size for type %s' % ctype)
+        raise ValueError('No known alignment size for type %s' % ctype)
 
 
 # Default mapping of C type and their wireshark field type.
@@ -299,7 +298,7 @@ Platform('Win32', 1, Platform.little,
 
 # Windows 64 bit
 Platform('Win64', 2, Platform.little,
-         macros=merge(WIN32_MACROS, X64_MACROS, {'_WIN64':1}),
+         macros=merge(WIN32_MACROS, X64_MACROS, {'_WIN64': 1}),
          sizes=WIN64_C_SIZE_MAP, alignment=WIN64_C_SIZE_MAP)
 
 # Solaris 32 bit

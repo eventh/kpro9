@@ -12,7 +12,7 @@ import yaml
 
 from platform import Platform
 from dissector import Delegator
-from field import create_lua_valuestring, create_lua_var, Field, BitField
+from field import create_lua_var, Field, BitField
 
 
 class ConfigError(Exception):
@@ -237,12 +237,15 @@ class Custom(BaseRule):
             alignment = size
         if self.name is not None:
             name = self.name
-        field = proto.add_field(name, self.field, size, alignment)
+
+        # Create the field
+        field = proto.add_field(Field(name,
+                self.field, size, alignment, endian))
         if self.abbr is not None:
-            field.abbr = self.abbr
+            field._abbr = self.abbr
         field.base = self.base
         if self.values:
-            field.values = create_lua_valuestring(self.values)
+            field.set_list_validation(self.values, strict=False)
         field.mask = self.mask
         field.desc = self.desc
         return field

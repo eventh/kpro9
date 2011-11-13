@@ -236,6 +236,8 @@ class Custom(BaseRule):
             alignment = self.alignment
         if alignment is None:
             alignment = size
+        if self.name is not None:
+            name = self.name
         field = proto.add_field(name, self.field, size, alignment)
         if self.abbr is not None:
             field.abbr = self.abbr

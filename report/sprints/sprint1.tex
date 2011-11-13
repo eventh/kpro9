@@ -272,10 +272,11 @@ Figure \ref{fig:sp1_class} illustrates the current class diagram for our
 \gls{utility} after the end of the first sprint. The csjark module contains the main
 method of the \gls{utility} and is responsible for running the program.
 It is in this module we have implemented the functionality for the command line interface.
+
 The \gls{utility} will typically start off by using cparser to parse the \Gls{c} \gls{header} file given to
 the \gls{utility} as a command line argument. cparser will then use the config module
 to ensure that the parsing is done correctly after the configuration, and then
-generate protocols and fields to be used in the csjark module. The csjark
+generate protocols and fields to be used in the csjark module. The CSjark
 module then generates a \Gls{wireshark} \gls{dissector} in \Gls{lua} code by going through the
 protocols and fields generated earlier by the cparser module.
 
@@ -285,6 +286,21 @@ range rules should be written in the configuration. In the \gls{dissector} modul
 we created a RangeField class, that interprets the rules
 and recognizes any invalid values when generating the \glspl{dissector}.
 The RangeField class inherits from the Field class.
+
+\subsubsection{CSjark}
+%-------------------
+
+
+\subsubsection{Cparser}
+%-------------------
+
+
+\subsubsection{Dissector}
+%-------------------
+
+
+\subsubsection{Config}
+%-------------------
 
 
 \begin{figure}[!htb]

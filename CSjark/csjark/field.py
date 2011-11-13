@@ -47,15 +47,13 @@ def create_lua_valuestring(dict_, wrap=True):
 class BaseField:
     """Interface for Fields and list of Fields."""
 
-    def __init__(self, type, size, alignment, endian):
+    def __init__(self, size, alignment, endian):
         """Create a new Wireshark ProtoField instance.
 
-        'type' the ProtoField type
         'size' the size of the field in bytes
         'alignment' the alignment of the field in bytes
         'endian' the endianess of the platform
         """
-        self.type = type
         self.size = size
         self.alignment = alignment
         self.endian = endian
@@ -86,6 +84,7 @@ class ProtoTree(BaseField):
 
 class Field(BaseField):
     """Represents Wireshark's ProtoFields which stores a specific value."""
+
     # Members this fields holds, used when testing equality and more
     prefixes = ['var_prefix', 'abbr_prefix', 'name_prefix']
     postfixes = ['name_postfix', 'var_postfix', 'abbr_postfix']
@@ -109,7 +108,8 @@ class Field(BaseField):
             setattr(self, member, None)
         for member in self.prefixes + self.postfixes:
             setattr(self, member, [])
-        super().__init__(type, size, alignment, endian)
+        super().__init__(size, alignment, endian)
+        self.type = type
         self.name = name
 
     @property

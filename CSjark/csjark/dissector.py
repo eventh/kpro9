@@ -11,85 +11,87 @@ from platform import Platform
 from field import create_lua_var, ProtoTree, Field
 
 
-class Protocol(ProtoTree):
-    """A Protocol is a collection of fields and code.
+class Dissector(ProtoTree):
 
-    It's used to generate Wireshark dissectors written in Lua, for
-    dissecting a packet into a set of fields with values.
-    """
-    DISSECTOR_TABLE = 'luastructs'
-    REGISTER_FUNC = 'delegator_register_proto'
-
-    def __init__(self, name, conf=None, platform=None):
-        """Create a Protocol, for generating a dissector.
-
-        'name' is the name of the Protocol to dissect
-        'conf' is the configuration for this Protocol
-        'platform' is the platform the dissector should run on
-        """
-        if platform is None:
-            platform = Platform.mappings['default']
+    def __init__(self, proto, platform):
+        super().__init__(None, None, platform.endian)
+        self.proto = proto
         self.platform = platform
-        self.endian = platform.endian
-        self.name = name
-        self.longname = '%s.%s' % (platform.name.lower(), self.name.lower())
-        self.conf = conf
+        self.name = proto.name
+        self.field_var = '%s.%s' (proto.field_var, platform.name)
+        self.children = [] # List of all child fields
 
-        # Dissector ID
-        if self.conf and self.conf.id is not None:
-            self.id = self.conf.id
-        else:
-            self.id = None
-
-        # Dissector description
-        if self.conf and self.conf.description is not None:
-            self.description = self.conf.description
-        else:
-            self.description = name
-        self.description = '%s (%s)' % (self.description, self.platform.name)
-
-        self.fields = [] # List of all fields in this protocol
-        self.data = [] # List of generated content
-
-        # Different lua variables
-        self.var = create_lua_var('proto_%s' % name)
-        self.field_var = 'f'
         self._pushed = False
+        self._increase_offset = True
 
     @property
     def alignment(self):
         """Find the alignment size of the fields in the protocol."""
-        return max([0] + [f.alignment for f in self.fields])
+        return max([0] + [f.alignment for f in self.children])
 
     @property
     def size(self):
         """Find the size of the fields in the protocol."""
         size = 0
-        for field in self.fields:
+        for field in self.children:
             if field.size:
                 size = self.get_padded_offset(field, size)
                 size += field.size
         return self.pad_struct_size(size)
-
-    def create(self):
-        """Returns all the code for dissecting this protocol."""
-        # Create dissector content
-        self.push_modifiers()
-        self._header_defintion()
-        self._fields_definition()
-        self._dissector_func()
-        self._register_dissector()
-        return '\n'.join(self.data)
 
     def push_modifiers(self):
         """Push prefixes and postfixes down to child fields."""
         if self._pushed:
             return
         self._pushed = True
-        for field in self.fields:
-            field.var_prefix.insert(0, '%s.' % self.field_var)
+        for field in self.children:
+            field.var_prefix.insert(0, self.field_var)
             field.abbr_prefix.insert(0, self.name)
             field.push_modifiers()
+
+    def get_definition(self):
+        """Get the ProtoField definition for this field."""
+        data = []
+
+        for field in self.children:
+            code = field.get_definition()
+
+            if self.conf and self.conf.cnf: # Conformance file code
+                code = self.conf.cnf.match(field.name, code, definition=True)
+            if code is not None:
+                data.append(code)
+
+        # Conformance file definition code extra
+        if self.conf and self.conf.cnf:
+            code = self.conf.cnf.match(None, None, definition=True)
+            if code:
+                data.append(code)
+
+        return '\n'.join(data)
+
+    def get_code(self, offset, store=None, tree='subtree'):
+        """Get the code for dissecting this field."""
+        self.offset = offset
+        for field in self.fields:
+            offset = self.get_padded_offset(field, offset)
+            code = field.get_code(offset)
+
+            if self.conf and self.conf.cnf: # Conformance file code
+                code = self.conf.cnf.match(field.name, code, False, field)
+            if code:
+                self.data.append(code)
+            if self._increase_offset:
+                offset += field.size
+
+        # Conformance file dissection function code extra
+        if self.conf and self.conf.cnf:
+            code = self.conf.cnf.match(None, None, definition=False)
+            if code:
+                self.data.append(code)
+
+        # Delegate rest of buffer to any trailing protocols
+        if self.conf and self.conf.trailers:
+            self._trailers(self.conf.trailers, offset)
 
     def get_padded_offset(self, field, offset):
         padding = 0
@@ -100,113 +102,18 @@ class Protocol(ProtoTree):
         return offset + padding
 
     def pad_struct_size(self, original_size):
+        alignment = self.alignment
         padding = 0
-        if self.alignment:
-            padding = (self.alignment - original_size) % self.alignment
-            if padding >= self.alignment:
+        if alignment:
+            padding = (alignment - original_size) % alignment
+            if padding >= alignment:
                 padding = 0
         return original_size + padding
 
     def add_field(self, field):
         """Add a field to the protocol, returns the field."""
-        self.fields.append(field)
+        self.children.append(field)
         return field
-
-    def _legal_header(self):
-        """Add the legal header with license info."""
-        pass
-
-    def _header_defintion(self):
-        """Add the code for the header of the protocol."""
-        comment = '-- Dissector for %s' % self.longname
-        if self.description:
-            comment = '%s: %s' % (comment, self.description)
-        self.data.append(comment)
-
-        proto = 'local {var} = Proto("{name}", "{description}")\n'
-        self.data.append(proto.format(var=self.var, name=self.longname,
-                                      description=self.description))
-
-    def _fields_definition(self):
-        """Add code for defining the ProtoField's in the protocol."""
-        self.data.append('-- ProtoField defintions for: %s' % self.name)
-        decl = 'local {field_var} = {var}.fields'
-        self.data.append(decl.format(field_var=self.field_var, var=self.var))
-
-        for field in self.fields:
-            code = field.get_definition()
-
-            if self.conf and self.conf.cnf: # Conformance file code
-                code = self.conf.cnf.match(field.name, code, definition=True)
-            if code is not None:
-                self.data.append(code)
-
-        # Conformance file definition code extra
-        if self.conf and self.conf.cnf:
-            code = self.conf.cnf.match(None, None, definition=True)
-            if code:
-                self.data.append(code)
-
-        self.data.append('')
-
-    def _fields_code(self, union=False):
-        """Add the code from each field into dissector function."""
-        offset = 0
-        for field in self.fields:
-            offset = self.get_padded_offset(field, offset)
-            code = field.get_code(offset)
-
-            if self.conf and self.conf.cnf: # Conformance file code
-                code = self.conf.cnf.match(field.name, code, False, field)
-            if code:
-                self.data.append(code)
-            if not union and field.size is not None:
-                offset += field.size
-
-        # Conformance file dissection function code extra
-        if self.conf and self.conf.cnf:
-            code = self.conf.cnf.match(None, None, definition=False)
-            if code:
-                self.data.append(code)
-
-        return offset
-
-    def _dissector_func(self):
-        """Add the code for the dissector function for the protocol."""
-        self.data.append('-- Dissector function for: %s' % self.name)
-        func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
-        sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
-        check = '\tif pinfo.private.field_name then\n\t\t'\
-            'subtree:set_text(pinfo.private.field_name .. ": {name}")'\
-            '\n\t\tpinfo.private.field_name = nil\n\telse\n'\
-            '\t\tpinfo.cols.info:append(" (" .. {var}.description .. ")")\n'\
-            '\tend\n'
-
-        self.data.append(func_diss.format(var=self.var))
-        self.data.append(sub_tree.format(
-                add=self.add_var, var=self.var))
-        self.data.append(check.format(var=self.var, name=self.name))
-
-        offset = self._fields_code()
-
-        # Delegate rest of buffer to any trailing protocols
-        if self.conf and self.conf.trailers:
-            self._trailers(self.conf.trailers, offset)
-
-        self.data.append('end\n')
-
-    def _register_dissector(self):
-        """Add code for registering the dissector in the dissector table."""
-        if self.id is None:
-            ids = ['nil']
-        else:
-            ids = self.id
-
-        for id in ids:
-            self.data.append('{func}({var}, "{platform}", "{name}", {id})'.format(
-                    func=self.REGISTER_FUNC, var=self.var, name=self.name,
-                    platform=self.platform.name, id=id))
-        self.data.append('')
 
     def _trailers(self, rules, offset):
         """Add code for handling of trailers to the protocol."""
@@ -258,20 +165,128 @@ class Protocol(ProtoTree):
                 self.data.append('\tend') # End for loop
 
 
-class UnionProtocol(Protocol):
-    def __init__(self, name, conf=None, platform=None):
-        super().__init__(name, conf, platform)
+class UnionDissector(Dissector):
+    def __init__(self, proto, endian):
+        super().__init__(proto, endian)
+        self._increase_offset = False
 
     @property
     def size(self):
         """Find the size of the fields in the protocol."""
         return self.pad_struct_size(max(
-                [0] + [field.size for field in self.fields]))
+                [0] + [field.size for field in self.children]))
 
-    def _fields_code(self):
-        """Add the code from each field into dissector function."""
-        super()._fields_code(union=True)
-        return self.size
+
+class Protocol:
+    """A Protocol is a collection of fields and code.
+
+    It's used to generate Wireshark dissectors written in Lua, for
+    dissecting a packet into a set of fields with values.
+    """
+    REGISTER_FUNC = 'delegator_register_proto'
+
+    def __init__(self, name, conf=None, platform=None):
+        """Create a Protocol, for generating a dissector.
+
+        'name' is the name of the Protocol to dissect
+        'conf' is the configuration for this Protocol
+        'platform' is the platform the dissector should run on
+        """
+        if platform is None:
+            platform = Platform.mappings['default']
+
+        self.name = name
+        self.conf = conf
+        self.platform = platform
+
+        # Dissector ID
+        if self.conf and self.conf.id is not None:
+            self.id = self.conf.id
+        else:
+            self.id = None
+
+        # Dissector description
+        if self.conf and self.conf.description is not None:
+            self.description = self.conf.description
+        else:
+            self.description = name
+
+        self.data = [] # List of generated content
+        self.children = [] # List of dissectors
+
+        # Different lua variables
+        self.var = create_lua_var('proto_%s' % name)
+
+    def create(self):
+        """Returns all the code for dissecting this protocol."""
+        for child in self.children:
+            child.push_modifiers()
+
+        # Create dissector content
+        self._header_defintion()
+        self._fields_definition()
+        self._dissector_func()
+        self._register_dissector()
+        return '\n'.join(self.data)
+
+    def _legal_header(self):
+        """Add the legal header with license info."""
+        pass
+
+    def _header_defintion(self):
+        """Add the code for the header of the protocol."""
+        comment = '-- Dissector for %s' % self.name
+        if self.description:
+            comment += ': %s' % self.description
+        self.data.append(comment)
+
+        proto = 'local {var} = Proto("{name}", "{description}")\n'
+        self.data.append(proto.format(var=self.var, name=self.name,
+                                      description=self.description))
+
+    def _fields_definition(self):
+        """Add code for defining the ProtoField's in the protocol."""
+        self.data.append('-- ProtoField defintions for: %s' % self.name)
+        decl = 'local {field_var} = {var}.fields'
+        self.data.append(decl.format(field_var=self.field_var, var=self.var))
+        for child in children:
+            self.data.append(child.get_definition())
+        self.data.append('')
+
+    def _dissector_func(self):
+        """Add the code for the dissector function for the protocol."""
+        self.data.append('-- Dissector function for: %s' % self.name)
+        func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
+        sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
+        check = '\tif pinfo.private.field_name then\n\t\t'\
+            'subtree:set_text(pinfo.private.field_name .. ": {name}")'\
+            '\n\t\tpinfo.private.field_name = nil\n\telse\n'\
+            '\t\tpinfo.cols.info:append(" (" .. {var}.description .. ")")\n'\
+            '\tend\n'
+
+        self.data.append(func_diss.format(var=self.var))
+        self.data.append(sub_tree.format(
+                add=self.add_var, var=self.var))
+        self.data.append(check.format(var=self.var, name=self.name))
+
+        offset = 0
+        for child in children:
+            child.get_code(offset)
+
+        self.data.append('end\n')
+
+    def _register_dissector(self):
+        """Add code for registering the dissector in the dissector table."""
+        if self.id is None:
+            ids = ['nil']
+        else:
+            ids = self.id
+
+        for id in ids:
+            self.data.append('{func}({var}, "{platform}", "{name}", {id})'.format(
+                    func=self.REGISTER_FUNC, var=self.var, name=self.name,
+                    platform=self.platform.name, id=id))
+        self.data.append('')
 
 
 class Delegator(Protocol):
@@ -288,7 +303,7 @@ class Delegator(Protocol):
 
     def __init__(self, platforms):
         self.platforms = platforms
-        name = self.DISSECTOR_TABLE
+        name = 'luastructs'
 
         super().__init__(name, None, Platform.mappings['default'])
 
@@ -328,8 +343,8 @@ class Delegator(Protocol):
         self.data.append('-- Delegator for %s dissectors' % self.name)
 
         # Create the different dissector tables
-        t = 'local {var} = DissectorTable.new("{short}", "Lua Structs", ftypes.STRING)'
-        self.data.append(t.format(var=self.table_var, short=self.name))
+        t = 'local {var} = DissectorTable.new("{name}", "Lua Structs", ftypes.STRING)'
+        self.data.append(t.format(var=self.table_var, name=self.name))
 
         # Create the delegator dissector
         proto = 'local {var} = Proto("{name}", "{description}")'

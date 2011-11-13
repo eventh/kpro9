@@ -289,19 +289,34 @@ The RangeField class inherits from the Field class.
 
 \subsubsection{CSjark}
 %-------------------
+The utilities \emph{main()} function is a part of the CSjark module, the method will start parsing of CLI arguments, start parsing of the configuration files, and start generating dissectors by calling \emph{createDissectors()}. When all structs have been generated, it will print the results to the user on the command-line interface.
 
+The Cli class will hold all the paramters, andl take the parameters from the command-line interface, it will parse the arguments and return lists for header and config.
 
 \subsubsection{Cparser}
 %-------------------
+The Cparser module is used to parse the header files, and has three methods and a class. The preprocessing is done in \emph{parse\_file()}, \emph{parse()} is used to parse the file with pycparser library. To find a struct in the abstract syntax tree, the function \emph{find\_structs()} is used.
 
+StructVisitor is a class that go through the abstract syntax tree that the pycparser library generates. The class will handle all the declaration, and return a struct with the members.
 
 \subsubsection{Dissector}
 %-------------------
+This module has three classes that generated the Lua dissector.
 
+\begin{itemize}
+	\item Protocol: This class generates the Lua dissector from a c struct. It will use Field class for each of the struct members.
+	\item Field: Field is a class that generates code for each of the struct members. Field will used to generate code for basic data types, and will be a superclass for other data types and for fields that are configured.
+	\item RangeField: Is a subclass of Field. That is modified so it generate a field that will give a warning for an invalid value in Wireshark.
+\end{itemize}
 
 \subsubsection{Config}
 %-------------------
-
+This module consist of three classes, and a method to parse all the configuration files.
+\begin{itemize}
+	\item StructConfig: This is a class is used to store configuration for the c structs, and the configured members of the structs.
+	\item RangeRule: This class is for range rules, stores information of minimum and maximum values, and the struct member.
+	\item ConfigError: This class will raise an exception, if pyYAML is unable to parse the config file due to a error message.
+\end{itemize}
 
 \begin{figure}[!htb]
 	\center

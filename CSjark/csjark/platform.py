@@ -17,8 +17,8 @@ class Platform:
     mappings = {} # Map platform name to instance
     flags = {} # Map platform flag to platform
 
-    def __init__(self, name, flag, endian,
-                macros=None, sizes=None, alignment=None):
+    def __init__(self, name, flag, endian, macros=None,
+            sizes=None, alignment=None, types=None):
         """Create a configuration for a specific platform.
 
         'name' is the name of the platform
@@ -26,6 +26,8 @@ class Platform:
         'endian' is either Platform.big or Platform.little
         'macros' is C preprocessor platform-specific macros like _WIN32
         'sizes' is a dict which maps C types to their size in bytes
+        'alignment' is a dict which maps C types to their alignment in bytes
+        'types' is a dict mapping C types to Wireshark ProtoField types
         """
         if flag in Platform.flags:
             raise Exception('%i is already used by another platform' % flag)
@@ -35,6 +37,8 @@ class Platform:
             sizes = {}
         if alignment is None:
             alignment = {}
+        if types is None:
+            types = {}
         Platform.mappings[name] = self
         Platform.flags[flag] = self
         self.flag = flag
@@ -42,17 +46,19 @@ class Platform:
         self.endian = endian
         self.macros = macros
         self.header = None
+
+        # Extend or overwrite type mapping from default type map
         self.types = dict(DEFAULT_C_TYPE_MAP)
+        for key, value in types.items():
+            self.types[key] = value
 
         # Extend sizes with missing types from default size map
         self.sizes = dict(DEFAULT_C_SIZE_MAP)
-
         for key, value in sizes.items():
             self.sizes[key] = value
 
         # Extend alignment sizes with missing types from default alignment size map
         self.alignments = dict(DEFAULT_C_ALIGNEMT_SIZE_MAP)
-
         for key, value in alignment.items():
             self.alignments[key] = value
 

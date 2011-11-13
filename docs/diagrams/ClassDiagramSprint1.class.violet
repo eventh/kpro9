@@ -40,8 +40,8 @@ find_structs()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>490.0</double> 
-     <double>130.0</double> 
+     <double>470.0</double> 
+     <double>120.0</double> 
     </void> 
    </object> 
   </void> 
@@ -58,7 +58,7 @@ newOperation()</string>
       </void> 
       <void property="name"> 
        <void property="text"> 
-        <string>RangeFiled</string> 
+        <string>RangeField</string> 
        </void> 
       </void> 
      </object> 
@@ -111,7 +111,7 @@ newOperation()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>20.0</double> 
+     <double>40.0</double> 
      <double>430.0</double> 
     </void> 
    </object> 
@@ -171,7 +171,8 @@ find()</string>
        <void property="text"> 
         <string>DEFAULT_C_TYPE_MAP: dict
 DEFAULT_C_SIZE_MAP: dict
-VALID_C_TYPES: list</string> 
+VALID_C_TYPES: list
+parse_file()</string> 
        </void> 
       </void> 
       <void property="name"> 
@@ -201,9 +202,7 @@ use_cpp: Boolean</string>
     </void> 
     <void property="methods"> 
      <void property="text"> 
-      <string>main()
-parse_args()
-create_dissector()</string> 
+      <string>parse_args()</string> 
      </void> 
     </void> 
     <void property="name"> 
@@ -214,8 +213,8 @@ create_dissector()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>271.0</double> 
-     <double>198.0</double> 
+     <double>217.0</double> 
+     <double>179.0</double> 
     </void> 
    </object> 
   </void> 
@@ -223,8 +222,8 @@ create_dissector()</string>
    <object idref="ClassNode0"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>497.0</double> 
-     <double>158.0</double> 
+     <double>478.0</double> 
+     <double>149.0</double> 
     </void> 
    </object> 
   </void> 
@@ -232,7 +231,7 @@ create_dissector()</string>
    <object idref="ClassNode1"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>32.0</double> 
+     <double>47.0</double> 
      <double>676.0</double> 
     </void> 
    </object> 
@@ -241,7 +240,7 @@ create_dissector()</string>
    <object idref="ClassNode2"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>237.0</double> 
+     <double>252.0</double> 
      <double>463.0</double> 
     </void> 
    </object> 
@@ -250,7 +249,7 @@ create_dissector()</string>
    <object idref="ClassNode3"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>36.0</double> 
+     <double>51.0</double> 
      <double>481.0</double> 
     </void> 
    </object> 
@@ -295,8 +294,8 @@ create_dissector()</string>
    <object idref="PackageNode1"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>634.0</double> 
-     <double>212.0</double> 
+     <double>615.0</double> 
+     <double>203.0</double> 
     </void> 
    </object> 
   </void> 
@@ -321,8 +320,8 @@ main()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>110.0</double> 
-     <double>160.0</double> 
+     <double>70.0</double> 
+     <double>150.0</double> 
     </void> 
    </object> 
   </void> 
@@ -330,8 +329,8 @@ main()</string>
    <object idref="PackageNode6"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>120.0</double> 
-     <double>193.0</double> 
+     <double>76.0</double> 
+     <double>180.0</double> 
     </void> 
    </object> 
   </void> 

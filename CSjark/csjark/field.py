@@ -290,42 +290,53 @@ class Field(BaseField):
 
 
 class Subtree(Field):
+    """A Subtree is a Field with a list of fields as children."""
+
     def __init__(self, tree, *args, **vargs):
+        """Create a new subtree of ProtoField's."""
         super().__init__(*args, **vargs)
         self.tree = tree
-        self.fields = []
+        self.parent = 'subtree'
+        self.children = []
 
         # Union and bitstrings don't want each field to increase offset
         self._increase_offset = True
 
     def __eq__(self, other):
+        """Compare if two Subtree instances are equal."""
         if (not isinstance(other, Subtree) or self.tree != other.tree or
                 self._increase_offset != other._increase_offset or
-                self.fields != other.fields):
+                self.children != other.children):
             return False
         return True
 
-    def push_modifiers(self):
+    def push_modifiers(self, push_children=True):
         """Push prefixes and postfixes down to child fields."""
-        for field in self.fields:
+        for field in self.children:
             for member in self.prefixes + self.postfixes:
                 setattr(field, member,
                         getattr(self, member) + getattr(field, member))
+            if push_children:
+                field.push_modifiers()
 
     def get_definition(self):
+        """Get the ProtoField definition for this field."""
         data = [super().get_definition()]
-        for field in self.fields:
+        for field in self.children:
             data.append(field.get_definition())
         return '\n'.join(data)
 
     def get_code(self, offset, store=None, tree=None):
-        if store is None:
-            store = self.tree
-        if tree is None:
-            tree = self.tree
+        """Get the code for dissecting this field.
 
-        data = [super().get_code(offset, store=store)]
-        for field in self.fields:
+        'offset' is the buffer offset the value is stored at
+        'store' is the lua variable to store the tree node in
+        'tree' is the tree we are adding the node to
+        """
+        parent = self.parent if tree is None else tree
+        tree = self.tree if store is None else store
+        data = [super().get_code(offset, store=tree, tree=parent)]
+        for field in self.children:
             data.append(field.get_code(offset, tree=tree))
             if self._increase_offset:
                 offset += field.size
@@ -333,37 +344,54 @@ class Subtree(Field):
 
 
 class ArrayField(Subtree):
-    def __init__(self, fields, tree='arrtree'):
-        field = fields[0]
+    """ArrayField is a Subtree with visible indices."""
+
+    def __init__(self, children, tree='arrtree', parent='subtree'):
+        """Create a new ArrayField instance.
+
+        'children' is a list of child fields
+        'tree' is the variable name of the tree node
+        'parent' is the variable name of the parent node
+        """
+        field = children[0]
         type = field.type
         if type not in ('string', 'stringz'):
             type = 'bytes'
-        size = len(fields) * field.size
+        size = len(children) * field.size
         super().__init__(tree, field.name, type, size, 0, field.endian)
-        self.fields = fields
+        self.parent = parent
+        self.children = children
 
     def push_modifiers(self):
         """Push prefixes and postfixes down to child fields."""
-        super().push_modifiers()
-        for i, field in enumerate(self.fields):
+        super().push_modifiers(push_children=False)
+        for i, field in enumerate(self.children):
             field.var_postfix.append(str(i))
             field.abbr_postfix.append(str(i))
             field.name_postfix.append('[%i]' % i)
+            field.push_modifiers()
 
     @classmethod
-    def create(cls, depth, field, name='arrays'):
+    def create(cls, depth, field, name='array'):
+        """Recursively create a tree of arrays of 'depth'."""
         depth = depth[:]
-        fields = []
+        children = []
         for i in range(depth.pop(0)):
             if not len(depth):
-                fields.append(copy.deepcopy(field))
+                children.append(copy.deepcopy(field))
             else:
-                fields.append(cls.create(depth, field, name))
-        return ArrayField(fields, tree=name)
+                children.append(cls.create(depth, field, 'sub%s' % name))
+        return ArrayField(children, tree=name)
 
 
 class BitField(Subtree):
+    """BitField is a Subtree with field for each relevant bit."""
+
     def __init__(self, bits, name, type, size, alignment, endian):
+        """Create a new BitField instance.
+
+        'bits' is a list of relevant bits to display.
+        """
         # Convert type to unsigned if int
         if 'int' in type and not type.startswith('u'):
             type = 'u%s' % type
@@ -385,7 +413,7 @@ class BitField(Subtree):
                 tmp[-(i+k)] = 1
             field.mask = '0x%x' % int(''.join(str(i) for i in tmp), 2)
 
-            self.fields.append(field)
+            self.children.append(field)
 
         self._name = '%s (bitstring)' % self.name
         self._increase_offset = False
@@ -422,6 +450,7 @@ if __name__ == '__main__':
     f.set_range_validation(5, 15)
     print(f.get_definition())
     print(f.get_code(12))
+    '''
     bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
             (2, 1, 'B', {0: 'No', 1: 'Yes'}),
             (3, 1, 'G', {0: 'No', 1: 'Yes'})]
@@ -430,9 +459,8 @@ if __name__ == '__main__':
     f.push_modifiers()
     print(f.get_definition())
     print(f.get_code(12))
-    '''
     f = Field('arr', 'float', 4, 0, Platform.big)
-    arr = ArrayField.create([2, 3], f)
+    arr = ArrayField.create([2, 2, 3], f)
     arr.var_prefix.append('f.')
     arr.push_modifiers()
     print(arr.get_definition())

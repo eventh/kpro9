@@ -171,8 +171,8 @@ class Protocol(ProtoTree):
         self.data.append('-- Dissector function for: %s' % self.name)
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
         sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
-        check = '\tif pinfo.private.caller_def_name then\n\t\t'\
-            'subtree:set_text(pinfo.private.caller_def_name .. ": {name}")'\
+        check = '\tif pinfo.private.field_name then\n\t\t'\
+            'subtree:set_text(pinfo.private.field_name .. ": {name}")'\
             '\n\t\tpinfo.private.caller_def_name = nil\n\telse\n'\
             '\t\tpinfo.cols.info:append(" (" .. {var}.description .. ")")\n'\
             '\tend\n'

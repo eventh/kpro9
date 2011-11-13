@@ -321,8 +321,8 @@ def create_dissector(filename, platform, folders=None, includes=None):
         print("Parsed header file '%s':%s successfully." % (
                 filename, platform.name))
 
-    if Options.debug:
-        ast.show()
+    #if Options.debug:
+    #    ast.show()
 
 
 def write_dissectors_to_file(all_protocols):

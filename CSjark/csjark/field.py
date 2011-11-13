@@ -110,9 +110,7 @@ class Field(BaseField):
         for member in self.prefixes + self.postfixes:
             setattr(self, member, [])
         super().__init__(type, size, alignment, endian)
-        self._name = name
-        self._var = create_lua_var(name)
-        self._abbr = name.replace(' ', '_')
+        self.name = name
 
     @property
     def name(self):
@@ -123,6 +121,13 @@ class Field(BaseField):
         if self.name_postfix:
             name = '%s%s' % (name, ''.join(self.name_postfix))
         return name
+
+    @name.setter
+    def name(self, value):
+        """Set the infix part of the name to 'value'."""
+        self._name = value
+        self._var = create_lua_var(self._name)
+        self._abbr = self._name.replace(' ', '_')
 
     @property
     def abbr(self):
@@ -319,7 +324,7 @@ class Subtree(Field):
         data = [super().get_definition()]
         for field in self.children:
             data.append(field.get_definition())
-        return '\n'.join(data)
+        return '\n'.join(i for i in data if i is not None)
 
     def get_code(self, offset, store=None, tree=None):
         """Get the code for dissecting this field.
@@ -415,7 +420,6 @@ class BitField(Subtree):
 
 
 class ProtocolField(Field):
-    """TODO!!"""
 
     def __init__(self, name, proto):
         super().__init__(name, proto.name, proto.size,
@@ -427,7 +431,7 @@ class ProtocolField(Field):
 
     def get_code(self, offset, store=None, tree='subtree'):
         self.offset = offset
-        t = '\tpinfo.private.caller_name = "{name}"\n'\
+        t = '\tpinfo.private.field_name = "{name}"\n'\
             '\tDissector.get("{proto}"):call(buffer({offset}, '\
             '{size}):tvb(), pinfo, {tree})'
         return t.format(name=self.name, proto=self.proto.longname,

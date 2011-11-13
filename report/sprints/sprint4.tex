@@ -43,27 +43,27 @@ This section contains the sprint backlog \ref{tab:sprint4req} and the timetable 
 	\midrule
 	\textbf{Impl.} &  & \textbf{47} & \textbf{-} \\
 	\hyperref[tab:req:stories13]{US57} & FR2-E: guess \gls{dissector} from \gls{packet} size & 5 & - \\
- 	\hyperref[tab:req:stories10]{US41} & FR3-A mod: support \gls{include} of system \glspl{header} &  8  & - \\
-	\hyperref[tab:req:stories10]{US42} & FR3-D mod: ignore \#pragma directives & 2 & - \\
-	\hyperref[tab:req:stories10]{US43} & FR3-E: find include dependencies which are not explicitly set & 16  & - \\
-	\hyperref[tab:req:stories11]{US48} & FR4-B mod: custom \Gls{lua} files support for offset and value inside a .cnf file & 4 & - \\
-	\hyperref[tab:req:stories12]{US50} & FR4-D mod: multiple message ID's for one \gls{dissector} & 2 & - \\
-	\hyperref[tab:req:stories12]{US53} & FR4-H: autogenerate configuration files for \glspl{struct} without a config file & 1  & - \\
+ 	\hyperref[tab:req:stories10]{US41} & FR3-A mod: support \gls{include} of system \glspl{header} &  8  & 3 \\
+	\hyperref[tab:req:stories10]{US42} & FR3-D mod: ignore \#pragma directives & 2 & 1 \\
+	\hyperref[tab:req:stories10]{US43} & FR3-E: find include dependencies which are not explicitly set & 16  & 11 \\
+	\hyperref[tab:req:stories11]{US48} & FR4-B mod: custom \Gls{lua} files support for offset and value inside a .cnf file & 4 & 1 \\
+	\hyperref[tab:req:stories12]{US50} & FR4-D mod: multiple message ID's for one \gls{dissector} & 2 & 1 \\
+	\hyperref[tab:req:stories12]{US53} & FR4-H: autogenerate configuration files for \glspl{struct} without a config file & 1  & 0.5\\
 	\hyperref[tab:req:stories12]{US52} & FR4-I: allow configuration of size for unknown \glspl{struct} & 4 & - \\
-	\hyperref[tab:req:stories10]{US44} & FR6-E: support \Gls{c} macros from \gls{cli} & 1 & - \\
+	\hyperref[tab:req:stories10]{US44} & FR6-E: support \Gls{c} macros from \gls{cli} & 1 & 1 \\
 	\hyperref[tab:req:stories12]{US55} & FR6-F: only generate \glspl{dissector} for \glspl{struct} with valid a id and their dependencies & 4 & - \\
 	\addlinespace
 	\textbf{Fixes} &  & \textbf{35} & \textbf{-} \\
 	& TheFIX: Be able to process customer's files & 12 & - \\
 	 & FR2-A: Improve generated \Gls{lua} output - Remove platform prefix & 10 & - \\
-	 & FR1-E: \Gls{array} bug in text & 2 & - \\
+	 & FR1-E: \Gls{array} bug in text & 2 & 1.5 \\
 	 & FR1-E: Pointer support (array) & 1 & - \\
 	 & FR1-E: \Gls{enum} in \glspl{array} & 1 & - \\		
-	 & FR6-C: \Gls{batch mode} (recursive search for subfolders) &  8  & - \\
-	 & FR6-C: Support command line arguments for Cpp "--Include" (folders) & 1 & - \\
+	 & FR6-C: \Gls{batch mode} (recursive search for subfolders) &  8  & 2 \\
+	 & FR6-C: Support command line arguments for Cpp "--Include" (folders) & 1 & 0.5\\
 	\addlinespace
 	\textbf{Testing} &  & \textbf{16} & \textbf{-} \\
-	 & Fixing existing tests & 3 & - \\
+	 & Fixing existing tests & 3 & 3.5 \\
 	 & Add more tests for csjark module & 3 & - \\
 	 & Add more tests for cparser module & 3 & - \\
 	 & Add more tests for the config module & 2 & - \\
@@ -72,13 +72,13 @@ This section contains the sprint backlog \ref{tab:sprint4req} and the timetable 
 	 & Add sprint 4 end-to-end tasks & 2 & - \\
 	\addlinespace
 	\textbf{Doc.} &  & \textbf{10} & \textbf{-} \\
-	\hyperref[tab:req:stories10]{US45} & Update command line interface document & 1 & - \\
-	\hyperref[tab:req:stories11]{US49} & Update user documentation for custom \Gls{lua} & 1 & - \\
-	\hyperref[tab:req:stories12]{US51} & Update user documentation for message ID & 1 & - \\
+	\hyperref[tab:req:stories10]{US45} & Update command line interface document & 1 & 1 \\
+	\hyperref[tab:req:stories11]{US49} & Update user documentation for custom \Gls{lua} & 1 & 1.5 \\
+	\hyperref[tab:req:stories12]{US51} & Update user documentation for message ID & 1 & 1 \\
 	\hyperref[tab:req:stories12]{US54} & User documentation for \gls{struct} size configuration & 1 & - \\
 	\hyperref[tab:req:stories12]{US56} & User documentation for generating only \gls{struct} with valid ID or dependencies & 1 & - \\
-	\hyperref[tab:req:stories9]{US36} & Which platforms that the \gls{utility} supports & 2 & - \\
-	\hyperref[tab:req:stories13]{US59} & How to define new platforms to support & 1 & - \\
+	\hyperref[tab:req:stories9]{US36} & Which platforms that the \gls{utility} supports & 2 & 1 \\
+	\hyperref[tab:req:stories13]{US59} & How to define new platforms to support & 1 & 3.5 \\
 	\hyperref[tab:req:stories9]{US37} & Create developer manual from python docstrings & 2 & - \\
 	\midrule
 	& Total: & 108 &  -\\
@@ -109,12 +109,12 @@ This section contains the sprint backlog \ref{tab:sprint4req} and the timetable 
 	Sprint 4 document & 42 & - \\
 	\addlinespace
 	\textbf{Report work} & \textbf{38} & \textbf{-} \\
-	Update tables with actual hours & 2 & - \\
+	Update tables with actual hours & 2 & 2 \\
 	Abstract - improve & 2 & -\\
 	Importing user documentation to report & 3 & -\\
 	Introduction section & 6 & -\\
-	Report read-through from a technical perspective & 6 & -\\
-	Report read-through from a non-technical perspective & 6 & -\\
+	Report read-through from a technical perspective & 6 & 6\\
+	Report read-through from a non-technical perspective & 6 & 7\\
 	Glossary refinement & 3 & -\\
 	Acronym refinement & 1 & -\\
 	Write about optional requirements & 4 & -\\
@@ -124,8 +124,8 @@ This section contains the sprint backlog \ref{tab:sprint4req} and the timetable 
 	\textbf{Thales presentation} & \textbf{28} & \textbf{14} \\
 	\addlinespace
 	\textbf{Meetings} & \textbf{63} & \textbf{-} \\
-	Advisor meetings & 28 & - \\
-	Customer meetings & 14 & - \\
+	Advisor meetings & 28 & 20 \\
+	Customer meetings & 14 & 10 \\
 	Stand-up meetings & 21 & - \\
 	\addlinespace
 	\textbf{Project management} & \textbf{17} & \textbf{-} \\

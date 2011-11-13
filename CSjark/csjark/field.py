@@ -2,6 +2,7 @@
 TODO
 """
 import string
+import copy
 from platform import Platform
 
 
@@ -43,17 +44,30 @@ def create_lua_valuestring(dict_, wrap=True):
     return '{%s}' % ', '.join('[%i]=%s' % (i, j) for i, j in items)
 
 
-class Field:
+class BaseField:
+    def get_definition(self):
+        """Get the ProtoField definition for this field."""
+        pass
+
+    def get_code(self, offset, store=None, tree='subtree'):
+        """Get the code for dissecting this field."""
+        pass
+
+    def push_modifiers(self):
+        pass
+
+
+class Field(BaseField):
     """Represents Wireshark's ProtoFields which stores a specific value."""
     # Members this fields holds, used when testing equality and more
-    members = (
-            '_name', '_var', '_abbr',
+    prefixes = ['var_prefix', 'abbr_prefix', 'name_prefix']
+    postfixes = ['name_postfix', 'var_postfix', 'abbr_postfix']
+    infixes = ['_name', '_var', '_abbr']
+    members = [
             'type', 'size', 'alignment', 'endian',
             'base', 'values', 'mask', 'desc',
-            'name_prefix', 'name_postfix', 'var_prefix',
-            'var_postfix', 'abbr_prefix', 'abbr_postfix',
-            'range_validation', 'list_validation',
-    )
+            'offset', 'range_validation', 'list_validation',
+    ] + prefixes + postfixes + infixes
 
     def __init__(self, name, type, size, alignment, endian):
         """Create a new Wireshark ProtoField instance.
@@ -66,40 +80,45 @@ class Field:
         """
         for member in self.members:
             setattr(self, member, None)
+        for member in self.prefixes + self.postfixes:
+            setattr(self, member, [])
 
         self._name = name
         self._var = create_lua_var(name)
         self._abbr = name.replace(' ', '_')
-
         self.type = type
         self.size = size
         self.alignment = alignment
         self.endian = endian
 
-        self.offset = None # Useful for others to access buffer(offset, size)
-
     @property
     def name(self):
         """Get the name of the field."""
         name = self._name
-        name = self.name_prefix + name if self.name_prefix else name
-        name = name + self.name_postfix if self.name_postfix else name
+        if self.name_prefix:
+            name = '%s%s' % (''.join(self.name_prefix), name)
+        if self.name_postfix:
+            name = '%s%s' % (name, ''.join(self.name_postfix))
         return name
 
     @property
     def abbr(self):
         """Get the fields abbr."""
         abbr = self._abbr
-        abbr = self.abbr_prefix + abbr if self.abbr_prefix else abbr
-        abbr = abbr + self.abbr_postfix if self.abbr_postfix else abbr
+        if self.abbr_prefix:
+            abbr = '%s.%s' % ('.'.join(self.abbr_prefix), abbr)
+        if self.abbr_postfix:
+            abbr = '%s.%s' % (abbr, '.'.join(self.abbr_postfix))
         return abbr
 
     @property
     def variable(self):
         """Get the variable to store the field in."""
         var = self._var
-        var = self.var_prefix + var if self.var_prefix else var
-        var = var + self.var_postfix if self.var_postfix else var
+        if self.var_prefix:
+            var = '%s.%s' % ('.'.join(self.var_prefix), var)
+        if self.var_postfix:
+            var = '%s.%s' % (var, '.'.join(self.var_postfix))
         return var
 
     @property
@@ -128,12 +147,6 @@ class Field:
             if getattr(self, member) != getattr(other, member):
                 return False
         return True
-
-    def update(self, **args):
-        """Update some member values."""
-        for key, value in args:
-            if key in self.members and value is not None:
-                setattr(self, key, value)
 
     def get_definition(self):
         """Get the ProtoField definition for this field."""
@@ -284,12 +297,19 @@ class ProtocolField(Field):
 
 class FieldsCollection(Field):
 
-    def __init__(self, *args, **vargs):
+    def __init__(self, tree, *args, **vargs):
         super().__init__(*args, **vargs)
+        self.tree = tree
+        self.comment = None
         self.fields = []
 
     def push_modifiers(self):
-        pass
+        for field in self.fields:
+            for member in self.prefixes:
+                setattr(field, member,
+                        getattr(self, member) + getattr(field, member))
+            for member in self.postfixes:
+                getattr(field, member).extend(getattr(self, member))
 
     def get_definition(self):
         data = []
@@ -300,165 +320,56 @@ class FieldsCollection(Field):
             data.append(field.get_definition())
         return '\n'.join(data)
 
-    def get_code(self, offset, store=None, tree='subtree'):
+    def get_code(self, offset):
         data = []
         if self.comment:
             data.append('\t%s' % self.comment)
-        data.append(super().get_code(offset, store=store, tree=tree))
-        subtree = store
+        data.append(super().get_code(offset, store=self.tree))
         for field in self.fields:
-            data.append(field.get_code(offset, tree=subtree))
+            data.append(field.get_code(offset, tree=self.tree))
+            offset += field.size
         return '\n'.join(data)
 
 
-class ArrayField(Field):
-    def __init__(self, proto, name, type, base_size, alignment_size, depth, enum_members=None):
-        self.base_size = base_size
-        self.depth = depth
-        array_size = 1
-        for size in self.depth:
-            array_size *= size
+class ArrayField(FieldsCollection):
+    def __init__(self, elements, field):
+        type = field.type
+        if type not in ('string', 'stringz'):
+            type = 'bytes'
+        super().__init__('arrtree', field.name, type,
+                elements*field.size, 0, field.endian)
+        self.comment = '-- Array definition for %s' % self.name
+        for i in range(elements):
+            self.fields.append(copy.deepcopy(field))
 
-        self.elements = depth.pop()
-        if not depth:
-            self.field = self._make_field(proto, name, type, base_size,
-                                          alignment_size, enum_members)
-        else:
-            self.field = ArrayField(proto, name, type, base_size,
-                                    alignment_size, depth)
+    def push_modifiers(self):
+        super().push_modifiers()
+        for i, field in enumerate(self.fields):
+            field.var_postfix.append(str(i))
+            field.abbr_postfix.append(str(i))
+            field.name_postfix.append('[%i]' % i)
 
-        if isinstance(type, Protocol) or isinstance(type, UnionProtocol):
-            super().__init__(proto, name, type.name, array_size * base_size,
-                             alignment_size)
-        else:
-            super().__init__(proto, name, proto.platform.map_type(type),
-                             array_size * base_size, alignment_size)
 
-    def _make_field(self, proto, name, type, size, alignment_size,
-                    enum_members):
-        if isinstance(type, Protocol) or isinstance(type, UnionProtocol):
-            return ProtocolField(proto, name, type)
-
-        ctype = proto.platform.map_type(type)
-        if enum_members != None:
-            return EnumField(proto, name, ctype, size, alignment_size,
-                             enum_members)
-
-        if proto.conf:
-            bits, enums, ranges, customs = proto.conf.get_field_attributes(name,
-                                                                           type)
-
-            ctype = proto.platform.map_type(type)
-
-            # Custom field rules
-            if customs:
-                custom = customs[0]
-                if(custom.size != size or custom.alignment_size != alignment_size):
-                    raise "Error: todo"
-                field = Field(proto, name, custom.field, size, alignment_size)
-                field.abbr = custom.abbr
-                field.base = custom.base
-                if custom.values:
-                    field.values = create_lua_valuestring(custom.values)
-                    field.mask = custom.mask
-                    field.desc = custom.desc
-                    return field
-
-                # Bitstring rules
-                if bits:
-                    return BitField(proto, name, ctype, size, alignment_size,
-                                    bits[0].bits)
-
-                # Enum rules
-                if enums:
-                    rule = enums[0]
-                    return EnumField(proto, name, ctype, size, alignment_size,
-                                     rule.values, rule.strict)
-                # Range
-                if ranges:
-                    rule = ranges[0]
-                    return RangeField(proto, name, ctype, size, alignment_size,
-                                      rule.min, rule.max)
-
-        return Field(proto, name, ctype, size, alignment_size)
-
-    def get_definition(self, sequence=None):
-        var = self.var
-        abbr = self.abbr
-        if sequence is None:
-            sequence = []
-        else:
-            postfix = self.get_array_postfix(sequence)
-            var = '%s_%s' % (self.var, postfix)
-            abbr = '%s_%s' % (self.abbr, postfix)
-
-        data = ['']
-        if not sequence:
-            data = ['-- Array definition for %s' % self.name]
-
-        type_ = self.type
-        if type_ not in ('string', 'stringz'):
-            type_ = 'bytes'
-
-        # This subtree definition
-        data.append(self._create_field(var, type_, abbr, self.name))
-
-        for i in range(0, self.elements):
-            definition = self.field.get_definition(sequence + [i])
-            if definition:
-                data.append(definition)
-
-        return '\n'.join(data)
-
-    def get_code(self, offset, tree='arraytree', parent='subtree', sequence=None):
-        data = []
-        var = self.var
-        if sequence is None:
-            sequence = []
-            data = ['\t-- Array handling for %s' % self.name]
-
-        if sequence == []:
-            t = '\tlocal {tree} = {parent}:{add}("{name}: {type} array", buffer({off}, {size}))'
-            data.append(t.format(tree=tree, parent=parent, name=self.name,
-                                 type=self.type, add=self.add_var, var=var,
-                                 off=offset, size=self.size))
-        else:
-            index = self.get_array_index_postfix(sequence)
-            var = '%s_%s' % (var, self.get_array_postfix(sequence))
-            t = '\tlocal {tree} = {parent}:{add}("{name}{index}: {type} array", buffer({off}, {size}))'
-            data.append(t.format(name=self.name, tree=tree, parent=parent,
-                                 type=self.type, index = index,
-                                 add=self.add_var, var=var, off=offset,
-                                 size=self.size))
-
-        for i in range(0, self.elements):
-            if  isinstance(self.field, ArrayField):
-                data.append(self.field.get_code(offset, 'sub' + tree, tree, sequence + [i]))
-                offset += self.field.size
-            else:
-                data.append(self.field.get_code(offset, None, sequence + [i], tree))
-                offset += self.field.size
-
-        return '\n'.join(data)
+class ArrayTree(FieldsCollection):
+    pass
 
 
 class BitField(FieldsCollection):
-
     def __init__(self, bits, name, type, size, alignment, endian):
         # Convert type to unsigned if int
         if 'int' in type and not type.startswith('u'):
             type = 'u%s' % type
 
         # Create bitstring tree field
-        super().__init__(name, type, size, alignment, endian)
+        super().__init__('bittree', name, type, size, alignment, endian)
         self.base = 'base.HEX'
         self.comment = '-- Bitstring definitions for %s' % name
 
         # Create fields
         for i, j, name, values in bits:
             field = Field(name, type, size, alignment, endian)
-            field.abbr_prefix = self.name + '.'
-            field.var_prefix = self.variable + '_'
+            field.abbr_prefix.append(self.name)
+            field.var_prefix.append(self.variable)
             field.values = create_lua_valuestring(values)
 
             # Create a mask for the bits
@@ -471,10 +382,15 @@ class BitField(FieldsCollection):
 
         self._name = '%s (bitstring)' % self.name
 
-    def get_code(self, offset, store=None, tree='subtree'):
-        if not store:
-            store = 'bittree'
-        return super().get_code(offset, store=store, tree=tree)
+    def get_code(self, offset):
+        data = []
+        if self.comment:
+            data.append('\t%s' % self.comment)
+        data.append(super(FieldsCollection, self).get_code(
+                offset, store=self.tree))
+        for field in self.fields:
+            data.append(field.get_code(offset, tree=self.tree))
+        return '\n'.join(data)
 
 
 if __name__ == '__main__':
@@ -493,7 +409,13 @@ if __name__ == '__main__':
             (2, 1, 'B', {0: 'No', 1: 'Yes'}),
             (3, 1, 'G', {0: 'No', 1: 'Yes'})]
     f = BitField(bits, 'bitname', 'int32', 4, 4, Platform.little)
-    f.var_prefix = 'f.'
+    f.var_prefix.append('f')
+    f.push_modifiers()
     print(f.get_definition())
     print(f.get_code(12))
+    f = Field('arr', 'float', 4, 0, Platform.big)
+    arr = ArrayField(10, f)
+    arr.push_modifiers()
+    print(arr.get_definition())
+    print(arr.get_code(12))
 

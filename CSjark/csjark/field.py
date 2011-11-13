@@ -47,10 +47,9 @@ def create_lua_valuestring(dict_, wrap=True):
 class BaseField:
     """Interface for Fields and list of Fields."""
 
-    def __init__(self, name, type, size, alignment, endian):
+    def __init__(self, type, size, alignment, endian):
         """Create a new Wireshark ProtoField instance.
 
-        'name' the name of the field
         'type' the ProtoField type
         'size' the size of the field in bytes
         'alignment' the alignment of the field in bytes
@@ -60,9 +59,10 @@ class BaseField:
         self.size = size
         self.alignment = alignment
         self.endian = endian
-        self._name = name
-        self._var = create_lua_var(name)
-        self._abbr = name.replace(' ', '_')
+
+    def push_modifiers(self):
+        """Push prefixes and postfixes down to child fields."""
+        pass
 
     def get_definition(self):
         """Get the ProtoField definition for this field."""
@@ -70,10 +70,6 @@ class BaseField:
 
     def get_code(self, offset, store=None, tree='subtree'):
         """Get the code for dissecting this field."""
-        pass
-
-    def push_modifiers(self):
-        """Push prefixes and postfixes down to child fields."""
         pass
 
 
@@ -102,7 +98,10 @@ class Field(BaseField):
             setattr(self, member, None)
         for member in self.prefixes + self.postfixes:
             setattr(self, member, [])
-        super().__init__(name, type, size, alignment, endian)
+        super().__init__(type, size, alignment, endian)
+        self._name = name
+        self._var = create_lua_var(name)
+        self._abbr = name.replace(' ', '_')
 
     @property
     def name(self):
@@ -156,6 +155,8 @@ class Field(BaseField):
 
     def __eq__(self, other):
         """Compare if two field instances are equal."""
+        if not isinstance(other, Field):
+            return False
         for member in members:
             if getattr(self, member) != getattr(other, member):
                 return False
@@ -288,35 +289,21 @@ class Field(BaseField):
         return offset + padding
 
 
-class ProtocolField(Field):
-    """TODO!!"""
-
-    def __init__(self, name, proto):
-        super().__init__(name, proto.name, proto.size,
-                         proto.alignment, proto.endian)
-        self.proto = proto
-
-    def get_definition(self):
-        pass
-
-    def get_code(self, offset, store=None, tree='subtree'):
-        self.offset = offset
-        t = '\tpinfo.private.caller_name = "{name}"\n'\
-            '\tDissector.get("{proto}"):call(buffer({offset}, '\
-            '{size}):tvb(), pinfo, {tree})'
-        return t.format(name=self.name, proto=self.proto.longname,
-                offset=offset, size=self.size, tree=tree)
-
-
 class Subtree(Field):
     def __init__(self, tree, *args, **vargs):
         super().__init__(*args, **vargs)
         self.tree = tree
-        self.comment = None
         self.fields = []
 
         # Union and bitstrings don't want each field to increase offset
         self._increase_offset = True
+
+    def __eq__(self, other):
+        if (not isinstance(other, Subtree) or self.tree != other.tree or
+                self._increase_offset != other._increase_offset or
+                self.fields != other.fields):
+            return False
+        return True
 
     def push_modifiers(self):
         """Push prefixes and postfixes down to child fields."""
@@ -326,36 +313,34 @@ class Subtree(Field):
                         getattr(self, member) + getattr(field, member))
 
     def get_definition(self):
-        data = []
-        if self.comment:
-            data.append(self.comment)
-        data.append(super().get_definition())
+        data = [super().get_definition()]
         for field in self.fields:
             data.append(field.get_definition())
         return '\n'.join(data)
 
-    def get_code(self, offset):
-        data = []
-        if self.comment:
-            data.append('\t%s' % self.comment)
-        data.append(super().get_code(offset, store=self.tree))
+    def get_code(self, offset, store=None, tree=None):
+        if store is None:
+            store = self.tree
+        if tree is None:
+            tree = self.tree
+
+        data = [super().get_code(offset, store=store)]
         for field in self.fields:
-            data.append(field.get_code(offset, tree=self.tree))
+            data.append(field.get_code(offset, tree=tree))
             if self._increase_offset:
                 offset += field.size
         return '\n'.join(data)
 
 
 class ArrayField(Subtree):
-    def __init__(self, elements, field):
+    def __init__(self, fields, tree='arrtree'):
+        field = fields[0]
         type = field.type
         if type not in ('string', 'stringz'):
             type = 'bytes'
-        super().__init__('arrtree', field.name, type,
-                elements*field.size, 0, field.endian)
-        self.comment = '-- Array definition for %s' % self.name
-        for i in range(elements):
-            self.fields.append(copy.deepcopy(field))
+        size = len(fields) * field.size
+        super().__init__(tree, field.name, type, size, 0, field.endian)
+        self.fields = fields
 
     def push_modifiers(self):
         """Push prefixes and postfixes down to child fields."""
@@ -365,9 +350,16 @@ class ArrayField(Subtree):
             field.abbr_postfix.append(str(i))
             field.name_postfix.append('[%i]' % i)
 
-
-class ArrayTree(Subtree):
-    pass
+    @classmethod
+    def create(cls, depth, field, name='arrays'):
+        depth = depth[:]
+        fields = []
+        for i in range(depth.pop(0)):
+            if not len(depth):
+                fields.append(copy.deepcopy(field))
+            else:
+                fields.append(cls.create(depth, field, name))
+        return ArrayField(fields, tree=name)
 
 
 class BitField(Subtree):
@@ -379,7 +371,6 @@ class BitField(Subtree):
         # Create bitstring tree field
         super().__init__('bittree', name, type, size, alignment, endian)
         self.base = 'base.HEX'
-        self.comment = '-- Bitstring definitions for %s' % name
 
         # Create fields
         for i, j, name, values in bits:
@@ -400,6 +391,26 @@ class BitField(Subtree):
         self._increase_offset = False
 
 
+class ProtocolField(Field):
+    """TODO!!"""
+
+    def __init__(self, name, proto):
+        super().__init__(name, proto.name, proto.size,
+                         proto.alignment, proto.endian)
+        self.proto = proto
+
+    def get_definition(self):
+        pass
+
+    def get_code(self, offset, store=None, tree='subtree'):
+        self.offset = offset
+        t = '\tpinfo.private.caller_name = "{name}"\n'\
+            '\tDissector.get("{proto}"):call(buffer({offset}, '\
+            '{size}):tvb(), pinfo, {tree})'
+        return t.format(name=self.name, proto=self.proto.longname,
+                offset=offset, size=self.size, tree=tree)
+
+
 if __name__ == '__main__':
     print("testing")
     '''
@@ -411,7 +422,6 @@ if __name__ == '__main__':
     f.set_range_validation(5, 15)
     print(f.get_definition())
     print(f.get_code(12))
-    '''
     bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
             (2, 1, 'B', {0: 'No', 1: 'Yes'}),
             (3, 1, 'G', {0: 'No', 1: 'Yes'})]
@@ -420,8 +430,9 @@ if __name__ == '__main__':
     f.push_modifiers()
     print(f.get_definition())
     print(f.get_code(12))
+    '''
     f = Field('arr', 'float', 4, 0, Platform.big)
-    arr = ArrayField(10, f)
+    arr = ArrayField.create([2, 3], f)
     arr.var_prefix.append('f.')
     arr.push_modifiers()
     print(arr.get_definition())

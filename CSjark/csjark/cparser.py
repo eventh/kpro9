@@ -197,7 +197,6 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def handle_array_decl(self, node, depth=None):
         """Find the depth and size of the array."""
-        return
         if depth is None:
             depth = []
         child = node.children()[0]

@@ -300,11 +300,7 @@ class Delegator(Protocol):
         field = Field('Flags', 'uint8', 1, 0, endian)
         field.set_list_validation(values)
         self.add_field(field)
-
-        field = Field('Message', 'uint16', 2, 0, endian)
-        field.set_list_validation({}, strict=False)
-        self.add_field(field)
-
+        self.add_field(Field('Message', 'uint16', 2, 0, endian))
         self.add_field(Field('Message length', 'uint32', 4, 0, endian))
         self._version, self._flags, self._msg_id, self._length = self.fields
 
@@ -361,7 +357,7 @@ class Delegator(Protocol):
         self.data.extend([t, ''])
 
         # Find message id and flag
-        msg_var = create_lua_var('id')
+        msg_var = create_lua_var('id_value')
         self.data.append(self._msg_id._store_value(msg_var))
 
         # Validate message id

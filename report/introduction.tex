@@ -50,7 +50,7 @@ All the packets containing C structs belong to the protocol called luastructs.
 When opening a capture file in Wireshark , this protocol maps the id of the messages to the correct dissector,
 and calls them.
 
-\section*{From struct definition to dissector - a true story}
+\section*{From struct definition to Lua dissector}
 This section explains how the Lua dissectors work, and how they can be built by our utility.
 
 The first part explains what happens under the hood of a Lua dissector, while 

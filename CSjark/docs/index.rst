@@ -41,7 +41,7 @@ Other Information
    other/about
 
 
-**Features** (TBD)
+**Feature list** (TBD)
 
 - C header files
 - Batch mode

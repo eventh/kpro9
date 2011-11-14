@@ -25,34 +25,31 @@ Configuration definitions
 Value ranges
 ~~~~~~~~~~~~
 
-Some variables may have a domain that is smaller than its given type. You could for example use an integer to describe percentage, which is a number between 0 and 100. It is possible to specify this to CSjark, so that the resulting dissector will tell wireshark if the values are in range or not. Value ranges are defined by the following syntax: ::
+Some variables may have a domain that is smaller than its given type. You could for example use an integer to describe percentage, which is a number between 0 and 100. It is possible to specify this to CSjark, so that the resulting dissector will tell Wireshark if the values are in the specified range or not. Value ranges are defined by the following syntax: ::
 
-    RangeRules:
-      - struct: "Name of the struct"
-        member: "Name of datameber"
-        min: "Lowest allowed value"
-        max: "Highest allowed value"
+    Structs:
+      - name: "Name of the struct"
+        id: 989
+        enums:
+            - member | type: "Name of struct member / type"
+              min: "Lowest allowed value"
+              max: "Highest allowed value"
+              
 
-or, one could specify a type, and apply the value range to all the members of that type within the struct: ::
-
-    RangeRules:
-      - struct: "Name of the struct"
-        type: "Name of the type"
-        min: "Lowest allowed value"
-        max: "Highest allowed value"
+When the definition specified as a type, the value range is applid to all the members of that type within the struct.
 
 Example: ::
 
-    RangeRules:
-      - struct: example_struct
-        member: percent
-        min: 0
-        max: 100
-    
-      - struct: example_struct
-        type: int
-        min: 0
-        max: 100
+    Structs:
+      - name: example_struct
+        id: name
+        enums:
+            - member: percent
+              min: 0
+              max: 100
+            - type: int
+              min: -10
+              max: 10
 
 Value explanations
 ~~~~~~~~~~~~~~~~~~
@@ -68,7 +65,7 @@ Values of integer variables can be assigned to string values similarly to enumer
 
 The enumeration definition can be of two types. The first one, mapping specified integer by its struct member name, so it gains string value dependent on the actual integer value. And the second, where assigned string values correspond to every struct member of the type defined in the configuration.
 
-The enum definition, as an attribute of the ``Structs`` item of the configuration file, always starts by ``enums`` keyword. It is followed by list of members/types for which we want to define enumerated integer values for. Each list item consists 2 mandatory and 1 optional value
+The enum definition, as an attribute of the ``Structs`` item of the configuration file, always starts by ``enums`` keyword. It is followed by list of members/types for which we want to define enumerated integer values for. Each list item consists of 2 mandatory and 1 optional values
 ::
 
     - member | type: member name | type name
@@ -83,34 +80,17 @@ where
 - ``strict`` is boolean value, which disables warning, if integer does not contain a value specified in the enum list (default ``True``)
     
 
-
-Member Config
-#############
-
-Example of Struct definition with member named ``weekday`` and values defined as a list of key-value pairs.
-
-::
+Example of enums in struct definition contains:
+- member named ``weekday`` and values defined as a list of key-value pairs.
+- definition of enumerated values for ``int`` type. Values are given by simple list, therefore numbering is implicit (starting from 0, i.e. ``Blue`` = 2). Warning in case of invalid integer value *will* be displayed. ::
 
     Structs:
       - name: enum_example1
         id: 10
-        description: Enum config example 1
+        description: Enum config example
         enums:
           - member: weekday
             values: {1: MONDAY, 2: TUESDAY, 3: WEDNESDAY, 4: THURSDAY, 5: FRIDAY, 6: SATURDAY, 7: SUNDAY}
-
-Type config
-###########
-
-In this example we can see definition of enumerated values for ``int`` type. Values are given by simple list, therefore numbering is implicit (starting from 0, i.e. ``Blue`` = 2). Warning in case of invalid integer value *will* be displayed.
-
-::
-
-    Structs:
-      - name: enum_example2
-        id: 10
-        description: Enum config example 2
-        enums:       
           - type: int
             values: [Black, Red, Blue, Green, Yellow, White]
             strict: True # Disable warning if not a valid value
@@ -130,10 +110,11 @@ These rules specifies the config:
 - Bit groups have a name
 - It is possible to name all possible values in a bit group.
 
-Member Config
-#############
 
-Below, there is an example of a configuration for the flags member of the struct example. This example has four bits specified, the first bit group is named "In use" and represent bit 0. The second group represent bit 1 and is named "Endian", and the values are named: 0 = "Big", 1 = "Little". The last group is "Platform" and represent bit 2-3 and have 4 named values.
+Below, there is an example of a configuration for the member named ``flags`` and all the members of ``short`` type belonging to the struct ``example``. 
+
+- member ``flags``: This example has four bits specified, the first bit group is named "In use" and represent bit 0. The second group represent bit 1 and is named "Endian", and the values are named: 0 = "Big", 1 = "Little". The last group is "Platform" and represent bit 2-3 and have 4 named values.
+- type ``short``: Each of the 3 bits represents one colour channel and it can be either "True" or "False".
 
 ::
 
@@ -146,17 +127,6 @@ Below, there is an example of a configuration for the flags member of the struct
             0: In use
             1: [Endian, Big, Little]
             2-3: [Platform, Win, Linux, Mac, Solaris]
-
-Type Config
-###########
-
-This example specifies a bitstring for all data types of short. ::
-
-    Structs:
-      - name: example
-        id: 1000
-        description: An example
-        bitstrings:
           - type: short
             0: Red
             1: Green

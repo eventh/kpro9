@@ -200,7 +200,7 @@ For sprint 2 the team decided to refactor some of the code in order to make it e
 %--------------------
 \autoref{fig:sp2:class} shows the class diagram the team made for sprint 2. 
 The main differences from sprint 1 are the additions of new classes, extending 
-the functionality of the \gls{utility} so that the \gls{utility} can handle 
+the functionality of the \gls{utility} so it can handle 
 more complex \gls{header} files than it could before. The developers also 
 generalized some of the modules and used inheritance to support the re-use of 
 code.
@@ -222,13 +222,32 @@ running CSjark, with the \emph{files\_in\_folder()}. This method used for the
 support of batch mode generation.
 
 \subsubsection{Cparser}
-
+In the cparser module, there was added a class names ParserError, the main 
+thing class to is to raise an exception when our utility do not support a C 
+data type. StructVisitor has been extended to support more data types, for 
+example structs, arrays and enums.
 
 \subsubsection{Config}
+For all the configuration added in this sprint, there has been added a class 
+for each configuration. For this there has been added a superclass, named 
+BaseRule. This class have all the functionality that the configuration rules 
+shares. 
 
+BaseRule has five subclasses, Custom, Enum, Range, Bitstring and Trailer. 
+These subclasses have the configuration that are specific for these 
+configuration types.
+
+The last class added in this module is ConformanceFile, which hold the 
+configuration written for custom Lua code. 
 
 \subsubsection{Dissector}
+There was added four subclasses of Field in the dissector module. This classes 
+is EnumField, ArrayField, BitField and ProtocolField, these classes will 
+generate different types of field for the Lua dissector, that will display 
+members differently in Wireshark.
 
+Field and Protocol classes has been extended to support the new fields, and 
+support for modifying configuration of the functionality in Wireshark.
 
 \subsection{User stories}
 %---------------------------

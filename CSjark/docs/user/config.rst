@@ -449,7 +449,7 @@ and applies for example for this C header file: ::
 Both struct members are redefined. First will be displayed as ``absolute_type`` according to its type (``time_t``), second one is changed because of the struct member name (``day``).
 
 Platform specific configuration
-------------------------------
+-------------------------------
 
 To ensure that CSjark is usable as much as possible, platform specific
 
@@ -540,21 +540,59 @@ When defining new platform, following steps should be done. Referenced sections 
 
 CSjark Options Configuration
 ----------------------------
-::
+
+CSjark processing behaviour can be set up in various ways. Besides letting the user to specify how the CSjark should work by the command line arguments (see section :ref:`use`), it is also possible to define the options as a part of the configuration file(s). 
+
+=========================   ==============  =============================   ==========================
+Configuration file field    CLI equivalent  Value                           Description
+=========================   ==============  =============================   ==========================
+``verbose``                 ``-v``          ``True``/``False``              Print detailed information
+``debug``                   ``-d``          ``True``/``False``              Print debugging information
+``strict``                  ``-s``          ``True``/``False``              Only generate dissectors for known structs
+``output_dir``                              ``None`` or path                Definition of output destination
+``output_file``             ``-o``          ``None`` or file name           Writes the output to the specified file
+``generate_placeholders``   ``-p``          ``True``/``False``              Generate placeholder config file for unknown structs
+``use_cpp``                 ``-n``          ``True``/``False``              Enables/disables the C pre-processor
+``cpp_path``                ``-C``          ``None`` or file name           Specifies which preprocessor to use  
+``excludes``                ``-x``          List of excluded paths          File or folders to exclude from parsing
+``platforms``                               List of platform names          Set of platforms to support in dissectors
+``include_dirs``            ``-I``          List of directories             Directories to be searched for Cpp includes
+``includes``                ``-i``          List of includes                Process file as Cpp #include "file" directive
+``defines``                 ``-D``          List of defines                 Predefine name as a Cpp macro
+``undefines``               ``-U``          List of undefines               Cancel any previous Cpp definition of name
+``arguments``               ``-A``          List of additional arguments    Any additional C preprocessor arguments
+=========================   ==============  =============================   ==========================
+
+These options can be specifies also separately for each individual input C header file. This can be achieved by adding sequence ``files`` with mandatory attribute ``name``. 
+
+Below you can see an example of such ``Options`` section: ::
 
     Options:
+        verbose: True
+        debug: False
+        strict: False
+        output_dir: ../out
+        output_file: output.log
+        generate_placeholders: False
         use_cpp: True
+        cpp_path: ../utils/cpp.exe
         excludes: [examples, test]
-        default:
-            include_dirs: []
-            includes: []
-            defines: [CONFIG_DEFINED=3, REMOVE=1]
-            undefines: [REMOVE]
-            arguments: [-D ARR=2]
+        platforms: [default, Win32, Win64, Solaris-sparc, Linux-x86]
+        include_dirs: [../more_includes]
+        includes: [foo.h, bar.h]
+        defines: [CONFIG_DEFINED=3, REMOVE=1]
+        undefines: [REMOVE]
+        arguments: [-D ARR=2]
         files:
           - name: a.h
-            includes: [b.h]
+            includes: [b.h, c.h]
+            define: [MY_DEFINE]
 
+..
 
+If you give CSjark to process more configuration files with the same values defined, it takes:
+
+- for attributes with single value: a value from *last given config file* is valid
+- for attributes with list values: values are *merged*
 
 .. _YAML: http://www.yaml.org/

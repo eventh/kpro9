@@ -53,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'CSjark'
-copyright = u'2011, Even Wiik Thomassen, Erik Bergersen, Sondre Johan Mannsverk, Terje Snarby, Lars Solvoll Tønder, Sigurd Wien & Jaroslav Fibichr'
+copyright = u'2011, Erik Bergersen, Jaroslav Fibichr, Sondre Johan Mannsverk, Terje Snarby, Even Wiik Thomassen, Lars Solvoll Tønder, Sigurd Wien'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -200,7 +200,7 @@ latex_paper_size = 'A4'
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'CSjark.tex', 'CSjark Documentation',
-   'Even Wiik Thomassen \\and Erik Bergersen \\and Sondre Johan Mannsverk \\and Terje Snarby \\and Lars Solvoll Tønder \\and Sigurd Wien \\and Jaroslav Fibichr', 'manual'),
+   'Erik Bergersen \\and Jaroslav Fibichr \\and Sondre Johan Mannsverk \\and Terje Snarby \\and Even Wiik Thomassen \\and Lars Solvoll Tønder \\and Sigurd Wien', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

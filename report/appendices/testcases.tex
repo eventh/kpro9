@@ -16,17 +16,17 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting parameters for c-header file \\
+	Description & Supporting parameters for \Gls{c}-\gls{header} file \\
 	Tester & Lars Solvoll Tønder \\
 	Prerequisites & The program has to have been compiled on the system \\
-	Feature & Test that we are able to feed the solution with a c-header file and have it get dissected \\
+	Feature & Test that we are able to feed the solution with a \Gls{c}-\gls{header} file and have it get dissected \\
 	\midrule
 	\multirow{3}{*}{Execution} & 1. Start the program \\
-	& 2. Write the name of the c-header file in the command line \\
+	& 2. Write the name of the \Gls{c}-\gls{header} file in the command line \\
 	& 3. Read the output given by the program \\
 	\midrule
 	\multirow{2}{*}{Expected result} & 1. The program should start up without any errors and present the user with a command line interface \\
-	& 3. The user should be presented with some text expressing the success of the LUA-file generation \\
+	& 3. The user should be presented with some text expressing the success of the \Gls{lua}-file generation \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -41,12 +41,12 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	Description & Supporting basic data types \\
 	Tester & Lars Solvoll Tønder \\
 	Prerequisites & The program has to have been started \\
-	Feature & Test that our utility will be able to make a dissectors for C-header files including the following basic data types: int, float, char and boolean \\
+	Feature & Test that our \gls{utility} will be able to make a \glspl{dissector} for \Gls{c}-\gls{header} files including the following basic data types: \gls{int}, \gls{float}, \gls{char} and \gls{boolean} \\
 	\midrule
-	\multirow{2}{*}{Execution} & 1. Write the name of a c-header file which includes the aforementioned basic data types \\
+	\multirow{2}{*}{Execution} & 1. Write the name of a \Gls{c}-\gls{header} file which includes the aforementioned basic data types \\
 	& 2. Read the output given by the program \\ 
 	\midrule
-	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	Expected result & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -58,17 +58,17 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Displaying simple structs \\
+	Description & Displaying simple \glspl{struct} \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has already made a dissector \\
-	Feature & Test that our utility is able to generate dissectors that displays simple structs \\
+	Prerequisites & The \gls{utility} has already made a \gls{dissector} \\
+	Feature & Test that our \gls{utility} is able to generate \glspl{dissector} that displays simple \glspl{struct} \\
 	\midrule
-	\multirow{3}{*}{Execution} & 1. Open wireshark and run the dissector \\
-	& 2. Run the dissector on some captured data of simple structs \\
+	\multirow{3}{*}{Execution} & 1. Open \Gls{wireshark} and run the \gls{dissector} \\
+	& 2. Run the \gls{dissector} on some captured data of simple \glspl{struct} \\
 	& 3. Read the output \\
 	\midrule
-	\multirow{2}{*}{Expected result} & 1. Wireshark should be able to load the dissector without any errors \\
-	& 3. Wireshark should display the data inside the structs sent in the capture data \\
+	\multirow{2}{*}{Expected result} & 1. \Gls{wireshark} should be able to load the \gls{dissector} without any errors \\
+	& 3. \Gls{wireshark} should display the data inside the \glspl{struct} sent in the capture data \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -80,15 +80,15 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting \#include \\
+	Description & Supporting \gls{include} \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
-	Feature & Test that our utility supports c-header files with the \#include directive \\
+	Prerequisites & The \gls{utility} has to be up and running \\
+	Feature & Test that our \gls{utility} supports \Gls{c}-\gls{header} files with the \gls{include} directive \\
 	\midrule
-	\multirow{2}{*}{Execution} & 1. Write the name of a C-header file with an \#include directive \\
+	\multirow{2}{*}{Execution} & 1. Write the name of a \Gls{c}-\gls{header} file with an \gls{include} directive \\
 	& 2. Read the output \\
 	\midrule
-	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	Expected result & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -100,15 +100,15 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting \#define and \#if \\
+	Description & Supporting \gls{define} and \gls{if} \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
-	Feature & Test that our utility supports c-header files with \#define and \#if directives \\
+	Prerequisites & The \gls{utility} has to be up and running \\
+	Feature & Test that our \gls{utility} supports \Gls{c}-\gls{header} files with \gls{define} and \gls{if} directives \\
 	\midrule
-	\multirow{2}{*}{Execution} & 1. Write the name of a C-header file with a \#define and \#if directives \\
+	\multirow{2}{*}{Execution} & 1. Write the name of a \Gls{c}-\gls{header} file with a \gls{define} and \gls{if} directives \\
 	& 2. Read the output \\
 	\midrule
-	Expected result & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	Expected result & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -122,10 +122,10 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\midrule
 	Description & Supporting configuration files \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
-	Feature & Test that our utility supports reading data from a configuration file \\
+	Prerequisites & The \gls{utility} has to be up and running \\
+	Feature & Test that our \gls{utility} supports reading data from a configuration file \\
 	\midrule
-	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a config file \\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with the name of a config file \\
 	& 2. Read the output \\
 	\midrule
 	Expected result & 2. The program should provide the user with some text expressing either the success of reading the file, or the failure of reading the file due to any errors in the config-file itself\\
@@ -142,14 +142,14 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\midrule
 	Description & Recognizing invalid values \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility must have already loaded a configuration file and generated a dissector for a given header file\\
-	Feature & Test that our utility recognizes invalid values for struct members specified in the config file. \\
+	Prerequisites & The \gls{utility} must have already loaded a configuration file and generated a \gls{dissector} for a given \gls{header} file\\
+	Feature & Test that our \gls{utility} recognizes invalid values for \gls{struct} \glspl{member} specified in the config file. \\
 	\midrule
-	\multirow{3}{*}{Execution} & 1. Feed the utility with the name of a header and a config-file, where the config file sets restrictions on the members of the header file. \\
-	& 2. Use the resulting dissector on some capture data for wireshark that contains struct members with invalid values. \\
-	& 3. Read the displayed data generated by wireshark \\
+	\multirow{3}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \gls{header} and a config-file, where the config file sets restrictions on the \glspl{member} of the \gls{header} file. \\
+	& 2. Use the resulting \gls{dissector} on some capture data for \Gls{wireshark} that contains \gls{struct} \glspl{member} with invalid values. \\
+	& 3. Read the displayed data generated by \Gls{wireshark} \\
 	\midrule
-	Expected result & 3. Wireshark should display the struct members with invalid values as invalid \\
+	Expected result & 3. \Gls{wireshark} should display the \gls{struct} \glspl{member} with invalid values as invalid \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -167,20 +167,20 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting members of type enum \\
+	Description & Supporting \glspl{member} of type \gls{enum} \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
-	Feature & Test that the utility iis able to support c-header files with enums \\
+	Prerequisites & The \gls{utility} has to be up and running \\
+	Feature & Test that the \gls{utility} is able to support \Gls{c}-\gls{header} files with \glspl{enum} \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct using enums and its configuration file \\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file which includes a \gls{struct} using \glspl{enum} and its configuration file \\
 	& 2. Read the output \\
-	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
-	& 4. Open the pcap file for this test with wireshark\\
-	& 5. Look at the different packets and struct members that are displayed in wireshark\\
+	& 3. Move the resulting \gls{dissector} into the plugins folder in the personal configuration folder of \Gls{wireshark}\\
+	& 4. Open the \gls{pcap-file} for this test with \Gls{wireshark}\\
+	& 5. Look at the different \glspl{packet} and \gls{struct} \glspl{member} that are displayed in \Gls{wireshark}\\
 	\midrule
-	\multirow{2}{*}{Expected result } & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\ 
+	\multirow{2}{*}{Expected result } & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation \\ 
 	\addlinespace
-	& 5 The different packets should be displayed as having structs with enums, showing the value of the enum by its name and value\\
+	& 5 The different \glspl{packet} should be displayed as having \glspl{struct} with \glspl{enum}, showing the value of the \gls{enum} by its name and value\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -192,19 +192,19 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting members of type array \\
+	Description & Supporting \glspl{member} of type \gls{array} \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
-	Feature & Test that the utility iis able to support c-header files with arrays \\
+	Prerequisites & The \gls{utility} has to be up and running \\
+	Feature & Test that the \gls{utility} iis able to support \Gls{c}-\gls{header} files with \glspl{array} \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct using arrays \\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file which includes a \gls{struct} using \glspl{array} \\
 	& 2. Read the output \\
-	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
-	& 4. Open the pcap file for this test with wireshark\\
-	& 5. Look at the different packets and struct members that are displayed in wireshark\\
+	& 3. Move the resulting \gls{dissector} into the plugins folder in the personal configuration folder of \Gls{wireshark}\\
+	& 4. Open the \gls{pcap-file} for this test with \Gls{wireshark}\\
+	& 5. Look at the different \glspl{packet} and \gls{struct} \glspl{member} that are displayed in \Gls{wireshark}\\
 	\midrule
-	\multirow{5}{*}{Expected result} & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
-	& 5 The different packets should be displayed as having structs with arrays, showing the values of the cells in the array. Multidimensional arrays should also be displayed as being arrays with subtrees of other arrays. This should be indicated by the multidimensional arrays having a clickable "+" box to the left which when pressed shows the values of the cells of the inner arrays \\
+	\multirow{5}{*}{Expected result} & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation \\
+	& 5 The different \glspl{packet} should be displayed as having \glspl{struct} with \glspl{array}, showing the values of the cells in the \gls{array}. Multidimensional \glspl{array} should also be displayed as being \glspl{array} with subtrees of other \glspl{array}. This should be indicated by the multidimensional \glspl{array} having a clickable "+" box to the left which when pressed shows the values of the cells of the inner \glspl{array} \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -216,19 +216,19 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting the display of structs within structs \\
+	Description & Supporting the display of \glspl{struct} within \glspl{struct} \\
 	Tester & Erik Bergersen \\
-	Prerequisites & The utility has to be up and running \\
-	Feature & Test that the utility iis able to support c-header files with structs that have other struct members  and display it properly in wireshark\\
+	Prerequisites & The \gls{utility} has to be up and running \\
+	Feature & Test that the \gls{utility} iis able to support \Gls{c}-\gls{header} files with \glspl{struct} that have other \gls{struct} \glspl{member}  and display it properly in \Gls{wireshark}\\
 	\midrule
-	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct with another struct member \\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file which includes a \gls{struct} with another \gls{struct} \gls{member} \\
 	& 2. Read the output \\
-	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
-	& 4. Open the pcap file for this test with wireshark\\
-	& 5. Look at the different struct members that are displayed in wireshark\\
+	& 3. Move the resulting \gls{dissector} into the plugins folder in the personal configuration folder of \Gls{wireshark}\\
+	& 4. Open the \gls{pcap-file} for this test with \Gls{wireshark}\\
+	& 5. Look at the different \gls{struct} \glspl{member} that are displayed in \Gls{wireshark}\\
 	\midrule
-	\multirow{2}{*}{Expected result} & 2. The program should provide the user with some text expressing the success of the LUA-file generation\\
-	& 5. The struct members within structs should be displayed as subtrees, indicated by having a clickable "+" box to the left whch when clicked, displayes the contents of the given struct\\
+	\multirow{2}{*}{Expected result} & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation\\
+	& 5. The \gls{struct} \glspl{member} within \glspl{struct} should be displayed as subtrees, indicated by having a clickable "+" box to the left whch when clicked, displayes the contents of the given \gls{struct}\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -242,18 +242,18 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\midrule
 	Description & Supporting enumerated named values \\
 	Tester & Erik Bergersen \\
-	Prerequisites & The utility has to be up and running \\
-	Feature & Test that the utility iis able to support c-header files which uses integers as enums without declaring them as enums \\
+	Prerequisites & The \gls{utility} has to be up and running \\
+	Feature & Test that the \gls{utility} iis able to support \Gls{c}-\gls{header} files which uses integers as \glspl{enum} without declaring them as \glspl{enum} \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes enumerated named values \\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file which includes enumerated named values \\
 	& 2. Read the output \\
-	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
-	& 4. Open the pcap file for this test with wireshark\\
-	& 5. Look at the different struct members that are displayed in wireshark\\
+	& 3. Move the resulting \gls{dissector} into the plugins folder in the personal configuration folder of \Gls{wireshark}\\
+	& 4. Open the \gls{pcap-file} for this test with \Gls{wireshark}\\
+	& 5. Look at the different \gls{struct} \glspl{member} that are displayed in \Gls{wireshark}\\
 	\midrule
-	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
+	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation \\
 	\addlinespace
-	& 5. The different packets should be displayed as containing enumerated named values expressed by their name and not value\\
+	& 5. The different \glspl{packet} should be displayed as containing enumerated named values expressed by their name and not value\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -265,19 +265,19 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting bit strings \\
+	Description & Supporting \glspl{bit string} \\
 	Tester & Erik Bergersen \\
-	Prerequisites & The utility has to be up and running \\
-	Feature & Test that the utility iis able to support c-header files with bit strings \\
+	Prerequisites & The \gls{utility} has to be up and running \\
+	Feature & Test that the \gls{utility} iis able to support \Gls{c}-\gls{header} files with \glspl{bit string} \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct using bit strings \\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file with a \gls{struct} using \glspl{bit string} \\
 	& 2. Read the output \\
-	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
-	& 4. Open the pcap file for this test with wireshark\\
-	& 5. Look at the different struct members that are displayed in wireshark\\
+	& 3. Move the resulting \gls{dissector} into the plugins folder in the personal configuration folder of \Gls{wireshark}\\
+	& 4. Open the \gls{pcap-file} for this test with \Gls{wireshark}\\
+	& 5. Look at the different \gls{struct} \glspl{member} that are displayed in \Gls{wireshark}\\
 	\midrule
-	\multirow{2}{*}{Expected result} & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
-	& 5. The packets should be displayed as containing bit strings. Bit strings should be displayed as subtrees indicated by a clickable "+" box to the left which shows the values of the different bits in the bit string when pressed\\
+	\multirow{2}{*}{Expected result} & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation \\
+	& 5. The \glspl{packet} should be displayed as containing \glspl{bit string}. \Glspl{bit string} should be displayed as subtrees indicated by a clickable "+" box to the left which shows the values of the different bits in the \gls{bit string} when pressed\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -289,19 +289,19 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting structs with various trailers \\
+	Description & Supporting \glspl{struct} with various \gls{trailers} \\
 	Tester & Erik Bergersen \\
-	Prerequisites & The utility has to be up and running \\
-	Feature & Test that the utility iis able to support c-header files with trailers \\
+	Prerequisites & The \gls{utility} has to be up and running \\
+	Feature & Test that the \gls{utility} iis able to support \Gls{c}-\gls{header} files with \gls{trailers} \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct that has a trailer \\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file with a \gls{struct} that has a trailer \\
 	& 2. Read the output \\
-	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
-	& 4. Open the pcap file for this test with wireshark\\
-	& 5. Look at the different struct members that are displayed in wireshark\\
+	& 3. Move the resulting \gls{dissector} into the plugins folder in the personal configuration folder of \Gls{wireshark}\\
+	& 4. Open the \gls{pcap-file} for this test with \Gls{wireshark}\\
+	& 5. Look at the different \gls{struct} \glspl{member} that are displayed in \Gls{wireshark}\\
 	\midrule
-	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
-	& 5. The packets should be display the data inside the struct, and the data from the trailer should be displayed below\\
+	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation \\
+	& 5. The \glspl{packet} should be display the data inside the \gls{struct}, and the data from the trailer should be displayed below\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -315,10 +315,10 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\midrule
 	Description & Sprint 2 functionality test \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to have been installed on the system as well as the attest testing framework \\
-	Feature & Checking that the utility is able to create a valid dissector from header files with all of the data types that were to be supported for sprint 2, including: trailers, bit strings, enumerated named values, structs within structs and arrays \\
+	Prerequisites & The \gls{utility} has to have been installed on the system as well as the attest testing framework \\
+	Feature & Checking that the \gls{utility} is able to create a valid \gls{dissector} from \gls{header} files with all of the data types that were to be supported for sprint 2, including: \gls{trailers}, \glspl{bit string}, enumerated named values, \glspl{struct} within \glspl{struct} and \glspl{array} \\
 	\midrule
-	\multirow{3}{*}{Execution} & 1. Navigate to the folder where CSjark is installed through the terminal orcommand line \\
+	\multirow{3}{*}{Execution} & 1. Navigate to the folder where CSjark is installed through the terminal or command line \\
 	& 2.  type "python -m attest" into the terminal or command line and then press enter  \\
 	& 3. Read the output\\
 	\midrule
@@ -339,15 +339,15 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Support batch mode of C header and configuration files \\
+	Description & Support \gls{batch mode} of \Gls{c} \gls{header} and configuration files \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
-	Feature &  Test that the utility is able to genereate dissectors for all header-files in a folder, with configuration\\
+	Prerequisites & The \gls{utility} has to be up and running \\
+	Feature &  Test that the \gls{utility} is able to genereate \glspl{dissector} for all \gls{header}-files in a folder, with configuration\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1. Feed the utility the name of the two folders with header-files and configuration-files. \\
-	& 2. Read output from the utility \\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} the name of the two folders with \gls{header}-files and configuration-files. \\
+	& 2. Read output from the \gls{utility} \\
 	\midrule
-	Expected result  & 2. The utility should provide the user with the amount of header files processed and the number of dissectors created. It should also provide the user with error messages for the header and configuration files it was unable to run  \\
+	Expected result  & 2. The \gls{utility} should provide the user with the amount of \gls{header} files processed and the number of \glspl{dissector} created. It should also provide the user with error messages for the \gls{header} and configuration files it was unable to run  \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -359,22 +359,22 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting custom Lua configuration  \\
+	Description & Supporting custom \Gls{lua} configuration  \\
 	Tester & Sondre Mannsverk \\
-	Prerequisites & The utility has to be up and running \\
-	Feature & Test that the utility is able to support custom Lua files by configuration \\
+	Prerequisites & The \gls{utility} has to be up and running \\
+	Feature & Test that the \gls{utility} is able to support custom \Gls{lua} files by configuration \\
 	\midrule
-	\multirow{6}{*}{Execution} & 1. Look at the custom Lua file(s) and understand what they do  \\
-	& 2. Feed the utility with a C header-file, that needs to have specific parts of it dissected by		
-	custom Lua file(s), and a configuration file that specifies what Lua file(s) should be used. \\
+	\multirow{6}{*}{Execution} & 1. Look at the custom \Gls{lua} file(s) and understand what they do  \\
+	& 2. Feed the \gls{utility} with a \Gls{c} \gls{header}-file, that needs to have specific parts of it dissected by		
+	custom \Gls{lua} file(s), and a configuration file that specifies what \Gls{lua} file(s) should be used. \\
 	& 3. Read the output \\
-	& 4. Move the resulting dissector into the plugins folder in the personal configuration
-	folder of wireshark\\
-	& 5. Open the pcap file for this test with wireshark \\
-	& 6. Look at the different struct members that are displayed in wireshark \\
+	& 4. Move the resulting \gls{dissector} into the plugins folder in the personal configuration
+	folder of \Gls{wireshark}\\
+	& 5. Open the \gls{pcap-file} for this test with \Gls{wireshark} \\
+	& 6. Look at the different \gls{struct} \glspl{member} that are displayed in \Gls{wireshark} \\
 	\midrule
-	\multirow{2}{*}{Expected result}  & 3.  The program should provide the user with some text expressing the			success of the Lua file generation \\
-	& 6. Assert that the custom Lua file(s) have affected the display of the struct members in the 		
+	\multirow{2}{*}{Expected result}  & 3. The program should provide the user with some text expressing the			success of the \Gls{lua} file generation \\
+	& 6. Assert that the custom \Gls{lua} file(s) have affected the display of the \gls{struct} \glspl{member} in the 		
 	expected way. \\
 	\bottomrule
 \end{tabularx}}
@@ -387,22 +387,24 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting unions \\
+	Description & Supporting \glspl{union} \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
-	Feature &  Test that the utility is able to support c-header files with unions \\
+	Prerequisites & The \gls{utility} has to be up and running \\
+	Feature &  Test that the \gls{utility} is able to support \Gls{c}-\gls{header} files with \glspl{union} \\
 	\midrule
-	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a header file with unions and its configuration file  \\
-	& 2. Read output from the utility \\
-	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
-	& 4. Open the pcap file for this test with wireshark\\
-	& 5. Look at the different struct members that are displayed in wireshark\\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \gls{header} file with \glspl{union} and its configuration file  \\
+	& 2. Read output from the \gls{utility} \\
+	& 3. Move the resulting \gls{dissector} into the plugins folder in the personal configuration folder of \Gls{wireshark}\\
+	& 4. Open the \gls{pcap-file} for this test with \Gls{wireshark}\\
+	& 5. Look at the different \gls{struct} \glspl{member} that are displayed in \Gls{wireshark}\\
 	\midrule
-	Expected result  & 2. The utility should provide the user some text expressing the success of the LUA-file generation \\
-	& 5. The unions should be displayed as subtrees with the names of all the union members and their values, even the ones that haven't been explicitly set\\
+	Expected result  & 2. The \gls{utility} should provide the user some text expressing the success of the \Gls{lua}-file generation \\
+	& 5. The \glspl{union} should be displayed as subtrees with the names of all the \gls{union} \glspl{member} and their values, even the ones that haven't been explicitly set\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
+
+\clearpage
 
 \begin{table}[ht] \footnotesize \center
 \caption{Test case TID18}\label{tab:TID18}
@@ -411,16 +413,16 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Support filter and search in wireshark  \\
+	Description & Support filter and search in \Gls{wireshark}  \\
 	Tester & Erik Bergersen \\
-	Prerequisites & Wireshark has to be up and running with the trailer\_test.lua \\
-	Feature & The dissector must support Wireshark's built-in filter and search on attributes \\
+	Prerequisites & \Gls{wireshark} has to be up and running with the trailer\_test.lua \\
+	Feature & The \gls{dissector} must support \Gls{wireshark}'s built-in filter and search on attributes \\
 	\midrule
-	\multirow{3}{*}{Execution} & 1. Open the pcap-file, which contains trailer\_test packets.   \\
+	\multirow{3}{*}{Execution} & 1. Open the pcap-file, which contains trailer\_test \glspl{packet}.   \\
 	& 2. Type the following in the filter-textbox: ''luatructs.message == 66'' and click apply\\
-	& 3. Look on the packet view. \\
+	& 3. Look on the \gls{packet} view. \\
 	\midrule
-	Expected result  & 3. Only trailer\_test packets will be visible in the packet view.\\
+	Expected result  & 3. Only trailer\_test \glspl{packet} will be visible in the \gls{packet} view.\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -434,17 +436,17 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
   	\midrule
   	Description &  Support WIN32, \_WIN64, \_sparc etc \\
   	Tester & Lars Solvoll Tønder \\
-  	Prerequisites & The utility has to be up and running \\
-  	Feature &  Test that the utility is able to support c-header files with platform definition preprocessor macros (e.g. \_WIN32, \_WIN64, \_sparc, etc.)\\
+  	Prerequisites & The \gls{utility} has to be up and running \\
+  	Feature &  Test that the \gls{utility} is able to support \Gls{c}-\gls{header} files with platform definition preprocessor macros (e.g. \_WIN32, \_WIN64, \_sparc, etc.)\\
   	\midrule
-  	\multirow{5}{*}{Execution} & 1. Feed the utility with c-header files with platform definition preprocessor macros (e.g. \_WIN32, \_WIN64, \_sparc, etc.). \\
- 	& 2. Read output from the utility \\
- 	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
- 	& 4. Open the pcap file for this test with wireshark\\
- 	& 5. Look at the different struct members that are displayed in wireshark\\
+  	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with \Gls{c}-\gls{header} files with platform definition preprocessor macros (e.g. \_WIN32, \_WIN64, \_sparc, etc.). \\
+ 	& 2. Read output from the \gls{utility} \\
+ 	& 3. Move the resulting \gls{dissector} into the plugins folder in the personal configuration folder of \Gls{wireshark}\\
+ 	& 4. Open the \gls{pcap-file} for this test with \Gls{wireshark}\\
+ 	& 5. Look at the different \gls{struct} \glspl{member} that are displayed in \Gls{wireshark}\\
 	\midrule
-	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the LUA-file generation. \\
-	& 5. The different structs should be displayed as having the right struct members according to the c-header definitions. For example, the member defined surronded by \texttt{\#ifdef \_WIN32 ... \#endif} directives should be displayed correctly in WIN32 struct. \\
+	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation. \\
+	& 5. The different \glspl{struct} should be displayed as having the right \gls{struct} \glspl{member} according to the \Gls{c}-\gls{header} definitions. For example, the \gls{member} defined surronded by \texttt{\gls{ifdef} \_WIN32 ... \#endif} directives should be displayed correctly in WIN32 \gls{struct}. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -456,15 +458,15 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting the use of flags specifying platforms to display member values correctly \\
+	Description & Supporting the use of flags specifying platforms to display \gls{member} values correctly \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & A dissector for dissecting a header according to it's configuration, as well as a pcap file for that header needs to be in place\\
-	Feature &  Test that the utility is able to create dissectors that support the use of different flags. These flags should specify the originating platform of the packet and be used to display the member values properly.\\
+	Prerequisites & A \gls{dissector} for dissecting a \gls{header} according to it's configuration, as well as a \gls{pcap-file} for that \gls{header} needs to be in place\\
+	Feature &  Test that the \gls{utility} is able to create \glspl{dissector} that support the use of different flags. These flags should specify the originating platform of the \gls{packet} and be used to display the \gls{member} values properly.\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1. Open a pcap file which includes packets with different flags but the same structs and member values just with different sizes according to the originating platform specified in the flags\\
-	& 2. Look at how the different packets are displayed in wireshark\\
+	\multirow{2}{*}{Execution} & 1. Open a \gls{pcap-file} which includes \glspl{packet} with different flags but the same \glspl{struct} and \gls{member} values just with different sizes according to the originating platform specified in the flags\\
+	& 2. Look at how the different \glspl{packet} are displayed in \Gls{wireshark}\\
 	\midrule
-	Expected result  & 2. The different packages should have the exact same member values just with different flag-values \\
+	Expected result  & 2. The different packages should have the exact same \gls{member} values just with different flag-values \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -478,19 +480,19 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting platforms with different endian  \\
+	Description & Supporting platforms with different \gls{endian}  \\
 	Tester & Erik Bergersen \\
-	Prerequisites & There have to exist a header-file, config-file and pcap-file to do the test. \\
-	Feature & Generate dissectors which support both little and big endian platforms \\
+	Prerequisites & There have to exist a \gls{header}-file, config-file and pcap-file to do the test. \\
+	Feature & Generate \glspl{dissector} which support both little and big \gls{endian} platforms \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct \\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file with a \gls{struct} \\
 	& 2. Read the output \\
-	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
-	& 4. Open the pcap file for this test with wireshark\\
-	& 5. Look at the different members in wireshark that have data types that can be affected by endianness. \\
+	& 3. Move the resulting \gls{dissector} into the plugins folder in the personal configuration folder of \Gls{wireshark}\\
+	& 4. Open the \gls{pcap-file} for this test with \Gls{wireshark}\\
+	& 5. Look at the different \glspl{member} in \Gls{wireshark} that have data types that can be affected by \gls{endianness}. \\
 	\midrule
-	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
-	& 5. The packets sent from platforms with different endian, should display the same values.\\
+	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation \\
+	& 5. The \glspl{packet} sent from platforms with different \gls{endian}, should display the same values.\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -504,17 +506,17 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\midrule
 	Description & Supporting alignments  \\
 	Tester & Erik Bergersen \\
-	Prerequisites & There have to exist a header-file, config-file and pcap-file to do the test. \\
-	Feature & Genereate dissectors on platforms with different alignment \\
+	Prerequisites & There have to exist a \gls{header}-file, config-file and pcap-file to do the test. \\
+	Feature & Genereate \glspl{dissector} on platforms with different alignment \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct \\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file with a \gls{struct} \\
 	& 2. Read the output \\
-	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
-	& 4. Open the pcap file for this test with wireshark\\
-	& 5. Look at the different packets from platforms that uses different alignments. \\
+	& 3. Move the resulting \gls{dissector} into the plugins folder in the personal configuration folder of \Gls{wireshark}\\
+	& 4. Open the \gls{pcap-file} for this test with \Gls{wireshark}\\
+	& 5. Look at the different \glspl{packet} from platforms that uses different alignments. \\
 	\midrule
-	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
-	& 5. The packets sent from platforms that uses different alignments, should display equal values.\\
+	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation \\
+	& 5. The \glspl{packet} sent from platforms that uses different alignments, should display equal values.\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -526,19 +528,19 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Handling Lua keywords  \\
+	Description & Handling \Gls{lua} keywords  \\
 	Tester & Erik Bergersen \\
-	Prerequisites & There have to exist a header-file, config-file and pcap-file to do the test. \\
-	Feature & The utility should support struct members, that have equal names as keywords in Lua \\
+	Prerequisites & There have to exist a \gls{header}-file, config-file and pcap-file to do the test. \\
+	Feature & The \gls{utility} should support \gls{struct} \glspl{member}, that have equal names as keywords in \Gls{lua} \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct \\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file with a \gls{struct} \\
 	& 2. Read the output \\
-	& 3. Move the resulting dissector into the plugins folder in the personal configuration folder of wireshark\\
-	& 4. Open the pcap file for this test with wireshark\\
-	& 5. Check that the dissector work as it should. \\
+	& 3. Move the resulting \gls{dissector} into the plugins folder in the personal configuration folder of \Gls{wireshark}\\
+	& 4. Open the \gls{pcap-file} for this test with \Gls{wireshark}\\
+	& 5. Check that the \gls{dissector} work as it should. \\
 	\midrule
-	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the LUA-file generation \\
-	& 5. Wireshark should not display an error message for invalid Lua code.\\
+	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation \\
+	& 5. \Gls{wireshark} should not display an error message for invalid \Gls{lua} code.\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -552,8 +554,8 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\midrule
 	Description & Sprint 3 functionality test \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to have been installed on the system as well as the attest testing framework.The file black\_box.py must also be present in the test folder of Csjark \\
-	Feature & Checking that the utility is able to create a valid dissector from header files with all of the data types that were to be supported for sprint 3\\
+	Prerequisites & The \gls{utility} has to have been installed on the system as well as the attest testing framework.The file black\_box.py must also be present in the test folder of Csjark \\
+	Feature & Checking that the \gls{utility} is able to create a valid \gls{dissector} from \gls{header} files with all of the data types that were to be supported for sprint 3\\
 	\midrule
 	\multirow{3}{*}{Execution} & 1. Navigate to the test folder inside the folder where CSjark is installed through the terminal or command line \\
 	& 2.  type "python -m attest" into the terminal or command line and then press enter  \\
@@ -573,8 +575,8 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\midrule
 	Description & Sprint 2 functionality test \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to have been installed on the system as well as the attest testing framework. The file requirements.py must also be present in the test folder of csjark \\
-	Feature & Checking that the utility is able to support all of the features required by the customer \\
+	Prerequisites & The \gls{utility} has to have been installed on the system as well as the attest testing framework. The file requirements.py must also be present in the test folder of CSjark \\
+	Feature & Checking that the \gls{utility} is able to support all of the features required by the customer \\
 	\midrule
 	\multirow{3}{*}{Execution} & 1. Navigate to the folder where CSjark is installed through the terminal orcommand line \\
 	& 2.  type "python -m attest" into the terminal or command line and then press enter  \\
@@ -596,20 +598,20 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Including system-headers \\
+	Description & Including system-\glspl{header} \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system and there has to exist a pcap file which is associated with this test \\
-	Feature & Checking that the utility is able to support headers which use system headers \\
+	Prerequisites & The \gls{utility} has to be installed on the system and there has to exist a \gls{pcap-file} which is associated with this test \\
+	Feature & Checking that the \gls{utility} is able to support \glspl{header} which use system \glspl{header} \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1.Feed the utility with the name of a c-header file that includes system-headers and its configuration file \\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file that includes system-\glspl{header} and its configuration file \\
 	& 2.  Read the output\\
-	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
-	& 4. Run wireshark with the pcap file associated with this test\\
-	& 5. Look at the resulting structs and members are displayed in wireshark\\
+	& 3. Copy the resulting \glspl{dissector} into the plugins folder of the personal configuration in \Gls{wireshark}\\
+	& 4. Run \Gls{wireshark} with the \gls{pcap-file} associated with this test\\
+	& 5. Look at the resulting \glspl{struct} and \glspl{member} are displayed in \Gls{wireshark}\\
 	\midrule
 	\multirow{2}{*}{Expected result}
-	& 2. The user should be presented with some text expressing the success of generating dissectors\\
-	& 5. The structs and struct members defined in the system headers should be displayed as having a value and not just hex data\\
+	& 2. The user should be presented with some text expressing the success of generating \glspl{dissector}\\
+	& 5. The \glspl{struct} and \gls{struct} \glspl{member} defined in the system \glspl{header} should be displayed as having a value and not just hex data\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -623,14 +625,14 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\midrule
 	Description & Ignoring \#pragma directives \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system and there needs to exist a pcap file which is associated with this test \\
-	Feature & Making sure that the utility is able to parse header files with the \#pragma directive by just ignoring that directive\\
+	Prerequisites & The \gls{utility} has to be installed on the system and there needs to exist a \gls{pcap-file} which is associated with this test \\
+	Feature & Making sure that the \gls{utility} is able to parse \gls{header} files with the \#pragma directive by just ignoring that directive\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1.Feed the utility with the name of a c-header file that contains a \#pragma directive and it's configuration file\\
-	& 2.  Read the output\\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file that contains a \#pragma directive and it's configuration file\\
+	& 2. Read the output\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+	& 2. The user should be presented with some text expressing the success of generating \glspl{dissector}\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -642,22 +644,22 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Improve generated Lua output by removing platform prefix\\
+	Description & Improve generated \Gls{lua} output by removing platform prefix\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system \\
-	Feature & Making sure the utility only generates one dissector for the struct instead of several, but still keeping all of the functionality\\
+	Prerequisites & The \gls{utility} has to be installed on the system \\
+	Feature & Making sure the \gls{utility} only generates one \gls{dissector} for the \gls{struct} instead of several, but still keeping all of the functionality\\
 	\midrule
-	\multirow{7}{*}{Execution} & 1.Feed the utility with any c-header file and it's configration\\
+	\multirow{7}{*}{Execution} & 1. Feed the \gls{utility} with any \Gls{c}-\gls{header} file and it's configration\\
 	& 2.  Read the output\\
-	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
-	& 4. Run wireshark\\
-	& 5. Open the dissector tables menu entry from the Internals menu\\
+	& 3. Copy the resulting \glspl{dissector} into the plugins folder of the personal configuration in \Gls{wireshark}\\
+	& 4. Run \Gls{wireshark}\\
+	& 5. Open the \gls{dissector} tables menu entry from the Internals menu\\
 	& 6. Click the luastructs tree entry\\
 	& 7. Inspect its contents\\ 
 	\midrule
 	\multirow{2}{*}{Expected result}
-	& 2. The user should be presented with some text expressing the success of generating dissectors\\
-	& 7. There should only be one tree entry for each dissector, not one for each platform as well\\
+	& 2. The user should be presented with some text expressing the success of generating \glspl{dissector}\\
+	& 7. There should only be one tree entry for each \gls{dissector}, not one for each platform as well\\
 \end{tabularx}}
 \end{table}
 
@@ -670,16 +672,16 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\midrule
 	Description & Recursive searching of subfolders\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system and there needs to exist a folder with folders that all have header files in them \\
-	Feature & Checking that it is possible for the utility to be fed a folder with header files that has subfolders which are in turn inspected\\
+	Prerequisites & The \gls{utility} has to be installed on the system and there needs to exist a folder with folders that all have \gls{header} files in them \\
+	Feature & Checking that it is possible for the \gls{utility} to be fed a folder with \gls{header} files that has subfolders which are in turn inspected\\
 	\midrule
-	\multirow{3}{*}{Execution} & 1.Feed the utility with the name of a folder of header files which again has subfolders with other header files\\
+	\multirow{3}{*}{Execution} & 1. Feed the \gls{utility} with the name of a folder of \gls{header} files which again has subfolders with other \gls{header} files\\
 	& 2.  Read the output\\
-	& 3. Inspect the generated Lua files \\
+	& 3. Inspect the generated \Gls{lua} files \\
 	\midrule
 	\multirow{2}{*}{Expected result}
-	& 2. The user should be presented with some text expressing the success of generating dissectors for every header file in the subfolders\\
-	& 3. There should be 1 file for each struct contained in the different header files located in the header folder and its subfolders \\
+	& 2. The user should be presented with some text expressing the success of generating \glspl{dissector} for every \gls{header} file in the subfolders\\
+	& 3. There should be 1 file for each \gls{struct} contained in the different \gls{header} files located in the \gls{header} folder and its subfolders \\
 \end{tabularx}}
 \end{table}
 
@@ -692,18 +694,18 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\midrule
 	Description & Finding include dependencies which are not explicitly set\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system \\
-	Feature & Check that the utility is able to identify include dependencies which are not explicitly set and use that information to parse files over again correctly\\
+	Prerequisites & The \gls{utility} has to be installed on the system \\
+	Feature & Check that the \gls{utility} is able to identify include dependencies which are not explicitly set and use that information to parse files over again correctly\\
 	\midrule
-	\multirow{5}{*}{Execution} & 1.Feed the utility with a c-header file that has include dependencies which are not explicitly set, and it's configration file\\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file that has include dependencies which are not explicitly set, and it's configration file\\
 	& 2.  Read the output\\
-	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
-	& 4. Run wireshark with the pcap file associated with this test\\
-	& 5. Inspect the different packets, their structs and member values\\
+	& 3. Copy the resulting \glspl{dissector} into the plugins folder of the personal configuration in \Gls{wireshark}\\
+	& 4. Run \Gls{wireshark} with the \gls{pcap-file} associated with this test\\
+	& 5. Inspect the different \glspl{packet}, their \glspl{struct} and \gls{member} values\\
 	\midrule
 	\multirow{2}{*}{Expected result}
-	& 2. The user should be presented with some text expressing the success of generating dissectors\\
-	& 5. All structs and member values should be displayed as having proper values and not just hex data\\
+	& 2. The user should be presented with some text expressing the success of generating \glspl{dissector}\\
+	& 5. All \glspl{struct} and \gls{member} values should be displayed as having proper values and not just hex data\\
 \end{tabularx}}
 \end{table}
 
@@ -716,18 +718,18 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\midrule
 	Description & Pointer support\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system \\
-	Feature & Checking that the utility is able to support the use of pointers in header files\\
+	Prerequisites & The \gls{utility} has to be installed on the system \\
+	Feature & Checking that the \gls{utility} is able to support the use of pointers in \gls{header} files\\
 	\midrule
-	\multirow{5}{*}{Execution} & 1.Feed the utility with a c-header file that has pointers, and it's configration file\\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file that has pointers, and it's configration file\\
 	& 2.  Read the output\\
-	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
-	& 4. Run wireshark with the pcap file associated with this test\\
-	& 5. Inspect the different packets, their structs and member values\\
+	& 3. Copy the resulting \glspl{dissector} into the plugins folder of the personal configuration in \Gls{wireshark}\\
+	& 4. Run \Gls{wireshark} with the \gls{pcap-file} associated with this test\\
+	& 5. Inspect the different \glspl{packet}, their \glspl{struct} and \gls{member} values\\
 	\midrule
 	\multirow{2}{*}{Expected result}
-	& 2. The user should be presented with some text expressing the success of generating dissectors\\
-	& 5. All structs and member values should be displayed as having proper values and not just hex data\\
+	& 2. The user should be presented with some text expressing the success of generating \glspl{dissector}\\
+	& 5. All \glspl{struct} and \gls{member} values should be displayed as having proper values and not just hex data\\
 \end{tabularx}}
 \end{table}
 
@@ -738,20 +740,20 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Enums in arrays\\
+	Description & Enums in \glspl{array}\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system \\
-	Feature & Checking that the utility is able to support the use of enums inside of arrays\\
+	Prerequisites & The \gls{utility} has to be installed on the system \\
+	Feature & Checking that the \gls{utility} is able to support the use of \glspl{enum} inside of \glspl{array}\\
 	\midrule
-	\multirow{5}{*}{Execution} & 1.Feed the utility with a c-header file that has an array of enums, and it's configration file\\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file that has an \gls{array} of \glspl{enum}, and it's configration file\\
 	& 2.  Read the output\\
-	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
-	& 4. Run wireshark with the pcap file associated with this test\\
-	& 5. Inspect the different packets, their structs and member values\\
+	& 3. Copy the resulting \glspl{dissector} into the plugins folder of the personal configuration in \Gls{wireshark}\\
+	& 4. Run \Gls{wireshark} with the \gls{pcap-file} associated with this test\\
+	& 5. Inspect the different \glspl{packet}, their \glspl{struct} and \gls{member} values\\
 	\midrule
 	\multirow{2}{*}{Expected result}
-	& 2. The user should be presented with some text expressing the success of generating dissectors\\
-	& 5. All structs that contain an array of enums should be displayed as containing enums instead of just integers\\
+	& 2. The user should be presented with some text expressing the success of generating \glspl{dissector}\\
+	& 5. All \glspl{struct} that contain an \gls{array} of \glspl{enum} should be displayed as containing \glspl{enum} instead of just integers\\
 \end{tabularx}}
 \end{table}
 
@@ -762,20 +764,20 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Supporting \#define as a command line argument\\
+	Description & Supporting \gls{define} as a command line argument\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system \\
-	Feature & Checking that it is possible to feed the utility with a \# define argument and have it force pre-processor to add a corresponding argument to the header files it is processing\\
+	Prerequisites & The \gls{utility} has to be installed on the system \\
+	Feature & Checking that it is possible to feed the \gls{utility} with a \gls{define} argument and have it force pre-processor to add a corresponding argument to the \gls{header} files it is processing\\
 	\midrule
-	\multirow{5}{*}{Execution} & 1.Feed the utility with a c-header file, it's configration file and a \#define directive\\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file, it's configration file and a \gls{define} directive\\
 	& 2.  Read the output\\
-	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
-	& 4. Run wireshark with the pcap file associated with this test\\
-	& 5. Inspect the different packets, their structs and member values\\
+	& 3. Copy the resulting \glspl{dissector} into the plugins folder of the personal configuration in \Gls{wireshark}\\
+	& 4. Run \Gls{wireshark} with the \gls{pcap-file} associated with this test\\
+	& 5. Inspect the different \glspl{packet}, their \glspl{struct} and \gls{member} values\\
 	\midrule
 	\multirow{2}{*}{Expected result}
-	& 2. The user should be presented with some text expressing the success of generating dissectors\\
-	& 5. All structs and their member values should be displayed as having proper values and not just hex data\\
+	& 2. The user should be presented with some text expressing the success of generating \glspl{dissector}\\
+	& 5. All \glspl{struct} and their \gls{member} values should be displayed as having proper values and not just hex data\\
 \end{tabularx}}
 \end{table}
 
@@ -786,16 +788,16 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Multiple message ID's for one dissector\\
+	Description & Multiple message ID's for one \gls{dissector}\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system \\
-	Feature & Checking that the utility supports having more than one message ID per dissector\\
+	Prerequisites & The \gls{utility} has to be installed on the system \\
+	Feature & Checking that the \gls{utility} supports having more than one message ID per \gls{dissector}\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1.Feed the utility with a c-header file and it's configuration file which includes more than one message ID\\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file and it's configuration file which includes more than one message ID\\
 	& 2.  Read the output\\ 
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+	& 2. The user should be presented with some text expressing the success of generating \glspl{dissector}\\
 \end{tabularx}}
 \end{table}
 
@@ -806,22 +808,24 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Allowing configuration for unknown structs\\
+	Description & Allowing configuration for unknown \glspl{struct}\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system \\
-	Feature & Checking that the utility supports being able to configure the size of unknown structs\\
+	Prerequisites & The \gls{utility} has to be installed on the system \\
+	Feature & Checking that the \gls{utility} supports being able to configure the size of unknown \glspl{struct}\\
 	\midrule
-	\multirow{5}{*}{Execution} & 1.Feed the utility with a c-header file that has unparseable members and it's configuration file which includes the size of the struct itself\\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file that has unparseable \glspl{member} and it's configuration file which includes the size of the \gls{struct} itself\\
 	& 2.  Read the output\\
-	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
-	& 4. Open wireshark with the pcap file associated with this test\\
-	& 5. Inspect the different packets, their structs and member values\\ 
+	& 3. Copy the resulting \glspl{dissector} into the plugins folder of the personal configuration in \Gls{wireshark}\\
+	& 4. Open \Gls{wireshark} with the \gls{pcap-file} associated with this test\\
+	& 5. Inspect the different \glspl{packet}, their \glspl{struct} and \gls{member} values\\ 
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. The user should be presented with some text expressing the success of generating dissectors\\
-	& 5. All of the members of each packets should have proper values except for the unparseable members which should only be displayed as containing hex data\\
+	& 2. The user should be presented with some text expressing the success of generating \glspl{dissector}\\
+	& 5. All of the \glspl{member} of each \glspl{packet} should have proper values except for the unparseable \glspl{member} which should only be displayed as containing hex data\\
 \end{tabularx}}
 \end{table}
+
+\clearpage
 
 \begin{table}[ht] \footnotesize \center
 \caption{Test case TID36}\label{tab:TID36}
@@ -830,24 +834,19 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Allowing configuration for unknown structs\\
+	Description & Autogenerating configuration files for \glspl{struct} that has no config file of their own\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system \\
-	Feature & Checking that the utility supports being able to configure the size of unknown structs\\
+	Prerequisites & The \gls{utility} has to be installed on the system \\
+	Feature & Checking that the \gls{utility} is able to create template configuration files for all \glspl{struct} that does not currently have a configuration\\
 	\midrule
-	\multirow{5}{*}{Execution} & 1.Feed the utility with a c-header file that has unparseable members and it's configuration file which includes the size of the struct itself\\
-	& 2.  Read the output\\
-	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
-	& 4. Open wireshark with the pcap file associated with this test\\
-	& 5. Inspect the different packets, their structs and member values\\ 
+	\multirow{3}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file which has several \glspl{struct} without any configuration files \\
+	& 2.  Open the configuration folder where CSjark is installed\\
+	& 3. Inspect the configuration files \\
 	\midrule
-	\multirow{2}{*}{Expected result}
-	& 2. The user should be presented with some text expressing the success of generating dissectors\\
-	& 5. All of the members of each packets should have proper values except for the unparseable members which should only be displayed as containing hex data\\
+	\multirow{1}{*}{Expected result}
+	& 3. There should now be one configuration file present for each \gls{struct} in the \Gls{c}-\gls{header} file that has an empty template for filling in values for configuration\\
 \end{tabularx}}
 \end{table}
-
-\clearpage
 
 \begin{table}[ht] \footnotesize \center
 \caption{Test case TID37}\label{tab:TID37}
@@ -856,17 +855,16 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Autogenerating configuration files for structs that has no config file of their own\\
+	Description & Only generating \glspl{dissector} for \glspl{struct} with a valid ID\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system \\
-	Feature & Checking that the utility is able to create template configuration files for all structs that does not currently have a configuration\\
+	Prerequisites & The \gls{utility} has to be installed on the system \\
+	Feature & Making sure that the \gls{utility} only creates \glspl{dissector} for files that have a valid ID specified in its configuration\\
 	\midrule
-	\multirow{3}{*}{Execution} & 1.Feed the utility with a c-header file which has several structs without any configuration files \\
-	& 2.  Open the configuration folder where CSjark is installed\\
-	& 3. Inspect the configuration files \\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file and it's configuration file that has no valid ID\\
+	& 2.  Read the output\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 3. There should now be one configuration file present for each struct in the c-header file that has an empty template for filling in values for configuration\\
+	& 2. The user should be presented with a message saying that no \glspl{dissector} were created and why\\
 \end{tabularx}}
 \end{table}
 
@@ -877,16 +875,16 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Only generating dissectors for structs with a valid ID\\
+	Description & Guessing \glspl{dissector} from \gls{packet} size\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system \\
-	Feature & Making sure that the utility only creates dissectors for files that have a valid ID specified in its configuration\\
+	Prerequisites & The \gls{utility} has to be installed on the system and \Gls{wireshark} has to have been loaded with a \gls{dissector} for a \gls{struct} of the same size as the one associated with this test \\
+	Feature & Making sure the \gls{utility} is able to guess which \gls{dissector} to use based on \gls{packet} size if there are no \glspl{dissector} specified for the \gls{packet}\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1.Feed the utility with a c-header file and it's configuration file that has no valid ID\\
-	& 2.  Read the output\\
+	\multirow{2}{*}{Execution} & 1.Start \Gls{wireshark} with the \gls{pcap-file} associated with this test\\
+	& 2.  Inspect the different \glspl{packet}, their \glspl{struct} and \gls{member} values\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. The user should be presented with a message saying that no dissectors were created and why\\
+	& 2. All of the \glspl{packet} should contain a \gls{struct} with different \glspl{member} and values instead of just raw hex data\\
 \end{tabularx}}
 \end{table}
 
@@ -897,16 +895,16 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Guessing dissectors from packet size\\
+	Description & Invalid \gls{header}\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system and wireshark has to have been loaded with a dissector for a struct of the same size as the one associated with this test \\
-	Feature & Making sure the utility is able to guess which dissector to use based on packet size if there are no dissectors specified for the packet\\
+	Prerequisites & The \gls{utility} has to be installed on the system\\
+	Feature & Making sure the \gls{utility} crashes if it receives an invalid \gls{header}\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1.Start wireshark with the pcap file associated with this test\\
-	& 2.  Inspect the different packets, their structs and member values\\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with an invalid \gls{header} file\\
+	& 2.  Read the output\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. All of the packets should contain a struct with different members and values instead of just raw hex data\\
+	& 2. The \gls{utility} should crash and give an error message explaining why it crashed\\
 \end{tabularx}}
 \end{table}
 
@@ -917,16 +915,16 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Invalid header\\
+	Description & Invalid \gls{header} during \gls{batch mode}\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system\\
-	Feature & Making sure the utility crashes if it receives an invalid header\\
+	Prerequisites & The \gls{utility} has to be installed on the system\\
+	Feature & Making sure the \gls{utility} skips \glspl{header} it is unable to parse during \gls{batch processing}\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1.Feed the utility with an invalid header file\\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with a folder containing several invalid \gls{header} files\\
 	& 2.  Read the output\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. The utility should crash and give an error message explaining why it crashed\\
+	& 2. The \gls{utility} should skip the files it is unable to parse and present the user with a message saying why it skipped the files it was unable to parse\\
 \end{tabularx}}
 \end{table}
 
@@ -937,16 +935,16 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Invalid header during batch mode\\
+	Description & Ambiguous \gls{struct} IDs \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system\\
-	Feature & Making sure the utility skips headers it is unable to parse during batch processing\\
+	Prerequisites & The \gls{utility} has to be installed on the system\\
+	Feature & Making sure the \gls{utility} crashes if there are several \glspl{struct} that all have been configured to using the same ID\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1.Feed the utility with a folder containing several invalid header files\\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with a pair of \glspl{header} and configuration files that both have the same \gls{struct} ID\\
 	& 2.  Read the output\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. The utility should skip the files it is unable to parse and present the user with a message saying why it skipped the files it was unable to parse\\
+	& 2. The \gls{utility} should present the user with an error message saying that there exists 2 \glspl{struct} which have been configured to using the same ID\\
 \end{tabularx}}
 \end{table}
 
@@ -957,16 +955,17 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Ambiguous struct IDs \\
+	Description & Ambiguous platform IDs \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system\\
-	Feature & Making sure the utility crashes if there are several structs that all have been configured to using the same ID\\
+	Prerequisites & The \gls{utility} has to be installed on the system\\
+	Feature & Making sure the \gls{utility} crashes if there are several platforms that all share the same ID\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1.Feed the utility with a pair of headers and configuration files that both have the same struct ID\\
-	& 2.  Read the output\\
+	\multirow{3}{*}{Execution} & 1.Add another platform platform.py which has the same platform ID as one of the previous ones\\
+	& 2.  Feed the \gls{utility} with any \gls{header} file and its config\\
+	& 3. Read the output\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. The utility should present the user with an error message saying that there exists 2 structs which have been configured to using the same ID\\
+	& 3. The \gls{utility} should present the user with an error message saying that there exists two platforms with the same name\\
 \end{tabularx}}
 \end{table}
 
@@ -977,17 +976,16 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Ambiguous platform IDs \\
+	Description & Running the \gls{utility} on \Gls{Windows}\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on the system\\
-	Feature & Making sure the utility crashes if there are several platforms that all share the same ID\\
+	Prerequisites & The \gls{utility} has to be installed on a \Gls{Windows} system\\
+	Feature & Making sure the \gls{utility} runs on the latest version of \Gls{Windows} as per 24.11.2011\\
 	\midrule
-	\multirow{3}{*}{Execution} & 1.Add another platform platform.py which has the same platform ID as one of the previous ones\\
-	& 2.  Feed the utility with any header file and its config\\
-	& 3. Read the output\\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with any \Gls{c}-\gls{header} file and its config\\
+	& 2. Read the output\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 3. The utility should present the user with an error message saying that there exists two platforms with the same name\\
+	& 2. The \gls{utility} should present the user with some text expressing the success of creating a \gls{dissector} for each of the \glspl{struct} inside the \gls{header} file\\
 \end{tabularx}}
 \end{table}
 
@@ -998,16 +996,16 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Running the utility on Windows\\
+	Description & Running the \gls{utility} on \Gls{Solaris}\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on a windows system\\
-	Feature & Making sure the utility runs on the latest version of Windows as per 24.11.2011\\
+	Prerequisites & The \gls{utility} has to be installed on a \Gls{Solaris} system\\
+	Feature & Making sure the \gls{utility} runs on the latest version of \Gls{Solaris} as per 24.11.2011\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1. Feed the utility with any c-header file and its config\\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with any \Gls{c}-\gls{header} file and its config\\
 	& 2. Read the output\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. The utility should present the user with some text expressing the success of creating a dissector for each of the structs inside the header file\\
+	& 2. The \gls{utility} should present the user with some text expressing the success of creating a \gls{dissector} for each of the \glspl{struct} inside the \gls{header} file\\
 \end{tabularx}}
 \end{table}
 
@@ -1018,16 +1016,16 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Running the utility on Solaris\\
+	Description & Running the \glspl{dissector} on \Gls{Solaris}\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be installed on a Solaris system\\
-	Feature & Making sure the utility runs on the latest version of Solais as per 24.11.2011\\
+	Prerequisites & \Gls{wireshark} has to have been installed with the \glspl{dissector} associated with this test\\
+	Feature & Making sure the \glspl{dissector} runs on the latest version of \Gls{Solaris} as per 24.11.2011\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1. Feed the utility with any c-header file and its config\\
-	& 2. Read the output\\
+	\multirow{2}{*}{Execution} & 1. Run \Gls{wireshark} with the \gls{pcap-file} associated with this test\\
+	& 2. Inspect the different \glspl{packet}, their \glspl{struct} and \gls{member} values\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. The utility should present the user with some text expressing the success of creating a dissector for each of the structs inside the header file\\
+	& 2. The \glspl{packet} should be displayed as containing \glspl{struct} with \glspl{member} that all have proper values and not just hex data\\
 \end{tabularx}}
 \end{table}
 
@@ -1038,16 +1036,16 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Running the dissectors on Solaris\\
+	Description & Running the \glspl{dissector} on \Gls{Windows}\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & Wireshark has to have been installed with the dissectors associated with this test\\
-	Feature & Making sure the dissectors runs on the latest version of Solais as per 24.11.2011\\
+	Prerequisites & \Gls{wireshark} has to have been installed with the \glspl{dissector} associated with this test\\
+	Feature & Making sure the \glspl{dissector} runs on the latest version of \Gls{Solaris} as per 24.11.2011\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1. Run wireshark with the pcap file associated with this test\\
-	& 2. Inspect the different packets, their structs and member values\\
+	\multirow{2}{*}{Execution} & 1. Run \Gls{wireshark} with the \gls{pcap-file} associated with this test\\
+	& 2. Inspect the different \glspl{packet}, their \glspl{struct} and \gls{member} values\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. The packets should be displayed as containing structs with members that all have proper values and not just hex data\\
+	& 2. The \glspl{packet} should be displayed as containing \glspl{struct} with \glspl{member} that all have proper values and not just hex data\\
 \end{tabularx}}
 \end{table}
 
@@ -1058,16 +1056,14 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Running the dissectors on Windows\\
+	Description & Quality of user documentation\\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & Wireshark has to have been installed with the dissectors associated with this test\\
-	Feature & Making sure the dissectors runs on the latest version of Solais as per 24.11.2011\\
+	Prerequisites & The user documentation has to have been written\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1. Run wireshark with the pcap file associated with this test\\
-	& 2. Inspect the different packets, their structs and member values\\
+	\multirow{2}{*}{Execution} & 1. Read the user documentation for one hour\\
+	& 2. Try using the utility to generate a dissector for a header file\\
 	\midrule
 	\multirow{1}{*}{Expected result}
-	& 2. The packets should be displayed as containing structs with members that all have proper values and not just hex data\\
+	& 2. The user should be able to generate a dissector configured to display the values from a given c-struct properly\\
 \end{tabularx}}
 \end{table}
-

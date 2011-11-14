@@ -133,25 +133,25 @@ Below, there is an example of a configuration for the member named ``flags`` and
             2: Blue
 
 
-Dissector ID
-~~~~~~~~~~~~~~~~~~
+Dissector message ID
+~~~~~~~~~~~~~~~~~~~~
 
-In every struct-packet that Wireshark captures, there is a header. One of the fields in the header, the ``id`` field, specifies which dissector should be loaded to dissect the actual struct. This field can be specified in the configuration file. If no configuration file is given, the packet will be assigned a default dissector.  
+In every struct-packet that Wireshark captures, there is a header. One of the fields in the header, the ``id`` field, specifies which dissector should be loaded to dissect the actual struct. This field can be specified in the configuration file.  
 
 This is an example of the specification ::
 
-    Structs: 
-        − name: structname 
-	      id: 10 
-	     
-One struct can be also dissected by multiple different dissectors. Therefore, it can contain a whole list of dissector ID's, that can process the struct. ::
+    Structs:
+        - name: structname
+          id: 10
+
+More different messages can be dissected by one specific dissector. Therefore, the struct configuration can contain a whole list of dissector message ID's, that can process the struct. ::
 
     Structs:
         - name: structname
           id: [12, 43, 3498]
           
 .. note::
-    The ``id`` must be an integer between 0 and 65535.	     
+    The ``id`` must be an integer between 0 and 65535.
 
 
 External Lua dissectors
@@ -202,7 +202,7 @@ Where ``id`` denotes C struct member name (``DEF_*``) or field name (``FUNC_*``)
 Example of such conformance file follows: ::                                                                                                                                                                                     
                                                                                                                                                                                                                                  
     #.COMMENT
-    	This is a .cnf file comment section
+        This is a .cnf file comment section
     #.END
     
     #.DEF_HEADER super
@@ -210,8 +210,8 @@ Example of such conformance file follows: ::
     #.END
     
     #.COMMENT
-    	DEF_BODY replaces code inside the dissector function.
-    	Use %(DEFAULT_BODY)s or {DEFAULT_BODY} to use generated code.
+        DEF_BODY replaces code inside the dissector function.
+        Use %(DEFAULT_BODY)s or {DEFAULT_BODY} to use generated code.
     #.DEF_BODY hyper
     -- This is above 'hyper' definition
     %(DEFAULT_BODY)s
@@ -229,25 +229,25 @@ Example of such conformance file follows: ::
     
     
     #.FUNC_HEADER precise
-    	-- This is above 'precise' inside the dissector function.
+        -- This is above 'precise' inside the dissector function.
     #.END
     
     
     #.COMMENT
-    	FUNC_BODY replaces code inside the dissector function.
-    	Use %(DEFAULT_BODY)s or {DEFAULT_BODY} to use generated code.
+        FUNC_BODY replaces code inside the dissector function.
+        Use %(DEFAULT_BODY)s or {DEFAULT_BODY} to use generated code.
     #.FUNC_BODY name
-    	--[[ This comments out the 'name' code
-    	{DEFAULT_BODY}
-    	]]--
+        --[[ This comments out the 'name' code
+        {DEFAULT_BODY}
+        ]]--
     #.END
     
     #.FUNC_FOOTER super
-    	-- This is below 'super' inside dissector function
+        -- This is below 'super' inside dissector function
     #.END
     
     #.FUNC_EXTRA
-    	-- This is the last line of the dissector function
+        -- This is the last line of the dissector function
     #.END_OF_CNF
     
 This conformance file when run with this C header code: ::
@@ -282,24 +282,24 @@ This conformance file when run with this C header code: ::
     
     -- Dissector function for: custom_lua
     function proto_custom_lua.dissector(buffer, pinfo, tree)
-    	local subtree = tree:add_le(proto_custom_lua, buffer())
-    	if pinfo.private.caller_def_name then
-    		subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_custom_lua.description)
-    		pinfo.private.caller_def_name = nil
-    	else
-    		pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
-    	end
+        local subtree = tree:add_le(proto_custom_lua, buffer())
+        if pinfo.private.caller_def_name then
+            subtree:set_text(pinfo.private.caller_def_name .. ": " .. proto_custom_lua.description)
+            pinfo.private.caller_def_name = nil
+        else
+            pinfo.cols.info:append(" (" .. proto_custom_lua.description .. ")")
+        end
     
-    	subtree:add_le(f.normal, buffer(0, 2))
-    	subtree:add_le(f.super, buffer(4, 4))
-    	-- This is below 'super' inside dissector function
-    	subtree:add_le(f.hyper, buffer(8, 8))
-    	--[[ This comments out the 'name' code
-    		subtree:add_le(f.name, buffer(16, 1))
-    	]]--
-    	-- This is above 'precise' inside the dissector function.
-    	subtree:add_le(f.precise, buffer(24, 8))
-    	-- This is the last line of the dissector function
+        subtree:add_le(f.normal, buffer(0, 2))
+        subtree:add_le(f.super, buffer(4, 4))
+        -- This is below 'super' inside dissector function
+        subtree:add_le(f.hyper, buffer(8, 8))
+        --[[ This comments out the 'name' code
+            subtree:add_le(f.name, buffer(16, 1))
+        ]]--
+        -- This is above 'precise' inside the dissector function.
+        subtree:add_le(f.precise, buffer(24, 8))
+        -- This is the last line of the dissector function
     end
     
     delegator_register_proto(proto_custom_lua, "Win32", "custom_lua", 1)
@@ -312,8 +312,8 @@ Via `External Lua dissectors`_ CSjark also provides a way to add new proto field
 To access the fields value and offset, ``{OFFSET}`` and ``{VALUE}`` strings may be put into the conformance file as shown below: ::
 
     #.FUNC_FOOTER pointer
-    	-- Offset: {OFFSET}
-    	-- Field value stored in lua variable: {VALUE}
+        -- Offset: {OFFSET}
+        -- Field value stored in lua variable: {VALUE}
     #.END
 
 Adding the offset and variable value is only possible in the parts that change the code of Lua functions, i.e. ``FUNC_HEADER``, ``FUNC_BODY`` and ``FUNC_FOOTER``.
@@ -321,8 +321,8 @@ Adding the offset and variable value is only possible in the parts that change t
 Above listed example leads to following Lua code: ::
     
     local field_value_var = subtree:add(f.pointer, buffer(56,4))
-        −− Offset: 56
-        −− Field value stored in lua variable: field_value_var
+        -- Offset: 56
+        -- Field value stored in lua variable: field_value_var
         
 .. note::
     The value of the referenced variable can be used after it is defined.
@@ -344,15 +344,15 @@ There are two ways to configure the trailers, specifiy the total number of trail
 
 ::
 
-	trailers:
-	  - name: "protocol name"
-	  - member: "variable in struct, which contain amount of trailers"
-	  - size: "size of the buffer"
-	  
-	trailers:
-	  - name: "protocol name"
-	  - count: "Number of trailers"
-	  - size: "size of the buffer"
+    trailers:
+      - name: "protocol name"
+      - member: "variable in struct, which contain amount of trailers"
+      - size: "size of the buffer"
+      
+    trailers:
+      - name: "protocol name"
+      - count: "Number of trailers"
+      - size: "size of the buffer"
 
 Example:
 The example below shows an example with BER [#]_, which av 4 trailers with a size of 6 bytes.
@@ -361,10 +361,10 @@ The example below shows an example with BER [#]_, which av 4 trailers with a siz
 
 ::
 
-	trailers:
-	  - name: ber
-	  - count: 4
-	  - size: 6
+    trailers:
+      - name: ber
+      - count: 4
+      - size: 6
 
 
 Custom handling of data types
@@ -377,10 +377,10 @@ For example, this functionality can cause Wireshark to display ``time_t`` data t
 List of available output types follows:
 
 ``Integer types``
-    uint8, uint16, uint24, uint32, uint64, framenum
+    uint8, uint16, uint24, uint32, uint64, int8, int16, int24, int32, int64, framenum
 
 ``Other types``
-    float, double, string, stringz, bytes, bool, ipv4, ipv6, ether, oid, guid
+    float, double, string, stringz, bytes, bool, ipv4, ipv6, ether, oid, guid, absolute_time, relative_time
     
 For ``Integer`` types, there are some specific attributes that can be defined (see below_). More about each individual type can be found in `Wireshark reference`_.
 
@@ -449,7 +449,7 @@ and applies for example for this C header file: ::
 Both struct members are redefined. First will be displayed as ``absolute_type`` according to its type (``time_t``), second one is changed because of the struct member name (``day``).
 
 Platform specific configuration
-------------------------------
+-------------------------------
 
 To ensure that CSjark is usable as much as possible, platform specific
 
@@ -540,21 +540,58 @@ When defining new platform, following steps should be done. Referenced sections 
 
 CSjark Options Configuration
 ----------------------------
-::
+
+CSjark processing behaviour can be set up in various ways. Besides letting the user to specify how the CSjark should work by the command line arguments (see section :ref:`use`), it is also possible to define the options as a part of the configuration file(s). 
+
+=========================   ==============  =============================   ==========================
+Configuration file field    CLI equivalent  Value                           Description
+=========================   ==============  =============================   ==========================
+``verbose``                 ``-v``          ``True``/``False``              Print detailed information
+``debug``                   ``-d``          ``True``/``False``              Print debugging information
+``strict``                  ``-s``          ``True``/``False``              Only generate dissectors for known structs
+``output_dir``              ``-o``          ``None`` or path                Definition of output destination
+``output_file``             ``-o``          ``None`` or file name           Writes the output to the specified file
+``generate_placeholders``   ``-p``          ``True``/``False``              Generate placeholder config file for unknown structs
+``use_cpp``                 ``-n``          ``True``/``False``              Enables/disables the C pre-processor
+``cpp_path``                ``-C``          ``None`` or file name           Specifies which preprocessor to use  
+``excludes``                ``-x``          List of excluded paths          File or folders to exclude from parsing
+``platforms``                               List of platform names          Set of platforms to support in dissectors
+``include_dirs``            ``-I``          List of directories             Directories to be searched for Cpp includes
+``includes``                ``-i``          List of includes                Process file as Cpp #include "file" directive
+``defines``                 ``-D``          List of defines                 Predefine name as a Cpp macro
+``undefines``               ``-U``          List of undefines               Cancel any previous Cpp definition of name
+``arguments``               ``-A``          List of additional arguments    Any additional C preprocessor arguments
+=========================   ==============  =============================   ==========================
+
+The last 5 options can be also specified separately for each individual input C header file. This can be achieved by adding sequence ``files`` with mandatory attribute ``name``. 
+
+Below you can see an example of such ``Options`` section: ::
 
     Options:
+        verbose: True
+        debug: False
+        strict: False
+        output_dir: ../out
+        output_file: output.log
+        generate_placeholders: False
         use_cpp: True
+        cpp_path: ../utils/cpp.exe
         excludes: [examples, test]
-        default:
-            include_dirs: []
-            includes: []
-            defines: [CONFIG_DEFINED=3, REMOVE=1]
-            undefines: [REMOVE]
-            arguments: [-D ARR=2]
+        platforms: [default, Win32, Win64, Solaris-sparc, Linux-x86]
+        include_dirs: [../more_includes]
+        includes: [foo.h, bar.h]
+        defines: [CONFIG_DEFINED=3, REMOVE=1]
+        undefines: [REMOVE]
+        arguments: [-D ARR=2]
         files:
           - name: a.h
-            includes: [b.h]
+            includes: [b.h, c.h]
+            define: [MY_DEFINE]
 
-
+.. note::
+    If you give CSjark multiple configuration files with the same values defined, it takes:
+    
+    - for attributes with single value: a value from *last processed config file* is valid
+    - for attributes with list values: lists are *merged*
 
 .. _YAML: http://www.yaml.org/

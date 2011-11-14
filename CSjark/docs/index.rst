@@ -22,14 +22,15 @@ User Documentation
    user/use_ws
    user/config
 
-Developer Documentation
------------------------
+..
+    Developer Documentation
+    -----------------------
+   
+    .. toctree::
+       :maxdepth: 2
 
-.. toctree::
-   :maxdepth: 2
-
-.. 
-    deve/devel
+    .. 
+        deve/devel
 
 Other Information
 -----------------
@@ -42,13 +43,13 @@ Other Information
    
 ------------   
 
-
-**Feature list** (TBD)
-
-- C header files
-- Batch mode
-- Searching and filtering in Wireshark
-- ...
+..
+    **Feature list** (TBD)
+    
+    - C header files
+    - Batch mode
+    - Searching and filtering in Wireshark
+    - ...
 
 **Currently supported platforms**
 
@@ -63,11 +64,11 @@ Other Information
 (additional platforms can be added by configuration)
 
 
-
-Indices and tables
-------------------
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+..
+    Indices and tables
+    ------------------
+    
+    * :ref:`genindex`
+    * :ref:`modindex`
+    * :ref:`search`
 

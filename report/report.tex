@@ -87,18 +87,27 @@
 % Abstract
 %==========
 \begin{abstract}
-\Gls{wireshark} is a program used to analyze \gls{packet} data sent between network
-nodes. The purpose of this project was to allow the use of \Gls{wireshark} to also
-decode \gls{aipc}, which is important for debugging and
-ensuring that such programs behave correctly. The process of decoding \glspl{packet}
-manually is often time-consuming and in some cases impossible.
+This paper address the problem of creating Lua dissectors for \Gls{wireshark}, 
+to analyze \gls{aipc} with C structs. The dissectors are used to display the 
+binary data in a readable form in \Gls{wireshark}. Writing Lua dissector 
+manually is difficult and time consuming, and a solution for doing this 
+automatic is necessary.  
 
-The project resulted in a stand-alone \gls{utility} which acts as a supporting tool
-for \Gls{wireshark}. Our \gls{utility} is written in \Gls{python}, and uses open source {library}
-like \gls{pycparser} and \gls{ply} to achieve this. The \gls{utility} automates the process of
-generating \glspl{dissector} for \Gls{wireshark} from \Gls{c} \gls{header} files. This functionality
-makes debugging and testing some programs a lot easier.
+The problem is solved by parsing C structs defined in C header-files, then 
+process the abstract-syntax tree for the parser and generate Lua dissectors 
+for these. Possibility to configure, will ensure flexibility in generation of 
+dissectors.
 
+The project resulted in CSjark, which is a stand-alone \gls{utility} that acts 
+as a supporting tool for \Gls{wireshark}. Our \gls{utility} is written in 
+\Gls{python}, and uses open source {library} like \gls{pycparser} and 
+\gls{ply} to achieve this. For configuration pyYAML was used to make the 
+utility flexible. The \gls{utility} automates the process of generating 
+\glspl{dissector} for \Gls{wireshark} from \Gls{c} \gls{header} files. 
+
+CSjark reduces the time developers use to write dissectors manually, which 
+will make it easier to use \Gls{wireshark} for debugging of  \gls{aipc} 
+traffic.
 \end{abstract}
 
 %=========

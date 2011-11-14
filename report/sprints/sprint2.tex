@@ -277,7 +277,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	ID & US10 \\
 	Requirement & FR1-C: The \gls{utility} must support \glspl{member} of type \gls{struct} \\
 	What & The administrator wants the \gls{utility} to support \glspl{struct} with \glspl{member} of type \gls{struct}. \\
-	How & When the cparser module detects a \gls{struct} in the AST that is a \gls{member} of another \gls{struct}, the cparser searches for its definition in the 
+	How & When the cparser module detects a \gls{struct} in the AST that has a \gls{struct} \gls{member}, the cparser searches for its definition in the 
 		dictionary of previously detected \glspl{struct}. When it finds it, it looks up the identification number and the size of the inner \gls{struct} and creates a 
 		struct\_field object with that information inside the prototype object corresponding to the outer \gls{struct}. \\
 	Result & The \gls{utility} supports \glspl{member} of type \glspl{struct}. \\
@@ -370,6 +370,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	\toprule
 	Header & Value \\
 	\midrule
+	ID & US19 \\
 	User doc & FR4-E: User documentation for how to specify trailers (other registered \glspl{protocol}) \\
 	What & The administrator should be able to find out how to specify trailers to a \gls{header} \gls{struct} by reading the user documentation. \\
 	How & The administrator opens the user documentation and finds the section about configuration. From here he locates the sub section about trailers. 
@@ -448,8 +449,8 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 \label{sec:sp2:impl}
 In the previous sprint we focused on creating a naive implementation of the 
 \gls{utility}. In this sprint the focus was on implementing data types for the 
-\Gls{c} programming language and making it possible to configure more options on how 
-the \gls{dissector} will function. This section will cover the requirements 
+\Gls{c} programming language and making it possible to configure more options for how 
+the \gls{dissector} should function. This section will cover the requirements 
 implemented, what the \gls{header} and config files looks like, and what the ''output'' looks like.
 
 To get a better understanding of how the different requirements were implemented,
@@ -511,8 +512,8 @@ In \Gls{c} there are two ways to do enumerations, the first option was explained
 \autoref{code:defenum}. The advantage of using \gls{define} is that the values 
 can be generated. Since this cannot be understood by the \gls{parser}, it can be 
 generated directly from the \gls{header} file, so it have to be supported by 
-configuration. \autoref{code:enumconf}. The \Gls{lua}-\gls{dissector} will display the 
-\gls{enum} in the same way as in \autoref{sec:supportenum}.
+configuration. \autoref{code:enumconf}. The \gls{enum} will be displayed in 
+the same way as in \autoref{sec:supportenum}.
 
 \lstset{language=C,caption={Enumerated named values},label=code:defenum}
 \lstinputlisting[language=C]{./sprints/code/def_enum.h}

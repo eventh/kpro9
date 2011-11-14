@@ -18,11 +18,11 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\midrule
 	Description & Supporting parameters for c-header file \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The program has to have been compiled on the system \\
+	Prerequisites & The program has to have been installed on the system and there needs to exist a header file for this test\\
 	Feature & Test that we are able to feed the solution with a c-header file and have it get dissected \\
 	\midrule
 	\multirow{3}{*}{Execution} & 1. Start the program \\
-	& 2. Write the name of the c-header file in the command line \\
+	& 2. Write the name of the c-header file associated with this test in the command line \\
 	& 3. Read the output given by the program \\
 	\midrule
 	\multirow{2}{*}{Expected result} & 1. The program should start up without any errors and present the user with a command line interface \\
@@ -40,7 +40,7 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\midrule
 	Description & Supporting basic data types \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The program has to have been started \\
+	Prerequisites & The program has to have been installed on the system and there needs to exist a header file for this test \\
 	Feature & Test that our utility will be able to make a dissectors for C-header files including the following basic data types: int, float, char and boolean \\
 	\midrule
 	\multirow{2}{*}{Execution} & 1. Write the name of a c-header file which includes the aforementioned basic data types \\
@@ -60,7 +60,7 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\midrule
 	Description & Displaying simple structs \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has already made a dissector \\
+	Prerequisites & The utility must have been installed on the system and have been used to make a dissector\\
 	Feature & Test that our utility is able to generate dissectors that displays simple structs \\
 	\midrule
 	\multirow{3}{*}{Execution} & 1. Open wireshark and run the dissector \\
@@ -82,7 +82,7 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\midrule
 	Description & Supporting \#include \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
+	Prerequisites & The program has to have been installed on the system and there needs to exist a header file for this test \\
 	Feature & Test that our utility supports c-header files with the \#include directive \\
 	\midrule
 	\multirow{2}{*}{Execution} & 1. Write the name of a C-header file with an \#include directive \\
@@ -102,7 +102,7 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\midrule
 	Description & Supporting \#define and \#if \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
+	Prerequisites & The program has to have been installed on the system and there needs to exist a header file for this test \\
 	Feature & Test that our utility supports c-header files with \#define and \#if directives \\
 	\midrule
 	\multirow{2}{*}{Execution} & 1. Write the name of a C-header file with a \#define and \#if directives \\
@@ -122,7 +122,7 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\midrule
 	Description & Supporting configuration files \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
+	Prerequisites & The program has to have been installed on the system and there needs to exist a header file for this test\\
 	Feature & Test that our utility supports reading data from a configuration file \\
 	\midrule
 	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a config file \\
@@ -142,7 +142,7 @@ Test cases for sprint 1 is \autoref{tab:TID01}-\ref{tab:TID07}.
 	\midrule
 	Description & Recognizing invalid values \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility must have already loaded a configuration file and generated a dissector for a given header file\\
+	Prerequisites & The utility must have already been installed on the system, and there needs to exist a header and a config file associated with this test\\
 	Feature & Test that our utility recognizes invalid values for struct members specified in the config file. \\
 	\midrule
 	\multirow{3}{*}{Execution} & 1. Feed the utility with the name of a header and a config-file, where the config file sets restrictions on the members of the header file. \\
@@ -169,8 +169,8 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\midrule
 	Description & Supporting members of type enum \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
-	Feature & Test that the utility iis able to support c-header files with enums \\
+	Prerequisites & The program has to have been installed on the system and there needs to exist a header file for this test \\
+	Feature & Test that the utility is able to support c-header files with enums \\
 	\midrule
 	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct using enums and its configuration file \\
 	& 2. Read the output \\
@@ -194,7 +194,7 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\midrule
 	Description & Supporting members of type array \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
+	Prerequisites & The program has to have been installed on the system and there needs to exist a header file for this test\\
 	Feature & Test that the utility iis able to support c-header files with arrays \\
 	\midrule
 	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct using arrays \\
@@ -218,7 +218,7 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\midrule
 	Description & Supporting the display of structs within structs \\
 	Tester & Erik Bergersen \\
-	Prerequisites & The utility has to be up and running \\
+	Prerequisites & The utility has to have been installed on the system and there needs to exist a header file for this test\\
 	Feature & Test that the utility iis able to support c-header files with structs that have other struct members  and display it properly in wireshark\\
 	\midrule
 	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes a struct with another struct member \\
@@ -242,7 +242,7 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\midrule
 	Description & Supporting enumerated named values \\
 	Tester & Erik Bergersen \\
-	Prerequisites & The utility has to be up and running \\
+	Prerequisites & The utility has to have been installed on the system and there needs to exist a header file for this test\\
 	Feature & Test that the utility iis able to support c-header files which uses integers as enums without declaring them as enums \\
 	\midrule
 	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file which includes enumerated named values \\
@@ -267,7 +267,7 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\midrule
 	Description & Supporting bit strings \\
 	Tester & Erik Bergersen \\
-	Prerequisites & The utility has to be up and running \\
+	Prerequisites & The utility has to have been installed on the system and there needs to exist a header file for this test\\
 	Feature & Test that the utility iis able to support c-header files with bit strings \\
 	\midrule
 	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct using bit strings \\
@@ -291,7 +291,7 @@ Test cases for sprint 2 is \autoref{tab:TID08}-\ref{tab:TID14}.
 	\midrule
 	Description & Supporting structs with various trailers \\
 	Tester & Erik Bergersen \\
-	Prerequisites & The utility has to be up and running \\
+	Prerequisites & The utility has to have been installed on the system and there needs to exist a header file for this test\\
 	Feature & Test that the utility iis able to support c-header files with trailers \\
 	\midrule
 	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a c-header file with a struct that has a trailer \\
@@ -341,7 +341,7 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\midrule
 	Description & Support batch mode of C header and configuration files \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
+	Prerequisites & The utility has to have been installed on the system and there needs to exist a header file for this test\\
 	Feature &  Test that the utility is able to genereate dissectors for all header-files in a folder, with configuration\\
 	\midrule
 	\multirow{2}{*}{Execution} & 1. Feed the utility the name of the two folders with header-files and configuration-files. \\
@@ -361,7 +361,7 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\midrule
 	Description & Supporting custom Lua configuration  \\
 	Tester & Sondre Mannsverk \\
-	Prerequisites & The utility has to be up and running \\
+	Prerequisites & The utility has to have been installed on the system and there needs to exist a header file for this test\\
 	Feature & Test that the utility is able to support custom Lua files by configuration \\
 	\midrule
 	\multirow{6}{*}{Execution} & 1. Look at the custom Lua file(s) and understand what they do  \\
@@ -389,7 +389,7 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
 	\midrule
 	Description & Supporting unions \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites & The utility has to be up and running \\
+	Prerequisites & The utility has to have been installed on the system and there needs to exist a header file for this test\\
 	Feature &  Test that the utility is able to support c-header files with unions \\
 	\midrule
 	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of a header file with unions and its configuration file  \\
@@ -434,7 +434,7 @@ Test cases for sprint 3 is \autoref{tab:TID15}-\ref{tab:TID23}.
   	\midrule
   	Description &  Support WIN32, \_WIN64, \_sparc etc \\
   	Tester & Lars Solvoll Tønder \\
-  	Prerequisites & The utility has to be up and running \\
+  	Prerequisites & The utility has to have been installed on the system and there needs to exist a header file for this test\\
   	Feature &  Test that the utility is able to support c-header files with platform definition preprocessor macros (e.g. \_WIN32, \_WIN64, \_sparc, etc.)\\
   	\midrule
   	\multirow{5}{*}{Execution} & 1. Feed the utility with c-header files with platform definition preprocessor macros (e.g. \_WIN32, \_WIN64, \_sparc, etc.). \\

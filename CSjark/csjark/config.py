@@ -468,10 +468,8 @@ class Options:
         if excludes:
             cls.excludes.extend(os.path.normpath(i) for i in excludes)
 
-        # Handle C preprocessor arguments
-        default = obj.get('default', None)
-        if default:
-            cls.default.update(default)
+        # Handle default C preprocessor arguments
+        cls.default.update(obj)
 
         # Handle files configuration
         files = obj.get('files', None)

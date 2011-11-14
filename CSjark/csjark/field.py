@@ -430,7 +430,7 @@ class ProtocolField(Field):
         t = '\tpinfo.private.field_name = "{name}"\n'\
             '\tDissector.get("{proto}"):call(buffer({offset}, '\
             '{size}):tvb(), pinfo, {tree})'
-        return t.format(name=self.name, proto=self.proto.longname,
+        return t.format(name=self.name, proto=self.proto.name,
                 offset=offset, size=self.size, tree=tree)
 
 

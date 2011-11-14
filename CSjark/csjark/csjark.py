@@ -208,7 +208,7 @@ def parse_headers(headers):
         include = None
         msg = str(error)
         if 'before: ' in msg:
-            key = msg.rsplit('before: ', 1)[1].strip(), platform
+            key = msg.rsplit('before: ', 1)[1].strip()
             include = cparser.StructVisitor.all_known_types.get(key, None)
         #print(filename, include)
         if include is None:
@@ -331,17 +331,8 @@ def write_dissectors_to_file(all_protocols):
     if Options.output_file and os.path.isfile(Options.output_file):
         os.remove(Options.output_file)
 
-    # Sort the protocols on name
-    sorted_protos = {}
-    for key, proto in all_protocols.items():
-        if proto.name not in sorted_protos:
-            sorted_protos[proto.name] = []
-        sorted_protos[proto.name].append(proto)
-
     # Generate and write lua dissectors
-    for name, protos in sorted_protos.items():
-        dissectors = [p.create() for p in protos]
-
+    for name, proto in all_protocols.items():
         path = '%s.lua' % name
         flag = 'w'
         if Options.output_dir:
@@ -350,12 +341,13 @@ def write_dissectors_to_file(all_protocols):
             path = Options.output_file
             flag = 'a'
 
+        code = proto.generate()
         with open(path, flag) as f:
-            f.write('\n\n'.join(dissectors))
+            f.write(code)
 
         if Options.verbose:
             print("Wrote %s to '%s' (%i platform(s))" %
-                    (name, path, len(protos)))
+                    (name, path, len(proto.children)))
 
 
 def write_delegator_to_file():
@@ -365,7 +357,7 @@ def write_delegator_to_file():
         filename = '%s/%s' % (Options.output_dir, filename)
 
     with open(filename, 'w') as f:
-        f.write(Options.delegator.create())
+        f.write(Options.delegator.generate())
 
     if Options.verbose:
         print("Wrote delegator file to '%s'" % filename)

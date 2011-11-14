@@ -29,7 +29,7 @@ class Dissector(BaseField):
         self.platform = platform
         self.endian = platform.endian
         self.conf = conf
-        self.field_var = 'f.%s' % platform.name
+        self.field_var = 'f.%s' % create_lua_var(platform.name)
         self.children = [] # List of all child fields
 
         self._pushed = False
@@ -131,7 +131,7 @@ class Dissector(BaseField):
             # Find the count
             if rule.member is not None:
                 # Find offset, size and func_type
-                fields = [i for i in self.fields if i.name == rule.member]
+                fields = [i for i in self.children if i.name == rule.member]
                 if not fields:
                     continue # rule.member don't exists in the struct
                 func = fields[0].func_type
@@ -217,6 +217,11 @@ class Protocol:
             self.description = self.conf.description
         else:
             self.description = name
+
+    def get_dissector(self, platform):
+        for dissector in self.children:
+            if dissector.platform == platform:
+                return dissector
 
     @classmethod
     def create_dissector(cls, name, platform=None, conf=None, union=False):

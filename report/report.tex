@@ -23,6 +23,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{textcomp}
+\usepackage[Glenn]{fncychap}
 \usepackage[style=treenoname,subentrycounter,numberedsection, 
         section=chapter, acronym]{glossaries}
 
@@ -57,7 +58,8 @@
 % Configure links in pdfs
 \hypersetup{
     bookmarksopen=false, % Hide bookmarks menu
-    colorlinks=true, % Don't wrap links in colored boxes
+    colorlinks=false, % Don't wrap links in colored boxes
+    pdfborder={0 0 0} % Remove ugly boxes
 }
 
 \newcommand{\HRule}{\rule{\linewidth}{0.2mm}}   

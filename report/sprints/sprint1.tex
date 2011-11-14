@@ -39,148 +39,63 @@ preprocessing capabilities will be implemented, such as handling \gls{include}
 directives. Basic support for configuration will be added.
 
 \subsection{Back Log}
-In the first sprint we will implement eight requirements. Table
-\ref{tab:sp1_req7a}-\ref{tab:sp1_req2d}  list each requirement with a time
-estimate. \autoref{tab:sprint1req} is the sprint backlog for the first phase.
-\autoref{tab:sprint1time} is the time table for the first phase.
+In the first sprint we will implement eight requirements. These are listed in \autoref{tab:sprint1req}.
+The time table for the sprint can be seen in \autoref{tab:sprint1time}.
 
-\begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR6-A\label{tab:sp1_req7a}}
-\begin{tabular}{l l c}
+\begin{table}[!htb] \small \center
+\caption{Sprint 1 Requirements \label{tab:sprint1req}}
+\begin{tabularx}{\textwidth}{l X c c}
 	\toprule
-	Requirement & Task & Hours \\
+	& & \multicolumn{2}{c}{Hours} \\
+	\cmidrule(r){3-4}
+	User story & Req. and Description & Est. & Act. \\
 	\midrule
-	\multirow{4}{5cm}{Command line shall support parameter for \Gls{c} \gls{header} file} & Design & 1 \\
-	& Implementation & 2 \\
-	& Testing & 2 \\
-	& Documentation & 4 \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR1-A\label{tab:sp1_req1a}}
-\begin{tabular}{l l c}
-	\toprule
-	Requirement & Task & Hours \\
-	\midrule
-	\multirow{4}{5cm}{The \gls{utility} must support the following basic data types: \gls{int}, \gls{float}, \gls{char} and \gls{boolean}} & Design & 4 \\
-	& Implementation & 8 \\
-	& Testing & 8 \\
-	& Documentation & 4 \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR2-A\label{tab:sp1_req2a}}
-\begin{tabular}{l l c}
-	\toprule
-	Requirement & Task & Hours \\
-	\midrule
-	\multirow{4}{5cm}{The \gls{dissector} shall be able to display simple \glspl{struct}} & Design & 4 \\
-	& Implementation & 8 \\
-	& Testing & 8 \\
-	& Documentation & 8 \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR3-A\label{tab:sp1_req3a}}
-\begin{tabular}{l l c}
-	\toprule
-	Requirement & Task & Hours \\
-	\midrule
-	\multirow{4}{5cm}{The \gls{utility} shall support \gls{include}} & Design & 2 \\
-	& Implementation & 2 \\
-	& Testing & 2 \\
-	& Documentation & 2 \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR3-B\label{tab:sp1_req3b}}
-\begin{tabular}{l l c}
-	\toprule
-	Requirement & Task & Hours \\
-	\midrule
-	\multirow{4}{5cm}{The \gls{utility} shall support \gls{define} and \gls{if}} & Design & 1 \\
-	& Implementation & 2 \\
-	& Testing & 6 \\
-	& Documentation & 2 \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR6-B\label{tab:sp1_req7b}}
-\begin{tabular}{l l c}
-	\toprule
-	Requirement & Task & Hours \\
-	\midrule
-	\multirow{4}{5cm}{Command line shall support parameter for configuration file} & Design & 8 \\
-	& Implementation & 8 \\
-	& Testing & 8 \\
-	& Documentation & 4 \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR4-A\label{tab:sp1_req4a}}
-\begin{tabular}{l l c}
-	\toprule
-	Requirement & Task & Hours \\
-	\midrule
-	\multirow{4}{5cm}{Configuration must support valid ranges for \gls{struct} \glspl{member}} & Design & 6 \\
-	& Implementation & 8 \\
-	& Testing & 8 \\
-	& Documentation & 8 \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirement FR2-D\label{tab:sp1_req2d}}
-\begin{tabular}{l l c}
-	\toprule
-	Requirement & Task & Hours \\
-	\midrule
-	\multirow{4}{5cm}{The \gls{dissector} shall be able to recognize invalid values for a \gls{struct} \gls{member}} & Design & 4 \\
-	& Implementation & 6 \\
-	& Testing & 8 \\
-	& Documentation & 4 \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!ht] \small \center
-\caption{Sprint 1 Requirements\label{tab:sprint1req}}
-\begin{tabularx}{\textwidth}{l l X c c}
-	\toprule
-	& & & \multicolumn{2}{c}{Hours} \\
-	\cmidrule(r){4-5}
-	\# & Req. & Description & Est. & Act. \\
-	\midrule
-	1 & FR6-A & Command line shall support parameter for \Gls{c} \gls{header} file & 9 & 9\\
+	\hyperref[tab:req:stories2]{US07} & FR6-A: Command line shall support parameter for \Gls{c} \gls{header} file & \textbf{9} & \textbf{9} \\
+	& Implementation & 2 & 5 \\
+	& Design & 1 & 1 \\
+	& Testing & 2 & 2 \\
+	& Documentation  & 4 & 1 \\
 	\addlinespace
-	2 & FR1-A & Support basic data types: \gls{int}, \gls{float}, \gls{char}, \gls{boolean} & 24 & 21\\
+ 	\hyperref[tab:req:stories1]{US01} & FR1-A: Support basic data types: \gls{int}, \gls{float}, \gls{char}, \gls{boolean} &  \textbf{24}  & \textbf{21} \\
+	& Implementation & 8 & 13 \\
+	& Design & 4 & 4 \\
+	& Testing & 8 & 4 \\
+	& Documentation & 4 & 0 \\
 	\addlinespace
-	3 & FR2-A & The \gls{dissector} shall be able to display simple \glspl{struct} & 28 & 25\\
+	\hyperref[tab:req:stories1]{US02} & FR2-A: The \gls{dissector} shall be able to display simple \glspl{struct} & \textbf{28} & \textbf{25} \\
+	& Implementation & 8 & 17 \\
+	& Design & 4 & 1 \\
+	& Testing & 8 & 6 \\
+	& Documentation & 8 & 1\\
 	\addlinespace
-	4 & FR3-A & The \gls{utility} shall support \gls{include} & 8 & 2\\
+	\hyperref[tab:req:stories1]{US04} & FR3-A: The \gls{utility} shall support \gls{include} & \textbf{8} & \textbf{2} \\
+	& Implementation & 2 & 0 \\
+	& Design & 2 & 1 \\
+	& Testing & 2 & 1 \\
+	& Documentation & 2 & 0\\
 	\addlinespace
-	5 & FR3-B & The \gls{utility} shall support \gls{define} and \gls{if} & 11 & 3\\	
+	\hyperref[tab:req:stories1]{US05} & FR3-B: Recognize invalid values for a \gls{struct} \gls{member} & \textbf{11} & \textbf{8} \\
+	& Implementation & 11 & 8 \\
 	\addlinespace
-	6 & FR6-B & Command line shall support paramter for configuration file & 28 & 8\\
+	\hyperref[tab:req:stories2]{US08} & FR6-B: Command line shall support paramter for configuration file & \textbf{28} & \textbf{8} \\
+	& Implementation & 8 & 4 \\
+	& Design & 8 & 2 \\
+	& Testing & 8 & 2 \\
+	& Documentation & 4 & 0 \\
 	\addlinespace
-	7 & FR4-A & Support valid ranges for \gls{struct} \glspl{member} & 30 & 15 \\
+	\hyperref[tab:req:stories2]{US06} & FR4-A: Support valid ranges for \gls{struct} \glspl{member} & \textbf{30} & \textbf{15} \\
+	& Implementation & 8 & 8 \\
+	& Design & 6 & 3 \\
+	& Testing & 8 & 3 \\
+	& Documentation & 8 & 1 \\
 	\addlinespace
-	8 & FR2-D & Recognize invalid values for a \gls{struct} \gls{member} & 22 & 15\\
+	\hyperref[tab:req:stories1]{US03} & FR2-D: Recognize invalid values for a \gls{struct} \gls{member} & \textbf{22} & \textbf{15} \\
+	& Implementation & 6 & 9 \\
+	& Design & 4 & 4 \\
+	& Testing & 8 & 2 \\
+	& Documentation  & 4 & 0 \\
 	\midrule
-	& & Total: & 160 & 98\\
+	& Total: & 108 & 95 \\
 	\bottomrule
 \end{tabularx}
 \end{table}

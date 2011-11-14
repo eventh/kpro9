@@ -39,6 +39,8 @@ Other Information
    
    other/license
    other/about
+   
+------------   
 
 
 **Feature list** (TBD)

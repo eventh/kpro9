@@ -30,7 +30,7 @@ Some variables may have a domain that is smaller than its given type. You could 
     Structs:
       - name: "Name of the struct"
         id: 989
-        enums:
+        ranges:
             - member | type: "Name of struct member / type"
               min: "Lowest allowed value"
               max: "Highest allowed value"
@@ -43,7 +43,7 @@ Example: ::
     Structs:
       - name: example_struct
         id: name
-        enums:
+        ranges:
             - member: percent
               min: 0
               max: 100
@@ -448,7 +448,7 @@ and applies for example for this C header file: ::
 
 Both struct members are redefined. First will be displayed as ``absolute_type`` according to its type (``time_t``), second one is changed because of the struct member name (``day``).
 
-Platform specific configuraion
+Platform specific configuration
 ------------------------------
 
 To ensure that CSjark is usable as much as possible, platform specific
@@ -536,6 +536,24 @@ When defining new platform, following steps should be done. Referenced sections 
                  macros=NEW_PLATFORM_MACROS,
                  sizes=NEW_PLATFORM_C_SIZE_MAP,
                  alignment=NEW_PLATFORM_C_ALIGNMENT_MAP)
+
+
+CSjark Options Configuration
+----------------------------
+::
+
+    Options:
+        use_cpp: True
+        excludes: [examples, test]
+        default:
+            include_dirs: []
+            includes: []
+            defines: [CONFIG_DEFINED=3, REMOVE=1]
+            undefines: [REMOVE]
+            arguments: [-D ARR=2]
+        files:
+          - name: a.h
+            includes: [b.h]
 
 
 

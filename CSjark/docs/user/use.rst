@@ -6,12 +6,13 @@ Using CSjark
 
 CSjark can be invoked by running the ``csjark.py`` script. The arguments must be specified according to: ::
 
-    csjark.py [-h] [-v] [-d] [-s] [-f [header [header ...]]]
-              [-c [config [config ...]]] [-o [output]] [-p] [-n] [-C [cpp]]
-			  [-i [header [header ...]]] [-I [directory [directory ...]]]
-			  [-D [name=definition [name=definition ...]]]
-			  [-U [name [name ...]]] [-A [argument [argument ...]]]
-			  [header] [config]
+       csjark.py [-h] [-v] [-d] [-s] [-f [header [header ...]]]
+                 [-c [config [config ...]]] [-x [path [path ...]]]
+                 [-o [output]] [-p] [-n] [-C [cpp]] [-i [header [header ...]]]
+                 [-I [directory [directory ...]]]
+                 [-D [name=definition [name=definition ...]]]
+                 [-U [name [name ...]]] [-A [argument [argument ...]]]
+                 [header] [config]
 			  
 The arguments here specify the following:
 
@@ -30,6 +31,7 @@ The arguments here specify the following:
     ``-s, --strict``              	                                                                     Only generate dissectors for known structs.
     ``-f [header [header ...]], --file [header [header ...]]``                                           Specifies that CSjark should look for struct definitions in the ``header`` files.
     ``-c [config [config ...]], --config [config [config ...]]``                                         Specifies that the program should use the ``config`` files as configuration.
+    ``-x [path [path ...]], --exclude [path [path ...]]``                                                File or folders to exclude from parsing
     ``-o [output], --output [output]``                                                                   Writes the output to the specified file ``output``.
     ``-p, --placeholders``                                                                               Generate placeholder config file for unknown structs
     ``-n, --nocpp``              		                                                                 Disables the C pre-processor.

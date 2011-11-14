@@ -190,7 +190,48 @@ The second sprint we will implement thirteen requirements. These are listed in T
 \end{table}
 
 
+%----------------------
+\section{System Design}
+%----------------------
+\label{sec:sp2:design}
+For sprint 2 the team decided to refactor some of the code in order to make it easier to read and to split the functionalities of the \gls{utility} in such a way that it reduces coupling within the system. Some new functionality was also added on the \gls{parser} side in order to get the \gls{utility} to recognize the datatypes mentioned in the sprint 2 backlog. This new functionality is represented by the addition of new classes in the \gls{dissector} and config modules. These classes include the BitField, ArrayField, EnumField and ProtocolField classes, which contain the functionality required to handle Bitstrings, \glspl{array}, \glspl{enum} and \glspl{struct} within \glspl{struct} respectively. The classes added to the config module include the Trailer, Bitstring, Custom and Enum classes which handles the configuration needs for \glspl{struct} with \gls{trailers}, \glspl{bit string}, custom handling of data types and \glspl{enum} respectively. Other than that, there were no other changes or additions made to the design during sprint 2.
+
+\subsection{Utility}
+%--------------------
+\autoref{fig:sp2:class} shows the class diagram the team made for sprint 2. 
+The main differences from sprint 1 are the additions of new classes, extending 
+the functionality of the \gls{utility} so that the \gls{utility} can handle 
+more complex \gls{header} files than it could before. The developers also 
+generalized some of the modules and used inheritance to support the re-use of 
+code.
+
+The addition to the class diagram have been mainly to support more data types 
+for C in the cparser and support for more configuration options in config 
+module, and generation of the fields in dissector module.
+ 
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s2}
+	\caption{Class Diagram\label{fig:sp2:class}}
+\end{figure}
+
+\subsubsection{CSjark}
+The main differences in this module was changes in the Cli class, which now 
+has functionality to find all files in a folder given as an argument when 
+running CSjark, with the \emph{files\_in\_folder()}. This method used for the 
+support of batch mode generation.
+
+\subsubsection{Cparser}
+
+
+\subsubsection{Config}
+
+
+\subsubsection{Dissector}
+
+
 \subsection{User stories}
+%---------------------------
 \label{sec:req:stories2}
 This section lists the user stories for the second sprint, these are displayed in \autoref{tab:req:stories3}, \autoref{tab:req:stories4},
 \autoref{tab:req:stories5} and \autoref{tab:req:stories6}.
@@ -381,22 +422,6 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 \end{tabularx}}
 \end{table}
 
-
-%----------------------
-\section{System Design}
-%----------------------
-\label{sec:sp2:design}
-For sprint 2 the team decided to refactor some of the code in order to make it easier to read and to split the functionalities of the \gls{utility} in such a way that it reduces coupling within the system. Some new functionality was also added on the \gls{parser} side in order to get the \gls{utility} to recognize the datatypes mentioned in the sprint 2 backlog. This new functionality is represented by the addition of new classes in the \gls{dissector} and config modules. These classes include the BitField, ArrayField, EnumField and ProtocolField classes, which contain the functionality required to handle Bitstrings, \glspl{array}, \glspl{enum} and \glspl{struct} within \glspl{struct} respectively. The classes added to the config module include the Trailer, Bitstring, Custom and Enum classes which handles the configuration needs for \glspl{struct} with \gls{trailers}, \glspl{bit string}, custom handling of data types and \glspl{enum} respectively. Other than that, there were no other changes or additions made to the design during sprint 2.
-
-\subsection{Utility}
-%--------------------
-\autoref{fig:sp2:class} shows the class diagram the team made for sprint 2. The main differences from sprint 1 are the additions of new classes, extending the functionality of the \gls{utility} so that the \gls{utility} can handle more complex \gls{header} files than it could before. The developers also generalized some of the modules and used inheritance to support the re-use of code.
- 
-\begin{figure}[!htb]
-	\center
-	\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s2}
-	\caption{Class Diagram\label{fig:sp2:class}}
-\end{figure}
 
 %----------------------
 \section{Implementation}

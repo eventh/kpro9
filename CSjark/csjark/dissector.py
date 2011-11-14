@@ -7,510 +7,11 @@ holds a list of fields which are instances of Field or its subclasses.
 Also contains the class which generates a dissector for delegating
 dissecting of messages to the specific protocol dissectors.
 """
-import string
-
 from platform import Platform
+from field import create_lua_var, ProtoTree, Field
 
 
-# Reserved keywords in Lua, to avoid using them as variable names
-LUA_KEYWORDS = [
-    'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
-    'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
-    'return', 'then', 'true', 'until', 'while'
-]
-
-
-def create_lua_var(var, length=None):
-    """Return a valid lua variable name."""
-    valid = string.ascii_letters + string.digits + '_'
-    if length is None:
-        length = len(var)
-    var.replace(' ', '_')
-
-    i = 0
-    while i < len(var) and i < length:
-        if var[i] not in valid:
-            var = var[:i] + var[i+1:]
-        elif i == 0 and var[i] in string.digits:
-            var = var[:i] + var[i+1:]
-        else:
-            i += 1
-
-    if var in LUA_KEYWORDS:
-        var = '_%s' % var
-
-    return var.lower()
-
-
-def create_lua_valuestring(dict_, wrap=True):
-    """Convert a python dictionary to lua table."""
-    items = dict_.items()
-    if wrap:
-        items = [(i, '"%s"' % j) for i, j in items]
-    return '{%s}' % ', '.join('[%i]=%s' % (i, j) for i, j in items)
-
-
-class Field:
-    """Represents Wireshark's ProtoFields which stores a specific value."""
-
-    def __init__(self, proto, name, type, size, alignment_size):
-        """Create a new Field instance.
-
-        'proto' is the protocol which owns the field
-        'name' the name of the field
-        'type' the ProtoField type
-        'size' the size of the field in bytes
-        """
-        self.proto = proto
-        self.name = name
-        self.type = type
-        self.size = size
-        self.alignment_size = alignment_size
-
-        self.add_var = self.proto._get_tree_add() # For adding fields to tree
-        self.var = '%s.%s' % (self.proto.field_var, create_lua_var(self.name))
-        self.abbr = '%s.%s' % (self.proto.name, self.name.replace(' ', '_'))
-
-        self.base = None # One of 'base.DEC', 'base.HEX' or 'base.OCT'
-        self.values = None # Dict with the text that corresponds to the values
-        self.mask = None # Integer mask of this field
-        self.desc = None # Description of the field
-        self.offset = None # Useful for others to access buffer(offset, size)
-
-    def get_array_postfix(self, sequence):
-        postfix = ''
-        if sequence is not None:
-            postfix = '_'.join(str(i) for i in sequence)
-        return postfix
-
-    def get_array_index_postfix(self, sequence):
-        postfix = ''
-        if sequence is not None:
-            for i in sequence:
-                postfix = postfix + '[%i]' % (i)
-        return postfix
-
-    def get_definition(self, sequence=None):
-        """Get the ProtoField definition for this field."""
-        var = self.var
-        abbr = self.abbr
-        index = ''
-        if sequence is not None:
-            postfix = self.get_array_postfix(sequence)
-            var = '%s_%s' % (self.var, postfix)
-            abbr = '%s_%s' % (abbr, postfix)
-            index = self.get_array_index_postfix(sequence)
-        return self._create_field(var, self.type, abbr,
-                self.name + index, self.base, self.values, self.mask, self.desc)
-
-    def get_code(self, offset, store=None, sequence=None, tree='subtree'):
-        """Get the code for dissecting this field."""
-        var = self.var
-        set_text = ''
-        if sequence is not None:
-            var = '%s_%s' % (self.var, self.get_array_postfix(sequence))
-        if store:
-            store = 'local {var} = '.format(var=create_lua_var(store))
-        else:
-            store = ''
-        self.offset = offset
-        t = '\t{store}{tree}:{add}({var}, buffer({offset}, {size}))'
-
-        return t.format(store=store, tree=tree, add=self.add_var,
-                        var=var, offset=offset, size=self.size)
-
-    def get_padded_offset(self, offset):
-        padding = 0
-        if(self.alignment_size != 0):
-            padding = self.alignment_size - offset % self.alignment_size
-            if padding >= self.alignment_size:
-                padding = 0
-        return offset + padding
-
-    def _create_field(self, var, type_, abbr, name,
-            base=None, values=None, mask=None, desc=None):
-        """Create a ProtoField definition."""
-        template = '{var} = ProtoField.{type}("{abbr}", "{name}"{rest})'
-        args = {'var': var, 'type': type_, 'abbr': abbr, 'name': name}
-
-        # Add other parameters if applicable
-        if desc is not None:
-            desc = '"%s"' % desc
-
-        other = []
-        for var in reversed([base, values, mask, desc]):
-            if other or var is not None:
-                if var is None:
-                    var = 'nil'
-                other.append(var)
-
-        if other:
-            other.append('')
-            args['rest'] = ', '.join(reversed(other))
-        else:
-            args['rest'] = ''
-
-        return template.format(**args)
-
-    def _create_value_var(self, var, offset=None):
-        """Create code which stores the field value in 'var'.
-
-        If 'offset' is not provided, must be run after get_code().
-        """
-        if offset is None:
-            offset = self.offset
-        store = 'local {var} = buffer({offset}, {size}):{type}()'
-        return store.format(var=create_lua_var(var), offset=offset,
-                            size=self.size, type=self._get_func_type())
-
-    def _get_func_type(self):
-        """Get the lua function to read values from buffers."""
-        func_type = self.type
-        if func_type[-1] == '8':
-            func_type = func_type[:-1]
-        if func_type[-2:] in ('16', '32'):
-            func_type = func_type[:-2]
-
-        # Endian handling
-        if func_type not in ('bytes', 'string', 'stringz', 'ether'):
-            if self.proto.platform is not None:
-                if self.proto.platform.endian == Platform.little:
-                    func_type = 'le_%s' % func_type
-
-        return func_type
-
-
-class EnumField(Field):
-    """A field representing an enum."""
-
-    def __init__(self, proto, name, type, size, alignment_size, values, strict=True):
-        """Create a new EnumField.
-
-        'proto' the Protocol which owns the field
-        'name' the name of the field
-        'type' the ProtoField type
-        'size' the size of the field in bytes
-        'values' is a dict mapping field values to names
-        'strict' adds validation of the fields value
-        """
-        super().__init__(proto, name, type, size, alignment_size)
-        self.values = create_lua_valuestring(values)
-        self.strict = strict
-
-        self.keys = ', '.join(str(i) for i in sorted(values.keys()))
-        self.func_type = self._get_func_type()
-        if self.strict:
-            self.values_var = create_lua_var('%s_values' % self.name)
-        else:
-            self.values_var = None
-        self.tree_var = create_lua_var(self.name)
-
-    def get_definition(self, sequence=None):
-        """Get the ProtoField definition for this field."""
-        variable_name = self.var
-        abbr = self.abbr
-        index = ''
-        if sequence is not None:
-            postfix = self.get_array_postfix(sequence)
-            variable_name = '%s_%s' % (self.var, postfix)
-            abbr = '%s_%s' % (abbr, postfix)
-            index = self.get_array_index_postfix(sequence)
-        data = []
-        if self.strict and (sequence == None or sequence[len(sequence) - 1] == 0):
-            data.append('local {var} = {values}'.format(
-                    var=self.values_var, values=self.values))
-        data.append(self._create_field(variable_name, self.type, abbr,
-                self.name + index, self.base, self.values_var, self.mask, self.desc))
-        return '\n'.join(data)
-
-    def get_code(self, offset, store=None, sequence=None, tree='subtree'):
-        """Get the code for dissecting this field."""
-        data = []
-        postfix = self.get_array_postfix(sequence)
-
-        # Local var definitions
-        if store is not None:
-            self.tree_var = store
-        if self.strict:
-            store = self.tree_var
-            if sequence is not None:
-                store = '%s_%s' % (store, postfix)
-
-        data.append(super().get_code(offset, store, sequence, tree))
-
-        # Add a test which validates the enum value
-        if self.strict:
-            tree_var = self.tree_var
-            if sequence is not None:
-                tree_var = '%s_%s' % (self.tree_var, postfix)
-            data.append('\tif (%s[buffer(%i, %i):%s()] == nil) then' % (
-                    self.values_var, offset, self.size, self.func_type))
-            data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, "%s")'
-                    % (create_lua_var(tree_var), 'Invalid value, not in (%s)' % self.keys))
-            data.append('\tend')
-
-        return '\n'.join(data)
-
-
-class ArrayField(Field):
-    def __init__(self, proto, name, type, base_size, alignment_size, depth, enum_members=None):
-        self.base_size = base_size
-        self.depth = depth
-        array_size = 1
-        for size in self.depth:
-            array_size *= size
-
-        self.elements = depth.pop()
-        if not depth:
-            self.field = self._make_field(proto, name, type, base_size,
-                                          alignment_size, enum_members)
-        else:
-            self.field = ArrayField(proto, name, type, base_size,
-                                    alignment_size, depth)
-
-        if isinstance(type, Protocol) or isinstance(type, UnionProtocol):
-            super().__init__(proto, name, type.name, array_size * base_size,
-                             alignment_size)
-        else:
-            super().__init__(proto, name, proto.platform.map_type(type),
-                             array_size * base_size, alignment_size)
-
-    def _make_field(self, proto, name, type, size, alignment_size,
-                    enum_members):
-        if isinstance(type, Protocol) or isinstance(type, UnionProtocol):
-            return ProtocolField(proto, name, type)
-
-        ctype = proto.platform.map_type(type)
-        if enum_members != None:
-            return EnumField(proto, name, ctype, size, alignment_size,
-                             enum_members)
-
-        if proto.conf:
-            bits, enums, ranges, customs = proto.conf.get_field_attributes(name,
-                                                                           type)
-
-            ctype = proto.platform.map_type(type)
-
-            # Custom field rules
-            if customs:
-                custom = customs[0]
-                if(custom.size != size or custom.alignment_size != alignment_size):
-                    raise "Error: todo"
-                field = Field(proto, name, custom.field, size, alignment_size)
-                field.abbr = custom.abbr
-                field.base = custom.base
-                if custom.values:
-                    field.values = create_lua_valuestring(custom.values)
-                    field.mask = custom.mask
-                    field.desc = custom.desc
-                    return field
-
-                # Bitstring rules
-                if bits:
-                    return BitField(proto, name, ctype, size, alignment_size,
-                                    bits[0].bits)
-
-                # Enum rules
-                if enums:
-                    rule = enums[0]
-                    return EnumField(proto, name, ctype, size, alignment_size,
-                                     rule.values, rule.strict)
-                # Range
-                if ranges:
-                    rule = ranges[0]
-                    return RangeField(proto, name, ctype, size, alignment_size,
-                                      rule.min, rule.max)
-
-        return Field(proto, name, ctype, size, alignment_size)
-
-    def get_definition(self, sequence=None):
-        var = self.var
-        abbr = self.abbr
-        if sequence is None:
-            sequence = []
-        else:
-            postfix = self.get_array_postfix(sequence)
-            var = '%s_%s' % (self.var, postfix)
-            abbr = '%s_%s' % (self.abbr, postfix)
-
-        data = ['']
-        if not sequence:
-            data = ['-- Array definition for %s' % self.name]
-
-        type_ = self.type
-        if type_ not in ('string', 'stringz'):
-            type_ = 'bytes'
-
-        # This subtree definition
-        data.append(self._create_field(var, type_, abbr, self.name))
-
-        for i in range(0, self.elements):
-            definition = self.field.get_definition(sequence + [i])
-            if definition:
-                data.append(definition)
-
-        return '\n'.join(data)
-
-    def get_code(self, offset, tree='arraytree', parent='subtree', sequence=None):
-        data = []
-        var = self.var
-        if sequence is None:
-            sequence = []
-            data = ['\t-- Array handling for %s' % self.name]
-
-        if sequence == []:
-            t = '\tlocal {tree} = {parent}:{add}("{name}: {type} array", buffer({off}, {size}))'
-            data.append(t.format(tree=tree, parent=parent, name=self.name,
-                                 type=self.type, add=self.add_var, var=var,
-                                 off=offset, size=self.size))
-        else:
-            index = self.get_array_index_postfix(sequence)
-            var = '%s_%s' % (var, self.get_array_postfix(sequence))
-            t = '\tlocal {tree} = {parent}:{add}("{name}{index}: {type} array", buffer({off}, {size}))'
-            data.append(t.format(name=self.name, tree=tree, parent=parent,
-                                 type=self.type, index = index,
-                                 add=self.add_var, var=var, off=offset,
-                                 size=self.size))
-
-        for i in range(0, self.elements):
-            if  isinstance(self.field, ArrayField):
-                data.append(self.field.get_code(offset, 'sub' + tree, tree, sequence + [i]))
-                offset += self.field.size
-            else:
-                data.append(self.field.get_code(offset, None, sequence + [i], tree))
-                offset += self.field.size
-
-        return '\n'.join(data)
-
-
-class ProtocolField(Field):
-    def __init__(self, proto, name, sub_proto):
-        super().__init__(proto, name, sub_proto.name, sub_proto.get_size(),
-                         sub_proto.get_alignment_size())
-        self.proto_name = sub_proto.longname
-
-    def get_definition(self, sequence=None):
-        pass
-
-    def get_code(self, offset, store=None, sequence=None, tree='subtree'):
-        name = self.name + self.get_array_index_postfix(sequence)
-
-        t = '\tpinfo.private.caller_def_name = "{name}"\n'\
-            '\tDissector.get("{proto}"):call('\
-            'buffer({offset},{size}):tvb(), pinfo, {tree})'
-        return t.format(name=name, proto=self.proto_name, tree=tree,
-                dt=self.proto.DISSECTOR_TABLE, offset=offset, size=self.size)
-
-
-class BitField(Field):
-    def __init__(self, proto, name, type, size, alignment_size, bits):
-        super().__init__(proto, name, type, size, alignment_size)
-        self.bits = bits
-
-    def _bit_var(self, name):
-        return '%s_%s' % (self.var, create_lua_var(name))
-
-    def _bit_abbr(self, name):
-        return '%s.%s' % (self.abbr, name.replace(' ', '_'))
-
-    def get_definition(self, sequence=None):
-        data = ['-- Bitstring definitions for %s' % self.name]
-
-        postfix = self.get_array_postfix(sequence)
-        var = self.var
-        index = ''
-        if sequence is not None:
-            var = '%s_%s' % (self.var, postfix)
-            index = self.get_array_index_postfix(sequence)
-
-        # Bitstrings need to be unsigned for HEX?? Research needed!
-        if 'int' in self.type and not self.type.startswith('u'):
-            type_ = 'u%s' % self.type
-        else:
-            type_ = self.type
-
-        # Create bitstring tree definition
-        data.append(self._create_field(var, type_,
-                self.abbr, '%s (bitstring)' % self.name, base='base.HEX'))
-
-        # Create definitions for all bits
-        for i, j, name, values in self.bits:
-
-            # Create a mask for the bits
-            tmp = [0] * self.size * 8
-            for k in range(j):
-                tmp[-(i+k)] = 1
-            mask = '0x%x' % int(''.join(str(i) for i in tmp), 2)
-
-            values = create_lua_valuestring(values)
-            bit_var = self._bit_var(name)
-            abbr = self._bit_abbr(name)
-            if sequence is not None:
-                bit_var = '%s_%s' % (bit_var, postfix)
-                abbr = '%s_%s' % (abbr, postfix)
-            data.append(self._create_field(bit_var, type_,
-                    abbr, name + index, values=values, mask=mask))
-
-        return '\n'.join(data)
-
-    def get_code(self, offset, store=None, sequence=None, tree='subtree'):
-        data = ['\t-- Bitstring handling for %s' % self.name]
-        postfix = self.get_array_postfix(sequence)
-        var = self.var
-        if sequence is not None:
-            var = '%s_%s' % (self.var, postfix)
-
-        buff = 'buffer({off}, {size})'.format(off=offset, size=self.size)
-        t = '\tlocal bittree = {tree}:{add}({var}, {buff})'
-        data.append(t.format(tree=tree, add=self.add_var, var=var, buff=buff))
-
-        for i, j, name, values in self.bits:
-            bit_var = self._bit_var(name)
-            if sequence != None:
-                bit_var = '%s_%s' % (bit_var, postfix)
-            data.append('\tbittree:{add}({var}, {buff})'.format(
-                        add=self.add_var, var=bit_var, buff=buff))
-
-        data.append('')
-        return '\n'.join(data)
-
-
-class RangeField(Field):
-    def __init__(self, proto, name, type, size, alignment_size, min, max):
-        super().__init__(proto, name, type, size, alignment_size)
-        self.min = min
-        self.max = max
-        self.func_type = self._get_func_type()
-
-    def get_code(self, offset, sequence=None, tree='subtree'):
-        """Get the code for dissecting this field."""
-        data = []
-        var = self.var
-        if sequence is not None:
-            var = '%s_%s' % (var, self.get_array_postfix(sequence))
-
-        # Local var definitions
-        t = '\tlocal {name} = {tree}:{add}({var}, buffer({off}, {size}))'
-        data.append(t.format(var=var, name=create_lua_var(self.name),
-                             tree=tree, add=self.add_var, off=offset, size=self.size))
-
-        # Test the value
-        def create_test(value, test, warn):
-            data.append('\tif (buffer(%i, %i):%s() %s %s) then' %
-                    (offset, self.size, self.func_type, test, value))
-            data.append('\t\t%s:add_expert_info(PI_MALFORMED, PI_WARN, '
-                            '"Should be %s %s")' % (create_lua_var(self.name), warn, value))
-            data.append('\tend')
-
-        if self.min is not None:
-            create_test(self.min, '<', 'larger than')
-        if self.max is not None:
-            create_test(self.max, '>', 'smaller than')
-
-        return '\n'.join(data)
-
-
-class Protocol:
+class Protocol(ProtoTree):
     """A Protocol is a collection of fields and code.
 
     It's used to generate Wireshark dissectors written in Lua, for
@@ -529,6 +30,7 @@ class Protocol:
         if platform is None:
             platform = Platform.mappings['default']
         self.platform = platform
+        self.endian = platform.endian
         self.name = name
         self.longname = '%s.%s' % (platform.name.lower(), self.name.lower())
         self.conf = conf
@@ -552,65 +54,60 @@ class Protocol:
         # Different lua variables
         self.var = create_lua_var('proto_%s' % name)
         self.field_var = 'f'
+        self._pushed = False
+
+    @property
+    def alignment(self):
+        """Find the alignment size of the fields in the protocol."""
+        return max([0] + [f.alignment for f in self.fields])
+
+    @property
+    def size(self):
+        """Find the size of the fields in the protocol."""
+        size = 0
+        for field in self.fields:
+            if field.size:
+                size = self.get_padded_offset(field, size)
+                size += field.size
+        return self.pad_struct_size(size)
 
     def create(self):
         """Returns all the code for dissecting this protocol."""
         # Create dissector content
+        self.push_modifiers()
         self._header_defintion()
         self._fields_definition()
         self._dissector_func()
         self._register_dissector()
         return '\n'.join(self.data)
 
-    def get_size(self):
-        """Find the size of the fields in the protocol."""
-        size = 0
+    def push_modifiers(self):
+        """Push prefixes and postfixes down to child fields."""
+        if self._pushed:
+            return
+        self._pushed = True
         for field in self.fields:
-            if field.size:
-                size = field.get_padded_offset(size)
-                size += field.size
+            field.var_prefix.insert(0, '%s.' % self.field_var)
+            field.abbr_prefix.insert(0, self.name)
+            field.push_modifiers()
 
-        return self.pad_struct_size(size)
+    def get_padded_offset(self, field, offset):
+        padding = 0
+        if field.alignment:
+            padding = field.alignment - offset % field.alignment
+            if padding >= field.alignment:
+                padding = 0
+        return offset + padding
 
     def pad_struct_size(self, original_size):
-        alignment_size = self.get_alignment_size()
         padding = 0
-        if alignment_size != 0:
-            padding = alignment_size - original_size % alignment_size
-            if padding >= alignment_size:
+        if self.alignment:
+            padding = (self.alignment - original_size) % self.alignment
+            if padding >= self.alignment:
                 padding = 0
         return original_size + padding
 
-    def get_alignment_size(self):
-        """Find the alignment size of the fields in the protocol."""
-        return max([0] + [f.alignment_size
-                        for f in self.fields if f.alignment_size])
-
-    def add_field(self, *args, **vargs):
-        """Create and add a new Field to the protocol."""
-        return self._add(Field(self, *args, **vargs))
-
-    def add_array(self, *args, **vargs):
-        """Create and add a new ArrayField to the protocol."""
-        return self._add(ArrayField(self, *args, **vargs))
-
-    def add_enum(self, *args, **vargs):
-        """Create and add a new EnumField to the protocol."""
-        return self._add(EnumField(self, *args, **vargs))
-
-    def add_range(self, *args, **vargs):
-        """Create and add a new RangeField to the protocol."""
-        return self._add(RangeField(self, *args, **vargs))
-
-    def add_bit(self, *args, **vargs):
-        """Create and add a new BitField to the protocol."""
-        return self._add(BitField(self, *args, **vargs))
-
-    def add_protocol(self, *args, **vargs):
-        """Create and add a new ProtocolField to the protocol."""
-        return self._add(ProtocolField(self, *args, **vargs))
-
-    def _add(self, field):
+    def add_field(self, field):
         """Add a field to the protocol, returns the field."""
         self.fields.append(field)
         return field
@@ -656,7 +153,7 @@ class Protocol:
         """Add the code from each field into dissector function."""
         offset = 0
         for field in self.fields:
-            offset = field.get_padded_offset(offset)
+            offset = self.get_padded_offset(field, offset)
             code = field.get_code(offset)
 
             if self.conf and self.conf.cnf: # Conformance file code
@@ -679,15 +176,15 @@ class Protocol:
         self.data.append('-- Dissector function for: %s' % self.name)
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
         sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
-        check = '\tif pinfo.private.caller_def_name then\n\t\t'\
-            'subtree:set_text(pinfo.private.caller_def_name .. ": {name}")'\
-            '\n\t\tpinfo.private.caller_def_name = nil\n\telse\n'\
+        check = '\tif pinfo.private.field_name then\n\t\t'\
+            'subtree:set_text(pinfo.private.field_name .. ": {name}")'\
+            '\n\t\tpinfo.private.field_name = nil\n\telse\n'\
             '\t\tpinfo.cols.info:append(" (" .. {var}.description .. ")")\n'\
             '\tend\n'
 
         self.data.append(func_diss.format(var=self.var))
         self.data.append(sub_tree.format(
-                add=self._get_tree_add(), var=self.var))
+                add=self.add_var, var=self.var))
         self.data.append(check.format(var=self.var, name=self.name))
 
         offset = self._fields_code()
@@ -727,7 +224,7 @@ class Protocol:
                 fields = [i for i in self.fields if i.name == rule.member]
                 if not fields:
                     continue # rule.member don't exists in the struct
-                func = fields[0]._get_func_type()
+                func = fields[0].func_type
 
                 count = 'trail_count'
                 t = '\tlocal {var} = buffer({off}, {size}):{func}()'
@@ -760,26 +257,21 @@ class Protocol:
             if rule.member is not None or count > 1:
                 self.data.append('\tend') # End for loop
 
-    def _get_tree_add(self):
-        """Get the endian specific function for adding a item to a tree."""
-        if self.platform and self.platform.endian == Platform.little:
-            return 'add_le'
-        return 'add'
-
 
 class UnionProtocol(Protocol):
     def __init__(self, name, conf=None, platform=None):
         super().__init__(name, conf, platform)
 
-    def get_size(self):
+    @property
+    def size(self):
         """Find the size of the fields in the protocol."""
         return self.pad_struct_size(max(
-                [0] + [field.size for field in self.fields if field.size]))
+                [0] + [field.size for field in self.fields]))
 
     def _fields_code(self):
         """Add the code from each field into dissector function."""
         super()._fields_code(union=True)
-        return self.get_size()
+        return self.size
 
 
 class Delegator(Protocol):
@@ -810,15 +302,20 @@ class Delegator(Protocol):
         self.msg_var = create_lua_var('msg_node')
 
         # Add fields, don't change sizes!
+        endian = Platform.big
+        self.add_field(Field('Version', 'uint8', 1, 0, endian))
+
         values = {p.flag: p.name for name, p in self.platforms.items()}
-        self.add_field('Version', 'uint8', 1, 0)
-        self.add_enum('Flags', 'uint8', 1, 0, values)
-        self.add_enum('Message', 'uint16', 2, 0, {}, strict=False)
-        self.add_field('Message length', 'uint32', 4, 0)
+        field = Field('Flags', 'uint8', 1, 0, endian)
+        field.set_list_validation(values)
+        self.add_field(field)
+        self.add_field(Field('Message', 'uint16', 2, 0, endian))
+        self.add_field(Field('Message length', 'uint32', 4, 0, endian))
         self._version, self._flags, self._msg_id, self._length = self.fields
 
     def create(self):
         """Returns all the code for dissecting this protocol."""
+        self.push_modifiers()
         self._header_defintion()
         self._fields_definition()
         self._register_function()
@@ -869,10 +366,8 @@ class Delegator(Protocol):
         self.data.extend([t, ''])
 
         # Find message id and flag
-        flags_var = create_lua_var('flags')
-        msg_var = create_lua_var('message_id')
-        self.data.append('\t' + self._flags._create_value_var(flags_var))
-        self.data.append('\t' + self._msg_id._create_value_var(msg_var))
+        msg_var = create_lua_var('id_value')
+        self.data.append(self._msg_id._store_value(msg_var))
 
         # Validate message id
         t = '\tif ({ids}[{msg}] == nil) then\n\t\t{node}:add_expert_info'\
@@ -886,6 +381,7 @@ class Delegator(Protocol):
             '\n\t\tlocal name = {flags}[{flag}] .. "." .. {ids}[{msg}]'\
             '\n\t\t{table}:try(name, buffer(4):tvb(), pinfo, tree)'\
             '\n\tend\nend'
-        self.data.append(t.format(flags=self._flags.values_var, msg=msg_var,
-                flag=flags_var, ids=self.id_table, table=self.table_var))
+        self.data.append(t.format(
+                flags=self._flags.values, msg=msg_var, table=self.table_var,
+                flag=self._flags._value_var, ids=self.id_table))
 

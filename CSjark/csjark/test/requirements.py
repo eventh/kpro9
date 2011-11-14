@@ -51,7 +51,7 @@ def req_1b():
     enum = cparser.find_structs(ast)[0].fields[0]
     assert enum
     assert enum.name == 'test'
-    assert enum.values == '{[0]="a", [3]="b"}'
+    assert enum._valuestring_values == '{[0]="a", [3]="b"}'
     assert enum.type == 'uint32' and enum.size == 4
 
 # FR1-C: The utility must support members of type struct
@@ -84,10 +84,8 @@ def req_1e():
     assert _child(a, 3).names[0] == 'int'
     a, b, c = cparser.find_structs(ast)[0].fields
     assert isinstance(b, dissector.Field)
-    # ArrayField.type now holds the ctype, instead of wireshark type
-    # Test will fail until this is fixed
-    assert a.type == 'int32' and b.type == 'string' and c.type == 'float'
-    assert a.base_size == 4 and b.size == 9 and c.base_size == 4
+    assert a.type == 'bytes' and b.type == 'string' and c.type == 'bytes'
+    assert a.size == 4*56 and b.size == 9 and c.size == 20
 
 # FR1-F: The utility should detect structs with the same name
 @parse_structs.test

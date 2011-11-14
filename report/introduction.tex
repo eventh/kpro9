@@ -1,5 +1,6 @@
 %=================
-\chapter{Introduction}
+% Introduction
+\chapter*{Introduction}
 %=================
 
 This chapter will give a technical introduction to our project.
@@ -10,12 +11,12 @@ The connection between Wireshark and the Lua structs protocol will also be expla
 
 The second section will describe how the Lua code works, and how it is built by our utility.
 
-\section{Wireshark and dissectors}
+\section*{Wireshark and dissectors}
 This section gives a brief introduction to Wireshark and dissectors.
 The first part describes what Wireshark is, and what it can be used for.
 The second part explains exactly what a dissector is, and how a dissector can be used to extend Wireshark.
 
-\subsection{Wireshark}
+\subsection*{Wireshark}
 Wireshark is a program used to analyze network traffic. A common usage scenario is when a person wants to troubleshoot network problems or
 look at the internal workings of a network protocol. An important feature of Wireshark is the ability to capture a live stream of packets sent through the network. 
 A user could, for example, see exactly what happens when he opens up a website. Wireshark will then display all the messages
@@ -36,7 +37,7 @@ Dissectors, in general, are explained more in detail below.
 	\caption{Wireshark\label{fig:introshark}}
 \end{figure}
 
-\subsection{Dissectors}
+\subsection*{Dissectors}
 In short, a dissector detects the protocol type of a packet and tries to obtain as much information
 from the packet as possible. This information is then displayed in Wireshark, in addition to the name of the protocol.
 
@@ -49,13 +50,13 @@ All the packets containing C structs belong to the protocol called Lua C Structs
 When opening a capture file in Wireshark , this protocol maps the id of the messages to the correct dissector,
 and calls them.
 
-\section{From struct definition to dissector - a true story}
+\section*{From struct definition to dissector - a true story}
 This section explains how the Lua dissectors work, and how they can be built by our utility.
 
 The first part explains what happens under the hood of a Lua dissector, while 
 the second part is a very brief explanation of how CSjark builds such dissectors.
 
-\subsection{Lua dissectors}
+\subsection*{Lua dissectors}
 
 \autoref{luaexample1} shows what the code for the Lua dissector, displayed in packet 1 in \autoref{fig:introshark}, looks like.
 The Proto variable defines a new protocol. In this example, a dissector for the internal\_snd struct, called internal\_snd, is created. 
@@ -75,7 +76,7 @@ as the example screenshot of Wireshark shows.
 \lstset{language=C,caption={Example Lua file},label=luaexample1}
 \lstinputlisting[language=C]{./code/luaexample.lua}
 
-\subsection{CSjark - Automated generation of Lua dissectors}
+\subsection*{CSjark - Automated generation of Lua dissectors}
 CSjark is a Python utility that can automatically generate a Lua dissector for 
 any valid C header file. The C file is inputted into a command line interface.
 The C file is then sent to the C preprocessor, where it is made ready for parsing.

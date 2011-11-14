@@ -22,14 +22,15 @@ User Documentation
    user/use_ws
    user/config
 
-Developer Documentation
------------------------
+..
+    Developer Documentation
+    -----------------------
+   
+    .. toctree::
+       :maxdepth: 2
 
-.. toctree::
-   :maxdepth: 2
-
-.. 
-    deve/devel
+    .. 
+        deve/devel
 
 Other Information
 -----------------

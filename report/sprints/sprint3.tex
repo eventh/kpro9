@@ -6,6 +6,7 @@
 %------------------------
 \section{Sprint Planning}
 %------------------------
+\label{sec:sp3:planning}
 For the third sprint we intend to implement the remaining requirements in the product backlog. We feel that the first and second sprint have resulted in a satisfying \gls{utility}, but it is still missing important functionality.
 
 After two sprint iterations, we are still trying to improve our approach to \Gls{scrum}. Each sprint results in new ideas and better ways to do the process, and in this sprint we want everything to be correct and in the right order.\\
@@ -293,6 +294,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 %----------------------
 \section{System Design}
 %----------------------
+\label{sec:sp3:design}
 The system design defines the new modules and architecture that has to be in place to satisfy the specified requirements that we have included in the sprint 3 backlog. Most of the design are already done in earlier sprints; now we extend that and add some new elements.
 
 \subsection{System overview}
@@ -369,6 +371,7 @@ The redesign of the config module will ensure better efficiency when the batch p
 %-----------------------
 \section{Implementation}
 %-----------------------
+\label{sec:sp3:impl}
 The main focus in this sprint was to add support for different platforms. Several 
 things are dependent on platform; \gls{endianness}, the memory allingment and sizes 
 of data types. It is also possible that \glspl{struct} can be defined differently for 
@@ -536,6 +539,7 @@ definition in \Gls{c} is shown in \autoref{code:typedefarray}. Also support for
 %-----------------------
 \section{Sprint Testing}
 %-----------------------
+\label{sec:sp3:test}
 During sprint 3 the team executed a total of 11 test cases, but no additional testing features were added during the sprint. Test cases executed:
 
 \begin{itemize}
@@ -712,10 +716,7 @@ During sprint 3 the team executed a total of 11 test cases, but no additional te
 \subsection{Test Evaluation}
 In this sprint we were finally able to harvest the fruits of using a tool to calculate our code coverage. By being able to more easily see what code was not being tested, the team was able to uncover several bugs in the system, though the team unfortunately were unable to fix them all by the end of the sprint. There were also some problems with tests failing because of poor communication between the ones responsible for making the tests and the ones generating pcap \gls{packet} traffic that were to be used in the test. It was therefore decided that these two groups of people should work more closely together on creating the tests.
 
-
-
 \subsubsection{Test Coverage}
-
 As can be seen in both \autoref{tab:sp3CoverageReport} and \autoref{fig:sp3CoverageChart} the team finally managed to hit the goal of having a code coverage of at least 80\% in this sprint. This was achieved mostly by improving the black\_box.py, which is a test of all the major parts of the \gls{utility}. In this sprint the team had 9 assertions in their unit tests fail. Unfortunately because these bugs were considered minor and because of time constraint the team was unable to fix the \gls{utility} before the end of the sprint. These bugfixes therefore had to be moved to sprint 4. The following list shows the unit tests ran in sprint 3:
 \begin{itemize}
 	\item black\_box.py
@@ -751,6 +752,10 @@ As can be seen in both \autoref{tab:sp3CoverageReport} and \autoref{fig:sp3Cover
 %--------------------------
 \section{Customer Feedback}
 %--------------------------
+\label{sec:sp3:feedback}
+This section covers the feedback we have got from the customer during the 
+spring, with the feedback they gave the team for each of the implemented 
+features.
 
 \subsection{Pre-sprint}
 
@@ -835,7 +840,7 @@ a lot of feedback on things we need to fix and improve.
 %--------------------------
 \section{Sprint Evaluation}
 %--------------------------
-
+\label{sec:sp3:eval}
 \subsection{Review}
 %--------------------------
 After some trying, failing and learning we now feel that we understand the \Gls{scrum} process and were able to do it correctly. We have done the planned actions from the prior sprints and have achieved a considerable increase in work efficiency, work completion and now have a well distributed workload.

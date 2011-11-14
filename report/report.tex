@@ -23,6 +23,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{textcomp}
+\usepackage[Glenn]{fncychap}
 \usepackage[style=treenoname,subentrycounter,numberedsection, 
         section=chapter, acronym]{glossaries}
 
@@ -57,7 +58,8 @@
 % Configure links in pdfs
 \hypersetup{
     bookmarksopen=false, % Hide bookmarks menu
-    colorlinks=true, % Don't wrap links in colored boxes
+    colorlinks=false, % Don't wrap links in colored boxes
+    pdfborder={0 0 0} % Remove ugly boxes
 }
 
 \newcommand{\HRule}{\rule{\linewidth}{0.2mm}}   
@@ -87,18 +89,27 @@
 % Abstract
 %==========
 \begin{abstract}
-\Gls{wireshark} is a program used to analyze \gls{packet} data sent between network
-nodes. The purpose of this project was to allow the use of \Gls{wireshark} to also
-decode \gls{aipc}, which is important for debugging and
-ensuring that such programs behave correctly. The process of decoding \glspl{packet}
-manually is often time-consuming and in some cases impossible.
+This paper addresses the problem of creating Lua dissectors for \Gls{wireshark}, 
+to analyze \gls{aipc} with C structs. The dissectors are used to display the 
+binary data in a readable format in \Gls{wireshark}. Writing Lua dissector 
+manually is difficult and time consuming, and a solution for doing this 
+automatically was necessary.  
 
-The project resulted in a stand-alone \gls{utility} which acts as a supporting tool
-for \Gls{wireshark}. Our \gls{utility} is written in \Gls{python}, and uses open source {library}
-like \gls{pycparser} and \gls{ply} to achieve this. The \gls{utility} automates the process of
-generating \glspl{dissector} for \Gls{wireshark} from \Gls{c} \gls{header} files. This functionality
-makes debugging and testing some programs a lot easier.
+The problem was solved by parsing C structs defined in C header-files, then 
+processing the abstract-syntax tree, and generating the Lua dissectors 
+for the structs. Configuration will ensure flexibility in generation of 
+dissectors.
 
+The project resulted in CSjark, which is a stand-alone \gls{utility} that acts 
+as a supporting tool for \Gls{wireshark}. Our \gls{utility} is written in 
+\Gls{python}, and uses open source {library} like \gls{pycparser} and 
+\gls{ply} to achieve this. For configuration pyYAML was used to make the 
+utility flexible. The \gls{utility} automates the process of generating 
+\glspl{dissector} for \Gls{wireshark} from \Gls{c} \gls{header} files. 
+
+CSjark reduces the time developers use to write dissectors, which 
+will make it easier to utilize \Gls{wireshark} for debugging of  \gls{aipc} 
+traffic.
 \end{abstract}
 
 %=========
@@ -127,6 +138,14 @@ development process and also for making the initial requirement
 specification clear and understandable.
 
 
+%=================
+% Introduction
+%=================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Introduction}
+\include {introduction}
+
 %===================
 % Table of Contents
 %===================
@@ -152,13 +171,14 @@ specification clear and understandable.
 \listoftables
 
 
+
+
 %###########################
 % Planning and Requirements
 %###########################
 \clearpage
 \pagenumbering{arabic}
 \part{Planning \& Requirements}
-
 \include{./planning/project_directive}
 \include{./planning/plan}
 \include{./planning/prestudy}

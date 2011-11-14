@@ -8,15 +8,20 @@ Also contains the class which generates a dissector for delegating
 dissecting of messages to the specific protocol dissectors.
 """
 from platform import Platform
-from field import create_lua_var, ProtoTree, Field
+from field import create_lua_var, BaseField, Field
 
 
-class Dissector(ProtoTree):
+class Dissector(BaseField):
+    """A Dissector is a collection of fields and code.
+
+    It's used to generate Wireshark dissectors written in Lua, for
+    dissecting a packet into a set of fields with values.
+    """
 
     def __init__(self, proto, platform):
-        super().__init__(None, None, platform.endian)
         self.proto = proto
         self.platform = platform
+        self.endian = platform.endian
         self.name = proto.name
         self.field_var = '%s.%s' (proto.field_var, platform.name)
         self.children = [] # List of all child fields
@@ -35,9 +40,9 @@ class Dissector(ProtoTree):
         size = 0
         for field in self.children:
             if field.size:
-                size = self.get_padded_offset(field, size)
+                size = self.get_padding(field, size)
                 size += field.size
-        return self.pad_struct_size(size)
+        return self.get_padding(self, size)
 
     def push_modifiers(self):
         """Push prefixes and postfixes down to child fields."""
@@ -58,71 +63,58 @@ class Dissector(ProtoTree):
 
             if self.conf and self.conf.cnf: # Conformance file code
                 code = self.conf.cnf.match(field.name, code, definition=True)
-            if code is not None:
-                data.append(code)
+            data.append(code)
 
         # Conformance file definition code extra
         if self.conf and self.conf.cnf:
-            code = self.conf.cnf.match(None, None, definition=True)
-            if code:
-                data.append(code)
+            data.append(self.conf.cnf.match(None, None, definition=True))
 
-        return '\n'.join(data)
+        return '\n'.join(i for i in data if i is not None)
 
     def get_code(self, offset, store=None, tree='subtree'):
         """Get the code for dissecting this field."""
         self.offset = offset
-        for field in self.fields:
-            offset = self.get_padded_offset(field, offset)
-            code = field.get_code(offset)
+        data = []
 
-            if self.conf and self.conf.cnf: # Conformance file code
+        for field in self.children:
+            offset = self.get_padding(field, offset)
+            code = field.get_code(offset, store=store, tree=tree)
+
+            # Conformance file code
+            if self.conf and self.conf.cnf:
                 code = self.conf.cnf.match(field.name, code, False, field)
-            if code:
-                self.data.append(code)
+            data.append(code)
+
             if self._increase_offset:
                 offset += field.size
 
         # Conformance file dissection function code extra
         if self.conf and self.conf.cnf:
-            code = self.conf.cnf.match(None, None, definition=False)
-            if code:
-                self.data.append(code)
+            data.append(self.conf.cnf.match(None, None, definition=False))
 
         # Delegate rest of buffer to any trailing protocols
         if self.conf and self.conf.trailers:
-            self._trailers(self.conf.trailers, offset)
+            data.append(self._trailers(self.conf.trailers, offset))
 
-    def get_padded_offset(self, field, offset):
+        return '\n'.join(i for i in data if i is not None)
+
+    def get_padding(self, field, offset):
+        alignment = field.alignment
         padding = 0
-        if field.alignment:
-            padding = field.alignment - offset % field.alignment
-            if padding >= field.alignment:
+        if alignment:
+            padding = (alignment - offset) % alignment
+            if padding >= alignment:
                 padding = 0
         return offset + padding
 
-    def pad_struct_size(self, original_size):
-        alignment = self.alignment
-        padding = 0
-        if alignment:
-            padding = (alignment - original_size) % alignment
-            if padding >= alignment:
-                padding = 0
-        return original_size + padding
-
-    def add_field(self, field):
-        """Add a field to the protocol, returns the field."""
-        self.children.append(field)
-        return field
-
     def _trailers(self, rules, offset):
         """Add code for handling of trailers to the protocol."""
-        self.data.append('\n\t-- Trailers handling for struct: %s' % self.name)
+        data = ['\n\t-- Trailers handling for struct: %s' % self.name]
 
         # Offset variable and variable declaration
         off_var = 'trail_offset'
         t_offset = '\tlocal {var} = {offset}'
-        self.data.append(t_offset.format(offset=offset, var=off_var))
+        data.append(t_offset.format(offset=offset, var=off_var))
 
         for i, rule in enumerate(rules):
             # Find the count
@@ -135,7 +127,7 @@ class Dissector(ProtoTree):
 
                 count = 'trail_count'
                 t = '\tlocal {var} = buffer({off}, {size}):{func}()'
-                self.data.append(t.format(off=fields[0].offset,
+                data.append(t.format(off=fields[0].offset,
                                  var=count, size=fields[0].size, func=func))
             else:
                 count = rule.count
@@ -147,22 +139,24 @@ class Dissector(ProtoTree):
             # Call trailers 'count' times
             tabs = '\t'
             if rule.member is not None or count > 1:
-                self.data.append('\tfor i = 1, {count} do'.format(count=count))
+                data.append('\tfor i = 1, {count} do'.format(count=count))
                 tabs += '\t'
 
             t1 = '{tabs}local trailer = Dissector.get("{name}")'
             t2 = '{tabs}trailer:call(buffer({off}{size}):tvb(), pinfo, tree)'
             t3 = '{tabs}{var} = {var} + {size}'
-            self.data.append(t1.format(tabs=tabs, name=rule.name))
-            self.data.append(t2.format(tabs=tabs, off=off_var, size=size_str))
+            data.append(t1.format(tabs=tabs, name=rule.name))
+            data.append(t2.format(tabs=tabs, off=off_var, size=size_str))
 
             # Update offset after all but last trailer
             if i < len(rules)-1:
-                self.data.append(t3.format(tabs=tabs,
+                data.append(t3.format(tabs=tabs,
                                            var=off_var, size=rule.size))
 
             if rule.member is not None or count > 1:
-                self.data.append('\tend') # End for loop
+                data.append('\tend') # End for loop
+
+        return '\n'.join(i for i in data if i is not None)
 
 
 class UnionDissector(Dissector):
@@ -173,7 +167,7 @@ class UnionDissector(Dissector):
     @property
     def size(self):
         """Find the size of the fields in the protocol."""
-        return self.pad_struct_size(max(
+        return self.get_padding(self, max(
                 [0] + [field.size for field in self.children]))
 
 
@@ -227,7 +221,7 @@ class Protocol:
         self._fields_definition()
         self._dissector_func()
         self._register_dissector()
-        return '\n'.join(self.data)
+        return '\n'.join(i for i in self.data if i is not None)
 
     def _legal_header(self):
         """Add the legal header with license info."""

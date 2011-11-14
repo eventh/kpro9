@@ -78,10 +78,6 @@ class BaseField:
         pass
 
 
-class ProtoTree(BaseField):
-    pass
-
-
 class Field(BaseField):
     """Represents Wireshark's ProtoFields which stores a specific value."""
 

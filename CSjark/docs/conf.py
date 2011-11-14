@@ -191,7 +191,7 @@ htmlhelp_basename = 'CSjarkdoc'
 # -- Options for LaTeX output --------------------------------------------------
 
 # The paper size ('letter' or 'a4').
-#latex_paper_size = 'letter'
+latex_paper_size = 'A4'
 
 # The font size ('10pt', '11pt' or '12pt').
 #latex_font_size = '10pt'
@@ -199,8 +199,8 @@ htmlhelp_basename = 'CSjarkdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'CSjark.tex', u'CSjark Documentation',
-   u'Even Wiik Thomassen, Erik Bergersen, Sondre Johan Mannsverk, Terje Snarby, Lars Solvoll Tønder, Sigurd Wien \\& Jaroslav Fibichr', 'manual'),
+  ('index', 'CSjark.tex', 'CSjark Documentation',
+   'Even Wiik Thomassen \\and Erik Bergersen \\and Sondre Johan Mannsverk \\and Terje Snarby \\and Lars Solvoll Tønder \\and Sigurd Wien \\and Jaroslav Fibichr', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

@@ -1,3 +1,9 @@
+=========
+Copyright
+=========
+
+Copyright (c) 2011, Erik Bergersen, Jaroslav Fibichr, Sondre Johan Mannsverk, Terje Snarby, Even Wiik Thomassen, Lars Solvoll Tonder, Sigurd Wien. All rights reserved.
+
 .. _license:
 
 ==================

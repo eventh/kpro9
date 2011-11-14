@@ -8,8 +8,37 @@ Welcome to CSjark's documentation!
 
 CSjark is a tool for generating Lua dissectors from C struct definitions to use with Wireshark. Wireshark is a leading tool for capturing and analysing network traffic. The goal with the dissectors is to make Wireshark able to nicely display the values of a struct sent over the network, along with member names and type. This can be a powerful tool for debugging C programs that communicates with strucs over the network.
 
-For more information about Wireshark please visit http://www.wireshark.org.
+For more information about Wireshark please visit `Wireshark website <http://www.wireshark.org>`_.
 
+
+User Documentation
+------------------
+
+.. toctree::
+   :maxdepth: 2
+   
+   user/install
+   user/use
+   user/use_ws
+   user/config
+
+Developer Documentation
+-----------------------
+
+.. toctree::
+   :maxdepth: 2
+
+.. 
+    deve/devel
+
+Other Information
+-----------------
+
+.. toctree::
+   :maxdepth: 2
+   
+   other/license
+   other/about
 
 
 **Features** (TBD)
@@ -31,38 +60,6 @@ For more information about Wireshark please visit http://www.wireshark.org.
 
 (additional platforms can be added by configuration)
 
-
-User Documentation
-------------------
-
-.. toctree::
-   :maxdepth: 2
-   
-   user/install
-   user/use
-   user/use_ws
-   user/config
-
-Developer Documentation
------------------------
-
-.. toctree::
-   :maxdepth: 2
-
-..   
-   devel/devel
-
-Other Information
------------------
-
-.. toctree::
-   :maxdepth: 2
-   
-   other/whatsnew
-   other/limits
-   other/license
-   other/copyright
-   other/about
 
 
 Indices and tables

@@ -1,12 +1,16 @@
 %=================
 \chapter{Planning}
 %=================
-This chapter explains the administrative part of the project.
-
+This chapter explains the administrative part of the project. The project plan 
+is presented in \autoref{sec:plan:project}. How the project is organized is 
+covered in \autoref{sec:plan:org}, the quality assurance is described in 
+\autoref{sec:plan:qa}, and how we are supposed to handle possible risk can be 
+found in \autoref{sec:plan:risk}.
 
 %---------------------
 \section{Project Plan}
 %---------------------
+\label{sec:plan:project}
 The project plan includes the specified plan on which tool we are using in this project, measurement of project effects, limitations and the concrete project work plan.
 
 \subsection{Measurement of Project Effects}
@@ -23,7 +27,7 @@ If 1 hour is the average time for creating a \gls{dissector} for 1 message, our 
 
 None of the workaround methods mentioned above is capable of processing messages with \Gls{c} \glspl{struct} that are big and complex. Time savings in these cases are not easily estimated.
 
-Somestimes a representative of Thales Norway AS has to physically move to the their customer’s site to solve a problem. With the delivered solution, in some cases, this will be no longer necessary and the problem will be solved remotely by sending capture files to Thales and solving it in-house. Savings in this case are not only time-based but it will also directly cut the transportation costs and it will increase the satisfaction for the client.
+Somestimes a representative of Thales Norway AS has to physically move to the their customer’s site to solve a problem. With the delivered solution, in some cases, this will be no longer necessary, since the customer's can use Wireshark with the dissectors, and then send the capture files to Thales, so the problem can be solved in-house. Savings in this case are not only time-based but it will also directly cut the transportation costs, as well as an enviromental benefit. There is also possible it will increase the satisfaction for the client.
 
 \subsection{Limitations}
 %-----------------------
@@ -34,8 +38,8 @@ As in all other projects, the project members have to deal with various limitati
 	\item[\Gls{c} \gls{preprocessor}] To fulfill all the requirements we might need to
 		either modify an existing \gls{preprocessor} or write our own, which can be
 		a highly time consuming process.
-	\item[Platforms] A \gls{asparc} platform that is required for the program is not
-		available to the project group.
+	\item[Platforms] Some of the platforms that are required for the utility is not
+		available to the project team.
 \end{description}
 
 \subsubsection{Non-technical Limitations}
@@ -122,7 +126,7 @@ with the team's advisor.
 \LaTeX \,is a document \gls{markup language} used to
 create reports, articles and books. It was chosen by the group for its 
 high quality typesetting which produces professional looking documents, and 
-because it is suitable for larger scientific reports. 
+because it is suitable for larger scientific reports.\cite{NotSoShorGuideToLatex} 
 Writing documents in \LaTeX \ is very different from writing them in, for example,
 Microsoft Word, as most of the visual presentation is handled by the \LaTeX \ system 
 and not by the user itself. Because the writer does not have to spend time
@@ -277,6 +281,7 @@ work breakdown structure, and the project timeline is in \autoref{fig:gantt}.
 %-----------------------------
 \section{Project Organization}
 %-----------------------------
+\label{sec:plan:org}
 This section describes how the team is organized, which roles the developers are divided into and the partners of the projet.
 
 \subsection{Project Organization}
@@ -367,6 +372,7 @@ listed in \autoref{tab:plan:advisors}.
 %--------------------------
 \section{Quality Assurance}
 %--------------------------
+\label{sec:plan:qa}
 The following section contains internal processes and routines the team will use in the project. This includes procesures for meetings, document templates and standards and internal reports.
 
 \subsection{Routines for Ensuring Quality Internally}
@@ -523,6 +529,7 @@ These documents should follow the templates specified in Templates and Standards
 %------------------------
 \section{Risk Management}
 %------------------------
+\label{sec:plan:risk}
 The following section lists the possible risk scenarios that can occur in the project, and how they should be handled. \autoref{tab:risk} shows how to handle the possible risks in the team. Each risk has a consequence and a probability:  \Gls{h}, \Gls{m} or \Gls{l}.
 Strategy and actions describes what we should do to reduce the consequences of the risk, or prevent the risk from happening altogether. Deadline states when we need to handle the risk.
 \begin{description}

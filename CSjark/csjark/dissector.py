@@ -8,7 +8,7 @@ Also contains the class which generates a dissector for delegating
 dissecting of messages to the specific protocol dissectors.
 """
 from platform import Platform
-from field import create_lua_var, BaseField, Field
+from field import create_lua_var, create_lua_valuestring, BaseField, Field
 
 
 class Dissector(BaseField):
@@ -313,18 +313,23 @@ class Protocol:
 
     def _register_dissector(self):
         """Add code for registering the dissector in the dissector table."""
-        data = []
+        # Dissector message id, which maps to name
         if self.id is None:
-            ids = ['nil']
+            message_ids = ['nil']
         else:
-            ids = self.id
+            message_ids = self.id
 
-        for id in ids:
-            data.append('{func}({var}, "{platform}", "{name}", {id})'.format(
+        # Dissector Sizes and platforms
+        # TODO: design the size format when registering the sizes
+        sizes = [(i.size, i.platform.name) for i in self.children]
+        sizes = create_lua_valuestring(dict(sizes))
+
+        data = []
+        for id in message_ids:
+            data.append('{func}({var}, "{name}", {id}, {sizes})'.format(
                     func=self.REGISTER_FUNC, var=self.var, name=self.name,
-                    platform=self.platform.name, id=id))
-
-        data.append('')
+                    platform=self.platform.name, id=id, sizes=sizes))
+        data.extend(['', ''])
         return '\n'.join(i for i in data if i is not None)
 
 

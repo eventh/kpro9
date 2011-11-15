@@ -29,7 +29,12 @@ class Dissector(BaseField):
         self.platform = platform
         self.endian = platform.endian
         self.conf = conf
-        self.field_var = 'f.%s' % create_lua_var(platform.name)
+
+        self.field_var = 'f.'
+        from config import Options
+        if len(Options.platforms) > 1:
+            self.field_var += create_lua_var(platform.name)
+
         self.children = [] # List of all child fields
 
         self._pushed = False

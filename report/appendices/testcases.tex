@@ -144,8 +144,8 @@ The test cases ran in sprint 1 are \autoref{tab:TID01}-\ref{tab:TID07}.
 	Feature & Test that our \gls{utility} recognizes invalid values for \gls{struct} \glspl{member} specified in the config file. \\
 	\midrule
 	\multirow{4}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \gls{header} and a config-file, where the config file sets restrictions on the \glspl{member} of the \gls{header} file. \\
-	& 2. Copy the resulting dissector to the personal plugins folder of wireshark.
-	& 3. Run wireshark with the pcap file associated with this test 
+	& 2. Copy the resulting dissector to the personal plugins folder of wireshark.\\
+	& 3. Run wireshark with the pcap file associated with this test \\
 	& 4. Inspect the different packets displayed in \Gls{wireshark} \\
 	\midrule
 	Expected result & 3. \Gls{wireshark} should display the \gls{struct} \glspl{member} with invalid values marked as invalid \\

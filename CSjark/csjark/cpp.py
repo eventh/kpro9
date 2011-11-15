@@ -38,7 +38,7 @@ def parse_file(filename, platform=None, folders=None, includes=None):
 
     # Add all -Include cpp arguments
     if folders or config.include_dirs:
-        folders.union(config.include_dirs)
+        folders |= set(config.include_dirs)
         path_list.extend('-I%s' % i for i in folders)
 
     # Define macros
@@ -54,13 +54,17 @@ def parse_file(filename, platform=None, folders=None, includes=None):
     if config.includes or includes:
         # Find all includes and their dependencies
         unprosess = [filename] + includes + config.includes
+        processed = set()
         all_includes = []
         while len(unprosess) > 0:
             file = unprosess.pop(0)
+            processed.add(file)
             if file in all_includes:
                 all_includes.remove(file) # Move it to the front
             all_includes.insert(0, file)
-            unprosess.extend(Options.match_file(file).includes)
+            unprosess.extend(i for i in Options.match_file(file).includes
+                    if i not in processed)
+
 
         feed = '\n'.join('#include "%s"' % i for i in all_includes) + '\n'
     else:

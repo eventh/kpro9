@@ -239,19 +239,28 @@ def parse_headers(headers):
         print('[%i] %s header files (%i platforms)' % (
                 len(tries), msg, len(Options.platforms)))
 
+    def filenames_have_shared_path(f1, f2):
+        p1 = os.path.dirname(f1)
+        p2 = os.path.dirname(f2)
+        c = os.path.commonprefix([p1, p2])
+        return c == p1 or c == p2
+
     print('[0] Attempting to parse %i header files' % len(headers))
 
     # First try, in the order given through the CLI
+    counter = 0
     for filename in headers:
         for platform in Options.platforms:
             error = create_dissector(filename, platform, folders)
             if error is not None:
                 failed.append([filename, platform, error])
+        counter += 1
+        print("Parsed file %i '%s'" % (counter, filename))
     print_status()
 
     # Try to include files based on decoding the error messages
     work_list = failed[:]
-    for tmp in range(2, 5):
+    for tmp in range(2, 4):
         for i in reversed(range(len(work_list))):
             status, new_error = include_heuristics(*work_list[i])
             if not status and new_error is not None:
@@ -264,7 +273,9 @@ def parse_headers(headers):
 
     # Try to include all who worked as it might help
     failed_names = [filename for filename, platform, error in failed]
-    includes = [file for file in headers if file not in failed_names]
+    includes = [f for f in headers if f not in failed_names and
+                            filenames_have_shared_path(filename, f)]
+
     for i in reversed(range(len(failed))):
         filename, platform, tmp = failed.pop(i)
         error = create_dissector(filename, platform, folders, includes)
@@ -310,6 +321,8 @@ def create_dissector(filename, platform, folders=None, includes=None):
         text = cpp.parse_file(filename, platform, folders, includes)
         ast = cparser.parse(text, filename)
         cparser.find_structs(ast, platform)
+    except OSError:
+        raise
     except Exception as err:
         # TODO some cleanup, now half-finished things might linger!
         if Options.verbose:

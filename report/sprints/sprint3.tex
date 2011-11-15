@@ -736,10 +736,11 @@ During sprint 3 the team executed a total of 11 test cases, but no additional te
 \end{table}
 
 \subsection{Test Evaluation}
-In this sprint we were finally able to harvest the fruits of using a tool to calculate our code coverage. By being able to more easily see what code was not being tested, the team was able to uncover several bugs in the utility. Unfortuneatly though, the team was unable to fix all of the bugs by the end of the sprint. There were also some problems with tests failing because of poor communication between the ones responsible for making the tests and the ones generating pcap \gls{packet} traffic that were to be used in the test. It was therefore decided that these two groups of people should work more closely together on creating the tests.
+In this sprint we saw a massive improvement in code coverage due to finally having been able to use the coverage tool to monitor our unit tests. There were also a lot of bugs discovered during this sprint, and while most of them got fixed, some of the bugfixing had to be pushed to next sprint due to time constraints. Some testcases also failed due to poor communication between the ones responsible for creating the testcases and the ones responsible for generating the test data. It was therefore decided that we not split up these two types of tasks but rather have the same person design a test case and create the required data for it as well.
 
 \subsubsection{Test Coverage}
-As can be seen in both \autoref{tab:sp3CoverageReport} and \autoref{fig:sp3CoverageChart} the team finally managed to hit the goal of having a code coverage of at least 80\% in this sprint. This was achieved mostly by improving the black\_box.py, which is a test of all the major parts of the \gls{utility}. In this sprint the team had 9 assertions in their unit tests fail. Unfortunately because these bugs were considered minor and because of time constraint the team was unable to fix the \gls{utility} before the end of the sprint. These bugfixes therefore had to be moved to sprint 4. The following list shows the unit tests ran in sprint 3:
+As can be seen in both \autoref{tab:sp3CoverageReport} and \autoref{fig:sp3CoverageChart} the team finally managed to hit the goal of having a code coverage of at least 80\% in this sprint. This was achieved mostly by improving the black\_box.py, which is a test of all the major parts of the \gls{utility}. The following list shows the unit tests ran in sprint 3:
+
 \begin{itemize}
 	\item black\_box.py
 	\item requirements.py

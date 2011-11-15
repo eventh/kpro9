@@ -48,11 +48,14 @@ at its architecture and data structures, especially how it generates \glspl{diss
 %-------------------
 Is a tool for generating \Gls{wireshark} \glspl{dissector} from \gls{asnone} \glspl{protocol}. Asn2wrs requires
 four input files: an \gls{asnone} \gls{protocol} description, a configuration file and two
-template files. Advantages of using Asn2wrs are faster development from
-easier recompilation, and plugins which are easy to distribute. The disadvantage
-is that code and \glspl{makefile} are more complex.\cite{asn2wrs} Our customer can't use this
-solution as it would require them to rewrite their \Gls{c} \glspl{struct} to \gls{asnone}
-descriptions, which would take a very long time.
+template files. Advantages of using Asn2wrs are faster development because of
+easier recompilation, and plugins that are easy to distribute. The disadvantage
+is that code and \glspl{makefile} are more complex.\cite{asn2wrs} 
+
+Our customer cannot use this solution as it would require them to rewrite 
+their \Gls{c} \glspl{struct} to \gls{asnone} descriptions, which would take a 
+very long time. But the team can use the asn2wrs code as an example of how to 
+create dissectors for \Gls{wireshark}.
 
 %-----------------------------------------
 \section{Software Development Methodology}
@@ -227,7 +230,7 @@ of Rio de Janeiro, in Brazil.\cite{LuaORG}
 
 The output of our \gls{utility} will be \Gls{wireshark} \glspl{dissector} written in \Gls{lua}. While
 \Gls{wireshark} supports \glspl{dissector} written in both \Gls{c} and \Gls{lua}, \Gls{lua} is preferred
-because they can be added without recompiling \Gls{wireshark}. \Gls{lua} \glspl{dissector}
+because they can be added without recompiling \Gls{wireshark}. This is important since some of Thales customers do not allow recompiled versions of Wireshark. \Gls{lua} \glspl{dissector}
 interface with \Gls{wireshark} through a simple \Gls{api}.
 
 \subsection{\Gls{java}}
@@ -304,8 +307,8 @@ cppheaderparser depends on \Gls{aply}. These are described later in this section
 \subsection{\gls{pycparser}}
 %---------------------
 \label{sec:pre:pycparser}
-There are two \Gls{python} \glspl{library} for parsing \Gls{c} with the same name (but different
-capitalization), \gls{pycparser}\footnote{\url{http://code.google.com/p/\gls{pycparser}/}}
+There are two \Gls{python} \glspl{library} for parsing \Gls{c} with the same name, but different
+capitalization, \gls{pycparser}\footnote{\url{http://code.google.com/p/\gls{pycparser}/}}
 and PyCParser\footnote{\url{https://github.com/albertz/PyCParser}}. While they
 both aim to solve almost the same problem, the first one appears to have better
 documentation, is a more mature project and support more of the \Gls{C99}
@@ -362,14 +365,7 @@ selected and why is explained in \autoref{sec:pre:configchoice}.
 Our \gls{utility} needs a flexible configuration, as some of the information we
 shall display does not exist in the files we parse. For example there are no
 clear relationship between enumerated values in messages and their names.
-These must be provided through a configuration. The configuration should also
-support the following:
-\begin{itemize}
-	\item Defining data constraints, so the \gls{dissector} can recognize invalid
-		values for a \gls{struct} member.
-	\item Defining custom handling of special data types.
-	\item Allow custom \Gls{lua} \glspl{dissector} to be defined and used in special cases.
-\end{itemize}
+These must be provided through a configuration.
 
 \subsection{\gls{asnone}}
 %-----------------

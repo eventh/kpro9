@@ -46,7 +46,7 @@ As in all other projects, the project members have to deal with various limitati
 \begin{description}
 	\item[Experience] No team members have experience with \Gls{lua}-\glspl{script},
 		running a project with a larger team, or have planned a project before.
-	\item[Time] The project group has a limited time of 12 weeks and a project
+	\item[Time] The project team has a limited time of 12 weeks and a project
 		deadline that cannot be changed. Also, the team consists of 7 members
 		that have different schedules so finding a time when everyone is
 		available for a meeting might be difficult. These limitations might
@@ -95,7 +95,7 @@ Git and the other on Mercurial.
 
 Github with Git \gls{version control system} was selected because more team members 
 had experience with Git than Mercurial. Since we use different platforms,
-we will also use different git clients, but for Windows most of the group has
+we will also use different git clients, but for Windows most of the team has
 selected tortoisegit.
 
 \subsubsection{Skype}
@@ -124,7 +124,7 @@ with the team's advisor.
 
 \subsubsection{\LaTeX}
 \LaTeX \,is a document \gls{markup language} used to
-create reports, articles and books. It was chosen by the group for its 
+create reports, articles and books. It was chosen by the team for its 
 high quality typesetting which produces professional looking documents, and 
 because it is suitable for larger scientific reports.\cite{NotSoShorGuideToLatex} 
 Writing documents in \LaTeX \ is very different from writing them in, for example,
@@ -152,7 +152,7 @@ provided by \Gls{idi}, \Gls{ntnu}.
 	\includegraphics[width=3cm]{./planning/img/google_calendar_logo}
 	\vspace{-20pt}
 \end{wrapfigure}
-Since all team members have google accounts, we have created a group calendar
+Since all team members have google accounts, we have created a team calendar
 in Google Calendar\footnote{\url{http://calendar.google.com/}}
 to help schedule and keep track of meetings. A single calendar which all
 members can include in their own, prevents misunderstandings and duplication
@@ -301,12 +301,12 @@ Our project organization has a flat structure and the organization chart can be 
 	Role name & Main responsibilities  \\
 	\midrule
 	Project manager & Responsible for having an overview of the project, delegating jobs and resolving conflicts. \\ 
-	Advisor contact & Responsible for distributing information between the group and the advisor. \\
-	Organizer & Responsible for setting up and informing the group about the meeting schedule. \\ 
+	Advisor contact & Responsible for distributing information between the team and the advisor. \\
+	Organizer & Responsible for setting up and informing the team about the meeting schedule. \\ 
 	Document master & Responsible for document quality and quantity. \\ 
 	System architect & The lead designer of the system. \\ 
 	Lead programmer & Makes sure everyone follows the agreed code standards, and ensures the quality of the code. \\ 
-	Customer contact & Responsible for distributing information between the group and the customer. \\ 
+	Customer contact & Responsible for distributing information between the team and the customer. \\ 
 	Technically responsible & Finds good technical solutions and makes sure that the essential tools are operative. \\ 
 	Technology evangelist & Brings in ideas about new technologies and tools. \\ 
 	Scrum master & Responsible for \Gls{scrum} meetings. \\ 
@@ -390,7 +390,7 @@ We have agreed to have three weekly meetings to accommodate these routines.
 
 \subsection{Phase Result Approval}
 %---------------------------------
-To ensure the quality of the sprint deliverables, the group members responsible for quality assurance for a given subject will either read through, or delegate that task to another free group member.
+To ensure the quality of the sprint deliverables, the team members responsible for quality assurance for a given subject will either read through, or delegate that task to another free team member.
 
 We will also present the results to the customer and advisor. They will then have the opportunity to point out problems and misunderstandings, and suggest solutions. This is a result of the \Gls{scrum} methodology: deliveries and deadlines throughout the project, making the progress very visible to the customer and advisors. We should be able to attain success at the end of the project because we have been guided by the feedback during the process of making the utility and report. If a problem appears, we will try to correct it and then reiterate the quality assurance.
 
@@ -533,15 +533,16 @@ The following section lists the possible risk scenarios that can occur in the pr
 Strategy and actions describes what we should do to reduce the consequences of the risk, or prevent the risk from happening altogether. Deadline states when we need to handle the risk.
 \begin{description}
 \item[R1. Choosing an incompatible technical solution]  The team decides to use a technical solution that is not suited for the given problem, or decides on an implementation that is too time consuming.
-\item[R2. Too much focus on report]   We spend too much time working on the report and neglect the implementation. 
+\item[R2. Too much focus on report]  We spend too much time working on the report and neglect the implementation. 
 \item[R3. Too much focus on implementation]  We spend too much time working on the implementation and neglect writing all the needed documentation for the report.
 \item[R4. Illness/Absence]  Members of the team become ill or are otherwise unavailable. 
-\item[R5. Even is absent]  Even is the only one in the group that is highly proficient in \Gls{python}, if he is absent for a long period, the overall development process of the utility will be hindered.
-\item[R6. Conflicts within group]   Internal conflicts which hinders the group's ability to work together. 
+\item[R5. Key member is absent] A member that has an important responsibility becomes ill.
+\item[R6. Conflicts within team]  Internal conflicts which hinders the team's ability to work together. 
 \item[R7. Lack of technical competence]  The team lack the needed technical ability to solve the given problem. 
 \item[R8. Miscommunication within team]  Team members don’t know what to do, or misunderstands the task given to them. 
 \item[R9. Miscommunication with customer]  The team misunderstands the requirements given by the customer. 
 \item[R10. Lack of experience with \Gls{scrum}]  The team does not have any experience in doing \Gls{scrum} projects.
+\item[R11. Important requirements added or modified by customer late in the project] The customer asks us to implement a new, and possibly time consuming requirement, or modifies a requirement in such a way that it needs to be reimplemented, late in the project.
 \end{description}
 
 \begin{longtable}{>{\footnotesize}p{0.25\textwidth} >{\footnotesize}p{0.75\textwidth}}
@@ -560,7 +561,7 @@ Strategy and actions describes what we should do to reduce the consequences of t
 	Risk factor & Too much focus on report \\
 	Consequences & \Gls{m}: The product will not be of a satisfying quality. \\
 	Probability & \Gls{m} \\ 
-	Strategy \& actions & Plan enough hours to use on the customer product. Look at old reports for inspiration. Ask the advisor for help. \\
+	Strategy \& actions & Plan enough hours to use on the customer product.\\
 	Deadline & Continuous\\
 	Responsible & Sondre \\
 	\midrule
@@ -568,7 +569,7 @@ Strategy and actions describes what we should do to reduce the consequences of t
 	Risk factor & Too much focus on implementation \\
 	Consequences & \Gls{h}: The documentation will not be good enough, leads to a bad grade. \\
 	Probability & \Gls{m} \\ 
-	Strategy \& actions & Plan enough hours to use on the report. Write documentation sooner later than later. Write good requirements that limit the scope of the project. \\
+	Strategy \& actions & Plan enough hours to use on the report. Write documentation in parallel with implementation when it is possible. Write good requirements that limit the scope of the project. \\
 	Deadline & Continuous \\
 	Responsible & All \\
 	\midrule
@@ -581,14 +582,14 @@ Strategy and actions describes what we should do to reduce the consequences of t
 	Responsible & Terje \\
 	\midrule
 	Risk ID & R5 \\
-	Risk factor & Even is absent \\
-	Consequences & \Gls{h} \\
-	Strategy \& actions & All group members should read through the source code and code documentation written by Even. \\
+	Risk factor & Key member is absent \\
+	Consequences & \Gls{h} Absence of a key member may greatly hinder the team's process during the period of the absence. \\
+	Strategy \& actions & The team should be updated on the work of key members, so that a team member they can step in for the key member on important tasks. \\
 	Deadline & Continuous \\
 	Responsible & All \\
 	\midrule
 	Risk ID & R6 \\
-	Risk factor & Conflicts within group \\
+	Risk factor & Conflicts within team \\
 	Consequences & \Gls{m}: May lead to bad morale, which could affect the work of the team. Could also be a waste of time. \\
 	Probability & \Gls{m} \\ 
 	Strategy \& actions & Not all conflicts are bad. If the conflict is simply a disagreement over technical issues, or the planning of the project, it could benefit the team. All such conflicts should lead to a constructive discussion that the entire team should take part in. Other types of conflicts, that can not positively influence the project should be avoided if possible. The team should agree on specific ground rules. \\
@@ -600,7 +601,7 @@ Strategy and actions describes what we should do to reduce the consequences of t
 	Consequences & \Gls{h}: The team is unable to solve the problem  \\
 	Probability & \Gls{h} \\ 
 	Strategy \& actions & Make sure the team is proficient in the programming languages and tools that are to be used. Decide on technical solutions that the team already is familiar with. Do a good pre-study of the parts the team is unfamiliar with. Consult with the customer’s technical expert. \\
-	Deadline & Early phases of development (Pre-study, first sprint) \\
+	Deadline & Continuous \\
 	Responsible & All \\
 	\midrule
 	Risk ID & R8 \\
@@ -615,7 +616,7 @@ Strategy and actions describes what we should do to reduce the consequences of t
 	Risk factor & Miscommunication with customer \\
 	Consequences & \Gls{h}: The team waste time on functionality the customer did not want. The delivered product does not do what the customer asked for. \\
 	Probability & \Gls{m} \\ 
-	Strategy \& actions & Make sure we and the customer have a common understanding of the requirements. Have frequent meetings with the customer.  \\
+	Strategy \& actions & Make sure we and the customer have a common understanding of the requirements. Have frequent meetings with the customer, with a weekly demo of new features.  \\
 	Deadline & Continuous \\
 	Responsible & Sigurd \\
 	\midrule
@@ -624,6 +625,14 @@ Strategy and actions describes what we should do to reduce the consequences of t
 	Consequences & \Gls{m}: The team does not provide the correct documents for the report, which could lead to a bad grade. \\
 	Probability & \Gls{m} \\ 
 	Strategy \& actions & Learn how to properly do \Gls{scrum}. Have \Gls{scrum} meetings as often as possible. Get feedback on documents from advisor. \\
+	Deadline & Continuous \\
+	Responsible & Jaroslav \\
+	\midrule
+	Risk ID & R11 \\
+	Risk factor & Important requirements added or modified by customer late in the project \\
+	Consequences & \Gls{m}: The team may spend time on implementation when we instead should be finishing up the report, or prepare for the presentation. \\
+	Probability & \Gls{h} \\ 
+	Strategy \& actions &  Have a good dialog with the customer, and be prepared to say no to new requirements if we do not have the time to complete them.\\
 	Deadline & Continuous \\
 	Responsible & Jaroslav \\
 	\bottomrule

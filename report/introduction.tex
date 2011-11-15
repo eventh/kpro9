@@ -42,13 +42,17 @@ In short, a dissector is a piece of code, run on a blob of data, that can dissec
 data and display it in a readable format in Wireshark, instead of the binary representation.
 
 \autoref{fig:introshark} displays four packets, with packet number 1 highlighted.
-The content of the packet, a C struct with two members, name and time,  is shown inside the green box.
+The content of the packet is a C struct with two members, name and time, and it is displayed inside the green box.
+The C code for the struct is shown in \autoref{structexample}.
 The dissector takes the C struct, decodes its binary representation and makes it readable by humans.
 Without a dissector, Wireshark would just display the struct and struct members as a binary blob.
 
 All the packets containing C structs belong to the protocol called luastructs.
 When opening a capture file in Wireshark , this protocol maps the id of the messages to the correct dissector,
 and calls them.
+
+\lstset{language=C,caption={Example C struct},label=structexample}
+\lstinputlisting[language=C]{./code/struct.h}
 
 \section*{From struct definition to Lua dissector}
 This section explains how the Lua dissectors work, and how they can be built by our utility.
@@ -73,7 +77,7 @@ In the last line the dissector is added to the dissector table as a subdissector
 When running a capture file, where the internal\_snd struct is being sent to another process, it is possible to see the exact contents of the struct, as the example screenshot of Wireshark shows.
 
 \lstset{language=C,caption={Example Lua file},label=luaexample1}
-\lstinputlisting[language=C]{./code/luaexample.lua}
+\lstinputlisting[language=C]{./code/luaexample1.lua}
 
 \subsection*{CSjark - Automated generation of Lua dissectors}
 CSjark is a Python utility that can automatically generate a Lua dissector for 

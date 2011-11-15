@@ -522,6 +522,63 @@ folder containing all header files.
 %-----------------------
 \label{sec:sp4test}
 
+During sprint 4 the team executed 21 new test cases as well as re-running all of the test cases from the previous sprints. This was done in an effort to ensure that all of the functionality from teh earlier sprints were still intact before ending the final sprint. \autoref{STID26} shows one of the testscases ran this sprint. The rest of the new testcases for this sprint can be seen in the following list. For more information about the testcases see \autoref{sec:testcases} in the appendix.
+
+\begin{itemize}
+	\item TID26 -Including system-headers \autoref{tab:sp4TID26}
+	\item TID27 -Ignoring \#pragma directives \autoref{tab:sp4TID27}
+	\item TID28 - Improve generated Lua output by removing platform prefix \autoref{tab:stp4TID28}
+	\item TID29 - Recursive searching of subfolders \autoref{tab:sp4TID29}
+	\item TID30 - Finding include dependencies which are not explicitly set \autoref{tab:sp4TID30}
+	\item TID31 - Pointer support \autoref{tab:sp4TID31}
+	\item TID32 - Enums in arrays \autoref{tab:sp4TID32}
+	\item TID33 - Supporting \#define as a command line argument \autoref{tab:sp4TID33}
+	\item TID 34 - Multiple message ID's for one dissector \autoref{tab:sp4TID34}
+	\item TID35 - Allowing configuration for unknown structs \autoref{tab:sp4TID35}
+	\item TID36 - Allowing configuration for unknown structs \autoref{tab:sp4TID36}
+	\item TID37 - Autogenerating configuration files for structs that has no config file of their own \autoref{tab:sp4TID37}
+	\item TID38 - Only generating dissectors for structs with a valid ID \autoref{tab:sp4TID38}
+	\item TID39 - Guessing dissectors from packet size \autoref{tab:sp4TID39}
+	\item TID40 -Invalid header \autoref{tab:sp4TID40}
+	\item TID41 -Invalid header during batch mode \autoref{tab:sp4TID41}
+	\item TID42 - Ambiguous struct IDs \autoref{tab:sp4TID42}
+	\item TID43 -Ambiguous platform IDs \autoref{tab:sp4TID43}
+	\item TID44 -Running the utility on Windows \autoref{tab:sp4TID44}
+	\item TID 45 - Running the utility on Solaris \autoref{tab:sp4TID45}
+	\item TID 46 - Running the dissectors on Solaris \autoref{tab:sp4TID46}
+	\item TID 47 - Running the dissectors on Windows \autoref{tab:sp4TID47}	
+\end{itemize}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID26}\label{tab:STID26}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Including system-headers \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility has to be installed on the system and there has to exist a pcap file which is associated with this test \\
+	Feature & Checking that the utility is able to support headers which use system headers \\
+	\midrule
+	\multirow{5}{*}{Execution} & 1.Feed the utility with the name of a c-header file that includes system-headers and its configuration file \\
+	& 2.  Read the output\\
+	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in wireshark\\
+	& 4. Run wireshark with the pcap file associated with this test\\
+	& 5. Look at the resulting structs and members are displayed in wireshark\\
+	\midrule
+	\multirow{2}{*}{Expected result}
+	& 2. The user should be presented with some text expressing the success of generating dissectors\\
+	& 5. The structs and struct members defined in the system headers should be displayed as having a value and not just hex data\\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+
+
+
+
+
 
 %--------------------------
 \section{Customer Feedback}
@@ -592,7 +649,7 @@ The customer want Wireshark to be able to guess what dissectors to use from the 
 \subsubsection{A way to ignore headers in a specified folder}
 The customer wants a way to specify what folder to ignore in batch mode. This is to avoid complex headers that are irrelevant to the customers goal (does not include structs) and would require significantly more developer time on the tool to get though the parser.
 %---------------------
-\subsection{Non-functional requirement agreement}
+\subsection{Non functional requirement agreement}
 %------------------------------
 We agreed on how some of the non functional requirements were to be tested, and the importance of them. 
 \subsubsection{Testing on Sparc}
@@ -606,24 +663,11 @@ The customer said that they have a person, with the relevant qualifications who,
 \subsubsection{NR5 Testing user documentation on a person without experience with Wireshark, but with some C experience}
 The customer has previously specified that a person without prior knowledge of Wireshark, but with a good understanding of C should use about 5 hours to be able to use the utility. Due to the duration of this task it is, how every, unlikely that we find a person willing to do this test that meets the qualifications. The customer therefore said that we should not prioritize testing this requirement.
 
+
+
 %--------------------------
 \section{Sprint Evaluation}
 %--------------------------
 \label{sec:sp4eval}
-\subsection{Review}
-
-\subsection{Positive Experiences}
-
-\subsection{Negative Experiences}
-
-\subsection{Planned Actions}
-
-\subsection{Barriers}
-
-
-
-
-
-
 
 

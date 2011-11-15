@@ -6,7 +6,6 @@ system is the structure of structures of the system, which comprise software ele
 
 The purpose of this document is to describe our architecture in a structured way so that it can be used not only by the team, but also as an aid for other stakeholders who are trying to understand the system.
 
-
 %------------------------------
 \section{Architectural Drivers}
 %------------------------------
@@ -52,6 +51,16 @@ By using configuration files, it is possible to change the behaviour of the syst
 \item The ability for \Gls{wireshark} to be able to use the generated \glspl{dissector} to display the values in \Gls{c}-\glspl{struct} passed through the system.
 \end{itemize}
 
+\subsection{Design Goals}
+%------------------------
+To help guide the design and the implementation we tried to follow these goals and guidelines:
+\begin{itemize}
+	\item Smart data structures and dumb code works a lot better than the other way around\cite{Raymond1999}!
+	\item Clear and clean separation of the front-end and the back-end so in the future other parsers can be used to generate \glspl{dissector}.
+	\item Try to be pythonic, follow  PEP8 \footnote{Style Guide for Python Code: \url{http://www.python.org/dev/peps/pep-0008/}} and PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}.
+	\item Now is better than never. Don't be afraid to write stupid or ugly code, we can always fix it later.
+	\item The first version is never perfect, so don't wait until its perfect before you commit. Commit often!
+\end{itemize}
 
 %------------------------------
 \section{Architectural Patterns}

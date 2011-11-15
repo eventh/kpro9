@@ -1,7 +1,7 @@
 --
 --  A sample dissector for testing Lua C structs scripts
 --  Copyright 2011, Stig Bjorlykke <stig@bjorlykke.org>
---
+-- 
 
 local PROTOCOL = Proto ("internal_snd", "struct internal_snd")
 local luastructs_dt = DissectorTable.get ("luastructs.message")

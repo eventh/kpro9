@@ -3,6 +3,8 @@ TODO
 """
 import string
 import copy
+from collections import namedtuple
+
 from platform import Platform
 
 
@@ -417,6 +419,8 @@ class BitField(Subtree):
 
 
 class ProtocolField(Field):
+
+    Fake = namedtuple('FakeProto', ['name', 'size', 'alignment', 'endian'])
 
     def __init__(self, name, proto):
         super().__init__(name, proto.name, proto.size,

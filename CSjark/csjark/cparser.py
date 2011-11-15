@@ -224,8 +224,8 @@ class StructVisitor(c_ast.NodeVisitor):
             if ctype in self.aliases:
                 token, base = self.aliases[ctype]
                 if token in ('struct', 'union'):
-                    return depth, ProtocolField(child.declname,
-                        self.all_protocols[base].get_dissector(self.platform))
+                    return depth, self._create_protocol_field(
+                            child.declname, base)
                 elif token == 'enum':
                     return depth, self._create_enum(child.declname, base)
                 elif token == 'array':
@@ -242,9 +242,8 @@ class StructVisitor(c_ast.NodeVisitor):
         # Union and struct
         elif (isinstance(sub_child, c_ast.Union) or
                 isinstance(sub_child, c_ast.Struct)):
-            return depth, ProtocolField(child.declname,
-                    self.all_protocols[sub_child.name]
-                    .get_dissector(self.platform))
+            return depth, self._create_protocol_field(
+                    child.declname, sub_child.name)
 
         # Pointer
         elif isinstance(child, c_ast.PtrDecl):
@@ -256,9 +255,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def handle_protocol(self, proto, name, proto_name):
         """Add an protocol field or union field to the protocol."""
-        sub_proto = StructVisitor.all_protocols[proto_name]
-        dissector = sub_proto.get_dissector(self.platform)
-        return proto.add_field(ProtocolField(name, dissector))
+        return proto.add_field(self._create_protocol_field(name, proto_name))
 
     def handle_array(self, proto, depth, field, name=None):
         """Add an ArrayField to the protocol."""
@@ -345,6 +342,22 @@ class StructVisitor(c_ast.NodeVisitor):
         field = Field(name, type, size, alignment, self.platform.endian)
         field.set_list_validation(self.enums[enum])
         return field
+
+    def _create_protocol_field(self, name, proto_name):
+        proto = StructVisitor.all_protocols.get(proto_name, None)
+        if proto is not None:
+            proto = proto.get_dissector(self.platform)
+
+        # Try to create a fake protocol if conf has size
+        if proto is None:
+            conf = Options.config.get(proto_name, None)
+            if conf is None or conf.size is None:
+                raise ParseError('Unknown protocol %s' % proto_name)
+            proto = ProtocolField.Fake(name=proto_name,
+                    size=conf.size, alignment=self.platform.alignment,
+                    endian=self.platform.endian)
+
+        return ProtocolField(name, proto)
 
     def _get_type(self, node):
         """Get the C type from a node."""

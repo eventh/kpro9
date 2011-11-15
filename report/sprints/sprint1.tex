@@ -450,7 +450,7 @@ results.
 \subsection{Tests}
 %-----------------
 During the sprint the team executed a total of 7 test cases with names as seen
-below. The test cases can be found in \autoref{sec:testcases}. 
+below. An example of a testcase run this sprint can be seen in \autoref{tab:STID01} while the rest of the test cases can be found in \autoref{sec:testcases}. 
 Test cases executed in this sprint:
 \begin{itemize}
 	\item TID01 - Supporting parameters for \Gls{c}-\gls{header} file. \autoref{tab:TID01}
@@ -461,6 +461,28 @@ Test cases executed in this sprint:
 	\item TID06 - Supporting configuration files. \autoref{tab:TID06}
 	\item TID07 - Recognizing invalid values. \autoref{tab:TID07}
 \end{itemize}
+
+\begin{table}[htb] \footnotesize \center
+\caption{Test case TID01}\label{tab:STID01}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting parameters for \Gls{c}-\gls{header} file \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility must have been installed on the system and there needs to exist a header file associated with this test \\
+	Feature & Test that we are able to feed the solution with a \Gls{c}-\gls{header} file and have it get dissected \\
+	\midrule
+	\multirow{3}{*}{Execution} & 1. Start the program \\
+	& 2. Write the name of the \Gls{c}-\gls{header} file in the command line \\
+	& 3. Read the output given by the program \\
+	\midrule
+	\multirow{2}{*}{Expected result} & 1. The program should start up without any errors and present the user with a command line interface \\
+	& 3. The user should be presented with some text expressing the success of the \Gls{lua}-file generation \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
 
 \subsection{Test Results}
 %------------------------

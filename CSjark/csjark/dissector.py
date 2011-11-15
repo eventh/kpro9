@@ -349,6 +349,7 @@ class Delegator(Dissector, Protocol):
         self.var = create_lua_var('delegator')
         self.table_var = create_lua_var('dissector_table')
         self.id_table = create_lua_var('message_ids')
+        self.sizes_table = create_lua_var('dissector_sizes')
         self.msg_var = create_lua_var('msg_node')
 
         # Add fields, don't change sizes!
@@ -388,16 +389,18 @@ class Delegator(Dissector, Protocol):
         data.append(proto.format(var=self.var, name=self.name,
                                       description=self.description))
 
-        # Add the message id table
-        data.append('local {var} = {{}}\n'.format(var=self.id_table))
+        # Add the message id and dissector sizes tables
+        data.append('local {var} = {{}}'.format(var=self.id_table))
+        data.append('local {var} = {{}}\n'.format(var=self.sizes_table))
         return '\n'.join(i for i in data if i is not None)
 
     def _register_function(self):
         """Add code for register protocol function."""
         data = ['-- Register struct dissectors']
-        t = 'function {func}(proto, platform, name, id)\n'\
-                '\t{table}:add(platform .. "." .. name, proto)\n'\
-                '\tif (id ~= nil) then {ids}[id] = name end\nend\n'
+        t = 'function {func}(proto, name, id, sizes)\n'\
+                '\t{table}:add(name, proto)\n'\
+                '\tif (id ~= nil) then {ids}[id] = name end\n'\
+                '\tif (sizes ~= nil) then --todo\n\tend\nend\n'
         data.append(t.format(func=self.REGISTER_FUNC,
                          table=self.table_var, ids=self.id_table))
         return '\n'.join(i for i in data if i is not None)
@@ -426,26 +429,23 @@ class Delegator(Dissector, Protocol):
 
         # Validate message id
         t = '\tif ({ids}[{msg}] == nil) then\n\t\t{node}:add_expert_info'\
-            '(PI_MALFORMED, PI_WARN, "Unknown message id")\n\telse\n'\
-            '\t\t{node}:append_text(" (" .. {ids}[{msg}] ..")")\n\tend\n'
+                '(PI_MALFORMED, PI_WARN, "Unknown message id")\n\telse\n'\
+                '\t\t{node}:append_text(" (" .. {ids}[{msg}] ..")")'
         data.append(t.format(ids=self.id_table,
                 msg=msg_var, node=self.msg_var))
 
         # Call the right dissector
-        t = '\tif ({flags}[{flag}] ~= nil and {ids}[{msg}] ~= nil) then'\
-            '\n\t\tlocal name = {flags}[{flag}] .. "." .. {ids}[{msg}]'\
-            '\n\t\t{table}:try(name, buffer(4):tvb(), pinfo, tree)'\
-            '\n\tend\nend'
-        data.append(t.format(
-                flags=self.flags.values, msg=msg_var, table=self.table_var,
-                flag=self.flags._value_var, ids=self.id_table))
+        t = '\t\tpinfo.private.platform_flag = {flag}\n'\
+                '\t\t{table}:try({ids}[{msg}], buffer(4):tvb(), pinfo, tree)'\
+                '\n\tend\nend'
+        data.append(t.format(flag=self.flags._value_var,
+                msg=msg_var, table=self.table_var, ids=self.id_table))
         return '\n'.join(i for i in data if i is not None)
 
 
 if __name__ == '__main__':
     b, a = Protocol.create_dissector('tester')
     a.add_field(Field('test', 'int32', 4, 0, Platform.big))
-
     d = Delegator(Platform.mappings)
     print(d.generate())
 

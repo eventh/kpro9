@@ -254,7 +254,7 @@ class Field(BaseField):
     def _create_range_validation(self):
         """Create code which validates the field value inside the range."""
         def create_test(field, value, test, warn):
-            return '\tif (%s %s %s) then\n\t\t%s:add_expert_info('\
+            return '\tif %s %s %s then\n\t\t%s:add_expert_info('\
                     'PI_MALFORMED, PI_WARN, "Should be %s %s")\n\tend' % (
                             field._value_var, test, value,
                             field._node_var, warn, value)
@@ -279,7 +279,7 @@ class Field(BaseField):
 
     def _create_list_validation(self):
         """Create code which validates fields value in valuestring."""
-        return '\tif (%s[%s] == nil) then\n\t\t%s:add_expert_info('\
+        return '\tif %s[%s] == nil then\n\t\t%s:add_expert_info('\
                 'PI_MALFORMED, PI_WARN, "Should be in [%s]")\n\tend' % (
                         self.values, self._value_var,
                         self._node_var, self.list_validation)
@@ -432,32 +432,4 @@ class ProtocolField(Field):
             '{size}):tvb(), pinfo, {tree})'
         return t.format(name=self.name, proto=self.proto.name,
                 offset=offset, size=self.size, tree=tree)
-
-
-if __name__ == '__main__':
-    print("testing")
-    '''
-    f = Field('enum', 'int32', 4, 0, Platform.little)
-    f.var_prefix = 'f.'
-    f.name_postfix = '.what?'
-    f.abbr_prefix = 'swead'
-    f.set_list_validation(dict(enumerate('ABCDE')))
-    f.set_range_validation(5, 15)
-    print(f.get_definition())
-    print(f.get_code(12))
-    '''
-    bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
-            (2, 1, 'B', {0: 'No', 1: 'Yes'}),
-            (3, 1, 'G', {0: 'No', 1: 'Yes'})]
-    f = BitField(bits, 'bitname', 'int32', 4, 4, Platform.little)
-    f.var_prefix.append('f.')
-    f.push_modifiers()
-    print(f.get_definition())
-    print(f.get_code(12))
-    f = Field('arr', 'float', 4, 0, Platform.big)
-    arr = ArrayField.create([2, 2, 3], f)
-    arr.var_prefix.append('f.')
-    arr.push_modifiers()
-    print(arr.get_definition())
-    print(arr.get_code(12))
 

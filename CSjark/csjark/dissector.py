@@ -265,16 +265,18 @@ class Protocol:
 
     def _header_defintion(self):
         """Add the code for the header of the protocol."""
-        data = []
+        def valid(text):
+            return text.lower().replace(' ', '_')
 
+        data = []
         comment = '-- Dissector for %s' % self.name
         if self.description:
             comment += ': %s' % self.description
         data.append(comment)
 
         proto = 'local {var} = Proto("{name}", "{description}")\n'
-        data.append(proto.format(var=self.var, name=self.name,
-                                      description=self.description))
+        data.append(proto.format(var=self.var,
+                name=valid(self.name), description=valid(self.description)))
         return '\n'.join(data)
 
     def _fields_definition(self):
@@ -297,38 +299,54 @@ class Protocol:
 
         # Retrieve flag value from private info table
         flag_var = create_lua_var('flag')
-        flag = '\tlocal {var} = pinfo.private.platform_flag'
+        flag = '\tlocal {var} = tonumber(pinfo.private.platform_flag)'
         data.append(flag.format(var=flag_var))
 
         # Get flags and call the platform specific function
         if self.children:
             els = ''
-            for dissector in self.children:
-                dissector._func_name = create_lua_var(
-                        '%s_%s' % (self.var, dissector.platform.name))
+            for child in self.children:
+                child._func_name = create_lua_var(
+                        '%s_%s' % (self.var, child.platform.name))
 
-                test = '\t{els}if ({var} == {flag}) then'
+                test = '\t{els}if {var} == {flag} then'
                 call = '\t\t{func}(buffer, pinfo, tree)'
                 data.append(test.format(els=els,
-                        var=flag_var, flag=dissector.platform.flag))
-                data.append(call.format(func=dissector._func_name))
+                        var=flag_var, flag=child.platform.flag))
+                data.append(call.format(func=child._func_name))
 
-                els = 'else '
+                els = 'else'
             data.append('\tend')
         data.extend(['end', ''])
 
-        # TODO
-        #sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
-        #'subtree:set_text(pinfo.private.field_name .. ": {name}")'\
-        #data.append(sub_tree.format(add=self.add_var, var=self.var))
-        #check = '\tif pinfo.private.field_name then\n'\
-        #        '\t\tpinfo.private.field_name = nil\n\telse\n'\
-        #        '\t\tpinfo.cols.info:append("({desc})")\n\tend\n'
-        #data.append(check.format(var=self.var, desc=self.description))
+        # Modify name if sub-dissector
+        pinfo_func = create_lua_var('%s_pinfo_magic' % self.var)
+        data.append('-- Function for retrieving parent dissector name')
+        data.append('function {func}(pinfo, tree)'.format(func=pinfo_func))
+        data.append('\tif pinfo.private.field_name then')
+        t = '\t\ttree:set_text(pinfo.private.field_name .. ": {name}")'
+        data.append(t.format(name=child.name))
+        data.append('\t\tpinfo.private.field_name = nil\n\telse')
+        t = '\t\tpinfo.cols.info:append("({desc})")'
+        data.append(t.format(desc=self.description))
+        data.extend(['\tend', 'end', ''])
 
+        # Create dissector function for each dissector
         offset = 0
         for child in self.children:
+            data.append('-- Dissector function for: %s (platform: %s)' % (
+                    child.name, child.platform.name))
+            func = 'function {name}(buffer, pinfo, tree)'
+            data.append(func.format(name=child._func_name))
+
+            # Add subtree
+            sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
+            data.append(sub_tree.format(add=child.add_var, var=self.var))
+            data.append('\t{func}(pinfo, subtree)'.format(func=pinfo_func))
+
+            # Add the actual field code for each field
             data.append(child.get_code(offset))
+            data.extend(['end', ''])
 
         return '\n'.join(i for i in data if i is not None)
 
@@ -425,8 +443,8 @@ class Delegator(Dissector, Protocol):
         data = ['-- Register struct dissectors']
         t = 'function {func}(proto, name, id, sizes)\n'\
                 '\t{table}:add(name, proto)\n'\
-                '\tif (id ~= nil) then {ids}[id] = name end\n'\
-                '\tif (sizes ~= nil) then --todo\n\tend\nend\n'
+                '\tif id ~= nil then {ids}[id] = name end\n'\
+                '\tif sizes ~= nil then --todo\n\tend\nend\n'
         data.append(t.format(func=self.REGISTER_FUNC,
                          table=self.table_var, ids=self.id_table))
         return '\n'.join(i for i in data if i is not None)
@@ -454,7 +472,7 @@ class Delegator(Dissector, Protocol):
         data.append(self.msg_id._store_value(msg_var))
 
         # Validate message id
-        t = '\tif ({ids}[{msg}] == nil) then\n\t\t{node}:add_expert_info'\
+        t = '\tif {ids}[{msg}] == nil then\n\t\t{node}:add_expert_info'\
                 '(PI_MALFORMED, PI_WARN, "Unknown message id")\n\telse\n'\
                 '\t\t{node}:append_text(" (" .. {ids}[{msg}] ..")")'
         data.append(t.format(ids=self.id_table,
@@ -467,10 +485,4 @@ class Delegator(Dissector, Protocol):
         data.append(t.format(flag=self.flags._value_var,
                 msg=msg_var, table=self.table_var, ids=self.id_table))
         return '\n'.join(i for i in data if i is not None)
-
-
-if __name__ == '__main__':
-    b, a = Protocol.create_dissector('tester')
-    a.add_field(Field('test', 'int32', 4, 0, Platform.big))
-    print(b.generate())
 

@@ -291,24 +291,45 @@ class Protocol:
         """Add the code for the dissector function for the protocol."""
         data = ['-- Dissector function for: %s' % self.name]
 
+        # Dissector function
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
-        check = '\tif pinfo.private.field_name then\n'\
-                '\t\tpinfo.private.field_name = nil\n\telse\n'\
-                '\t\tpinfo.cols.info:append("({desc})")\n\tend\n'
+        data.append(func_diss.format(var=self.var))
+
+        # Retrieve flag value from private info table
+        flag_var = create_lua_var('flag')
+        flag = '\tlocal {var} = pinfo.private.platform_flag'
+        data.append(flag.format(var=flag_var))
+
+        # Get flags and call the platform specific function
+        if self.children:
+            els = ''
+            for dissector in self.children:
+                dissector._func_name = create_lua_var(
+                        '%s_%s' % (self.var, dissector.platform.name))
+
+                test = '\t{els}if ({var} == {flag}) then'
+                call = '\t\t{func}(buffer, pinfo, tree)'
+                data.append(test.format(els=els,
+                        var=flag_var, flag=dissector.platform.flag))
+                data.append(call.format(func=dissector._func_name))
+
+                els = 'else '
+            data.append('\tend')
+        data.extend(['end', ''])
 
         # TODO
         #sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
         #'subtree:set_text(pinfo.private.field_name .. ": {name}")'\
         #data.append(sub_tree.format(add=self.add_var, var=self.var))
-
-        data.append(func_diss.format(var=self.var))
-        data.append(check.format(var=self.var, desc=self.description))
+        #check = '\tif pinfo.private.field_name then\n'\
+        #        '\t\tpinfo.private.field_name = nil\n\telse\n'\
+        #        '\t\tpinfo.cols.info:append("({desc})")\n\tend\n'
+        #data.append(check.format(var=self.var, desc=self.description))
 
         offset = 0
         for child in self.children:
             data.append(child.get_code(offset))
 
-        data.append('end\n')
         return '\n'.join(i for i in data if i is not None)
 
     def _register_dissector(self):
@@ -451,6 +472,5 @@ class Delegator(Dissector, Protocol):
 if __name__ == '__main__':
     b, a = Protocol.create_dissector('tester')
     a.add_field(Field('test', 'int32', 4, 0, Platform.big))
-    d = Delegator(Platform.mappings)
-    print(d.generate())
+    print(b.generate())
 

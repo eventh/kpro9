@@ -221,7 +221,7 @@ class Protocol:
         if self.conf and self.conf.description is not None:
             self.description = self.conf.description
         else:
-            self.description = name
+            self.description = 'struct %s' % name
 
     def get_dissector(self, platform):
         for dissector in self.children:
@@ -270,9 +270,6 @@ class Protocol:
 
     def _header_defintion(self):
         """Add the code for the header of the protocol."""
-        def valid(text):
-            return text.lower().replace(' ', '_')
-
         data = []
         comment = '-- Dissector for %s' % self.name
         if self.description:
@@ -280,8 +277,8 @@ class Protocol:
         data.append(comment)
 
         proto = 'local {var} = Proto("{name}", "{description}")\n'
-        data.append(proto.format(var=self.var,
-                name=valid(self.name), description=valid(self.description)))
+        data.append(proto.format(var=self.var, description=self.description,
+                name=self.name.lower().replace(' ', '_')))
         return '\n'.join(data)
 
     def _fields_definition(self):
@@ -491,16 +488,16 @@ end\n""".format(func=self.REGISTER_FUNC,
         # Call the right dissector
         data.append('\t-- Call the correct dissector, or try and guess which')
         data.append('''\
-    if {ids}[{msg}] == nil then
+    if {ids}[{msg}] then
+        {node}:append_text(" (" .. {ids}[{msg}] ..")")
+        {table}:try({ids}[{msg}], buffer(4):tvb(), pinfo, tree)
+    else
         {node}:add_expert_info(PI_MALFORMED, PI_WARN, "Unknown message id")
         if {sizes}[{flag}] and {sizes}[{flag}][{length}] then
             for key, value in pairs({sizes}[{flag}][{length}]) do
                 {table}:try(value, buffer(4):tvb(), pinfo, tree)
             end
         end
-    else
-        {node}:append_text(" (" .. {ids}[{msg}] ..")")
-        {table}:try({ids}[{msg}], buffer(4):tvb(), pinfo, tree)
     end\nend\n\n'''.format(ids=self.id_table, msg=msg_var, node=self.msg_var,
                 sizes=self.sizes_table, flag=self.flags._value_var,
                 table=self.table_var, length=self.length._value_var))

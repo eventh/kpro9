@@ -246,6 +246,10 @@ class StructVisitor(c_ast.NodeVisitor):
                     self.all_protocols[sub_child.name]
                     .get_dissector(self.platform))
 
+        # Pointer
+        elif isinstance(child, c_ast.PtrDecl):
+            return depth, self._create_field(sub_child.declname, 'pointer')
+
         # Error
         else:
             raise ParseError('Unknown type in array: %s' % repr(sub_child))

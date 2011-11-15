@@ -226,12 +226,12 @@ def union_proto_field_code(one, two):
     assert isinstance(one, ProtocolField)
     assert isinstance(two, ProtocolField)
     assert compare_lua(one.get_code(0), '''
-    pinfo.private.field_name = "test"
-    Dissector.get("default.union_proto_one"):call(buffer(0,0):tvb(), pinfo, subtree)
+    pinfo.private.field_name = "test1"
+    Dissector.get("union_one"):call(buffer(0,0):tvb(), pinfo, subtree)
     ''')
     assert compare_lua(two.get_code(32), '''
     pinfo.private.field_name = "test2"
-    Dissector.get("default.union_proto_two"):call(buffer(32,0):tvb(), pinfo, subtree)
+    Dissector.get("union_two"):call(buffer(32,0):tvb(), pinfo, subtree)
     ''')
 
 # Test BitField
@@ -404,8 +404,8 @@ def protos_create_dissector(proto):
     """Test that Protocol generates valid dissector code."""
     assert proto
     assert compare_lua(proto.generate(), '''
-    -- Dissector for default.tester: This is a test (default)
-    local proto_tester = Proto("default.tester", "This is a test (default)")
+    -- Dissector for tester: This is a test
+    local proto_tester = Proto("tester", "this_is_a_test")
     -- ProtoField defintions for: tester
     local f = proto_tester.fields
     f.one = ProtoField.float("tester.one", "one")
@@ -426,20 +426,31 @@ def protos_create_dissector(proto):
     f.count = ProtoField.int32("tester.count", "count")
     -- Dissector function for: tester
     function proto_tester.dissector(buffer, pinfo, tree)
-    local subtree = tree:add(proto_tester, buffer())
+    local flag = tonumber(pinfo.private.platform_flag)
+    if flag == 0 then
+    proto_tester_default(buffer, pinfo, tree)
+    end
+    end
+    -- Function for retrieving parent dissector name
+    function proto_tester_pinfo_magic(pinfo, tree)
     if pinfo.private.field_name then
-    subtree:set_text(pinfo.private.field_name .. ": tester")
+    tree:set_text(pinfo.private.field_name .. ": tester")
     pinfo.private.field_name = nil
     else
-    pinfo.cols.info:append(" (" .. proto_tester.description .. ")")
+    pinfo.cols.info:append("(This is a test)")
     end
+    end
+    -- Dissector function for: tester (platform: default)
+    function proto_tester_default(buffer, pinfo, tree)
+    local subtree = tree:add(proto_tester, buffer())
+    proto_tester_pinfo_magic(pinfo, subtree)
     subtree:add(f.one, buffer(0, 4))
     local range_node = subtree:add(f.range, buffer(4, 4))
     local range_value = buffer(4, 4):float()
-    if (range_value < 0) then
+    if range_value < 0 then
     range_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0")
     end
-    if (range_value > 10) then
+    if range_value > 10 then
     range_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 10")
     end
     local array = subtree:add(f.array, buffer(8, 24))
@@ -472,6 +483,6 @@ def protos_create_dissector(proto):
     trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
     end
     end
-    delegator_register_proto(proto_tester, "default", "tester", 25)
+    delegator_register_proto(proto_tester, "tester", 25, {[96]="default"})
     ''')
 

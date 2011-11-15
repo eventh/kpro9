@@ -364,9 +364,8 @@ class Protocol:
             message_ids = self.id
 
         # Dissector Sizes and platforms
-        # TODO: design the size format when registering the sizes
-        sizes = [(i.size, i.platform.name) for i in self.children]
-        sizes = create_lua_valuestring(dict(sizes))
+        sizes = {i.platform.flag: i.size for i in self.children}
+        sizes = create_lua_valuestring(sizes, wrap=False)
 
         data = []
         for id in message_ids:
@@ -445,14 +444,24 @@ class Delegator(Dissector, Protocol):
 
     def _register_function(self):
         """Add code for register protocol function."""
-        data = ['-- Register struct dissectors']
-        t = 'function {func}(proto, name, id, sizes)\n'\
-                '\t{table}:add(name, proto)\n'\
-                '\tif id ~= nil then {ids}[id] = name end\n'\
-                '\tif sizes ~= nil then --todo\n\tend\nend\n'
-        data.append(t.format(func=self.REGISTER_FUNC,
-                         table=self.table_var, ids=self.id_table))
-        return '\n'.join(i for i in data if i is not None)
+        return """\
+-- Register struct dissectors
+function {func}(proto, name, id, sizes)
+    {table}:add(name, proto)
+    if id ~= nil then {ids}[id] = name end
+    if sizes ~= nil then
+	for flag, size in pairs(sizes) do
+	    if {sizes}[flag] == nil then
+                {sizes}[flag] = {{}}
+	    end
+	    if {sizes}[flag][size] == nil then
+		{sizes}[flag][size] = {{}}
+	    end
+	    table.insert({sizes}[flag][size], name)
+	end
+    end
+end\n""".format(func=self.REGISTER_FUNC,
+        table=self.table_var, ids=self.id_table, sizes=self.sizes_table)
 
     def _dissector_func(self):
         """Add the code for the dissector function for the protocol."""
@@ -467,27 +476,34 @@ class Delegator(Dissector, Protocol):
         # Fields code
         data.append(self.version.get_code(0))
         data.append(self.flags.get_code(1))
+        t = '\tpinfo.private.platform_flag = {flag}'
+        data.append(t.format(flag=self.flags._value_var))
         data.append(self.msg_id.get_code(2, store=self.msg_var))
-
         t = '\tsubtree:add(f.messagelength, buffer(4):len()):set_generated()'
         data.extend([t, ''])
 
         # Find message id and flag
         msg_var = create_lua_var('id_value')
         data.append(self.msg_id._store_value(msg_var))
-
-        # Validate message id
-        t = '\tif {ids}[{msg}] == nil then\n\t\t{node}:add_expert_info'\
-                '(PI_MALFORMED, PI_WARN, "Unknown message id")\n\telse\n'\
-                '\t\t{node}:append_text(" (" .. {ids}[{msg}] ..")")'
-        data.append(t.format(ids=self.id_table,
-                msg=msg_var, node=self.msg_var))
+        data.append(self.length._store_value('length_value', offset=4))
+        data.append('')
 
         # Call the right dissector
-        t = '\t\tpinfo.private.platform_flag = {flag}\n'\
-                '\t\t{table}:try({ids}[{msg}], buffer(4):tvb(), pinfo, tree)'\
-                '\n\tend\nend'
-        data.append(t.format(flag=self.flags._value_var,
-                msg=msg_var, table=self.table_var, ids=self.id_table))
+        data.append('\t-- Call the correct dissector, or try and guess which')
+        data.append('''\
+    if {ids}[{msg}] == nil then
+        {node}:add_expert_info(PI_MALFORMED, PI_WARN, "Unknown message id")
+        if {sizes}[{flag}] and {sizes}[{flag}][{length}] then
+            for key, value in pairs({sizes}[{flag}][{length}]) do
+                {table}:try(value, buffer(4):tvb(), pinfo, tree)
+            end
+        end
+    else
+        {node}:append_text(" (" .. {ids}[{msg}] ..")")
+        {table}:try({ids}[{msg}], buffer(4):tvb(), pinfo, tree)
+    end\nend\n\n'''.format(ids=self.id_table, msg=msg_var, node=self.msg_var,
+                sizes=self.sizes_table, flag=self.flags._value_var,
+                table=self.table_var, length=self.length._value_var))
+
         return '\n'.join(i for i in data if i is not None)
 

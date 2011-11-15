@@ -1,4 +1,4 @@
-%=================
+%================
 \chapter{Planning}
 %=================
 This chapter explains the administrative part of the project. The project plan 
@@ -159,17 +159,17 @@ members can include in their own, prevents misunderstandings and duplication
 of work.
 
 \subsubsection{text2pcap}
-In this project text2pcap is used to generate capture files from \gls{aascii}
+In this project text2pcap is used to generate capture files from ASCII\footnote{\url{http://www.asciitable.com/}}
 \glspl{hex dump}. Since the customer cannot provide us with capture files, 
 we have to create them ourselves. The capture files are important for testing
 the generated \Gls{lua}-\glspl{script}. The text2pcap tool is included with \Gls{wireshark}. 
-The input to the tool is an \gls{aascii} \gls{hex dump} as a text-file, and the output will
+The input to the tool is an ASCII \gls{hex dump} as a text-file, and the output will
 be a \gls{pcap-file}. When running text2pcap, it is necessary to specifiy the \gls{protocol}
 type.
 
 \subsubsection{Hex Editor}
 The team is using a hex editor to create input for text2pcap. To make it
-easier to write \gls{aascii} \glspl{hex dump}, it is necessary to write them in a hex editor.
+easier to write ASCII \glspl{hex dump}, it is necessary to write them in a hex editor.
 HxD\footnote{\url{http://mh-nexus.de/en/hxd/}} is the recommended hex editor
 for this project, since it is free and has the necessary functionality. HxD is
 only for Windows.
@@ -285,7 +285,7 @@ This section describes how the team is organized, which roles the developers are
 
 \subsection{Project Organization}
 %--------------------------------
-Our project organization has a flat structure and the organization chart can be seen in figure \ref{fig:orgchart}. The roles listed in the organization chart are described in table \ref{tab:roles}.
+Our project organization has a flat structure, and the organization chart can be seen in figure \ref{fig:orgchart}. The roles listed in the organization chart are described in table \ref{tab:roles}.
 
 \begin{figure}[htb]
 	\noindent\makebox[\textwidth]{%
@@ -390,7 +390,7 @@ We have agreed to have three weekly meetings to accommodate these routines.
 
 \subsection{Phase Result Approval}
 %---------------------------------
-To ensure the quality of the sprint deliverables, the team members responsible for quality assurance for a given subject will either read through, or delegate that task to another free team member.
+To ensure the quality of the sprint deliverables, at least one team member will go through the work of another before it is delivered.
 
 We will also present the results to the customer and advisor. They will then have the opportunity to point out problems and misunderstandings, and suggest solutions. This is a result of the \Gls{scrum} methodology: deliveries and deadlines throughout the project, making the progress very visible to the customer and advisors. We should be able to attain success at the end of the project because we have been guided by the feedback during the process of making the utility and report. If a problem appears, we will try to correct it and then reiterate the quality assurance.
 
@@ -448,7 +448,7 @@ The minutes should be written and sent to the advisor for approval before 12:00 
 %--------------------------------------------
 The team has specified procedures for templates and file organization.
 
-\subsubsection{Templates the Group Has Created}
+\subsubsection{Templates the Team Has Created}
 All templates are stored under docs/ on Github, the team has templates for:
 
 \begin{itemize}

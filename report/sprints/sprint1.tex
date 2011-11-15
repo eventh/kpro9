@@ -462,7 +462,7 @@ Test cases executed in this sprint:
 	\item TID07 - Recognizing invalid values. \autoref{tab:TID07}
 \end{itemize}
 
-\begin{table}[htb] \footnotesize \center
+\begin{table}[ht] \footnotesize \center
 \caption{Test case TID01}\label{tab:STID01}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
@@ -474,12 +474,10 @@ Test cases executed in this sprint:
 	Prerequisites & The utility must have been installed on the system and there needs to exist a header file associated with this test \\
 	Feature & Test that we are able to feed the solution with a \Gls{c}-\gls{header} file and have it get dissected \\
 	\midrule
-	\multirow{3}{*}{Execution} & 1. Start the program \\
-	& 2. Write the name of the \Gls{c}-\gls{header} file in the command line \\
-	& 3. Read the output given by the program \\
+	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of the \Gls{c}-\gls{header} file associated with this test through the command line  \\
+	& 2. Read the output given by the program \\
 	\midrule
-	\multirow{2}{*}{Expected result} & 1. The program should start up without any errors and present the user with a command line interface \\
-	& 3. The user should be presented with some text expressing the success of the \Gls{lua}-file generation \\
+	\multirow{1}{*}{Expected result} & 2. The user should be presented with some text expressing the success of creating a dissector\\
 	\bottomrule
 \end{tabularx}}
 \end{table}

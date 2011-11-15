@@ -203,14 +203,14 @@ union_protofields = Tests()
 @union_protofields.context
 def create_union_protocol_field():
     """Create a Union Protocol instance with some fields."""
-    proto = dissector.Protocol('test')
+    proto, diss = dissector.Protocol.create_dissector('test')
     union_proto_one = dissector.UnionProtocol('union_proto_one')
     union_proto_two = dissector.UnionProtocol('union_proto_two')
-    proto.add_field(ProtocolField('test', union_proto_one))
-    proto.add_field(ProtocolField('test2', union_proto_two))
-    proto.push_modifiers()
-    yield proto.fields[0], proto.fields[1]
-    del proto
+    diss.add_field(ProtocolField('test', union_proto_one))
+    diss.add_field(ProtocolField('test2', union_proto_two))
+    diss.push_modifiers()
+    yield diss.children[0], diss.children[1]
+    del proto, diss
 
 @union_protofields.test
 def union_proto_field_def(one, two):
@@ -239,15 +239,15 @@ bits = Tests()
 @bits.context
 def create_bit_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None)
+    proto, diss = dissector.Protocol.create_dissector('test')
     bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
             (2, 1, 'B', {0: 'No', 1: 'Yes'}),
             (3, 1, 'G', {0: 'No', 1: 'Yes'})]
-    proto.add_field(BitField(bits, 'bit1', 'int32', 4, 0, Platform.big))
-    proto.add_field(BitField(bits, 'bit2', 'uint16', 2, 0, Platform.big))
-    proto.push_modifiers()
-    yield proto.fields[0], proto.fields[1]
-    del proto
+    diss.add_field(BitField(bits, 'bit1', 'int32', 4, 0, Platform.big))
+    diss.add_field(BitField(bits, 'bit2', 'uint16', 2, 0, Platform.big))
+    diss.push_modifiers()
+    yield diss.children[0], diss.children[1]
+    del proto, diss
 
 @bits.test
 def bitfield_def(one, two):

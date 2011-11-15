@@ -39,7 +39,7 @@ def create_protocols(header, yml):
     # Sort the protocols on name
     structs = {}
     for key, proto in protocols.items():
-        structs[proto.name] = proto.create()
+        structs[proto.name] = proto.generate()
 
     # Write out dissectors for manual testing
     #config.Options.output_dir = os.path.dirname(__file__)

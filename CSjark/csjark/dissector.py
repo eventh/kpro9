@@ -65,7 +65,7 @@ class Dissector(BaseField):
             field.abbr_prefix.insert(0, self.name)
             field.push_modifiers()
 
-    def get_definition(self):
+    def get_definition(self)
         """Get the ProtoField definition for this field."""
         data = []
 

@@ -48,7 +48,7 @@ def req_1b():
     cparser.StructVisitor.all_protocols = {}
     ast = cparser.parse('enum c {a, b=3}; struct req { enum c test; };')
     assert isinstance(_child(ast.children()[1], 4), c_ast.Enum)
-    enum = cparser.find_structs(ast)[0].fields[0]
+    enum = cparser.find_structs(ast)[0].children[0].children[0]
     assert enum
     assert enum.name == 'test'
     assert enum._valuestring_values == '{[0]="a", [3]="b"}'
@@ -82,7 +82,7 @@ def req_1e():
     assert isinstance(_child(a, 1), c_ast.ArrayDecl)
     assert _child(a, 2).declname == 'a'
     assert _child(a, 3).names[0] == 'int'
-    a, b, c = cparser.find_structs(ast)[0].fields
+    a, b, c = cparser.find_structs(ast)[0].children[0].children
     assert isinstance(b, dissector.Field)
     assert a.type == 'bytes' and b.type == 'string' and c.type == 'bytes'
     assert a.size == 4*56 and b.size == 9 and c.size == 20

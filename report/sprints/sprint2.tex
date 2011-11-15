@@ -668,7 +668,7 @@ csjark supports.
 This section introduces the tests preformed during the sprint and their results. For sprint 2 it was also decided that the larger unit tests should also be documented and added to the test documents.
 
 %subsection{Tests}
-During the sprint the team executed a total of 7 test cases. The test cases can be found in \autoref{sec:testcases}. Here is a list of the executed test cases:
+During the sprint the team executed a total of 7 test cases. An example of a testcase can be seen in \autoref{tab:STID08} while the rest of the  test cases can be found in \autoref{sec:testcases}.The following list shows the test cases executed this sprint:
 \begin{itemize}
 	\item TID08 - Supporting \glspl{member} of type \gls{enum} \autoref{tab:sp2TID08}
 	\item TID09 - Supporting \glspl{member} of type \gls{array}  \autoref{tab:sp2TID09}
@@ -678,6 +678,31 @@ During the sprint the team executed a total of 7 test cases. The test cases can 
 	\item TID13 - Supporting \glspl{struct} with various \gls{trailers} \autoref{tab:sp2TID13}
 	\item TID14 - Sprint 2 functionality test \autoref{tab:sp2TID14}
 \end{itemize}
+
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID08}\label{tab:STID08}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting \glspl{member} of type \gls{enum} \\
+	Tester & Lars Solvoll Tønder \\
+	Prerequisites & The utility must have been installed on the system and there needs to exist a header file associated with this test \\
+	Feature & Test that the \gls{utility} is able to support \Gls{c}-\gls{header} files with \glspl{enum} \\
+	\midrule
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file which includes a \gls{struct} using \glspl{enum} and its configuration file \\
+	& 2. Read the output \\
+	& 3. Move the resulting \gls{dissector} into the plugins folder in the personal configuration folder of \Gls{wireshark}\\
+	& 4. Open the \gls{pcap-file} for this test with \Gls{wireshark}\\
+	& 5. Look at the different \glspl{packet} and \gls{struct} \glspl{member} that are displayed in \Gls{wireshark}\\
+	\midrule
+	\multirow{2}{*}{Expected result } & 2. The program should provide the user with some text expressing the success of the \Gls{lua}-file generation \\ 
+	\addlinespace
+	& 5 The different \glspl{packet} should be displayed as having \glspl{struct} with \glspl{enum}, showing the value of the \gls{enum} by its name and value\\
+	\bottomrule
+\end{tabularx}}
+\end{table}
 
 \subsection{Test Results}
 %----------------------------

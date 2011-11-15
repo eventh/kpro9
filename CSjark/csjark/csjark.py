@@ -47,6 +47,7 @@ import cpp
 import cparser
 import config
 from config import Options, FileConfig
+from field import ProtocolField
 
 
 def parse_args(args=None):
@@ -310,6 +311,7 @@ def create_dissector(filename, platform, folders=None, includes=None):
         ast = cparser.parse(text, filename)
         cparser.find_structs(ast, platform)
     except Exception as err:
+        # TODO some cleanup, now half-finished things might linger!
         if Options.verbose:
             print('Failed "%s":%s which raised %s' % (
                     filename, platform.name, repr(err)))
@@ -321,8 +323,8 @@ def create_dissector(filename, platform, folders=None, includes=None):
         print("Parsed header file '%s':%s successfully." % (
                 filename, platform.name))
 
-    if Options.debug:
-        ast.show()
+    #if Options.debug:
+    #    ast.show()
 
 
 def write_dissectors_to_file(all_protocols):
@@ -331,8 +333,25 @@ def write_dissectors_to_file(all_protocols):
     if Options.output_file and os.path.isfile(Options.output_file):
         os.remove(Options.output_file)
 
+    # Sort which dissectors to write out
+    protocols = all_protocols
+    if Options.strict:
+        def find_proto(proto):
+            found = []
+            # Possible endless loop?
+            for child in proto.children:
+                if isinstance(child, ProtocolField):
+                    found.append(child.proto.name)
+                found.extend(find_proto(child))
+            return found
+
+        protocols = {p.name: p for p in protocols.values() if p.id}
+        for proto in list(protocols.values()):
+            names = find_proto(proto)
+            protocols.update({name: all_protocols[name] for name in names})
+
     # Generate and write lua dissectors
-    for name, proto in all_protocols.items():
+    for name, proto in protocols.items():
         path = '%s.lua' % name
         flag = 'w'
         if Options.output_dir:
@@ -348,6 +367,8 @@ def write_dissectors_to_file(all_protocols):
         if Options.verbose:
             print("Wrote %s to '%s' (%i platform(s))" %
                     (name, path, len(proto.children)))
+
+    return len(protocols)
 
 
 def write_delegator_to_file():
@@ -396,7 +417,7 @@ def main():
 
     # Write dissectors to disk
     protocols = cparser.StructVisitor.all_protocols
-    write_dissectors_to_file(protocols)
+    wrote = write_dissectors_to_file(protocols)
     write_delegator_to_file()
     write_placeholders_to_file(protocols)
 
@@ -407,7 +428,7 @@ def main():
     else:
         msg = 'Successfully parsed all %i files' % len(headers)
     print("%s for %i platforms, created %i dissectors" % (
-            msg, len(Options.platforms), len(protocols)))
+            msg, len(Options.platforms), wrote))
 
 
 if __name__ == "__main__":

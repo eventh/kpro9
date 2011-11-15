@@ -57,6 +57,7 @@ class BaseField:
         self.size = size
         self.alignment = alignment
         self.endian = endian
+        self.children = []
 
     @property
     def add_var(self):

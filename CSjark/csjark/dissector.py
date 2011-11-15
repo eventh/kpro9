@@ -297,8 +297,8 @@ class Protocol:
                 '\t\tpinfo.cols.info:append("({desc})")\n\tend\n'
 
         # TODO
-        #'subtree:set_text(pinfo.private.field_name .. ": {name}")'\
         #sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
+        #'subtree:set_text(pinfo.private.field_name .. ": {name}")'\
         #data.append(sub_tree.format(add=self.add_var, var=self.var))
 
         data.append(func_diss.format(var=self.var))

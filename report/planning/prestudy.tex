@@ -37,23 +37,22 @@ Both of these solutions are bundled with \Gls{wireshark}.
 \subsection{idl2wrs}
 %-------------------
 A tool for generating \Gls{wireshark} \glspl{dissector} from \gls{idl} files. The tool is written
-in \Gls{python}, and generates \glspl{dissector} in \Gls{c} from \gls{idl} specifications. (\gls{idl})
-is used to interface in a language-neutral way, which enables communication between software
-of different languages. It is used for example in \gls{Sun RPC} and \gls{acorba}. 
+in \Gls{python}, and generates \glspl{dissector} in \Gls{c} from \gls{idl} specifications. \gls{idl}
+ is used as an interface to enable communication between software of different languages, in a 
+language-neutral way. It is used for example in \gls{Sun RPC} and \gls{acorba}. 
 Since idl2wrs takes input in a different language than our \gls{utility} will, and creates \glspl{dissector}
 in a different language than our \gls{utility}, we can not reuse any of its code. Instead we will look
 at its architecture and data structures, especially how it generates \glspl{dissector}.
 
 \subsection{Asn2wrs}
 %-------------------
-A tool for generating \Gls{wireshark} \glspl{dissector} from \gls{asnone} \glspl{protocol}. It requires
+Is a tool for generating \Gls{wireshark} \glspl{dissector} from \gls{asnone} \glspl{protocol}. Asn2wrs requires
 four input files: an \gls{asnone} \gls{protocol} description, a configuration file and two
 template files. Advantages of using Asn2wrs are faster development from
 easier recompilation, and plugins which are easy to distribute. The disadvantage
-is that code and \glspl{makefile} are more complex. Our customer can't use this
+is that code and \glspl{makefile} are more complex.\cite{asn2wrs} Our customer can't use this
 solution as it would require them to rewrite their \Gls{c} \glspl{struct} to \gls{asnone}
 descriptions, which would take a very long time.
-
 
 %-----------------------------------------
 \section{Software Development Methodology}

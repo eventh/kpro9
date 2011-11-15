@@ -51,17 +51,17 @@ Timetable for this sprint: Table \ref{tab:sprint3time}. \\
 	\midrule
 	\textbf{Impl.} &  & \textbf{56} & \textbf{48} \\
 	\hyperref[tab:req:stories7]{US29} & FR5-A: Flags specified for each platform &  5  & 11 \\
-	\hyperref[tab:req:stories8]{US31} & FR5-C: \Gls{dissector} support both little and big \gls{endian} & 5  & 4 \\
-	\hyperref[tab:req:stories8]{US32} & FR5-D: \Gls{dissector} support different sizes from flags & 12  & 2 \\
-	\hyperref[tab:req:stories8]{US33} & FR3-C: Support WIN32, WIN64,\gls{asparc} etc &  5  & 2.5 \\
+	\hyperref[tab:req:stories8]{US30} & FR5-C: \Gls{dissector} support both little and big \gls{endian} & 5  & 4 \\
+	\hyperref[tab:req:stories8]{US31} & FR5-D: \Gls{dissector} support different sizes from flags & 12  & 2 \\
+	\hyperref[tab:req:stories8]{US32} & FR3-C: Support WIN32, WIN64,\gls{asparc} etc &  5  & 2.5 \\
 	\hyperref[tab:req:stories7]{US29} & FR4-B: Configuration supports custom \Gls{lua} files & 6 & 3.5\\
 	\hyperref[tab:req:stories7]{US28} & FR2-C: Support \Gls{wireshark} filter and search on attributes &  3 & 1.5\\
 	\hyperref[tab:req:stories7]{US29} & FR5-B: \Glspl{dissector} support memory alignment & 4 & 6.5\\
 	\hyperref[tab:req:stories7]{US26} & FR1-D: Support \glspl{member} of type \gls{union} & 5  & 6\\
 	\hyperref[tab:req:stories7]{US27} & FR2-A add: Display a \gls{wildcard} type for valid \Gls{c} types that \Gls{wireshark} has no support for & 3  & 1.5\\
-	\hyperref[tab:req:stories9]{US35} & FR4-D mod: Support specifying the ID of \glspl{dissector} (name and function) & 3  & 3 \\
-	\hyperref[tab:req:stories9]{US39} & FR6-D: Don’t regenerate \glspl{dissector} & 1 & 1.5\\
-	\hyperref[tab:req:stories7]{US29} & FR2: Handle \Gls{lua} reserved definition names & 2 & 3 \\
+	\hyperref[tab:req:stories9]{US34} & FR4-D mod: Support specifying the ID of \glspl{dissector} (name and function) & 3  & 3 \\
+	\hyperref[tab:req:stories9]{US37} & FR6-D: Don’t regenerate \glspl{dissector} & 1 & 1.5\\
+	\hyperref[tab:req:stories7]{US38} & FR2: Handle \Gls{lua} reserved definition names & 2 & 3 \\
 	\addlinespace
 	\textbf{Testing} &  & \textbf{19} & \textbf{18.5} \\
 	 & FR4-B: Custom \Gls{lua} configuration & 2 & 3\\
@@ -74,9 +74,9 @@ Timetable for this sprint: Table \ref{tab:sprint3time}. \\
 	\addlinespace
 	\textbf{Doc.} &  & \textbf{11} & \textbf{12} \\
 	 & FR4-B: Custom \Gls{lua} configuration & 2 & 3.5\\
-	\hyperref[tab:req:stories8]{US34} & FR4-C: Support custom handling of specific data types & 2 & 1.5 \\
-	\hyperref[tab:req:stories9]{US36} & FR5: User documentation for what platform that the \gls{utility} support & 3 & 0 \\
-	\hyperref[tab:req:stories9]{US37} & FR5: Create developer manual from \Gls{python} docstrings (autodoc plugin) & 4 & 7 \\
+	\hyperref[tab:req:stories8]{US33} & FR4-C: Support custom handling of specific data types & 2 & 1.5 \\
+	\hyperref[tab:req:stories9]{US35} & FR5: User documentation for what platform that the \gls{utility} support & 3 & 0 \\
+	\hyperref[tab:req:stories9]{US36} & FR5: Create developer manual from \Gls{python} docstrings (autodoc plugin) & 4 & 7 \\
 	\addlinespace
 	\textbf{Fixes} &  & \textbf{16} & \textbf{27} \\
 	\midrule
@@ -260,7 +260,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	\toprule
 	Header & Value \\
 	\midrule
-	ID & US31 \\
+	ID & US30 \\
 	Requirement & FR5-C: Generate \glspl{dissector} which support both little and big \gls{endian} platforms \\
 	What & The administrator wants \glspl{dissector} which handle both big and little \gls{endian} encoding. \\
 	How & The \gls{dissector} module will need to create different \Gls{lua} code for big and little \gls{endian}, when adding nodes to the \Gls{wireshark} tree and when calling other \glspl{dissector}.
@@ -268,7 +268,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	nodes to the \Gls{wireshark} tree. \\
 	Result & \Glspl{dissector} can be created with platform specific \gls{endian}. \\
 	\midrule
-	ID & US32 \\
+	ID & US31 \\
 	Requirement & FR5-D: Generate \glspl{dissector} which support different sizes depending on platforms \\
 	What & The administrator wants to generate \glspl{dissector} for \gls{struct} where \glspl{member} size depend on the originating platform. \\
 	How & When the administrator feeds the \gls{utility} a \gls{header} file and a config file with a set of platform he wants \glspl{dissector} for, the config module will create new \gls{header} files
@@ -277,7 +277,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	platform to the correct \gls{dissector}. \\
 	Result & \Glspl{dissector} can be created with platform specific sizes of \glspl{member}.\\
 	\midrule
-	ID & US33 \\
+	ID & US32 \\
 	Requirement & FR3-C: Support for configuring a platform with a platform specific macro like WIN32, \_WIN64, \_\_sparc to be able to  support different \gls{struct} definitions 
 	for different platforms. \\
 	What & The administratorwants to be able to configure the \gls{utility} to make \glspl{dissector} that support \glspl{struct} that is defined differently on different platforms via platform specific
@@ -287,7 +287,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
   	one \gls{dissector} for each platform for each \gls{struct}. All \glspl{dissector} dissecting the same \glspl{struct} are stored in the same file, but are added to a platform specific \gls{dissector} table. \\
 	Result & The generated \Gls{lua} files corresponding to \glspl{struct} now includes one \gls{dissector} for each platform defined in the configuration file. \\
 	\midrule
-	ID & US34 \\
+	ID & US33 \\
 	User doc & FR4-C: User documentation for configurating custom handling of specific types. \\
 	What & The administrator should be able to find out how to specify custom handling for a specific type by reading the user documentation. \\
 	How &	 The administrator opens the user documentation and finds the section about configuration. From here he locates the sub section about custom type handling. 
@@ -306,14 +306,14 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	\toprule
 	Header & Value \\
 	\midrule
-	ID & US35 \\
+	ID & US34 \\
 	Requirement & FR4-D modified: Configuration must support specifying the ID of \glspl{dissector} \\
 	What & The administrator wants to specify the ID of a \gls{dissector} in a configuration file. The \glspl{dissector} should not be given any ID if it has not been specifically configured. \\
 	How & When the cparser finds a \gls{struct} in the \gls{AST} it looks for a configuration file for the \gls{struct}. If a config-file is found, the	ID of the prototype field
 	representing the \gls{dissector} will be mapped to the ID given in the config-file.  If it is not found, the ID will be sat to NONE. \\
 	Result & The administrator can specify the ID of \glspl{dissector} in the configuration. \\
 	\midrule
-	ID & US36 \\
+	ID & US35 \\
 	User doc & FR5 User documentation for how to add or remove support for a platform in the \glspl{dissector} generated from the \glspl{utility}. \\
 	What & The administrator should be able to find out how to add or remove support for a platform in the \glspl{dissector} by reading the user documentation. \\
 	How & The administrator opens the user documentation and finds the section about configuration. From here he locates the sub section about platform support. 
@@ -321,7 +321,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	this after reading the section. \\
 	Result & The administrator is now able to configure the \gls{utility} to add or remove platform support from the generated \glspl{dissector}. \\
 	\midrule
-	ID & US37 \\
+	ID & US36 \\
 	User doc & FR5 User documentation for what platform that the \gls{utility} support. \\
 	What & The administrator should be able to find out what platforms he can add support for in the custom \gls{dissector} files. \\
 	How & The administrator opens the user documentation and finds the section about configuration. From here he locates the sub section about platform support.
@@ -329,7 +329,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	how to add support for more platforms. \\
 	Result & The administrator is now able to look up what platforms he can get the \glspl{dissector} to support. \\
 	\midrule
-	ID & US38 \\
+	ID & US37 \\
 	Requirement & FR6-D The \gls{utility} should not regenerate \glspl{dissector} within a single run. \\
 	What & The administrator should be able to specify folder that includes both a standalone \gls{header} file with a \gls{struct} definitions and another \gls{header} file that includes
 	the first \gls{header}. The \gls{utility} will only generate the \gls{dissector} once for the \gls{struct} inside the first \gls{header}. \\
@@ -337,7 +337,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	It will only generate a new \gls{dissector} if the table of \glspl{dissector} is empty for that name. \\
 	Result & The \gls{utility} will run faster as a result of not needing to regenerate \glspl{dissector}. \\
 	\midrule
-	ID & US39 \\
+	ID & US38 \\
 	Requirement & Handle \Gls{lua} reserved definition names \\
 	What & The \Gls{c} \glspl{struct} could contain \glspl{member} with names that are reserved by \Gls{lua}. The \gls{dissector} module needs to avoid creating \Gls{lua} variables with such names.  \\
 	How &	 The \gls{dissector} module has a method called create\_lua\_var. This method will ensure that variable names are valid, by comparing the variable names to a list
@@ -354,7 +354,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	\toprule
 	Header & Value \\
 	\midrule
-	ID & US40 \\
+	ID & US39 \\
 	Requirement &  FR5-B: Generate \glspl{dissector} with correct alignment depending on platform \\
 	What & The administrator wants to generate \glspl{dissector} which are different depending on platform. \\
 	How & The \gls{dissector} module will use the configured flags from the config module to modify the generated \Gls{lua} \glspl{dissector} so that they have the right memory structure alignment and \gls{endianness}.
@@ -736,7 +736,7 @@ During sprint 3 the team executed a total of 11 test cases, but no additional te
 \end{table}
 
 \subsection{Test Evaluation}
-In this sprint we saw a massive improvement in code coverage due to finally having been able to use the coverage tool to monitor our unit tests. There were also a lot of bugs discovered during this sprint, and while most of them got fixed, some of the bugfixing had to be pushed to next sprint due to time constraints. Some testcases also failed due to poor communication between the ones responsible for creating the testcases and the ones responsible for generating the test data. It was therefore decided that we not split up these two types of tasks but rather have the same person design a test case and create the required data for it as well.
+In this sprint we saw a massive improvement in code coverage due to finally having been able to use the coverage tool to monitor our unit tests. There were also many bugs discovered during this sprint, and while most of them were fixed, some of the bugfixing had to be pushed to next sprint due to time constraints. Some test cases also failed due to poor communication between the ones responsible for creating the testcases and the ones responsible for generating the test data. It was therefore decided that we not split up these two types of tasks but rather have the same person design a test case and create the required data for it as well.
 
 \subsubsection{Test Coverage}
 As can be seen in both \autoref{tab:sp3CoverageReport} and \autoref{fig:sp3CoverageChart} the team finally managed to hit the goal of having a code coverage of at least 80\% in this sprint. This was achieved mostly by improving the black\_box.py, which is a test of all the major parts of the \gls{utility}. The following list shows the unit tests ran in sprint 3:
@@ -842,8 +842,8 @@ file extensions, for example, .h and .hpp.
 
 \subsubsection{Overall customer satisfaction}
 In general the customer is satisfied with the progress we have made so far. Most of the requirements are
-implemented or close to completion. When the \gls{utility} is ready to be tested on their code, we can expect to receive
-a lot of feedback on things we need to fix and improve.
+implemented or close to completion. When the \gls{utility} is ready to be tested on their code, we can expect to receive more
+feedback on things we need to fix and improve.
 
 %--------------------------
 \section{Sprint Evaluation}

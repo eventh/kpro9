@@ -169,7 +169,7 @@ class Field(BaseField):
         """Compare if two field instances are equal."""
         if not isinstance(other, Field):
             return False
-        for member in members:
+        for member in self.members:
             if getattr(self, member) != getattr(other, member):
                 return False
         return True
@@ -373,6 +373,42 @@ class ArrayField(Subtree):
             field.abbr_postfix.append(str(i))
             field.name_postfix.append('[%i]' % i)
             field.push_modifiers()
+
+    def get_code(self, offset, store=None, tree=None):
+        """Get the code for dissecting this field.
+
+        'offset' is the buffer offset the value is stored at
+        'store' is the lua variable to store the tree node in
+        'tree' is the tree we are adding the node to
+        """
+        parent = self.parent if tree is None else tree
+        tree = self.tree if store is None else store
+        data = [super(Subtree, self).get_code(offset, store=tree, tree=parent)]
+
+        # Fix the display of non-leaf nodes
+        if self.type == 'bytes' and self.children:
+            def traverse(children):
+                i = 0
+                type_ = None
+                for child in children:
+                    if child.children:
+                        j, type_ = traverse(child.children)
+                        i += j
+                    else:
+                        i += 1
+                        type_ = child.type
+                return i, type_
+
+            size, type_ = traverse(self.children)
+            text = '\t{tree}:set_text("{name} ({size} x {type})")'
+            data.append(text.format(tree=tree, name=self.name,
+                                    type=type_, size=size))
+
+        for field in self.children:
+            data.append(field.get_code(offset, tree=tree))
+            if self._increase_offset:
+                offset += field.size
+        return '\n'.join(data)
 
     @classmethod
     def create(cls, depth, field, name='array'):

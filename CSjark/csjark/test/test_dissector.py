@@ -101,7 +101,7 @@ def lua_keywords_code(field1, field2):
 
 @lua_keywords.test
 def fields_not_equal(field1, field2):
-    """Test that two different fiels are not equal."""
+    """Test that two different fields are not equal."""
     assert field1
     assert field2
     assert field1 == field1
@@ -171,6 +171,13 @@ def arrays_str(one, two):
     array:add(f.str_1, buffer(30, 30))
     ''')
 
+@arrays.test
+def subtrees_not_equal(field1, field2):
+    """Test that two different subtree-fields are not equal."""
+    assert field1
+    assert field2
+    assert field1 == field1
+    assert field1 != field2
 
 # Test ProtocolField
 protofields = Tests()
@@ -500,5 +507,87 @@ def protos_create_dissector(proto):
     end
     end
     delegator_register_proto(proto_tester, "tester", 25, {[0]=96})
+    ''')
+
+
+# Test Delegator
+delegator = Tests()
+
+@delegator.context
+def create_delegator():
+    """Create a Protocol instance with some fields."""
+    platforms = {p.name: p for flag, p in Platform.mappings.items()}
+    delegator = dissector.Delegator(platforms)
+    yield delegator
+    del delegator
+
+@delegator.test
+def delegator_members(delegator):
+    assert delegator
+    assert delegator.name == 'luastructs'
+    assert len(delegator.children) == 4
+    assert delegator.endian == Platform.big
+
+@delegator.test
+def delegator_generate(delegator):
+    assert delegator
+    assert compare_lua(delegator.generate(), '''
+    -- Delegator for luastructs dissectors
+    local dissector_table = DissectorTable.new("luastructs", "Lua Structs", ftypes.STRING)
+    local delegator = Proto("luastructs", "Lua C Structs")
+    local message_ids = {}
+    local dissector_sizes = {}
+    -- ProtoField defintions for: luastructs
+    local f = delegator.fields
+    f.version = ProtoField.uint8("luastructs.Version", "Version")
+    local flags_valuestring = {[0]="default", [1]="Win32", [2]="Win64", [3]="Solaris-x86", [4]="Solaris-x86-64", [5]="Solaris-sparc", [6]="Macos", [7]="Linux-x86"}
+    f.flags = ProtoField.uint8("luastructs.Flags", "Flags", nil, flags_valuestring)
+    f.message = ProtoField.uint16("luastructs.Message", "Message")
+    f.messagelength = ProtoField.uint32("luastructs.Message_length", "Message length")
+    -- Register struct dissectors
+    function delegator_register_proto(proto, name, id, sizes)
+    dissector_table:add(name, proto)
+    if id ~= nil then message_ids[id] = name end
+    if sizes ~= nil then
+    for flag, size in pairs(sizes) do
+    if dissector_sizes[flag] == nil then
+    dissector_sizes[flag] = {}
+    end
+    if dissector_sizes[flag][size] == nil then
+    dissector_sizes[flag][size] = {}
+    end
+    table.insert(dissector_sizes[flag][size], name)
+    end
+    end
+    end
+    -- Delegator dissector function for luastructs
+    function delegator.dissector(buffer, pinfo, tree)
+    local subtree = tree:add(delegator, buffer())
+    pinfo.cols.protocol = delegator.name
+    pinfo.cols.info = delegator.description
+    subtree:add(f.version, buffer(0, 1))
+    local flags_node = subtree:add(f.flags, buffer(1, 1))
+    local flags_value = buffer(1, 1):uint()
+    if flags_valuestring[flags_value] == nil then
+    flags_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be in [0, 1, 2, 3, 4, 5, 6, 7]")
+    end
+    pinfo.private.platform_flag = flags_value
+    local msg_node = subtree:add(f.message, buffer(2, 2))
+    subtree:add(f.messagelength, buffer(4):len()):set_generated()
+    local id_value = buffer(2, 2):uint()
+    local length_value = buffer(4, 4):uint()
+    -- Call the correct dissector, or try and guess which
+    if message_ids[id_value] then
+    msg_node:append_text(" (" .. message_ids[id_value] ..")")
+    dissector_table:try(message_ids[id_value], buffer(4):tvb(), pinfo, tree)
+    else
+    msg_node:add_expert_info(PI_MALFORMED, PI_WARN, "Unknown message id")
+    if dissector_sizes[flags_value] and dissector_sizes[flags_value][length_value] then
+    for key, value in pairs(dissector_sizes[flags_value][length_value]) do
+    dissector_table:try(value, buffer(4):tvb(), pinfo, tree)
+    end
+    end
+    end
+    end
     ''')
 

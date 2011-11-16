@@ -36,13 +36,18 @@ The configuration file may have following strucuture: ::
       - name: struct2
         id: [11, 13, 15]
         # another struct2 config
+
+**Automatic generation of configuration files**
+
+Autogeneration of configuration file is a simple feature, that could save the user of the utility some time, since  the essential part of the configuration file is generated automatically.  The utility will only create a new file, containg the name of the struct and line to specifiy the ID for the dissector.  To generate the configuration file, the utility must be run with ``-p`` or ``--placeholders`` as an option (see :ref:`use` for about CSjark CLI.
+
     
 .. note::
     One part of the configuration is held directly in the code. It represents the platform specific setup (file ``platform.py``) - see `Platform specific configuration`_.
 
 
 Struct Configuration
-____________________
+--------------------
 
 Each individual C struct processed by CSjark can be treated in different way. All the configuration settings must be done in the ``Structs`` section of the configuration file. Every Struct definition is one item of the sequence and may contain these attributes:
 
@@ -172,11 +177,12 @@ Below, there is an example of a configuration for the member named ``flags`` and
             1: Green
             2: Blue
 
+.. _ids:
 
 Dissector message ID
 ~~~~~~~~~~~~~~~~~~~~
 
-In every struct-packet that Wireshark captures, there is a header. One of the fields in the header, the ``id`` field, specifies which dissector should be loaded to dissect the actual struct. This field can be specified in the configuration file.  
+Every packet with C struct captured by Wireshark contains a header. One of the fields in the header, the ``id`` field, specifies which dissector should be loaded to dissect the actual struct. The value of this field can be specified in the configuration file. 
 
 This is an example of the specification ::
 
@@ -189,7 +195,7 @@ More different messages can be dissected by one specific dissector. Therefore, t
     Structs:
         - name: structname
           id: [12, 43, 3498]
-          
+         
 .. note::
     The ``id`` must be an integer between 0 and 65535.
 
@@ -491,13 +497,20 @@ Both struct members are redefined. First will be displayed as ``absolute_type`` 
 Unknown structs handling
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+The header files that the utility parses, may have nested struct that is not defined in any other header file. To make  it possible to generate a dissector for this case, the user must be able to specify the size of the struct in a configuration file. When the sizes are specified it will be possible to generate a struct that can display the defined members of the struct correctly in the utility, for the parts that are not defined only the hex value will be displayed. This feature is added as a possible way to solve include dependencies that our utility is not able to solve. The user of the utility will get an error message when the utility is not able to find include dependencies, and the user may add the size of struct to be able to generate a dissector for the struct.
 
+The size of unknown struct may be defined directly in the struct configuration as ``size`` attribute, similar to the example below: ::
 
+    Structs:
+        - name: unknown struct
+          id: 111
+          size: 78
 
-
+.. note::
+    Size must be defined as a positive integer (or 0).
 
 Options Configuration
-_____________________
+---------------------
 
 CSjark processing behaviour can be set up in various ways. Besides letting the user to specify how the CSjark should work by the command line arguments (see section :ref:`use`), it is also possible to define the options as a part of the configuration file(s). 
 

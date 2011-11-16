@@ -453,23 +453,13 @@ def protos_create_dissector(proto):
     -- Dissector function for: tester
     function proto_tester.dissector(buffer, pinfo, tree)
     local flag = tonumber(pinfo.private.platform_flag)
-    if flag == 0 then
-    proto_tester_default(buffer, pinfo, tree)
-    end
-    end
-    -- Function for retrieving parent dissector name
-    function proto_tester_pinfo_magic(pinfo, tree)
+    local subtree = tree:add(proto_tester, buffer())
     if pinfo.private.field_name then
-    tree:set_text(pinfo.private.field_name .. ": tester")
+    subtree:set_text(pinfo.private.field_name .. ": tester")
     pinfo.private.field_name = nil
     else
     pinfo.cols.info:append("(This is a test)")
     end
-    end
-    -- Dissector function for: tester (platform: default)
-    function proto_tester_default(buffer, pinfo, tree)
-    local subtree = tree:add(proto_tester, buffer())
-    proto_tester_pinfo_magic(pinfo, subtree)
     subtree:add(f.one, buffer(0, 4))
     local range_node = subtree:add(f.range, buffer(4, 4))
     local range_value = buffer(4, 4):float()

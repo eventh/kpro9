@@ -42,7 +42,7 @@ directives. Basic support for configuration will be added.
 In the first sprint we will implement eight requirements. These are listed in \autoref{tab:sprint1req}.
 The time table for the sprint can be seen in \autoref{tab:sprint1time}.
 
-\begin{table}[!htb] \small \center
+\begin{table}[!htb] \footnotesize \center
 \caption{Sprint 1 Requirements \label{tab:sprint1req}}
 \begin{tabularx}{\textwidth}{l X c c}
 	\toprule
@@ -100,7 +100,7 @@ The time table for the sprint can be seen in \autoref{tab:sprint1time}.
 \end{tabularx}
 \end{table}
 
-\begin{table}[!ht] \small \center
+\begin{table}[!ht] \footnotesize \center
 \caption{Sprint 1 Timetable\label{tab:sprint1time}}
 \begin{tabularx}{\textwidth}{X c c}
 	\toprule
@@ -276,17 +276,16 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	ID & US03 \\
 	Requirements & FR2-D: Recognize invalid values for a \gls{struct} \gls{member}. \\
 	What & The developer wants \Gls{wireshark} to give a warning if a \gls{struct} contains invalid values. \\
-	How & The generated \glspl{dissector} contain valid ranges for certain fields, and \Gls{lua} code that adds warning flags 
-		in \Gls{wireshark} if a specific fields value is outside the range. \Gls{wireshark} color the display tree yellow to alert the 
-		developer of the error. The range is specified by configuration files. \\
+	How & The \glspl{dissector} module will generate fields that will display warning in \Gls{wireshark} when the value is 
+	outside the configured range. \Gls{wireshark} will change the background color to yellow for fields with an invalid value, 
+	and give an error message. \\
 	Result & The developer can see when a value is out of range. \\
 	\midrule
 	ID & US04 \\
 	Requirements & FR3-A: The \gls{utility} should support \gls{include}.\\
 	What & The administrator wants the \gls{utility} to support the \gls{include}-statement inside a \gls{header} file.\\
 	How & The cparser module feeds the input into an external tool, the \Gls{c} \gls{preprocessor}, which supports 
-		\gls{include}-statements. It returns a \Gls{c} code file with all the included code from the external files. pycparser
-		provides support using a \Gls{c}-\gls{preprocessor}.  \\
+		\gls{include}-statements. It returns a \Gls{c} code file with all the included code from the external files. \\
 	Result & The \gls{utility} supports \gls{include}. \\
 	\midrule
 	ID & US05 \\

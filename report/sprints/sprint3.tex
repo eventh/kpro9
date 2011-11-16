@@ -543,17 +543,17 @@ definition in \Gls{c} is shown in \autoref{code:typedefarray}. Also support for
 During sprint 3 the team executed a total of 11 test cases, but no additional testing features were added during the sprint. The test cases executed in this sprint can be found in \autoref{sec:testcases}. An example of such a test case can be seen in \autoref{tab:STID15} while the rest of the test cases can be found in the listing below:
 
 \begin{itemize}
-	\item TID15 - Supporting \gls{batch mode} of \Gls{c} \gls{header} and configuration files \autoref{tab:sp3TID15}
-	\item TID16 - Supporting custom \Gls{lua} configuration \autoref{tab:sp3TID16}
-	\item TID17 - Supporting \glspl{union} \autoref{tab:sp3TID17}
-	\item TID18 - Supporting filter and search in \Gls{wireshark} \autoref{tab:sp3TID18}
-	\item TID19 - Supporting WIN32, \_WIN64, \_\gls{asparc} etc \autoref{tab:sp3TID19}
-	\item TID20 -  Supporting the use of flags specifying platforms to display \gls{member} values correctly \autoref{tab:sp3TID20}
-	\item TID21 - Supporting platforms with different \glspl{endian} \autoref{tab:sp3TID21}
-	\item TID22 - Supporting alignments \autoref{tab:sp3TID22}
-	\item TID 23 - Handling \Gls{lua} keywords \autoref{tab:sp3TID23}
-	\item TID24 - Sprint 3 functionality test \autoref{tab:sp3TID24}
-	\item TID25 - Sprint 3 requirements test \autoref{tab:sp3TID25}
+	\item TID15 - Supporting \gls{batch mode} of \Gls{c} \gls{header} and configuration files
+	\item TID16 - Supporting custom \Gls{lua} configuration
+	\item TID17 - Supporting \glspl{union} 
+	\item TID18 - Supporting filter and search in \Gls{wireshark} 
+	\item TID19 - Supporting WIN32, \_WIN64, \_\gls{asparc} etc 
+	\item TID20 -  Supporting the use of flags specifying platforms to display \gls{member} values correctly 
+	\item TID21 - Supporting platforms with different \glspl{endian} 
+	\item TID22 - Supporting alignments 
+	\item TID 23 - Handling \Gls{lua} keywords 
+	\item TID24 - Sprint 3 functionality test 
+	\item TID25 - Sprint 3 requirements test
 \end{itemize}
 
 \begin{table}[ht] \footnotesize \center
@@ -577,156 +577,86 @@ During sprint 3 the team executed a total of 11 test cases, but no additional te
 \end{table}
 
 \subsection{Test Results}
+The results from the tests are listed in \autoref{tab:sp3:testres1} and \autoref{tab:sp3:testres2}.
 
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting \gls{batch mode} of \Gls{c}-\glspl{header} and configuration files\label{tab:sp3TID15}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
-	\midrule
-	Description & Supporting \gls{batch mode} of \Gls{c} \gls{header} and configuration files \\
-	Tester & Lars Solvoll Tønder \\
-	Date & 28.10.2011 \\
-	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting custom \Gls{lua} configuration\label{tab:sp3TID16}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
-	\midrule
-	Description & Supporting custom \Gls{lua} configuration\\
-	Tester & Lars Solvoll Tønder \\
-	Date & 30.10.2011\\
-	Result & success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting \glspl{union}\label{tab:sp3TID17}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
-	\midrule
-	Description & Supporting \glspl{union}\\
-	Tester & Lars Solvoll Tønder\\
-	Date & 30.10.2011\\
-	Result & success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting filter and search in \Gls{wireshark}\label{tab:sp3TID18}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
-	\midrule
-	Description & Supporting filter and search in \Gls{wireshark}\\
-	Tester & Lars Solvoll Tønder \\
-	Date & 30.10.2011\\
-	Result & success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting WIN32, \_WIN64, \_\gls{asparc} \label{tab:sp3TID19}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
-	\midrule
-	Description & Supporting WIN32, \_WIN64, \_\gls{asparc} \\
-	Tester & Lars Solvoll tønder\\
-	Date & 30.10.2011\\
-	Result & Success \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting the use of flags specifying platforms \label{tab:sp3TID20}}
+\begin{table}[htbp] \footnotesize \center
+\caption{Sprint 1 test results part 1\label{tab:sp3:testres1}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
+	Test ID & TID15 \\
+	Description & Supporting \gls{batch mode} of \Gls{c} \gls{header} and configuration files \\
+	Tester & Lars Solvoll Tønder \\
+	Date & 28.10.2011 \\
+	Result & Success\\
+	\midrule
+	Test ID & TID16 \\
+	Description & Supporting custom \Gls{lua} configuration\\
+	Tester & Lars Solvoll Tønder \\
+	Date & 30.10.2011\\
+	Result & success\\
+	\midrule
+	Test ID & TID17 \\
+	Description & Supporting \glspl{union}\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 30.10.2011\\
+	Result & success\\
+	\midrule
+	Test ID & TID18 \\
+	Description & Supporting filter and search in \Gls{wireshark}\\
+	Tester & Lars Solvoll Tønder \\
+	Date & 30.10.2011\\
+	Result & success\\
+	\midrule
+	Test ID & TID19 \\
+	Description & Supporting WIN32, \_WIN64, \_\gls{asparc} \\
+	Tester & Lars Solvoll tønder\\
+	Date & 30.10.2011\\
+	Result & Success \\
+	\midrule
+	Test ID & TID20 \\
 	Description & Supporting the use of flags specifying platforms to display \gls{member} values correctly \\
 	Tester & Lars Solvoll Tønder\\
 	Date & 30.10.2011\\
 	Result & Failure. Most values were displayed correctly, but there were cases where the \glspl{member} and their values were different. Most notably in \gls{packet} 2 and 3 in the win64 and win32 \glspl{pcap-file}\\
-	\bottomrule
-\end{tabularx}}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting platforms with different \gls{endian} \label{tab:sp3TID21}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID21 \\
 	Description & Supporting platforms with different \gls{endian} \\
 	Tester & Erik Bergersen\\
 	Date & 31.10.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting alignments \label{tab:sp3TID22}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID22 \\
 	Description & Supporting alignments \\
 	Tester & Lars Solvoll Tønder\\
 	Date & 30.10.2011\\
 	Result & Failure. All of the platforms that were used for testing were the same\\
 	\bottomrule
-\end{tabular}
+\end{tabularx}}
 \end{table}
 
-\begin{table}[!htb] \footnotesize \center
-\caption{Handling \Gls{lua} keywords \label{tab:sp3TID23}}
-\begin{tabular}{l l}
+\begin{table}[htbp] \footnotesize \center
+\caption{Sprint 1 test results part 2\label{tab:sp3:testres2}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
+	Test ID & TID23 \\
 	Description & Handling \Gls{lua} keywords \\
 	Tester & Lars Solvoll Tønder\\
 	Date & 30.10.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Sprint 3 functionality test \label{tab:sp3TID24}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{\textwidth}{l X}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID24 \\
 	Description & Unit test encompassing all of the functionality implemented thus far in the \gls{utility} \\
 	Tester & Lars Solvoll Tønder\\
 	Date & 01.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabularx}}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Requirements test \label{tab:sp3TID25}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{\textwidth}{l X}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID25 \\
 	Description & Unit test covering all of the functionality imposed by the customer \\
 	Tester & Lars Solvoll Tønder\\
 	Date & 01.11.2011\\

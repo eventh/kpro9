@@ -17,7 +17,7 @@ CSjark can be invoked by running the ``csjark.py`` script. The arguments must be
 The arguments here specify the following:
 
 ``header``
-  a c header file to parse.
+  a C header file to parse.
 ``config``
   a configuration file to parse.
 

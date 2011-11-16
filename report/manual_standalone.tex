@@ -22,20 +22,47 @@
 \usepackage{textcomp}
 \usepackage[style=treenoname,subentrycounter,numberedsection, 
         section=chapter, acronym]{glossaries}
+\usepackage{standalone}
+
 % new for userdoc
 % \usepackage{times}
 % \usepackage{longtable}
 % \usepackage{sphinx}
 % \usepackage[Bjarne]{fncychap}
 % \usepackage[T1]{fontenc}
-% \DeclareUnicodeCharacter{00A0}{\nobreakspace}
-% \usepackage{fancyvrb}
 % \usepackage{fancybox}
 % \usepackage{subsections}
 % \setcounter{secnumdepth}{5}
-\usepackage{standalone}
 
-\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+% currently needed
+% \DeclareUnicodeCharacter{00A0}{\nobreakspace}
+% \usepackage{fancyvrb}
+% \usepackage{standalone}
+% \usepackage{tabulary}
+% \newcommand{\code}[1]{\texttt{#1}}
+
+
+%% NOTICE mumbo jumbo
+% \newcommand{\py@lightbox}{{%
+%   \setlength\parskip{0pt}\par
+%   \rule[0ex]{\linewidth}{0.5pt}%
+%   \par\vspace{-0.5ex}%
+%   }}
+% \newcommand{\py@endlightbox}{{%
+%   \setlength{\parskip}{0pt}%
+%   \par\rule[0.5ex]{\linewidth}{0.5pt}%
+%   \par\vspace{-0.5ex}%
+%   }}
+
+% \newcommand{\py@noticestart@note}{\py@lightbox}
+% \newcommand{\py@noticeend@note}{\py@endlightbox}
+
+% \newenvironment{notice}[2]{
+%   \def\py@noticetype{#1}
+%   \csname py@noticestart@#1\endcsname
+%   \strong{#2}
+% }{\csname py@noticeend@\py@noticetype\endcsname}
+
 
 \definecolor{listinggray}{gray}{0.9}
 \definecolor{lbcolor}{rgb}{0.9,0.9,0.9}

@@ -160,7 +160,6 @@ The need for preprocessing C files before they are parsed have become so compreh
 Field specific classes were moved from the dissector module to its own, fields module. For the same reason as the ccp module; the amount of code concerning fields became so great, that a own module was appropriate. 
 %Write about methods ect. 
 
-
 \subsection{User stories}
 \label{sec:req:stories4}
 This section lists the user stories for the fourth sprint, these are displayed in \autoref{tab:req:stories11}, \autoref{tab:req:stories12}, \autoref{tab:req:stories13} and \autoref{tab:req:stories14}.
@@ -342,7 +341,6 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 \section{Implementation}
 %-----------------------
 \label{sec:sp4impl}
-
 The implementation in this sprint has mainly been bug fixing, and adding 
 features that the customer needs to be able to run the \gls{utility} on their code. 
 This section covers the added functionality and the most important fixes 
@@ -389,9 +387,12 @@ The way CSjark solve this problem is to parse all the header-files. After one
 attempt of parsing all header-files, the utility will parse the error messages 
 from pycparser library. From these error messages, the utility will try to 
 find the missing includes, by going through the abstract syntax tree from the 
-header-files that was parsed successfully in the first attempt. 
+header-files that was parsed successfully in the first attempt. CSjark will 
+try this procedure three times, before it gives up.
 
-TODO: Not finished, will be changed
+This solution is not optimal, but was implemented due to limitied time in this 
+last sprint. A possible way to solve the dependencies if CSjark fails, is to 
+add the missing includes to the header-files.
 
 \subsection{Improve Generated \Gls{lua} Output}
 %--------------------
@@ -521,8 +522,11 @@ This makes it possible to generate dissectors, without doing changes to the
 folder containing all header files.
 
 \subsection{Configuration of Options}
-
-TODO: Not finished
+A feature to add some of the command-line arguments to the configuration files 
+was implemented in this sprint. This was added because it is easier to write 
+the options in a configuration file, instead of typing the commands each time 
+a user execute the utility. \autoref{code:configoptions} shows an example of 
+how Options can be added to the configuration file.
 
 \lstset{language=C,caption={Configuration of Options},label=code:configoptions}
 \lstinputlisting[language=C]{./sprints/code/configoptions.yml}
@@ -543,7 +547,7 @@ During sprint 4 the team executed 21 new test cases as well as re-running all of
 	\item TID31 - Pointer support \autoref{tab:sp4TID31}
 	\item TID32 - Enums in arrays \autoref{tab:sp4TID32}
 	\item TID33 - Supporting \#define as a command line argument \autoref{tab:sp4TID33}
-	\item TID 34 - Multiple message ID's for one dissector \autoref{tab:sp4TID34}
+	\item TID34 - Multiple message ID's for one dissector \autoref{tab:sp4TID34}
 	\item TID35 - Allowing configuration for unknown structs \autoref{tab:sp4TID35}
 	\item TID36 - Allowing configuration for unknown structs \autoref{tab:sp4TID36}
 	\item TID37 - Autogenerating configuration files for structs that has no config file of their own \autoref{tab:sp4TID37}
@@ -554,9 +558,9 @@ During sprint 4 the team executed 21 new test cases as well as re-running all of
 	\item TID42 - Ambiguous struct IDs \autoref{tab:sp4TID42}
 	\item TID43 -Ambiguous platform IDs \autoref{tab:sp4TID43}
 	\item TID44 -Running the utility on Windows \autoref{tab:sp4TID44}
-	\item TID 45 - Running the utility on Solaris \autoref{tab:sp4TID45}
-	\item TID 46 - Running the dissectors on Solaris \autoref{tab:sp4TID46}
-	\item TID 47 - Running the dissectors on Windows \autoref{tab:sp4TID47}	
+	\item TID45 - Running the utility on Solaris \autoref{tab:sp4TID45}
+	\item TID46 - Running the dissectors on Solaris \autoref{tab:sp4TID46}
+	\item TID47 - Running the dissectors on Windows \autoref{tab:sp4TID47}	
 \end{itemize}
 
 \begin{table}[ht] \footnotesize \center

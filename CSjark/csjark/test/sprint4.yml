@@ -1,6 +1,6 @@
 Options:
     use_cpp: True
-    excludes: [examples, test]
+    excludes: []
     include_dirs: []
     includes: []
     defines: [CONFIG_DEFINED=3, REMOVE=1]

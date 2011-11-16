@@ -178,7 +178,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	\midrule
 	ID & US40 \\
 	Requirement & FR3-A modification: \gls{include} system includes \\
-	What & The \gls{utility} needs to be able to support \gls{header} files that includes system dependent \glspl{header}
+	What & The \gls{utility} needs to be support system dependent \glspl{header}-files
 	even if these are not available on the platform that the \gls{utility} is used on. \\
 	How & The administrator is able to specify a fake system \gls{header} file with the defines they need to make their \glspl{struct} work correctly.
 	This fake \gls{header} is then used to represent the system \gls{header} in the file so it is parsed correctly by \gls{pycparser}.  \\

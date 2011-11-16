@@ -215,7 +215,7 @@ module, and generation of the fields in dissector module.
 	\caption{Class Diagram\label{fig:sp2:class}}
 \end{figure}
 
-\subsubsection{CSjark}
+\subsubsection{Csjark}
 The main differences in this module was changes in the Cli class, which now 
 has functionality to find all files in a folder given as an argument when 
 running CSjark, with the \emph{files\_in\_folder()}. This method used for the 
@@ -543,8 +543,8 @@ The values are also named, if they are configured.
 
 \subsection{Support Members of Type \Gls{array}}
 %----------------------
-Csjark supports \gls{header}-files with \glspl{array}, and is able to display them in 
-\Gls{wireshark} with the \Gls{lua}-\gls{dissector}. Csjark supports \glspl{array} of all data types 
+CSjark supports \gls{header}-files with \glspl{array}, and is able to display them in 
+\Gls{wireshark} with the \Gls{lua}-\gls{dissector}. CSjark supports \glspl{array} of all data types 
 implemented so far. The \Gls{wireshark} \gls{dissector} can display multidimensional 
 \glspl{array}, and will create a new subtree for each dimension.  A representation of 
 \glspl{array} in \Gls{wireshark} is displayed in \autoref{fig:wsarray}.
@@ -583,7 +583,7 @@ example of \gls{asnone} in \Gls{wireshark}, can be seen in \autoref{fig:wstraile
 
 \subsection{Custom \Gls{lua} Configuration}
 %----------------------
-Csjark can support custom \Gls{lua} configuration, by including \Gls{lua}-\glspl{script} from a 
+CSjark can support custom \Gls{lua} configuration, by including \Gls{lua}-\glspl{script} from a 
 file specified in the configuration file. The reason for supporting custom \Gls{lua} 
 configuration is for protocols that are not built-in \glspl{dissector} in \Gls{wireshark}, 
 and are not \glspl{struct}, or display the members in a struct in a different way 
@@ -612,7 +612,7 @@ specific problem, and should be implemented together with platform support.
 
 \subsection{Folder Support in the \gls{cli}}
 %----------------------
-Folder support in the \gls{cli}\footnote{Command-line Interface} has been 
+Folder support in the \gls{cli} has been 
 implemented, so it is possible to generate \Gls{lua}-\glspl{script} for all \glspl{struct} stored 
 in a given folder. At the moment, all \glspl{dissector} will be regenerated. 
 Functionality to only generate modified or new \gls{header}-files will be added in 
@@ -654,9 +654,9 @@ screenshot of the \gls{struct} in \Gls{wireshark}.
 
 \subsection{Typedef Support}
 %----------------------
-Csjark is supporting the keyword typedef, which is a facility to create new 
+CSjark is supporting the keyword typedef, which is a facility to create new 
 data types names. \autoref{code:typedef} shows examples of typedef's that 
-csjark supports.
+CSjark supports.
 
 \lstset{language=C,caption={Typedef example},label=code:typedef}
 \lstinputlisting[language=C]{./sprints/code/typedef.h}
@@ -762,7 +762,7 @@ The results are listed in \autoref{tab:sp2TIDS}.
 
 \subsection{Test Evaluation}
 %-------------------------------
-For the second sprint the developers focused a lot more on testing during implementation. The team also decided that the testers should check how much of the code was covered in the unit tests. This made the group focus more on making proper unit tests that tests as much functionality as possible. This had a very positive effect on the tests that were run at the end of the sprint, where not a single test failed, except for one which ended up exposing a bug in \Gls{wireshark}
+For the second sprint the developers focused a lot more on testing during implementation. The team also decided that the testers should check how much of the code was covered in the unit tests. This made the team focus more on making proper unit tests that tests as much functionality as possible. This had a very positive effect on the tests that were run at the end of the sprint, where not a single test failed, except for one which ended up exposing a bug in \Gls{wireshark}
 
 \subsection{Test Coverage}
 This section introduces the amount of code covered by our unit tests and how it relates to the test coverage from the previous sprints.
@@ -978,7 +978,7 @@ We will strive to give our advisers more documentation to look at. We need their
 As mentioned in the review, the team had an uneven work distribution. Some team members were eager to start implementing and took all the implementation tasks, leaving mostly documentation tasks for the rest of the team. The documentation tasks are closely connected to the implementation, so this resulted in problems. Documentation were postponed till the end.The planned actions section describes how we are planning to avoid that this happens again. 
 
 \subsubsection{\Gls{wireshark}} 
-We identified several bugs in \Gls{wireshark}, which ended up crashing it when we tried to run our \gls{utility}. Most of them were fixed by Stig, as he works as a core developer for \Gls{wireshark}. Unfixed bugs either will be fixed or dropped because they are not really relevant to us. Time can be lost while we wait for a patch.
+We identified several bugs in \Gls{wireshark}, which ended up crashing it when we tried to run our \gls{utility}. Most of them were fixed by Stig Bjørlykke, as he works as a core developer for \Gls{wireshark}. Unfixed bugs either will be fixed or dropped because they are not really relevant to us. Time can be lost while we wait for a patch.
 
 \subsubsection{Complexity consideration}
 As always, design and estimation of future implementation is hard. At the planning meeting, we evaluated each work item and estimated the complexity of it. In hindsight we saw that our complexity consideration for some of the work items was wrong, making it hard to complete all the items in the sprint backlog.

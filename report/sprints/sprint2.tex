@@ -241,9 +241,9 @@ The last class added in this module is ConformanceFile, which hold the
 configuration written for custom Lua code. 
 
 \subsubsection{Dissector}
-There was added four subclasses of Field in the dissector module. This classes 
-is EnumField, ArrayField, BitField and ProtocolField, these classes will 
-generate different types of field for the Lua dissector, that will display 
+Four subclasses of Field was added in the dissector module. These classes 
+are EnumField, ArrayField, BitField and ProtocolField, and they will 
+generate different types of fields for the Lua dissector, which will display 
 members differently in Wireshark.
 
 Field and Protocol classes has been extended to support the new fields, and 
@@ -374,13 +374,13 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	User doc & FR4-E: User documentation for how to specify trailers (other registered \glspl{protocol}) \\
 	What & The administrator should be able to find out how to specify trailers to a \gls{header} \gls{struct} by reading the user documentation. \\
 	How & The administrator opens the user documentation and finds the section about configuration. From here he locates the sub section about trailers. 
-	This section gives a good description of how to write such configuration for different types of trailers and provides sufficient examples, so that
-	it is  clear to the administrator how to write the configuration he needs after reading the section. \\
+	This section gives a good description of how to write such configuration for different types of trailers and provides sufficient examples, to make
+	it clear to the administrator how to write the configuration he needs after reading the section. \\
 	Result & The administrator is now able to utilise the trailer feature of CSjark. \\
 	\midrule
 	ID & US20 \\
 	Requirements & FR4-B: Configuration must support custom \Gls{lua} files for specific \glspl{protocol} \\
-	What & The administrator wants to specify custom \Gls{lua} files in the configuration, that are to be used in complex cases where our \gls{utility} is unable to generate
+	What & The administrator wants to specify custom \Gls{lua} files in the configuration, which are to be used in complex cases where our \gls{utility} is unable to generate
 	a \gls{dissector} for the \Gls{c} \gls{header}. \\
 	How & The config module should read config files provided to the command line interface, and find any rules regarding the use of custom \Gls{lua} files.
 	When such a rule is found, the \gls{dissector} module will use the \Gls{lua} code found in the file(s) in addition to its own generated \Gls{lua} code.
@@ -431,7 +431,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	\midrule
 	ID & US25 \\
 	Requirements & FR6-C: Command line shall support batch processing of \Gls{c} \gls{header} and configuration files \\
-	What & The administrator wants to set up the program to run automatically, so that the program creates \glspl{dissector} from the \Gls{c} \gls{header} and configuration file(s) that are specified. \\
+	What & The administrator wants to set up the program to run automatically, in order for the program to create \glspl{dissector} from the \Gls{c} \gls{header} and configuration file(s) that are specified. \\
 	How & When the administrator feeds the command line with an input argument, \gls{header} or configuration, the \gls{utility} shall check if the input is a single file or a directory (folder). 
 	If it is a file, parse it. If it is a folder, retrieve all files in that folder and add them to a list, this list will be sent to the \gls{parser} and all the files will be parsed one after another.
 	A directory within a directory should be detected, and traversed recursively. With this approach we can start in a root folder and include all files,
@@ -841,7 +841,7 @@ In sprint 2 we were able to demonstrate many of the requirements for the custome
 
 \subsubsection{FR2-B: \gls{struct} within \glspl{struct}}
 The customer stated that the inner \gls{struct} should be displayed as a sublevel of the outer \gls{struct}.
-When an external \gls{dissector} is called, it should be called with name, and not id, so that \glspl{struct} that is never used as a base does not need to be assigned an id.
+When an external \gls{dissector} is called, it should be called with a name and not an id, in order to not assign an id to \glspl{struct} that are never used as a base.
 
 \subsubsection{FR4-C Custom handling of specific types}
 The customer stated that they would like certain types to be interpreted in a certain way as default behaviour, but that the user should be able to configure specific behaviour for a specific \gls{member} of a \gls{struct}.
@@ -905,13 +905,13 @@ This section contains the team evaluation of the second sprint.
 
 \subsection{Review}
 %--------------------------
-The first sprint evaluation resulted in some planned actions for the forthcoming sprints. Looking back at these at now, we quickly realized that we fell into the same pitfalls again: lack of documentation, bad work distribution and reverse engineering of vital parts. The documentation was improved to some degree, but we did not manage to collect it all together so that the advisors could have a look at it. This way we lost valuable feedback. These matters will be basis for planned actions for forthcoming sprints. 
+The first sprint evaluation resulted in some planned actions for the forthcoming sprints. Looking back at these at now, we quickly realized that we fell into the same pitfalls again: lack of documentation, bad work distribution and reverse engineering of vital parts. The documentation was improved to some degree, but we did not manage to continuously provide it for the advisors. This way we lost valuable feedback. These matters will be basis for planned actions for forthcoming sprints. 
 
 The sprint started out very good. We had a four-hour long planning meeting, and ended up with a good backlog and a common understanding of the technical aspects of the sprint. Even though the meeting was significantly better this time, we failed in doing the design early. User stories was postponed till the middle of the sprint and they were written by team members that had no understanding of the code. This is something we definitely have to change in the next sprints, if we want to do Scrum properly.
 
 The rest of the sprint went as expected. Implementation went smoothly and the customer is satisfied with our progress.
 
-In our sprint backlog, that we made at the sprint planning meeting, we listed responsible for each task. In retrospect this did not work out very well. The problem we encountered was that the most experienced programmer was assigned almost all the programming tasks, leaving documentation tasks for the rest of the team. This could have worked out well, if the documentation and implementation were independent of each other. We know that the implementation and documentation are highly dependent, and the fact that it is not easy to write documentation for code you have not written yourself made it even worse. So all team members had to ask the implementer how he did it and how it works, which was not very efficient. 
+In our sprint backlog, which we made at the sprint planning meeting, we listed responsible for each task. In retrospect this did not work out very well. The problem we encountered was that the most experienced programmer was assigned almost all the programming tasks, leaving documentation tasks for the rest of the team. This could have worked out well, if the documentation and implementation were independent of each other. We know that the implementation and documentation are highly dependent, and the fact that it is not easy to write documentation for code you have not written yourself made it even worse. So all team members had to ask the implementer how he did it and how it works, which was not very efficient. 
 This actually resulted in two bad experiences:
 \begin{itemize}
 \item Work distribution was uneven. Those with responsibilities were expected to do their task, but we did not think that a task might have been poorly estimated. Some tasks which seemed simple ended up being hard and consumed a lot of person hours.
@@ -963,10 +963,10 @@ We intend to complete these planned actions for the next sprint. To achieve bett
 Last evaluation meeting we agreed to do the design early in the sprint. Since that did not work for us, we have decided to do the design in the planning meeting. Then it will not be possible to postpone it and the rest of the work will be more efficient. We will use as many hours as it takes to have a planning meeting where we end up with a good plan, proper documentation and detailed user stories.
 
 \subsubsection{Not assign responsibilities}
-We will not assign responsibilities for all the tasks at the sprint planning meeting, we rather assign responsibilities for one task for each team member. This way no team members can assign themselves a lot of tasks and might in the end realize that they are not able to complete all the tasks. Now all team members will be able to see what is done and what is not, and assign an unassigned task to themselves. We hope that this will make us capable of completing the whole sprint backlog within the given time.
+We will not assign responsibilities for all the tasks at the sprint planning meeting, we rather pick one task each. This way no team members can assign themselves too many tasks, and in the end realize that they are not able to complete them. All team members will be able to see what is done and what is not, and can assign an unassigned task to themselves. We hope that this will make us capable of completing the whole sprint backlog within the given time.
 
 \subsubsection{List dependencies and prioritize the work items}
-As some tasks are dependent on others, it is important to understand this early and plan so that no team member must wait for others to do a task. Now that we do not want to assign responsibilities to all tasks, it is crucial to prioritize each task so that we know what tasks to do first. We do not want to end up with undone work items that have a high priority when the sprint is over. These changes are applied to the sprint backlog.
+As some tasks are dependent on others, we must plan in such a way that no team member must wait for others to do a task. It is crucial that we prioritize each task, in order to pick and complete the most important tasks first. We do not want to end up with uncompleted work items that have a high priority when the sprint is over. These changes are applied to the sprint backlog.
 
 \subsubsection{Provide more and better documentation to the advisors}
 We will strive to give our advisors more documentation to look at. We need their feedback and help in order to finish this project in a suitable manner. 

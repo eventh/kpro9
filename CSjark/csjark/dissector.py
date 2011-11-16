@@ -1,11 +1,11 @@
 """
 A module for generating Lua dissectors for Wireshark.
 
-Contains classes for creating dissectors for a specific protocol, which
-holds a list of fields which are instances of Field or its subclasses.
-
-Also contains the class which generates a dissector for delegating
-dissecting of messages to the specific protocol dissectors.
+The Disssector class is a container of platform-specific Wirehsark
+fields instances and subclasses. The Protocol class is a collection of
+dissector-instances for each platform it should support. The Delegator
+class is a subclass of both these classes, and generates 'luastructs.lua'
+which decides which Wireshark dissector to call from each message id.
 """
 from platform import Platform
 from field import create_lua_var, create_lua_valuestring, BaseField, Field
@@ -115,6 +115,7 @@ class Dissector(BaseField):
         return '\n'.join(i for i in data if i is not None)
 
     def get_padding(self, field, offset):
+        """Get padding for correct alignment."""
         alignment = field.alignment
         padding = 0
         if alignment:
@@ -176,7 +177,10 @@ class Dissector(BaseField):
 
 
 class UnionDissector(Dissector):
+    """A Dissector where each field does not increase the offset."""
+
     def __init__(self, *args, **vargs):
+        """Create a new UnionDissector instance."""
         super().__init__(*args, **vargs)
         self._increase_offset = False
 
@@ -225,6 +229,7 @@ class Protocol:
             self.description = 'struct %s' % name
 
     def get_dissector(self, platform):
+        """Get a dissector for a given 'platform'."""
         return self.dissectors.get(platform.name, None)
 
     @classmethod
@@ -388,6 +393,10 @@ class Delegator(Dissector, Protocol):
     """
 
     def __init__(self, platforms):
+        """Create a new delegator instance.
+
+        'platforms' is a set of all platforms to support
+        """
         super().__init__('luastructs', Platform.mappings['default'], None)
         self.platforms = platforms
         self.field_var = 'f.'

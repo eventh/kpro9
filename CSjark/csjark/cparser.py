@@ -353,9 +353,8 @@ class StructVisitor(c_ast.NodeVisitor):
             conf = Options.config.get(proto_name, None)
             if conf is None or conf.size is None:
                 raise ParseError('Unknown protocol %s' % proto_name)
-            proto = ProtocolField.Fake(name=proto_name,
-                    size=conf.size, alignment=self.platform.alignment,
-                    endian=self.platform.endian)
+            proto = ProtocolField.Fake(name=proto_name, size=conf.size,
+                    alignment=conf.size, endian=self.platform.endian)
 
         return ProtocolField(name, proto)
 

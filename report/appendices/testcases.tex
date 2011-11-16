@@ -749,15 +749,11 @@ The testcases ran in sprint 4 are \autoref{tab:TID26}-\ref{tab:TID47}.
 	Prerequisites & The \gls{utility} has to be installed on the system \\
 	Feature & Checking that the \gls{utility} is able to support the use of \glspl{enum} inside of \glspl{array}\\
 	\midrule
-	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file that has an \gls{array} of \glspl{enum}, and it's configration file\\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file that has an \gls{array} of \glspl{enum}, and it's configration file\\
 	& 2.  Read the output\\
-	& 3. Copy the resulting \glspl{dissector} into the plugins folder of the personal configuration in \Gls{wireshark}\\
-	& 4. Run \Gls{wireshark} with the \gls{pcap-file} associated with this test\\
-	& 5. Inspect the different \glspl{packet}, their \glspl{struct} and \gls{member} values\\
 	\midrule
-	\multirow{2}{*}{Expected result}
+	\multirow{1}{*}{Expected result}
 	& 2. The user should be presented with some text expressing the success of generating \glspl{dissector}\\
-	& 5. All \glspl{struct} that contain an \gls{array} of \glspl{enum} should be displayed as containing \glspl{enum} instead of just integers\\
 	\bottomrule
 \end{tabularx}}
 \end{table}

@@ -536,7 +536,7 @@ how Options can be added to the configuration file.
 %-----------------------
 \label{sec:sp4test}
 
-During sprint 4 the team executed 21 new test cases as well as re-running all of the test cases from the previous sprints. This was done in an effort to ensure that all of the functionality from teh earlier sprints were still intact before ending the final sprint. \autoref{STID26} shows one of the testscases ran this sprint. The rest of the new testcases for this sprint can be seen in the following list. For more information about the testcases see \autoref{sec:testcases} in the appendix.
+During sprint 4 the team executed 22 new test cases as well as re-running all of the test cases from the previous sprints. This was done in an effort to ensure that all of the functionality from teh earlier sprints were still intact before ending the final sprint. \autoref{STID26} shows one of the testscases ran this sprint. The rest of the new testcases for this sprint can be seen in the following list. For more information about the testcases see \autoref{sec:testcases} in the appendix.
 
 \begin{itemize}
 	\item TID26 -Including system-headers \autoref{tab:sp4TID26}
@@ -549,18 +549,18 @@ During sprint 4 the team executed 21 new test cases as well as re-running all of
 	\item TID33 - Supporting \#define as a command line argument \autoref{tab:sp4TID33}
 	\item TID34 - Multiple message ID's for one dissector \autoref{tab:sp4TID34}
 	\item TID35 - Allowing configuration for unknown structs \autoref{tab:sp4TID35}
-	\item TID36 - Allowing configuration for unknown structs \autoref{tab:sp4TID36}
-	\item TID37 - Autogenerating configuration files for structs that has no config file of their own \autoref{tab:sp4TID37}
-	\item TID38 - Only generating dissectors for structs with a valid ID \autoref{tab:sp4TID38}
-	\item TID39 - Guessing dissectors from packet size \autoref{tab:sp4TID39}
-	\item TID40 -Invalid header \autoref{tab:sp4TID40}
-	\item TID41 -Invalid header during batch mode \autoref{tab:sp4TID41}
-	\item TID42 - Ambiguous struct IDs \autoref{tab:sp4TID42}
-	\item TID43 -Ambiguous platform IDs \autoref{tab:sp4TID43}
-	\item TID44 -Running the utility on Windows \autoref{tab:sp4TID44}
-	\item TID45 - Running the utility on Solaris \autoref{tab:sp4TID45}
-	\item TID46 - Running the dissectors on Solaris \autoref{tab:sp4TID46}
-	\item TID47 - Running the dissectors on Windows \autoref{tab:sp4TID47}	
+	\item TID37 - Autogenerating configuration files for structs that has no config file of their own \autoref{tab:sp4TID36}
+	\item TID38 - Only generating dissectors for structs with a valid ID \autoref{tab:sp4TID37}
+	\item TID39 - Guessing dissectors from packet size \autoref{tab:sp4TID38}
+	\item TID40 -Invalid header \autoref{tab:sp4TID39}
+	\item TID41 -Invalid header during batch mode \autoref{tab:sp4TID40}
+	\item TID42 - Ambiguous struct IDs \autoref{tab:sp4TID41}
+	\item TID43 -Ambiguous platform IDs \autoref{tab:sp4TID42}
+	\item TID44 -Running the utility on Windows \autoref{tab:sp4TID43}
+	\item TID45 - Running the utility on Solaris \autoref{tab:sp4TID44}
+	\item TID46 - Running the dissectors on Solaris \autoref{tab:sp4TID45}
+	\item TID47 - Running the dissectors on Windows \autoref{tab:sp4TID46}
+	\item TID48 - Docstrings in code \autoref{tab:sp4TID47}
 \end{itemize}
 
 \begin{table}[ht] \footnotesize \center
@@ -588,7 +588,340 @@ During sprint 4 the team executed 21 new test cases as well as re-running all of
 \end{tabularx}}
 \end{table}
 
+\begin{table}[!htb] \footnotesize \center
+\caption{Ignoring \#pragma directives \label{tab:sp4TID26}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Including system-headers\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 16.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
 
+\begin{table}[!htb] \footnotesize \center
+\caption{Ignoring \#pragma directives \label{tab:sp4TID27}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Ignoring \#pragma directives\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 14.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Improve generated Lua output by removing platform prefix \label{tab:sp4TID28}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Improve generated Lua output by removing platform prefix\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 16.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Recursive searching of subfolders \label{tab:sp4TID29}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Improve generated Lua output by removing platform prefix\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 14.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Finding include dependencies which are not explicitly set \label{tab:sp4TID30}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Finding include dependencies which are not explicitly set\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 16.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Pointer support \label{tab:sp4TID31}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Pointer support\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 14.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Enums in arrays \label{tab:sp4TID32}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Enums in arrays\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 16.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Supporting \#define as a command line argument \label{tab:sp4TID33}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Supporting \#define as a command line argument\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 14.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Multiple message ID's for one dissector \label{tab:sp4TID34}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Multiple message ID's for one dissector\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 14.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Allowing configuration for unknown structs \label{tab:sp4TID35}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Allowing configuration for unknown structs\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 16.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Autogenerating configuration files for \glspl{struct} that has no config file of their own \label{tab:sp4TID36}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Autogenerating configuration files for \glspl{struct} that has no config file of their own\\
+	Tester & Even Wiik Thomassen\\
+	Date & 09.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Only generating \glspl{dissector} for \glspl{struct} with a valid ID \label{tab:sp4TID37}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Only generating \glspl{dissector} for \glspl{struct} with a valid ID\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 16.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Guessing \glspl{dissector} from \gls{packet} size \label{tab:sp4TID38}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Guessing \glspl{dissector} from \gls{packet} size\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 16.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Invalid \gls{header} \label{tab:sp4TID39}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Invalid \gls{header}\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 14.11.2011\\
+	Result & Failure. Syntax errors are caught by the utility, but declaring variables with the same name several times in the same struct is not caught\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Invalid \gls{header} during \gls{batch mode} \label{tab:sp4TID40}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Invalid \gls{header} during \gls{batch mode}\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 14.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Ambiguous \gls{struct} IDs  \label{tab:sp4TID41}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Ambiguous \gls{struct} IDs \\
+	Tester & Lars Solvoll Tønder\\
+	Date & 14.11.2011\\
+	Result & Failure. The user is not even presented with a warning if there are several structs with the same ID\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Ambiguous platform IDs  \label{tab:sp4TID42}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Ambiguous platform IDs \\
+	Tester & Lars Solvoll Tønder\\
+	Date & 14.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Running the \gls{utility} on \Gls{Windows} \label{tab:sp4TID43}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description & Running the \gls{utility} on \Gls{Windows} \\
+	Tester & Lars Solvoll Tønder\\
+	Date & 14.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Running the \gls{utility} on \gls{Solaris} \label{tab:sp4TID44}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Descriptio & Running the \gls{utility} on \Gls{Solaris}\\
+	Tester & Even Wiik Thomassen\\
+	Date & 14.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Running the \glspl{dissector} on \Gls{Solaris} \label{tab:sp4TID45}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description &  Running the \glspl{dissector} on \Gls{Solaris}\\
+	Tester & Even Wiik Thomassen\\
+	Date & 14.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb] \footnotesize \center
+\caption{Running the \glspl{dissector} on \Gls{Windows} \label{tab:sp4TID46}}
+\begin{tabular}{l l}
+	\toprule
+	Header & Description \\
+	\midrule
+	Description &  Running the \glspl{dissector} on \Gls{Windows}\\
+	Tester & Lars Solvoll Tønder\\
+	Date & 14.11.2011\\
+	Result & Success\\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Test Evaluation}
+%-------------------------------
+This sprint was very test intensive as it had been decided that the team would run regression tests with all of the testcases from the previous sprints. It was therefore heartening to see that all but two test cases failed, and that all of the functionality from the previous sprints were still intact. The bugs that caused the one use cases to fail was also not deemed severe enough that it would warrant a fix. This was due to the fact that they both included processing invalid input and the complexity of having to fix the bugs.The customer had also expressed that not having CSjark function properly would be the least of their problems if they had header files with invalid C-code. 
+
+\subsubsection{Test Coverage}
+As can be seen in  \autoref{tab:sp4CoverageReport} and \autoref{fig:sp4CoverageChart} the team managed to have a healthy increase in code coverage for sprint 4. This was done in spite of having to add a lot of new functionality to the utility during the sprint, as the team focused on improving the already existing unit tests as well as creating new ones. It also proved difficult to improve the unit tests for the csjark module as it is the module that has to be run with the most test input in order to get proper coverage. This on the other hand was not considered a problem as all but two testcases failed during this sprint even with the addition of regression testcases. The following list shows the unit tests ran in sprint 4:
+
+\begin{itemize}
+	\item black\_box.py
+	\item requirements.py
+	\item test\_config.py
+	\item test\_cparser.py
+	\item test\_csjark.py
+	\item test\_dissector.py
+	\item test\_platform.py
+\end{itemize}
+
+\begin{table}[!htb]\footnotesize\center
+	\caption{Sprint 3 Coverage Report\label{tab:sp4CoverageReport}}
+	\begin{tabular}{l l l l l}
+		\toprule
+		Module & Statements & Missing & Excluded & Coverage\\
+		\midrule
+		config & 370 & 19 & 0 & 95\%\ \\
+		cparser & 230 & 32 & 0 & 92\%\ \\
+		cpp & 63 & 7 & 0 & 89\%\ \\
+		csjark & 239 & 85 & 0 & 64\%\ \\
+		dissector & 289 & 27 & 0 & 91\%\ \\
+		Total & 271 & 6  & 0 & 98\%\ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/sprint4_code_coverage_chart.png}
+	\caption{Code coverage progress from previous sprints\label{fig:sp4CoverageChart}}
+\end{figure}
 
 
 

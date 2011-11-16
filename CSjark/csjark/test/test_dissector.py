@@ -413,7 +413,7 @@ def protos_create_dissector(proto):
     assert proto
     assert compare_lua(proto.generate(), '''
     -- Dissector for tester: This is a test
-    local proto_tester = Proto("tester", "this_is_a_test")
+    local proto_tester = Proto("tester", "This is a test")
     -- ProtoField defintions for: tester
     local f = proto_tester.fields
     f.one = ProtoField.float("tester.one", "one")
@@ -491,6 +491,6 @@ def protos_create_dissector(proto):
     trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
     end
     end
-    delegator_register_proto(proto_tester, "tester", 25, {[96]="default"})
+    delegator_register_proto(proto_tester, "tester", 25, {[0]=96})
     ''')
 

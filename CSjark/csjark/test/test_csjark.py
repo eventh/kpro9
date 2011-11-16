@@ -107,8 +107,11 @@ def cli_no_file(cli):
     assert out[0].startswith('usage:')
 
 @cli.test
-def cli_flag_output(cli):
+def cli_only_config(cli):
     """Test that one can provide an output argument."""
-    # TODO: terje!
-    pass
+    config = os.path.join(os.path.dirname(__file__), 'sprint2.yml')
+    assert os.path.isfile(config)
+    headers, configs = csjark.parse_args([config])
+    assert len(headers) == 0
+    assert len(configs) == 1
 

@@ -46,6 +46,7 @@ def create_protocols(header, yml):
     #csjark.write_dissectors_to_file(protocols)
 
     # Clean up context
+    dissector.Protocol.protocols = {}
     config.Options.platforms = set()
     cparser.StructVisitor.all_protocols = {}
     config.Options.configs = {}

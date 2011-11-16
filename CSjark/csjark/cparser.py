@@ -32,6 +32,7 @@ def find_structs(ast, platform=None):
 
     visitor = StructVisitor(platform)
     visitor.visit(ast)
+    del visitor
     return list(StructVisitor.all_protocols.values())
 
 

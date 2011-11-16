@@ -313,19 +313,18 @@ class Protocol:
 
         # Get flags and call the platform specific function
         if self.dissectors:
-            els = ''
+            table = {}
             for child in self.dissectors.values():
                 child._func_name = create_lua_var(
                         '%s_%s' % (self.var, child.platform.name))
-
-                test = '\t{els}if {var} == {flag} then'
-                call = '\t\t{func}(buffer, pinfo, tree)'
-                data.append(test.format(els=els,
-                        var=flag_var, flag=child.platform.flag))
-                data.append(call.format(func=child._func_name))
-
-                els = 'else'
+                table[child.platform.flag] = child._func_name
+            table = create_lua_valuestring(table, wrap=False)
+            data.append('\tlocal func_mapping = {table}'.format(table=table))
+            data.append('\tif func_mapping[{var}] then'.format(var=flag_var))
+            call = '\t\t func_mapping[{var}](buffer, pinfo, tree)'
+            data.append(call.format(var=flag_var))
             data.append('\tend')
+
         data.extend(['end', ''])
 
         # Modify name if sub-dissector

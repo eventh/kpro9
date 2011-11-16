@@ -14,7 +14,8 @@ import dissector
 from .test_dissector import compare_lua
 
 
-def create_protocols(headers, yml, args=None):
+def create_protocols(headers, yml, args=None, cleanup=True):
+    """Create protocols for black-box-testing."""
     # Store default options to be able to restore them later
     config.Options.platforms = set()
     o = config.Options
@@ -22,12 +23,9 @@ def create_protocols(headers, yml, args=None):
                 o.output_dir, o.output_file, o.platforms, o.delegator)
 
     # Parse command line arguments
-    cli_args = []
-    for header in headers:
-        cli_args.extend(['-f', header])
-    cli_args.extend(['-c', yml])
-    if args is not None:
-        cli_args.extend(args)
+    if args is None:
+        args = []
+    cli_args = ['-f'] + headers + ['-c', yml] + args
     headers, configs = csjark.parse_args(cli_args)
 
     # Parse config files
@@ -36,22 +34,21 @@ def create_protocols(headers, yml, args=None):
     config.Options.prepare_for_parsing()
 
     # Create protocols
-    for filename in headers:
-        for platform in config.Options.platforms:
-            csjark.create_dissector(filename, platform)
-
-    protocols = cparser.StructVisitor.all_protocols
+    csjark.parse_headers(headers)
 
     # Sort the protocols on name
     structs = {}
-    for key, proto in protocols.items():
+    for key, proto in cparser.StructVisitor.all_protocols.items():
         structs[proto.name] = proto.generate()
 
-    # Write out dissectors for manual testing
-    #config.Options.output_dir = os.path.dirname(__file__)
-    #csjark.write_dissectors_to_file(protocols)
+    if cleanup:
+        perform_cleanup(defaults)
+        return structs
+    else:
+        return structs, defaults
 
-    # Clean up context
+def perform_cleanup(defaults):
+    """Clean up after running create_protocols."""
     dissector.Protocol.protocols = {}
     config.Options.platforms = set()
     cparser.StructVisitor.all_protocols = {}
@@ -60,8 +57,6 @@ def create_protocols(headers, yml, args=None):
             config.Options.strict, config.Options.use_cpp,
             config.Options.output_dir, config.Options.output_file,
             config.Options.platforms, config.Options.delegator) = defaults
-
-    return structs
 
 
 # End-to-end tests for sprint 2 features
@@ -786,30 +781,147 @@ delegator_register_proto(proto_custom_lua, "custom_lua", 74, {[1]=88})
 sprint4 = Tests()
 
 @sprint4.context
-def create_sprint3(structs={}):
+def create_sprint4():
     """Create protocols for all structs in sprint2.h"""
-    if not structs:
-        headers = [os.path.join(os.path.dirname(__file__), i)
-                    for i in ['sprint4.h', 'a.h', 'b.h']]
-        yml = os.path.join(os.path.dirname(__file__), 'sprint4.yml')
-        structs.update(create_protocols(headers, yml))
-    yield structs
-
+    headers = [os.path.join(os.path.dirname(__file__), i)
+                for i in ['sprint4.h', 'a.h', 'b.h']]
+    yml = os.path.join(os.path.dirname(__file__), 'sprint4.yml')
+    args = ['-v', '-d', '-I', os.path.dirname(__file__)]
+    protos, defaults = create_protocols(headers, yml, args, cleanup=False)
+    yield protos
+    perform_cleanup(defaults)
 
 @sprint4.test
 def enum_arrays(structs):
-    pass
-
-@sprint4.test
-def multiple_ids(structs):
-    pass
-
-@sprint4.test
-def placeholder_configs(structs):
-    pass
+    """Test support for arrays of enums."""
+    assert 'enum_arrays' in structs
+    assert structs['enum_arrays']
+    assert compare_lua(structs['enum_arrays'], '''
+    -- Dissector for enum_arrays: struct enum_arrays
+    local proto_enum_arrays = Proto("enum_arrays", "struct enum_arrays")
+    -- ProtoField defintions for: enum_arrays
+    local f = proto_enum_arrays.fields
+    f.month_array = ProtoField.bytes("enum_arrays.month_array", "month_array")
+    local month_array_valuestring = {[1]="JAN", [2]="FEB", [3]="MAR", [4]="APR", [5]="NOV", [20]="DEC"}
+    f.month_array_0 = ProtoField.uint32("enum_arrays.month_array.0", "month_array[0]", nil, month_array_valuestring)
+    local month_array_valuestring = {[1]="JAN", [2]="FEB", [3]="MAR", [4]="APR", [5]="NOV", [20]="DEC"}
+    f.month_array_1 = ProtoField.uint32("enum_arrays.month_array.1", "month_array[1]", nil, month_array_valuestring)
+    local month_array_valuestring = {[1]="JAN", [2]="FEB", [3]="MAR", [4]="APR", [5]="NOV", [20]="DEC"}
+    f.month_array_2 = ProtoField.uint32("enum_arrays.month_array.2", "month_array[2]", nil, month_array_valuestring)
+    local month_array_valuestring = {[1]="JAN", [2]="FEB", [3]="MAR", [4]="APR", [5]="NOV", [20]="DEC"}
+    f.month_array_3 = ProtoField.uint32("enum_arrays.month_array.3", "month_array[3]", nil, month_array_valuestring)
+    -- Dissector function for: enum_arrays
+    function proto_enum_arrays.dissector(buffer, pinfo, tree)
+    local flag = tonumber(pinfo.private.platform_flag)
+    if flag == 1 then
+    proto_enum_arrays_win32(buffer, pinfo, tree)
+    end
+    end
+    -- Function for retrieving parent dissector name
+    function proto_enum_arrays_pinfo_magic(pinfo, tree)
+    if pinfo.private.field_name then
+    tree:set_text(pinfo.private.field_name .. ": enum_arrays")
+    pinfo.private.field_name = nil
+    else
+    pinfo.cols.info:append("(struct enum_arrays)")
+    end
+    end
+    -- Dissector function for: enum_arrays (platform: Win32)
+    function proto_enum_arrays_win32(buffer, pinfo, tree)
+    local subtree = tree:add_le(proto_enum_arrays, buffer())
+    proto_enum_arrays_pinfo_magic(pinfo, subtree)
+    local array = subtree:add_le(f.month_array, buffer(0, 16))
+    array:set_text("month_array (4 x uint32)")
+    local month_array_node = array:add_le(f.month_array_0, buffer(0, 4))
+    local month_array_value = buffer(0, 4):le_uint()
+    if month_array_valuestring[month_array_value] == nil then
+    month_array_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be in [1, 2, 3, 4, 5, 20]")
+    end
+    local month_array_node = array:add_le(f.month_array_1, buffer(4, 4))
+    local month_array_value = buffer(4, 4):le_uint()
+    if month_array_valuestring[month_array_value] == nil then
+    month_array_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be in [1, 2, 3, 4, 5, 20]")
+    end
+    local month_array_node = array:add_le(f.month_array_2, buffer(8, 4))
+    local month_array_value = buffer(8, 4):le_uint()
+    if month_array_valuestring[month_array_value] == nil then
+    month_array_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be in [1, 2, 3, 4, 5, 20]")
+    end
+    local month_array_node = array:add_le(f.month_array_3, buffer(12, 4))
+    local month_array_value = buffer(12, 4):le_uint()
+    if month_array_valuestring[month_array_value] == nil then
+    month_array_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be in [1, 2, 3, 4, 5, 20]")
+    end
+    end
+    delegator_register_proto(proto_enum_arrays, "enum_arrays", nil, {[1]=16})
+    ''')
 
 @sprint4.test
 def cpp_arguments(structs):
-    pass
+    """Test support for providing CPP arguments from config."""
+    assert 'cpp_test' in structs
+    assert structs['cpp_test']
+    assert compare_lua(structs['cpp_test'], '''
+    -- Dissector for cpp_test: struct cpp_test
+    local proto_cpp_test = Proto("cpp_test", "struct cpp_test")
+    -- ProtoField defintions for: cpp_test
+    local f = proto_cpp_test.fields
+    f.arr = ProtoField.bytes("cpp_test.arr", "arr")
+    f.arr_0 = ProtoField.bytes("cpp_test.arr.0", "arr[0]")
+    f.arr_0_0 = ProtoField.bytes("cpp_test.arr.0.0", "arr[0][0]")
+    f.arr_0_1 = ProtoField.bytes("cpp_test.arr.0.1", "arr[0][1]")
+    f.arr_0_2 = ProtoField.bytes("cpp_test.arr.0.2", "arr[0][2]")
+    f.arr_1 = ProtoField.bytes("cpp_test.arr.1", "arr[1]")
+    f.arr_1_0 = ProtoField.bytes("cpp_test.arr.1.0", "arr[1][0]")
+    f.arr_1_1 = ProtoField.bytes("cpp_test.arr.1.1", "arr[1][1]")
+    f.arr_1_2 = ProtoField.bytes("cpp_test.arr.1.2", "arr[1][2]")
+    f.test = ProtoField.float("cpp_test.test", "test")
+    -- Dissector function for: cpp_test
+    function proto_cpp_test.dissector(buffer, pinfo, tree)
+    local flag = tonumber(pinfo.private.platform_flag)
+    if flag == 1 then
+    proto_cpp_test_win32(buffer, pinfo, tree)
+    end
+    end
+    -- Function for retrieving parent dissector name
+    function proto_cpp_test_pinfo_magic(pinfo, tree)
+    if pinfo.private.field_name then
+    tree:set_text(pinfo.private.field_name .. ": cpp_test")
+    pinfo.private.field_name = nil
+    else
+    pinfo.cols.info:append("(struct cpp_test)")
+    end
+    end
+    -- Dissector function for: cpp_test (platform: Win32)
+    function proto_cpp_test_win32(buffer, pinfo, tree)
+    local subtree = tree:add_le(proto_cpp_test, buffer())
+    proto_cpp_test_pinfo_magic(pinfo, subtree)
+    local array = subtree:add_le(f.arr, buffer(0, 48))
+    array:set_text("arr (6 x bytes)")
+    local subarray = array:add_le(f.arr_0, buffer(0, 24))
+    subarray:set_text("arr[0] (3 x bytes)")
+    subarray:add_le(f.arr_0_0, buffer(0, 8))
+    subarray:add_le(f.arr_0_1, buffer(8, 8))
+    subarray:add_le(f.arr_0_2, buffer(16, 8))
+    local subarray = array:add_le(f.arr_1, buffer(24, 24))
+    subarray:set_text("arr[1] (3 x bytes)")
+    subarray:add_le(f.arr_1_0, buffer(24, 8))
+    subarray:add_le(f.arr_1_1, buffer(32, 8))
+    subarray:add_le(f.arr_1_2, buffer(40, 8))
+    subtree:add_le(f.test, buffer(48, 4))
+    end
+    delegator_register_proto(proto_cpp_test, "cpp_test", 10, {[1]=52})
+    delegator_register_proto(proto_cpp_test, "cpp_test", 12, {[1]=52})
+    delegator_register_proto(proto_cpp_test, "cpp_test", 14, {[1]=52})
+    ''')
 
+@sprint4.test
+def placeholder_configs(structs):
+    """Test that it works to generate placeholder configs."""
+    protocols = cparser.StructVisitor.all_protocols
+    assert protocols
+    text, count = config.generate_placeholders(protocols)
+    assert text and count
+    assert count == 3
+    assert text.startswith('Options:')
 

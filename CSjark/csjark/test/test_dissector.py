@@ -34,6 +34,7 @@ def create_enum_field():
     diss.add_field(field)
     diss.push_modifiers()
     yield diss.children[0]
+    dissector.Protocol.protocols = {}
     del proto, diss
 
 @enums.test
@@ -71,6 +72,7 @@ def create_lua_keywords_field():
     diss.add_field(Field('in', 'float', 4, 0, Platform.big))
     diss.push_modifiers()
     yield diss.children[0], diss.children[1]
+    dissector.Protocol.protocols = {}
     del proto, diss
 
 @lua_keywords.test
@@ -111,6 +113,7 @@ def create_array_field():
     diss.add_field(ArrayField.create([2], field))
     diss.push_modifiers()
     yield diss.children[0], diss.children[1]
+    dissector.Protocol.protocols = {}
     del proto, diss
 
 @arrays.test
@@ -167,7 +170,6 @@ protofields = Tests()
 @protofields.context
 def create_protocol_field():
     """Create a Protocol instance with some fields."""
-    dissector.Protocol.protocols = {}
     proto, diss = dissector.Protocol.create_dissector('test')
     proto_one, diss_one = dissector.Protocol.create_dissector('one')
     proto_two, diss_two = dissector.Protocol.create_dissector('two')
@@ -175,6 +177,7 @@ def create_protocol_field():
     diss.add_field(ProtocolField('test2', diss_two))
     diss.push_modifiers()
     yield diss.children[0], diss.children[1]
+    dissector.Protocol.protocols = {}
     del proto, diss
 
 @protofields.test
@@ -211,6 +214,7 @@ def create_union_protocol_field():
     diss.add_field(ProtocolField('test2', two))
     diss.push_modifiers()
     yield diss.children[0], diss.children[1]
+    dissector.Protocol.protocols = {}
     del proto, diss
 
 @union_protofields.test
@@ -248,6 +252,7 @@ def create_bit_field():
     diss.add_field(BitField(bits, 'bit2', 'uint16', 2, 0, Platform.big))
     diss.push_modifiers()
     yield diss.children[0], diss.children[1]
+    dissector.Protocol.protocols = {}
     del proto, diss
 
 @bits.test
@@ -295,6 +300,7 @@ def create_range_field():
     diss.children[-1].set_range_validation(0, 10)
     diss.push_modifiers()
     yield diss.children[0]
+    dissector.Protocol.protocols = {}
     del proto, diss
 
 @ranges.test
@@ -331,6 +337,7 @@ def create_field():
     diss.add_field(Field('two', 'string', 12, 0, Platform.big))
     diss.push_modifiers()
     yield diss.children[0], diss.children[1]
+    dissector.Protocol.protocols = {}
     del proto, diss
 
 @fields.test
@@ -378,6 +385,7 @@ def create_protos():
     diss.add_field(Field('count', 'int32', 4, 0, Platform.big))
     diss.push_modifiers()
     yield proto
+    dissector.Protocol.protocols = {}
     del proto, diss
 
 @protos.test
@@ -387,8 +395,8 @@ def protos_id(proto):
     assert proto.id == [25]
     assert proto.description.startswith('This is a test')
     assert proto.var == 'proto_tester'
-    assert isinstance(proto.children[0], dissector.Dissector)
-    assert isinstance(proto.children[0].children[0], Field)
+    assert isinstance(list(proto.dissectors.values())[0], dissector.Dissector)
+    assert isinstance(list(proto.dissectors.values())[0].children[0], Field)
 
 @protos.test
 def protos_trailer(proto):

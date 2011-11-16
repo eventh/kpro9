@@ -360,7 +360,7 @@ def write_dissectors_to_file(all_protocols):
 
         protocols = {p.name: p for p in protocols.values() if p.id}
         for proto in list(protocols.values()):
-            names = find_proto(proto)
+            names = find_proto(proto.dissectors.values())
             protocols.update({name: all_protocols[name] for name in names})
 
     # Generate and write lua dissectors

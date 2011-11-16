@@ -208,8 +208,9 @@ class Protocol:
         self.name = name
         self.conf = conf
         self.platform = platform
-        self.children = [] # List of dissectors
         self.var = create_lua_var('proto_%s' % name)
+
+        self.dissectors = {} # Map platform names to dissectors
 
         # Dissector ID
         if self.conf and self.conf.id is not None:
@@ -224,9 +225,7 @@ class Protocol:
             self.description = 'struct %s' % name
 
     def get_dissector(self, platform):
-        for dissector in self.children:
-            if dissector.platform == platform:
-                return dissector
+        return self.dissectors.get(platform.name, None)
 
     @classmethod
     def create_dissector(cls, name, platform=None, conf=None, union=False):
@@ -242,17 +241,20 @@ class Protocol:
             cls.protocols[name] = proto
 
         # Create the actual dissector or union dissector
-        if not union:
-            dissector = Dissector(name, platform, conf)
+        if platform.name in proto.dissectors:
+            dissector = proto.dissectors[platform.name]
         else:
-            dissector = UnionDissector(name, platform, conf)
-        proto.children.append(dissector)
+            if not union:
+                dissector = Dissector(name, platform, conf)
+            else:
+                dissector = UnionDissector(name, platform, conf)
+            proto.dissectors[platform.name] = dissector
 
         return proto, dissector
 
     def generate(self):
         """Returns all the code for dissecting this protocol."""
-        for child in self.children:
+        for child in self.dissectors.values():
             child.push_modifiers()
 
         # Create dissector content
@@ -286,7 +288,7 @@ class Protocol:
         data = ['-- ProtoField defintions for: %s' % self.name]
         decl = 'local {field_var} = {var}.fields'
         data.append(decl.format(field_var='f', var=self.var))
-        for child in self.children:
+        for child in self.dissectors.values():
             data.append(child.get_definition())
         data.append('')
         return '\n'.join(i for i in data if i is not None)
@@ -305,9 +307,9 @@ class Protocol:
         data.append(flag.format(var=flag_var))
 
         # Get flags and call the platform specific function
-        if self.children:
+        if self.dissectors:
             els = ''
-            for child in self.children:
+            for child in self.dissectors.values():
                 child._func_name = create_lua_var(
                         '%s_%s' % (self.var, child.platform.name))
 
@@ -335,7 +337,7 @@ class Protocol:
 
         # Create dissector function for each dissector
         offset = 0
-        for child in self.children:
+        for child in self.dissectors.values():
             data.append('-- Dissector function for: %s (platform: %s)' % (
                     child.name, child.platform.name))
             func = 'function {name}(buffer, pinfo, tree)'
@@ -361,7 +363,7 @@ class Protocol:
             message_ids = self.id
 
         # Dissector Sizes and platforms
-        sizes = {i.platform.flag: i.size for i in self.children}
+        sizes = {i.platform.flag: i.size for i in self.dissectors.values()}
         sizes = create_lua_valuestring(sizes, wrap=False)
 
         data = []
@@ -390,6 +392,7 @@ class Delegator(Dissector, Protocol):
         self.platforms = platforms
         self.field_var = 'f.'
         self.description = 'Lua C Structs'
+        self.dissectors = {self.platform.name: self}
 
         self.var = create_lua_var('delegator')
         self.table_var = create_lua_var('dissector_table')

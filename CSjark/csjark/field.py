@@ -3,6 +3,8 @@ TODO
 """
 import string
 import copy
+from collections import namedtuple
+
 from platform import Platform
 
 
@@ -47,18 +49,17 @@ def create_lua_valuestring(dict_, wrap=True):
 class BaseField:
     """Interface for Fields and list of Fields."""
 
-    def __init__(self, type, size, alignment, endian):
+    def __init__(self, size, alignment, endian):
         """Create a new Wireshark ProtoField instance.
 
-        'type' the ProtoField type
         'size' the size of the field in bytes
         'alignment' the alignment of the field in bytes
         'endian' the endianess of the platform
         """
-        self.type = type
         self.size = size
         self.alignment = alignment
         self.endian = endian
+        self.children = []
 
     @property
     def add_var(self):
@@ -80,12 +81,9 @@ class BaseField:
         pass
 
 
-class ProtoTree(BaseField):
-    pass
-
-
 class Field(BaseField):
     """Represents Wireshark's ProtoFields which stores a specific value."""
+
     # Members this fields holds, used when testing equality and more
     prefixes = ['var_prefix', 'abbr_prefix', 'name_prefix']
     postfixes = ['name_postfix', 'var_postfix', 'abbr_postfix']
@@ -109,7 +107,8 @@ class Field(BaseField):
             setattr(self, member, None)
         for member in self.prefixes + self.postfixes:
             setattr(self, member, [])
-        super().__init__(type, size, alignment, endian)
+        super().__init__(size, alignment, endian)
+        self.type = type
         self.name = name
 
     @property
@@ -258,7 +257,7 @@ class Field(BaseField):
     def _create_range_validation(self):
         """Create code which validates the field value inside the range."""
         def create_test(field, value, test, warn):
-            return '\tif (%s %s %s) then\n\t\t%s:add_expert_info('\
+            return '\tif %s %s %s then\n\t\t%s:add_expert_info('\
                     'PI_MALFORMED, PI_WARN, "Should be %s %s")\n\tend' % (
                             field._value_var, test, value,
                             field._node_var, warn, value)
@@ -283,7 +282,7 @@ class Field(BaseField):
 
     def _create_list_validation(self):
         """Create code which validates fields value in valuestring."""
-        return '\tif (%s[%s] == nil) then\n\t\t%s:add_expert_info('\
+        return '\tif %s[%s] == nil then\n\t\t%s:add_expert_info('\
                 'PI_MALFORMED, PI_WARN, "Should be in [%s]")\n\tend' % (
                         self.values, self._value_var,
                         self._node_var, self.list_validation)
@@ -421,6 +420,8 @@ class BitField(Subtree):
 
 class ProtocolField(Field):
 
+    Fake = namedtuple('FakeProto', ['name', 'size', 'alignment', 'endian'])
+
     def __init__(self, name, proto):
         super().__init__(name, proto.name, proto.size,
                          proto.alignment, proto.endian)
@@ -434,34 +435,6 @@ class ProtocolField(Field):
         t = '\tpinfo.private.field_name = "{name}"\n'\
             '\tDissector.get("{proto}"):call(buffer({offset}, '\
             '{size}):tvb(), pinfo, {tree})'
-        return t.format(name=self.name, proto=self.proto.longname,
+        return t.format(name=self.name, proto=self.proto.name,
                 offset=offset, size=self.size, tree=tree)
-
-
-if __name__ == '__main__':
-    print("testing")
-    '''
-    f = Field('enum', 'int32', 4, 0, Platform.little)
-    f.var_prefix = 'f.'
-    f.name_postfix = '.what?'
-    f.abbr_prefix = 'swead'
-    f.set_list_validation(dict(enumerate('ABCDE')))
-    f.set_range_validation(5, 15)
-    print(f.get_definition())
-    print(f.get_code(12))
-    '''
-    bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
-            (2, 1, 'B', {0: 'No', 1: 'Yes'}),
-            (3, 1, 'G', {0: 'No', 1: 'Yes'})]
-    f = BitField(bits, 'bitname', 'int32', 4, 4, Platform.little)
-    f.var_prefix.append('f.')
-    f.push_modifiers()
-    print(f.get_definition())
-    print(f.get_code(12))
-    f = Field('arr', 'float', 4, 0, Platform.big)
-    arr = ArrayField.create([2, 2, 3], f)
-    arr.var_prefix.append('f.')
-    arr.push_modifiers()
-    print(arr.get_definition())
-    print(arr.get_code(12))
 

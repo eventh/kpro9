@@ -27,6 +27,7 @@ class Config:
         self.name = name
         self.id = None # Message id
         self.description = None
+        self.size = None # Used for unknown protocols
         self.cnf = None # Conformance File, for custom lua code
         self.members = {} # Rules for struct members
         self.types = {} # Rules for struct member types
@@ -531,6 +532,11 @@ class Options:
         description = obj.get('description', None)
         if description is not None:
             conf.description = description
+
+        # Protocol's optional size
+        size = obj.get('size', None)
+        if size is not None:
+            conf.size = size
 
         # Protocol's optional conformance file
         cnf = obj.get('cnf', None)

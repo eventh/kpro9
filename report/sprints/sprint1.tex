@@ -450,123 +450,92 @@ results.
 \subsection{Tests}
 %-----------------
 During the sprint the team executed a total of 7 test cases with names as seen
-below. The test cases can be found in \autoref{sec:testcases}. 
+below. An example of a testcase run this sprint can be seen in \autoref{tab:STID01} while the rest of the test cases can be found in \autoref{sec:testcases}. 
 Test cases executed in this sprint:
 \begin{itemize}
-	\item TID01 - Supporting parameters for \Gls{c}-\gls{header} file. \autoref{tab:TID01}
-	\item TID02 - Supporting basic data types. \autoref{tab:TID02}
-	\item TID03 - Displaying simple \glspl{struct}. \autoref{tab:TID03}
-	\item TID04 - Supporting \Gls{c}-\gls{header} files with the \gls{include} directive. \autoref{tab:TID04}
-	\item TID05 - Supporting \gls{define} and \gls{if}. \autoref{tab:TID05}
-	\item TID06 - Supporting configuration files. \autoref{tab:TID06}
-	\item TID07 - Recognizing invalid values. \autoref{tab:TID07}
+	\item TID01 - Supporting parameters for \Gls{c}-\gls{header} file.
+	\item TID02 - Supporting basic data types.
+	\item TID03 - Displaying simple \glspl{struct}.
+	\item TID04 - Supporting \Gls{c}-\gls{header} files with the \gls{include} directive.
+	\item TID05 - Supporting \gls{define} and \gls{if}.
+	\item TID06 - Supporting configuration files. 
+	\item TID07 - Recognizing invalid values.
 \end{itemize}
 
-\subsection{Test Results}
-%------------------------
-These are the results for the tests the team ran for sprint 1 as according to \autoref{tab:testreport} discussed in the test plan.
-The test results can be seen in table \ref{tab:sp1_tid01}-\ref{tab:sp1_tid07}.
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting parameters for \Gls{c}-\gls{header} file \label{tab:sp1_tid01}}
+\begin{table}[ht] \footnotesize \center
+\caption{Test case TID01}\label{tab:STID01}
 \noindent\makebox[\textwidth]{%
-\begin{tabularx}{\textwidth}{l X}
+\begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
 	Description & Supporting parameters for \Gls{c}-\gls{header} file \\
 	Tester & Lars Solvoll Tønder \\
-	Date & 27.09.2011 \\
-	Result & Failure. The \Gls{lua}-file got created successfully but the user was not informed of the result \\
+	Prerequisites & The utility must have been installed on the system and there needs to exist a header file associated with this test \\
+	Feature & Test that we are able to feed the solution with a \Gls{c}-\gls{header} file and have it get dissected \\
+	\midrule
+	\multirow{2}{*}{Execution} & 1. Feed the utility with the name of the \Gls{c}-\gls{header} file associated with this test through the command line  \\
+	& 2. Read the output given by the program \\
+	\midrule
+	\multirow{1}{*}{Expected result} & 2. The user should be presented with some text expressing the success of creating a dissector\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
 
+\subsection{Test Results}
+%------------------------
+These are the results for the tests the team ran for sprint 1 as according to \autoref{tab:testreport} discussed in the test plan.
+The test results can be seen in \autoref{tab:sp1TIDS}.
 \begin{table}[!htb] \footnotesize \center
-\caption{Supporting basic data types \label{tab:sp1_tid02}}
+\caption{Sprint 2 test results \label{tab:sp1TIDS}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
+	Test ID & TID01 \\
+	Description & Supporting parameters for \Gls{c}-\gls{header} file \\
+	Tester & Lars Solvoll Tønder \\
+	Date & 27.09.2011 \\
+	Result & Failure. The \Gls{lua}-file got created successfully but the user was not informed of the result \\
+	\midrule
+	Test ID & TID02 \\
 	Description & Supporting basic data types \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 27.09.2011 \\
 	Result & Failure. The program supports the use of \gls{int}, \gls{float}, \gls{char} and \gls{boolean}, but did not inform the user of the result\\
-	\bottomrule
-\end{tabularx}}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Displaying simple \glspl{struct}  \label{tab:sp1_tid03}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID03 \\
 	Description & Displaying simple \glspl{struct} \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 27.09.2011 \\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting \gls{c}-\gls{header} files with the \gls{include} directive \label{tab:sp1_tid04}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{\textwidth}{l X}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID04 \\
 	Description &  Supporting \Gls{c}-\gls{header} files with the \gls{include} directive  \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 27.09.2011 \\
 	Result & Failure. The program supports \gls{header} files with the \gls{include} directive, but did not inform the user of the result\\
-	\bottomrule
-\end{tabularx}}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting \gls{define} and \gls{if} \label{tab:sp1_tid05}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{\textwidth}{l X}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID05 \\
 	Description &  Supporting \gls{define} and \gls{if}  \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 27.09.2011 \\
 	Result & Failure. The program supports \gls{header} files with the \gls{define} and \gls{if} directives, but did not inform the user of the result\\
-	\bottomrule
-\end{tabularx}}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting configuration files \label{tab:sp1_tid06}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{\textwidth}{l X}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID06 \\
 	Description &  Supporting configuration files  \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 27.09.2011 \\
 	Result & Failure. The program supports the use of configuration files but does not inform the user of any results\\
-	\bottomrule
-\end{tabularx}}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Recognizing invalid values \label{tab:sp1_tid07}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID07 \\
 	Description &  Recognizing invalid values  \\
 	Tester & Lars Solvoll Tønder \\
 	Date & 27.09.2011 \\
 	Result & Success\\
 	\bottomrule
-\end{tabular}
+\end{tabularx}}
 \end{table}
 
 \subsection{Test Evaluation}

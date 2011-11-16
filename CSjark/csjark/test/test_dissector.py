@@ -28,13 +28,14 @@ enums = Tests()
 @enums.context
 def create_enum_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None)
+    proto, diss = dissector.Protocol.create_dissector('test')
     field = Field('enum', 'int32', 4, 0, Platform.big)
     field.set_list_validation(dict(enumerate('ABCDE')))
-    proto.add_field(field)
-    proto.push_modifiers()
-    yield proto.fields[0]
-    del proto
+    diss.add_field(field)
+    diss.push_modifiers()
+    yield diss.children[0]
+    dissector.Protocol.protocols = {}
+    del proto, diss
 
 @enums.test
 def enum_def(field):
@@ -52,7 +53,7 @@ def enum_code(field):
     assert compare_lua(field.get_code(0), '''
     local enum_node = subtree:add(f.enum, buffer(0, 4))
     local enum_value = buffer(0, 4):int()
-    if (enum_valuestring[enum_value] == nil) then
+    if enum_valuestring[enum_value] == nil then
     enum_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be in [0, 1, 2, 3, 4]")
     end
     ''')
@@ -64,14 +65,15 @@ lua_keywords = Tests()
 @lua_keywords.context
 def create_lua_keywords_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None)
+    proto, diss = dissector.Protocol.create_dissector('test')
     field = Field('elseif', 'int32', 4, 0, Platform.big)
     field.set_list_validation(dict(enumerate('VWXYZ')))
-    proto.add_field(field)
-    proto.add_field(Field('in', 'float', 4, 0, Platform.big))
-    proto.push_modifiers()
-    yield proto.fields[0], proto.fields[1]
-    del proto
+    diss.add_field(field)
+    diss.add_field(Field('in', 'float', 4, 0, Platform.big))
+    diss.push_modifiers()
+    yield diss.children[0], diss.children[1]
+    dissector.Protocol.protocols = {}
+    del proto, diss
 
 @lua_keywords.test
 def lua_keywords_def(field1, field2):
@@ -91,7 +93,7 @@ def lua_keywords_code(field1, field2):
     assert compare_lua(field1.get_code(0), '''
     local elseif_node = subtree:add(f._elseif, buffer(0, 4))
     local elseif_value = buffer(0, 4):int()
-    if (elseif_valuestring[elseif_value] == nil) then
+    if elseif_valuestring[elseif_value] == nil then
     elseif_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be in [0, 1, 2, 3, 4]")
     end
     ''')
@@ -104,14 +106,15 @@ arrays = Tests()
 @arrays.context
 def create_array_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None)
+    proto, diss = dissector.Protocol.create_dissector('test')
     field = Field('arr', 'float', 4, 0, Platform.big)
-    proto.add_field(ArrayField.create([2, 3], field))
+    diss.add_field(ArrayField.create([2, 3], field))
     field = Field('str', 'string', 30, 0, Platform.big)
-    proto.add_field(ArrayField.create([2], field))
-    proto.push_modifiers()
-    yield proto.fields[0], proto.fields[1]
-    del proto
+    diss.add_field(ArrayField.create([2], field))
+    diss.push_modifiers()
+    yield diss.children[0], diss.children[1]
+    dissector.Protocol.protocols = {}
+    del proto, diss
 
 @arrays.test
 def arrays_def(one, two):
@@ -167,14 +170,15 @@ protofields = Tests()
 @protofields.context
 def create_protocol_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test')
-    proto_one = dissector.Protocol('proto_one')
-    proto_two = dissector.Protocol('proto_two')
-    proto.add_field(ProtocolField('test', proto_one))
-    proto.add_field(ProtocolField('test2', proto_two))
-    proto.push_modifiers()
-    yield proto.fields[0], proto.fields[1]
-    del proto
+    proto, diss = dissector.Protocol.create_dissector('test')
+    proto_one, diss_one = dissector.Protocol.create_dissector('one')
+    proto_two, diss_two = dissector.Protocol.create_dissector('two')
+    diss.add_field(ProtocolField('test', diss_one))
+    diss.add_field(ProtocolField('test2', diss_two))
+    diss.push_modifiers()
+    yield diss.children[0], diss.children[1]
+    dissector.Protocol.protocols = {}
+    del proto, diss
 
 @protofields.test
 def proto_field_def(one, two):
@@ -190,11 +194,11 @@ def proto_field_code(one, two):
     assert isinstance(two, ProtocolField)
     assert compare_lua(one.get_code(0), '''
     pinfo.private.field_name = "test"
-    Dissector.get("default.proto_one"):call(buffer(0, 0):tvb(), pinfo, subtree)
+    Dissector.get("one"):call(buffer(0, 0):tvb(), pinfo, subtree)
     ''')
     assert compare_lua(two.get_code(32), '''
     pinfo.private.field_name = "test2"
-    Dissector.get("default.proto_two"):call(buffer(32,0):tvb(), pinfo, subtree)
+    Dissector.get("two"):call(buffer(32,0):tvb(), pinfo, subtree)
     ''')
 
 # Test ProtocolField
@@ -203,14 +207,15 @@ union_protofields = Tests()
 @union_protofields.context
 def create_union_protocol_field():
     """Create a Union Protocol instance with some fields."""
-    proto = dissector.Protocol('test')
-    union_proto_one = dissector.UnionProtocol('union_proto_one')
-    union_proto_two = dissector.UnionProtocol('union_proto_two')
-    proto.add_field(ProtocolField('test', union_proto_one))
-    proto.add_field(ProtocolField('test2', union_proto_two))
-    proto.push_modifiers()
-    yield proto.fields[0], proto.fields[1]
-    del proto
+    proto, diss = dissector.Protocol.create_dissector('test')
+    tmp, one = dissector.Protocol.create_dissector('union_one', union=True)
+    tmp, two = dissector.Protocol.create_dissector('union_two', union=True)
+    diss.add_field(ProtocolField('test1', one))
+    diss.add_field(ProtocolField('test2', two))
+    diss.push_modifiers()
+    yield diss.children[0], diss.children[1]
+    dissector.Protocol.protocols = {}
+    del proto, diss
 
 @union_protofields.test
 def union_proto_field_def(one, two):
@@ -225,12 +230,12 @@ def union_proto_field_code(one, two):
     assert isinstance(one, ProtocolField)
     assert isinstance(two, ProtocolField)
     assert compare_lua(one.get_code(0), '''
-    pinfo.private.field_name = "test"
-    Dissector.get("default.union_proto_one"):call(buffer(0,0):tvb(), pinfo, subtree)
+    pinfo.private.field_name = "test1"
+    Dissector.get("union_one"):call(buffer(0,0):tvb(), pinfo, subtree)
     ''')
     assert compare_lua(two.get_code(32), '''
     pinfo.private.field_name = "test2"
-    Dissector.get("default.union_proto_two"):call(buffer(32,0):tvb(), pinfo, subtree)
+    Dissector.get("union_two"):call(buffer(32,0):tvb(), pinfo, subtree)
     ''')
 
 # Test BitField
@@ -239,15 +244,16 @@ bits = Tests()
 @bits.context
 def create_bit_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None)
+    proto, diss = dissector.Protocol.create_dissector('test')
     bits = [(1, 1, 'R', {0: 'No', 1: 'Yes'}),
             (2, 1, 'B', {0: 'No', 1: 'Yes'}),
             (3, 1, 'G', {0: 'No', 1: 'Yes'})]
-    proto.add_field(BitField(bits, 'bit1', 'int32', 4, 0, Platform.big))
-    proto.add_field(BitField(bits, 'bit2', 'uint16', 2, 0, Platform.big))
-    proto.push_modifiers()
-    yield proto.fields[0], proto.fields[1]
-    del proto
+    diss.add_field(BitField(bits, 'bit1', 'int32', 4, 0, Platform.big))
+    diss.add_field(BitField(bits, 'bit2', 'uint16', 2, 0, Platform.big))
+    diss.push_modifiers()
+    yield diss.children[0], diss.children[1]
+    dissector.Protocol.protocols = {}
+    del proto, diss
 
 @bits.test
 def bitfield_def(one, two):
@@ -289,12 +295,13 @@ ranges = Tests()
 @ranges.context
 def create_range_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None)
-    proto.add_field(Field('range', 'float', 4, 0, Platform.big))
-    proto.fields[-1].set_range_validation(0, 10)
-    proto.push_modifiers()
-    yield proto.fields[0]
-    del proto
+    proto, diss = dissector.Protocol.create_dissector('test')
+    diss.add_field(Field('range', 'float', 4, 0, Platform.big))
+    diss.children[-1].set_range_validation(0, 10)
+    diss.push_modifiers()
+    yield diss.children[0]
+    dissector.Protocol.protocols = {}
+    del proto, diss
 
 @ranges.test
 def ranges_def(field):
@@ -310,10 +317,10 @@ def ranges_code(field):
     assert compare_lua(field.get_code(0), '''
     local range_node = subtree:add(f.range, buffer(0, 4))
     local range_value = buffer(0, 4):float()
-    if (range_value < 0) then
+    if range_value < 0 then
     range_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0")
     end
-    if (range_value > 10) then
+    if range_value > 10 then
     range_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 10")
     end
     ''')
@@ -325,12 +332,13 @@ fields = Tests()
 @fields.context
 def create_field():
     """Create a Protocol instance with some fields."""
-    proto = dissector.Protocol('test', None)
-    proto.add_field(Field('one', 'float', 4, 0, Platform.big))
-    proto.add_field(Field('two', 'string', 12, 0, Platform.big))
-    proto.push_modifiers()
-    yield proto.fields[0], proto.fields[1]
-    del proto
+    proto, diss = dissector.Protocol.create_dissector('test')
+    diss.add_field(Field('one', 'float', 4, 0, Platform.big))
+    diss.add_field(Field('two', 'string', 12, 0, Platform.big))
+    diss.push_modifiers()
+    yield diss.children[0], diss.children[1]
+    dissector.Protocol.protocols = {}
+    del proto, diss
 
 @fields.test
 def fields_def(one, two):
@@ -356,6 +364,7 @@ protos = Tests()
 @protos.context
 def create_protos():
     """Create a Protocol instance with some fields."""
+    dissector.Protocol.protocols = {}
     conf = Config('tester')
     conf.id = [25,]
     conf.description = 'This is a test'
@@ -365,16 +374,19 @@ def create_protos():
              Trailer(conf, {'name': 'bur', 'count': 3, 'size': 8}),
              Trailer(conf, {'name': 'ber', 'member': 'count'})]
 
-    proto = dissector.Protocol('tester', conf)
-    proto.add_field(Field('one', 'float', 4, 0, Platform.big))
-    proto.add_field(Field('range', 'float', 4, 0, Platform.big))
-    proto.fields[-1].set_range_validation(0, 10)
+    proto, diss = dissector.Protocol.create_dissector('tester', None, conf)
+    diss.add_field(Field('one', 'float', 4, 0, Platform.big))
+    diss.add_field(Field('range', 'float', 4, 0, Platform.big))
+    diss.children[-1].set_range_validation(0, 10)
     field = Field('array', 'float', 4, 0, Platform.big)
-    proto.add_field(ArrayField.create([1, 2, 3], field))
+    diss.add_field(ArrayField.create([1, 2, 3], field))
     field = Field('str', 'string', 30, 0, Platform.big)
-    proto.add_field(ArrayField.create([2], field))
-    proto.add_field(Field('count', 'int32', 4, 0, Platform.big))
+    diss.add_field(ArrayField.create([2], field))
+    diss.add_field(Field('count', 'int32', 4, 0, Platform.big))
+    diss.push_modifiers()
     yield proto
+    dissector.Protocol.protocols = {}
+    del proto, diss
 
 @protos.test
 def protos_id(proto):
@@ -383,7 +395,8 @@ def protos_id(proto):
     assert proto.id == [25]
     assert proto.description.startswith('This is a test')
     assert proto.var == 'proto_tester'
-    assert isinstance(proto.fields[0], Field)
+    assert isinstance(list(proto.dissectors.values())[0], dissector.Dissector)
+    assert isinstance(list(proto.dissectors.values())[0].children[0], Field)
 
 @protos.test
 def protos_trailer(proto):
@@ -398,9 +411,9 @@ def protos_trailer(proto):
 def protos_create_dissector(proto):
     """Test that Protocol generates valid dissector code."""
     assert proto
-    assert compare_lua(proto.create(), '''
-    -- Dissector for default.tester: This is a test (default)
-    local proto_tester = Proto("default.tester", "This is a test (default)")
+    assert compare_lua(proto.generate(), '''
+    -- Dissector for tester: This is a test
+    local proto_tester = Proto("tester", "this_is_a_test")
     -- ProtoField defintions for: tester
     local f = proto_tester.fields
     f.one = ProtoField.float("tester.one", "one")
@@ -421,20 +434,31 @@ def protos_create_dissector(proto):
     f.count = ProtoField.int32("tester.count", "count")
     -- Dissector function for: tester
     function proto_tester.dissector(buffer, pinfo, tree)
-    local subtree = tree:add(proto_tester, buffer())
+    local flag = tonumber(pinfo.private.platform_flag)
+    if flag == 0 then
+    proto_tester_default(buffer, pinfo, tree)
+    end
+    end
+    -- Function for retrieving parent dissector name
+    function proto_tester_pinfo_magic(pinfo, tree)
     if pinfo.private.field_name then
-    subtree:set_text(pinfo.private.field_name .. ": tester")
+    tree:set_text(pinfo.private.field_name .. ": tester")
     pinfo.private.field_name = nil
     else
-    pinfo.cols.info:append(" (" .. proto_tester.description .. ")")
+    pinfo.cols.info:append("(This is a test)")
     end
+    end
+    -- Dissector function for: tester (platform: default)
+    function proto_tester_default(buffer, pinfo, tree)
+    local subtree = tree:add(proto_tester, buffer())
+    proto_tester_pinfo_magic(pinfo, subtree)
     subtree:add(f.one, buffer(0, 4))
     local range_node = subtree:add(f.range, buffer(4, 4))
     local range_value = buffer(4, 4):float()
-    if (range_value < 0) then
+    if range_value < 0 then
     range_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be larger than 0")
     end
-    if (range_value > 10) then
+    if range_value > 10 then
     range_node:add_expert_info(PI_MALFORMED, PI_WARN, "Should be smaller than 10")
     end
     local array = subtree:add(f.array, buffer(8, 24))
@@ -467,6 +491,6 @@ def protos_create_dissector(proto):
     trailer:call(buffer(trail_offset):tvb(), pinfo, tree)
     end
     end
-    delegator_register_proto(proto_tester, "default", "tester", 25)
+    delegator_register_proto(proto_tester, "tester", 25, {[96]="default"})
     ''')
 

@@ -105,7 +105,7 @@ def create_structs():
     '''
     ast = cparser.parse(code, 'test')
     structs = {i.name: i for i in cparser.find_structs(ast)}
-    yield structs['find'].fields
+    yield list(structs['find'].dissectors.values())[0].children
     cparser.StructVisitor.all_protocols = {}
 
 @find_structs.test

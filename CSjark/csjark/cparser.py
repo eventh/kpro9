@@ -10,7 +10,7 @@ from pycparser import c_ast, c_parser, plyparser
 
 from config import Options
 from platform import Platform
-from dissector import Protocol, UnionProtocol
+from dissector import Protocol
 from field import Field, ArrayField, ProtocolField
 
 
@@ -32,14 +32,15 @@ def find_structs(ast, platform=None):
 
     visitor = StructVisitor(platform)
     visitor.visit(ast)
+    del visitor
     return list(StructVisitor.all_protocols.values())
 
 
 class StructVisitor(c_ast.NodeVisitor):
     """A class which visit struct nodes in the AST."""
 
-    all_protocols = {} # Map (struct name, platform) to Protocol instances
-    all_known_types = {} # Map (type name, platform) to source filename
+    all_protocols = {} # Map struct name to Protocol instances
+    all_known_types = {} # Map type name to source filename
 
     def __init__(self, platform):
         """Create a new instance to visit all nodes in the AST.
@@ -224,8 +225,8 @@ class StructVisitor(c_ast.NodeVisitor):
             if ctype in self.aliases:
                 token, base = self.aliases[ctype]
                 if token in ('struct', 'union'):
-                    return depth, ProtocolField(child.declname,
-                            self.all_protocols[base, self.platform])
+                    return depth, self._create_protocol_field(
+                            child.declname, base)
                 elif token == 'enum':
                     return depth, self._create_enum(child.declname, base)
                 elif token == 'array':
@@ -242,8 +243,12 @@ class StructVisitor(c_ast.NodeVisitor):
         # Union and struct
         elif (isinstance(sub_child, c_ast.Union) or
                 isinstance(sub_child, c_ast.Struct)):
-            return depth, ProtocolField(child.declname,
-                self.all_protocols[sub_child.name, self.platform])
+            return depth, self._create_protocol_field(
+                    child.declname, sub_child.name)
+
+        # Pointer
+        elif isinstance(child, c_ast.PtrDecl):
+            return depth, self._create_field(sub_child.declname, 'pointer')
 
         # Error
         else:
@@ -251,8 +256,7 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def handle_protocol(self, proto, name, proto_name):
         """Add an protocol field or union field to the protocol."""
-        sub_proto = StructVisitor.all_protocols[(proto_name, self.platform)]
-        return proto.add_field(ProtocolField(name, sub_proto))
+        return proto.add_field(self._create_protocol_field(name, proto_name))
 
     def handle_array(self, proto, depth, field, name=None):
         """Add an ArrayField to the protocol."""
@@ -292,31 +296,35 @@ class StructVisitor(c_ast.NodeVisitor):
 
     def _find_protocol(self, node):
         """Check if the protocol already exists."""
-        if (node.name, self.platform) not in StructVisitor.all_protocols:
+        if node.name not in StructVisitor.all_protocols:
             return None
-        else:
-            old = StructVisitor.all_protocols[(node.name, self.platform)]
+
+        # Match platform
+        old = StructVisitor.all_protocols[node.name]
+        dissector = old.get_dissector(self.platform)
+        if dissector is None:
+            return None
 
         # Disallow structs with same name
-        o, norm = old._coord, os.path.normpath
-        if norm(o.file) == norm(node.coord.file) and o.line == node.coord.line:
-            return old
+        if (os.path.normpath(old._file) == os.path.normpath(node.coord.file)
+                and old._line == node.coord.line):
+            return dissector
 
         raise ParseError('Two structs with same name %s: %s:%i & %s:%i' % (
-               node.name, o.file, o.line, node.coord.file, node.coord.line))
+               node.name, old._file, old._line,
+               node.coord.file, node.coord.line))
 
     def _create_protocol(self, node, union=False):
         """Create a new protocol for 'node'."""
         conf = Options.configs.get(node.name, None)
-        if union:
-            proto = UnionProtocol(node.name, conf, self.platform)
-        else:
-            proto = Protocol(node.name, conf, self.platform)
-        proto._coord = node.coord
+        proto, diss = Protocol.create_dissector(
+                node.name, self.platform, conf, union=union)
 
         # Add protocol to list of all protocols
-        StructVisitor.all_protocols[(node.name, self.platform)] = proto
-        return proto
+        proto._file = node.coord.file
+        proto._line = node.coord.line
+        StructVisitor.all_protocols[node.name] = proto
+        return diss
 
     def _create_field(self, name, ctype, size=None, alignment=None):
         if size is None:
@@ -335,6 +343,21 @@ class StructVisitor(c_ast.NodeVisitor):
         field = Field(name, type, size, alignment, self.platform.endian)
         field.set_list_validation(self.enums[enum])
         return field
+
+    def _create_protocol_field(self, name, proto_name):
+        proto = StructVisitor.all_protocols.get(proto_name, None)
+        if proto is not None:
+            proto = proto.get_dissector(self.platform)
+
+        # Try to create a fake protocol if conf has size
+        if proto is None:
+            conf = Options.config.get(proto_name, None)
+            if conf is None or conf.size is None:
+                raise ParseError('Unknown protocol %s' % proto_name)
+            proto = ProtocolField.Fake(name=proto_name, size=conf.size,
+                    alignment=conf.size, endian=self.platform.endian)
+
+        return ProtocolField(name, proto)
 
     def _get_type(self, node):
         """Get the C type from a node."""
@@ -364,5 +387,5 @@ class StructVisitor(c_ast.NodeVisitor):
         """Register the type 'name' in the known types mapping."""
         if name is None:
             name = node.name
-        StructVisitor.all_known_types[(name, self.platform)] = node.coord.file
+        StructVisitor.all_known_types[name] = node.coord.file
 

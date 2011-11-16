@@ -13,4 +13,5 @@ Options:
 Structs:
   - name: cpp_test
     id: [10, 12, 14]
+    size: 24
 

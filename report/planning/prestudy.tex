@@ -37,23 +37,25 @@ Both of these solutions are bundled with \Gls{wireshark}.
 \subsection{idl2wrs}
 %-------------------
 A tool for generating \Gls{wireshark} \glspl{dissector} from \gls{idl} files. The tool is written
-in \Gls{python}, and generates \glspl{dissector} in \Gls{c} from \gls{idl} specifications. (\gls{idl})
-is used to interface in a language-neutral way, which enables communication between software
-of different languages. It is used for example in \gls{Sun RPC} and \gls{acorba}. 
+in \Gls{python}, and generates \glspl{dissector} in \Gls{c} from \gls{idl} specifications. \gls{idl}
+ is used as an interface to enable communication between software of different languages, in a 
+language-neutral way. It is used for example in \gls{Sun RPC} and \gls{acorba}. 
 Since idl2wrs takes input in a different language than our \gls{utility} will, and creates \glspl{dissector}
 in a different language than our \gls{utility}, we can not reuse any of its code. Instead we will look
 at its architecture and data structures, especially how it generates \glspl{dissector}.
 
 \subsection{Asn2wrs}
 %-------------------
-A tool for generating \Gls{wireshark} \glspl{dissector} from \gls{asnone} \glspl{protocol}. It requires
+Is a tool for generating \Gls{wireshark} \glspl{dissector} from \gls{asnone} \glspl{protocol}. Asn2wrs requires
 four input files: an \gls{asnone} \gls{protocol} description, a configuration file and two
-template files. Advantages of using Asn2wrs are faster development from
-easier recompilation, and plugins which are easy to distribute. The disadvantage
-is that code and \glspl{makefile} are more complex. Our customer can't use this
-solution as it would require them to rewrite their \Gls{c} \glspl{struct} to \gls{asnone}
-descriptions, which would take a very long time.
+template files. Advantages of using Asn2wrs are faster development because of
+easier recompilation, and plugins that are easy to distribute. The disadvantage
+is that code and \glspl{makefile} are more complex.\cite{asn2wrs} 
 
+Our customer cannot use this solution as it would require them to rewrite 
+their \Gls{c} \glspl{struct} to \gls{asnone} descriptions, which would take a 
+very long time. But the team can use the asn2wrs code as an example of how to 
+create dissectors for \Gls{wireshark}.
 
 %-----------------------------------------
 \section{Software Development Methodology}
@@ -70,42 +72,39 @@ Waterfall is a software development methodology based on sequential phases.
 It consist of the following phases: requirement specification, design,
 implementation, integration, testing, deployment, and maintenance. In its pure
 form, these phases are non-overlapping and one way only, which means that each
-phase must be fully completed before the next can begin.
+phase must be fully completed before the next can begin. Following the phases are listed in sequentially order.  
 
-\subsubsection{Requirement Specification}
-This phase is about receiving requirements from a customer and then formalising
+\paragraph{Requirement Specification}
+Receiving requirements from a customer and then formalising
 these into concrete functional and non-functional requirements. These will
 again be further broken down into smaller work items that are easy to quantify
 in terms of time of use and importance. These metrics may help distinguish
 which features are to be prioritised.
 
-\subsubsection{Design}
-The design phase is about planning how to implement the features from the
-requirement phase. The goal is to make a precise software architecture for the
+\paragraph{Design}
+The design is about planning how to implement the features from the
+requirement specification. The goal is to make a precise software architecture for the
 project that dictates most of the implementation phase. This may include (but
 not limited to) making class diagrams, data flow diagrams, state machines, user
 interface mock-ups, etc.
 
-\subsubsection{Implementation}
-This phase is about implementing/coding the design made in the design phase on
+\paragraph{Implementation}
+Implementing and coding the design made in the design phase on
 a component level.
 
-\subsubsection{Integration}
-This phase is about integrating the different components that results from the
+\paragraph{Integration}
+Integrating the different components that results from the
 implementation phase.
 
-\subsubsection{Testing}
-The testing phase aims to thoroughly test the result of the implementation and
-integration phase. The goal is to find and fix bugs introduced in both these
+\paragraph{Testing}
+Thoroughly test the result of the implementation and
+integration. The goal is to find and fix bugs introduced in these
 phases.
 
-\subsubsection{Deployment}
-The deployment phase is about delivering the resulting software to the
-customer. This may include installing the software on their systems. This is
-also the phase where the customer either accepts or rejects the resulting
-software.
+\paragraph{Deployment}
+Delivering the resulting software to the customer. This may include installing the software on their systems. This is also the phase where the customer either accepts or rejects the resulting software.
 
-\subsubsection{Maintenance}
+\paragraph{Maintenance}
 Large software projects are almost impossible to make completely bug free, and
 therefore a certain amount of maintenance may be required. The obvious tasks
 are to either fix or provide viable workarounds for problems that appear during
@@ -155,19 +154,14 @@ to the customer, even if this requires some redundant work.
 		and to give a visual representation of the work progress.
 \end{description}
 
-A sprint begins with the sprint planning meeting, which consists of two
-stages. In the first, the team and the product owner prioritizes the product
-backlog. In the second, the team discusses what features they can commit to
-(based on priority) and break these down into work items, which are added to
-the sprint backlog. This should include giving each item an estimated
-completion time.
+A sprint begins with the sprint planning meeting, which consists of two stages. In the first, the team and the product owner prioritizes the product backlog. In the second, the team discusses what features they can commit to, based on priority, and break these down into work items, which are added to the sprint backlog. This should include giving each item an estimated completion time.
 
 The sprint itself consists of producing what is required for completing work
 items, updating the burn down chart, and daily \Gls{scrum} meetings. In these daily
 meetings each team member provides a short update of what they did the day
 before, what they plan to do today and what problems might be in their way.
 These problems should not be discussed in this meeting, but rather dealt with
-separately after the meeting (this is the \Gls{scrum} master's responsibility).
+separately after the meeting, which is the \Gls{scrum} master's responsibility.
 
 At the end of the sprint cycle, the team should hold a \Gls{scrum} review meeting.
 In this meeting the team should discuss what was completed and what was not, and
@@ -236,7 +230,7 @@ of Rio de Janeiro, in Brazil.\cite{LuaORG}
 
 The output of our \gls{utility} will be \Gls{wireshark} \glspl{dissector} written in \Gls{lua}. While
 \Gls{wireshark} supports \glspl{dissector} written in both \Gls{c} and \Gls{lua}, \Gls{lua} is preferred
-because they can be added without recompiling \Gls{wireshark}. \Gls{lua} \glspl{dissector}
+because they can be added without recompiling \Gls{wireshark}. This is important since some of Thales customers do not allow recompiled versions of Wireshark. \Gls{lua} \glspl{dissector}
 interface with \Gls{wireshark} through a simple \Gls{api}.
 
 \subsection{\Gls{java}}
@@ -313,8 +307,8 @@ cppheaderparser depends on \Gls{aply}. These are described later in this section
 \subsection{\gls{pycparser}}
 %---------------------
 \label{sec:pre:pycparser}
-There are two \Gls{python} \glspl{library} for parsing \Gls{c} with the same name (but different
-capitalization), \gls{pycparser}\footnote{\url{http://code.google.com/p/\gls{pycparser}/}}
+There are two \Gls{python} \glspl{library} for parsing \Gls{c} with the same name, but different
+capitalization, \gls{pycparser}\footnote{\url{http://code.google.com/p/\gls{pycparser}/}}
 and PyCParser\footnote{\url{https://github.com/albertz/PyCParser}}. While they
 both aim to solve almost the same problem, the first one appears to have better
 documentation, is a more mature project and support more of the \Gls{C99}
@@ -335,7 +329,7 @@ It also depends on \Gls{aply}.
 	\includegraphics[width=1.5cm]{./planning/img/gcc_logo}
 	\vspace{-20pt}
 \end{wrapfigure}
-\gls{gnu} Compiler Collection\footnote{\url{http://gcc.gnu.org/}} (\Gls{agcc}) is a
+GNU Compiler Collection\footnote{\url{http://gcc.gnu.org/}} (\Gls{agcc}) is a
 compiler system which has front ends which parse \Gls{c} and \Gls{c++} code, and is written
 in \Gls{c} and \Gls{c++}. It can be used in our \gls{utility} as an external tool which does the
 parsing and then outputs an intermediate language representation which we can
@@ -371,18 +365,11 @@ selected and why is explained in \autoref{sec:pre:configchoice}.
 Our \gls{utility} needs a flexible configuration, as some of the information we
 shall display does not exist in the files we parse. For example there are no
 clear relationship between enumerated values in messages and their names.
-These must be provided through a configuration. The configuration should also
-support the following:
-\begin{itemize}
-	\item Defining data constraints, so the \gls{dissector} can recognize invalid
-		values for a \gls{struct} member.
-	\item Defining custom handling of special data types.
-	\item Allow custom \Gls{lua} \glspl{dissector} to be defined and used in special cases.
-\end{itemize}
+These must be provided through a configuration.
 
 \subsection{\gls{asnone}}
 %-----------------
-Abstract Syntax Notation One (\gls{asnone}) is a notation for describing data
+\gls{asn1} (\gls{asnone}) for describing data
 structures, the standard is defined by \Gls{iso} 8824. \gls{asnone} is used for
 representing, encoding, transferring and decoding of data. It provides a
 fundamental tool to be used in application, which make it possible to exchange
@@ -651,7 +638,7 @@ that the \Gls{c} \gls{preprocessor} grammar was written in 2006, and had stopped
 generated \Gls{c} \gls{parser} only validated \Gls{c} code, it did not create an \gls{AST} which we could traverse.
 This meant that using \Gls{java} and \gls{antlr} would
 require us to modify these grammars to suite our needs, and \gls{antlr}'s lack of
-documentation became a huge risk for our project.
+documentation became a significant risk for our project.
 
 These issues and feedback from our customer made us evaluate \Gls{python} for
 developing our \gls{utility}. We found several \glspl{library} for parsing \Gls{c} files, and
@@ -797,7 +784,7 @@ The versions of the different tools and \glspl{library} we are using can be foun
 \label{sec:pre:license}
 The customer has explained that they do not intend to distribute our \gls{utility},
 and that we are free to license it as open source if we want to, under
-whichever license we feel is most suited. They suggested \gls{gnu} \Gls{gpl} as \Gls{wireshark}
+whichever license we feel is most suited. They suggested GNU\footnote{\url{http://www.gnu.org/}} \Gls{gpl} as \Gls{wireshark}
 is released under it.
 
 We needed to consider the licenses of the \glspl{library} and tools we depend upon
@@ -808,7 +795,7 @@ when we decided which license to use. This is summarized by
 \caption{Licenses\label{tab:pre:licenses}}
 \begin{tabular}{l l}
 	\toprule
-	\Gls{wireshark} & \gls{gnu} \Gls{gpl} \\
+	\Gls{wireshark} & GNU \Gls{gpl} \\
 	\Gls{aply} & \Gls{bsd}-new \\
 	\gls{pycparser} & \Gls{bsd}-new \\
 	pyYAML & \Gls{mit} \\

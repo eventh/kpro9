@@ -47,6 +47,7 @@ import cpp
 import cparser
 import config
 from config import Options, FileConfig
+from field import ProtocolField
 
 
 def parse_args(args=None):
@@ -208,7 +209,7 @@ def parse_headers(headers):
         include = None
         msg = str(error)
         if 'before: ' in msg:
-            key = msg.rsplit('before: ', 1)[1].strip(), platform
+            key = msg.rsplit('before: ', 1)[1].strip()
             include = cparser.StructVisitor.all_known_types.get(key, None)
         #print(filename, include)
         if include is None:
@@ -238,19 +239,28 @@ def parse_headers(headers):
         print('[%i] %s header files (%i platforms)' % (
                 len(tries), msg, len(Options.platforms)))
 
+    def filenames_have_shared_path(f1, f2):
+        p1 = os.path.dirname(f1)
+        p2 = os.path.dirname(f2)
+        c = os.path.commonprefix([p1, p2])
+        return c == p1 or c == p2
+
     print('[0] Attempting to parse %i header files' % len(headers))
 
     # First try, in the order given through the CLI
+    counter = 0
     for filename in headers:
         for platform in Options.platforms:
             error = create_dissector(filename, platform, folders)
             if error is not None:
                 failed.append([filename, platform, error])
+        counter += 1
+        print("Parsed file %i '%s'" % (counter, filename))
     print_status()
 
     # Try to include files based on decoding the error messages
     work_list = failed[:]
-    for tmp in range(2, 5):
+    for tmp in range(2, 4):
         for i in reversed(range(len(work_list))):
             status, new_error = include_heuristics(*work_list[i])
             if not status and new_error is not None:
@@ -263,7 +273,9 @@ def parse_headers(headers):
 
     # Try to include all who worked as it might help
     failed_names = [filename for filename, platform, error in failed]
-    includes = [file for file in headers if file not in failed_names]
+    includes = [f for f in headers if f not in failed_names and
+                            filenames_have_shared_path(filename, f)]
+
     for i in reversed(range(len(failed))):
         filename, platform, tmp = failed.pop(i)
         error = create_dissector(filename, platform, folders, includes)
@@ -309,7 +321,10 @@ def create_dissector(filename, platform, folders=None, includes=None):
         text = cpp.parse_file(filename, platform, folders, includes)
         ast = cparser.parse(text, filename)
         cparser.find_structs(ast, platform)
+    except OSError:
+        raise
     except Exception as err:
+        # TODO some cleanup, now half-finished things might linger!
         if Options.verbose:
             print('Failed "%s":%s which raised %s' % (
                     filename, platform.name, repr(err)))
@@ -331,17 +346,25 @@ def write_dissectors_to_file(all_protocols):
     if Options.output_file and os.path.isfile(Options.output_file):
         os.remove(Options.output_file)
 
-    # Sort the protocols on name
-    sorted_protos = {}
-    for key, proto in all_protocols.items():
-        if proto.name not in sorted_protos:
-            sorted_protos[proto.name] = []
-        sorted_protos[proto.name].append(proto)
+    # Sort which dissectors to write out
+    protocols = all_protocols
+    if Options.strict:
+        def find_proto(proto):
+            found = []
+            # Possible endless loop?
+            for child in proto.children:
+                if isinstance(child, ProtocolField):
+                    found.append(child.proto.name)
+                found.extend(find_proto(child))
+            return found
+
+        protocols = {p.name: p for p in protocols.values() if p.id}
+        for proto in list(protocols.values()):
+            names = find_proto(proto.dissectors.values())
+            protocols.update({name: all_protocols[name] for name in names})
 
     # Generate and write lua dissectors
-    for name, protos in sorted_protos.items():
-        dissectors = [p.create() for p in protos]
-
+    for name, proto in protocols.items():
         path = '%s.lua' % name
         flag = 'w'
         if Options.output_dir:
@@ -350,12 +373,15 @@ def write_dissectors_to_file(all_protocols):
             path = Options.output_file
             flag = 'a'
 
+        code = proto.generate()
         with open(path, flag) as f:
-            f.write('\n\n'.join(dissectors))
+            f.write(code)
 
         if Options.verbose:
             print("Wrote %s to '%s' (%i platform(s))" %
-                    (name, path, len(protos)))
+                    (name, path, len(proto.children)))
+
+    return len(protocols)
 
 
 def write_delegator_to_file():
@@ -365,7 +391,7 @@ def write_delegator_to_file():
         filename = '%s/%s' % (Options.output_dir, filename)
 
     with open(filename, 'w') as f:
-        f.write(Options.delegator.create())
+        f.write(Options.delegator.generate())
 
     if Options.verbose:
         print("Wrote delegator file to '%s'" % filename)
@@ -404,7 +430,7 @@ def main():
 
     # Write dissectors to disk
     protocols = cparser.StructVisitor.all_protocols
-    write_dissectors_to_file(protocols)
+    wrote = write_dissectors_to_file(protocols)
     write_delegator_to_file()
     write_placeholders_to_file(protocols)
 
@@ -415,7 +441,7 @@ def main():
     else:
         msg = 'Successfully parsed all %i files' % len(headers)
     print("%s for %i platforms, created %i dissectors" % (
-            msg, len(Options.platforms), len(protocols)))
+            msg, len(Options.platforms), wrote))
 
 
 if __name__ == "__main__":

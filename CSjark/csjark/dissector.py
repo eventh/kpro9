@@ -302,6 +302,15 @@ class Protocol:
         """Add the code for the dissector function for the protocol."""
         data = ['-- Dissector function for: %s' % self.name]
 
+        def retrieve_pinfo():
+            data.append('\tif pinfo.private.field_name then')
+            t = '\t\tsubtree:set_text(pinfo.private.field_name .. ": {name}")'
+            data.append(t.format(name=child.name))
+            data.append('\t\tpinfo.private.field_name = nil\n\telse')
+            t = '\t\tpinfo.cols.info:append("({desc})")'
+            data.append(t.format(desc=self.description))
+            data.append('\tend')
+
         # Dissector function
         func_diss = 'function {var}.dissector(buffer, pinfo, tree)'
         data.append(func_diss.format(var=self.var))
@@ -311,36 +320,38 @@ class Protocol:
         flag = '\tlocal {var} = tonumber(pinfo.private.platform_flag)'
         data.append(flag.format(var=flag_var))
 
-        # Get flags and call the platform specific function
-        if self.dissectors:
-            table = {}
-            for child in self.dissectors.values():
-                child._func_name = create_lua_var(
-                        '%s_%s' % (self.var, child.platform.name))
-                table[child.platform.flag] = child._func_name
-            table = create_lua_valuestring(table, wrap=False)
-            data.append('\tlocal func_mapping = {table}'.format(table=table))
-            data.append('\tif func_mapping[{var}] then'.format(var=flag_var))
-            call = '\t\t func_mapping[{var}](buffer, pinfo, tree)'
-            data.append(call.format(var=flag_var))
-            data.append('\tend')
+        # If only 1 or less dissectors, insert dissector code directly
+        if len(self.dissectors) < 2:
+            if self.dissectors:
+                child = list(self.dissectors.values())[0]
+                sub_tree = '\tlocal subtree = tree:{add}({var}, buffer())'
+                data.append(sub_tree.format(add=child.add_var, var=self.var))
+                retrieve_pinfo()
+                data.append(child.get_code(0))
+            data.extend(['end', ''])
+            return '\n'.join(i for i in data if i is not None)
 
-        data.extend(['end', ''])
+        # Get flags and call the platform specific function
+        table = {}
+        for child in self.dissectors.values():
+            child._func_name = create_lua_var(
+                    '%s_%s' % (self.var, child.platform.name))
+            table[child.platform.flag] = child._func_name
+        table = create_lua_valuestring(table, wrap=False)
+        data.append('\tlocal func_mapping = {table}'.format(table=table))
+        data.append('\tif func_mapping[{var}] then'.format(var=flag_var))
+        call = '\t\t func_mapping[{var}](buffer, pinfo, tree)'
+        data.append(call.format(var=flag_var))
+        data.extend(['\tend', 'end', ''])
 
         # Modify name if sub-dissector
         pinfo_func = create_lua_var('%s_pinfo_magic' % self.var)
         data.append('-- Function for retrieving parent dissector name')
-        data.append('function {func}(pinfo, tree)'.format(func=pinfo_func))
-        data.append('\tif pinfo.private.field_name then')
-        t = '\t\ttree:set_text(pinfo.private.field_name .. ": {name}")'
-        data.append(t.format(name=child.name))
-        data.append('\t\tpinfo.private.field_name = nil\n\telse')
-        t = '\t\tpinfo.cols.info:append("({desc})")'
-        data.append(t.format(desc=self.description))
-        data.extend(['\tend', 'end', ''])
+        data.append('function {func}(pinfo, subtree)'.format(func=pinfo_func))
+        retrieve_pinfo()
+        data.extend(['end', ''])
 
         # Create dissector function for each dissector
-        offset = 0
         for child in self.dissectors.values():
             data.append('-- Dissector function for: %s (platform: %s)' % (
                     child.name, child.platform.name))
@@ -353,7 +364,7 @@ class Protocol:
             data.append('\t{func}(pinfo, subtree)'.format(func=pinfo_func))
 
             # Add the actual field code for each field
-            data.append(child.get_code(offset))
+            data.append(child.get_code(0))
             data.extend(['end', ''])
 
         return '\n'.join(i for i in data if i is not None)

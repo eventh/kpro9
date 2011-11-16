@@ -1,5 +1,9 @@
 """
-TODO
+A module for classes which represents values in a packet.
+
+Field class and its subclasses represent a value or a list of values in
+packets to be dissected by Wireshark. They represent Wireshark's
+ProtoField instances.
 """
 import string
 import copy
@@ -419,18 +423,35 @@ class BitField(Subtree):
 
 
 class ProtocolField(Field):
+    """A ProtocolField is a field for a protocol.
+
+    This class allows part of a packet to be dissected by another
+    protocol, used for structs and unions which is a member of another.
+    """
 
     Fake = namedtuple('FakeProto', ['name', 'size', 'alignment', 'endian'])
 
     def __init__(self, name, proto):
+        """Create a new ProtocolField instance.
+
+        'name' the name of the field
+        'proto' a protocol for dissecting the field
+        """
         super().__init__(name, proto.name, proto.size,
                          proto.alignment, proto.endian)
         self.proto = proto
 
     def get_definition(self):
+        """Get the ProtoField definition for this field."""
         pass
 
     def get_code(self, offset, store=None, tree='subtree'):
+        """Get the code for dissecting this field.
+
+        'offset' is the buffer offset the value is stored at
+        'store' is the lua variable to store the tree node in
+        'tree' is the tree we are adding the node to
+        """
         self.offset = offset
         t = '\tpinfo.private.field_name = "{name}"\n'\
             '\tDissector.get("{proto}"):call(buffer({offset}, '\

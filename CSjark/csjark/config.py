@@ -3,6 +3,14 @@ A module for configuration of our utility.
 
 Should parse config files and create data structures which the parser can
 use when translating C struct definitions to Wireshark protocols and fields.
+
+Config class holds configuration for specific struct by name. FileConfig
+holds C preprocessor options for specific files by path. Options holds
+global utility configuration, include dictinaries for the Config and
+Fileconfig instances.
+
+Additionally there is the BaseRule class and its subclasses which holds
+specific rules specified by configuration for members in structs.
 """
 import sys
 import os

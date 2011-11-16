@@ -556,7 +556,7 @@ class Options:
 def generate_placeholders(protocols):
     """Generate placeholder config for unknown structs."""
     def placeholder(proto):
-        return '  - name: %s #%s' % (proto.name, proto._coord.file)
+        return '  - name: %s #%s' % (proto.name, proto._file)
     structs = '''
     id:
     description:

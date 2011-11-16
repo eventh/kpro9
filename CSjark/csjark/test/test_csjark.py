@@ -7,8 +7,11 @@ from attest import Tests, assert_hook, contexts
 
 import csjark
 import config
+import cparser
+import dissector
 
 
+# Tests for the command line interface.
 cli = Tests()
 
 @cli.context
@@ -108,10 +111,46 @@ def cli_no_file(cli):
 
 @cli.test
 def cli_only_config(cli):
-    """Test that one can provide an output argument."""
+    """Test that one can provide only a yaml file."""
     config = os.path.join(os.path.dirname(__file__), 'sprint2.yml')
     assert os.path.isfile(config)
     headers, configs = csjark.parse_args([config])
     assert len(headers) == 0
     assert len(configs) == 1
+
+@cli.test
+def cli_output_dir(cli):
+    """Test that one can provide an output folder argument."""
+    assert cli.output_file is None
+    assert cli.output_dir is None
+    header = os.path.join(os.path.dirname(__file__), 'cpp.h')
+    config = os.path.join(os.path.dirname(__file__), 'sprint3.yml')
+    folder = os.path.dirname(__file__)
+    headers, configs = csjark.parse_args([header, config, '-o', folder])
+    assert cli.output_file is None
+    assert cli.output_dir == folder
+
+@cli.test
+def cli_output_file(cli):
+    """Test that one can provide an output file argument."""
+    assert cli.output_file is None
+    assert cli.output_dir is None
+    header = os.path.join(os.path.dirname(__file__), 'cpp.h')
+    config = os.path.join(os.path.dirname(__file__), 'sprint3.yml')
+    out_file = os.path.join(os.path.dirname(__file__), 'out_file.lua')
+    headers, configs = csjark.parse_args([header, config, '-o', out_file])
+    assert cli.output_file == out_file
+    assert cli.output_dir is None
+
+@cli.test
+def parse_headers(cli):
+    """Test the parse header function in csjark module."""
+    headers = [os.path.join(os.path.dirname(__file__), i)
+                for i in ('sprint2.h', 'sprint3.h', 'cpp.h')]
+    tmp, configs = csjark.parse_args([headers[0], '-v', '-d'])
+    failed = csjark.parse_headers(headers)
+    assert failed == 0
+    # Cleanup
+    cparser.StructVisitor.all_protocols = {}
+    dissector.Protocol.protocols = {}
 

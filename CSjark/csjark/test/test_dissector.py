@@ -99,6 +99,14 @@ def lua_keywords_code(field1, field2):
     ''')
     assert compare_lua(field2.get_code(0), 'subtree:add(f._in, buffer(0, 4))')
 
+@lua_keywords.test
+def fields_not_equal(field1, field2):
+    """Test that two different fiels are not equal."""
+    assert field1
+    assert field2
+    assert field1 == field1
+    assert field1 != field2
+
 
 # Test ArrayField
 arrays = Tests()

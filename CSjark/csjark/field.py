@@ -169,7 +169,7 @@ class Field(BaseField):
         """Compare if two field instances are equal."""
         if not isinstance(other, Field):
             return False
-        for member in members:
+        for member in self.members:
             if getattr(self, member) != getattr(other, member):
                 return False
         return True

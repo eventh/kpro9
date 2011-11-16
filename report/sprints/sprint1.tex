@@ -193,7 +193,7 @@ It is in this module we have implemented the functionality for the command line 
 The \gls{utility} will typically start off by using cparser to parse the \Gls{c} \gls{header} file given to
 the \gls{utility} as a command line argument. cparser will then use the config module
 to ensure that the parsing is done correctly after the configuration, and then
-generate protocols and fields to be used in the csjark module. The CSjark
+generate protocols and fields to be used in the csjark module. The csjark
 module then generates a \Gls{wireshark} \gls{dissector} in \Gls{lua} code by going through the
 protocols and fields generated earlier by the cparser module.
 
@@ -204,9 +204,9 @@ we created a RangeField class, that interprets the rules
 and recognizes any invalid values when generating the \glspl{dissector}.
 The RangeField class inherits from the Field class.
 
-\subsubsection{CSjark}
+\subsubsection{Csjark}
 %-------------------
-The utilities \emph{main()} function is a part of the CSjark module, the method will start parsing of CLI arguments, start parsing of the configuration files, and start generating dissectors by calling \emph{createDissectors()}. When all structs have been generated, it will print the results to the user on the command-line interface.
+The utilities \emph{main()} function is a part of the csjark module, the method will start parsing of CLI arguments, start parsing of the configuration files, and start generating dissectors by calling \emph{createDissectors()}. When all structs have been generated, it will print the results to the user on the command-line interface.
 
 The Cli class will hold all the paramters, andl take the parameters from the command-line interface, it will parse the arguments and return lists for header and config.
 

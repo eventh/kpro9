@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_29" class="java.beans.XMLDecoder"> 
+ <object class="com.horstmann.violet.ClassDiagramGraph"> 
+  <void method="addNode"> 
+   <object class="com.horstmann.violet.PackageNode"> 
+    <void method="addChild"> 
+     <object id="PackageNode0" class="com.horstmann.violet.PackageNode"> 
+      <void property="contents"> 
+       <void property="text"> 
+        <string>parse_args()
+parse_headers()
+create_dissector()
+write_dissectors_to_file()
+write_delegator_to_file()
+write_placeholders_to_file()
+</string> 
+       </void> 
+      </void> 
+     </object> 
+    </void> 
+    <void method="addChild"> 
+     <object id="InterfaceNode0" class="com.horstmann.violet.InterfaceNode"/> 
+    </void> 
+    <void property="name"> 
+     <string>csjark</string> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>110.0</double> 
+     <double>260.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object idref="PackageNode0"/> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>122.0</double> 
+     <double>299.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object idref="InterfaceNode0"/> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>317.0</double> 
+     <double>288.0</double> 
+    </void> 
+   </object> 
+  </void> 
+ </object> 
+</java> 

@@ -57,6 +57,7 @@
 	FUNC_FOOTER places code below in the dissector function
 #.FUNC_FOOTER five
 	-- This is below 'five' inside dissector function
+	-- Offset: {OFFSET} and {VALUE} variable.
 #.END
 
 

@@ -14,7 +14,7 @@ import dissector
 from .test_dissector import compare_lua
 
 
-def create_protocols(header, yml):
+def create_protocols(headers, yml, args=None):
     # Store default options to be able to restore them later
     config.Options.platforms = set()
     o = config.Options
@@ -22,7 +22,13 @@ def create_protocols(header, yml):
                 o.output_dir, o.output_file, o.platforms, o.delegator)
 
     # Parse command line arguments
-    headers, configs = csjark.parse_args(['-f', header, '-c', yml])
+    cli_args = []
+    for header in headers:
+        cli_args.extend(['-f', header])
+    cli_args.extend(['-c', yml])
+    if args is not None:
+        cli_args.extend(args)
+    headers, configs = csjark.parse_args(cli_args)
 
     # Parse config files
     for filename in configs:
@@ -67,7 +73,7 @@ def create_sprint2(structs={}):
     if not structs:
         header = os.path.join(os.path.dirname(__file__), 'sprint2.h')
         yml = os.path.join(os.path.dirname(__file__), 'sprint2.yml')
-        structs.update(create_protocols(header, yml))
+        structs.update(create_protocols([header], yml))
     yield structs
 
 
@@ -519,7 +525,7 @@ def create_sprint3(structs={}):
     if not structs:
         header = os.path.join(os.path.dirname(__file__), 'sprint3.h')
         yml = os.path.join(os.path.dirname(__file__), 'sprint3.yml')
-        structs.update(create_protocols(header, yml))
+        structs.update(create_protocols([header], yml))
     yield structs
 
 
@@ -638,7 +644,7 @@ delegator_register_proto(proto_platform_test, "Win32", "platform_test", 670)
 
 @sprint3.test
 def unions(structs):
-    """End-to-end test platform specific header."""
+    """End-to-end test unions header."""
     assert 'union_test' in structs
     assert structs['union_test']
     assert compare_lua(structs['union_test'], '''
@@ -776,7 +782,6 @@ end
 delegator_register_proto(proto_custom_lua, "custom_lua", 74, {[1]=88})
 ''')
 
-'''
 # End-to-end tests for sprint 4 features
 sprint4 = Tests()
 
@@ -784,14 +789,27 @@ sprint4 = Tests()
 def create_sprint3(structs={}):
     """Create protocols for all structs in sprint2.h"""
     if not structs:
-        header = os.path.join(os.path.dirname(__file__), 'sprint4.h')
+        headers = [os.path.join(os.path.dirname(__file__), i)
+                    for i in ['sprint4.h', 'a.h', 'b.h']]
         yml = os.path.join(os.path.dirname(__file__), 'sprint4.yml')
-        structs.update(create_protocols(header, yml))
+        structs.update(create_protocols(headers, yml))
     yield structs
 
 
 @sprint4.test
-def keywords(structs):
+def enum_arrays(structs):
     pass
-'''
+
+@sprint4.test
+def multiple_ids(structs):
+    pass
+
+@sprint4.test
+def placeholder_configs(structs):
+    pass
+
+@sprint4.test
+def cpp_arguments(structs):
+    pass
+
 

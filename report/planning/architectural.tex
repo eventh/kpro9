@@ -106,7 +106,12 @@ This view shown in \autoref{fig:logicalview}. Command line takes the arguments f
 %------------------------
 \subsection{Deployment View}
 %------------------------
-\autoref{fig:deployment} shows the deployment diagram for this project. CSjark takes \gls{header}- and config-files as input, and generates \Gls{lua}-\glspl{script}. The \Gls{lua}-\glspl{script} are used for \glspl{dissector} in \Gls{wireshark}.
+\autoref{fig:deployment} shows the deployment diagram for this project. CSjark 
+takes \gls{header}-files and config-filess as input, and generates \Gls{lua} 
+\glspl{dissector}. All these \glspl{dissector} are added as plugins to 
+\Gls{wireshark}, to extend the functionality. \Gls{wireshark} will capture the 
+data packet when Process A send data to Process B, the \Gls{lua} 
+\glspl{dissector} is used to display these data packets correctly.
 
 \begin{figure}[htb]
 	\includegraphics[width = \textwidth]{./planning/img/Deployment}

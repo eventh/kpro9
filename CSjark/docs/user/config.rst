@@ -1,5 +1,5 @@
 ..
-    header  = - ~ ^ #
+    header  = - _ ~ ^ #
 
 ===============
  Configuration
@@ -10,17 +10,57 @@ Because there exists distinct requirements for flexibility of generating dissect
 .. contents:: Contents
    :depth: 4
 
-Configuration format
---------------------
+Configuration file format and structure
+---------------------------------------
 
-The configuration files are written in YAML_ which is a data serialization format designed to be easy to read and write. The format of the files are described below. The configuration should be put in a ``filename.yml`` file and specified when running CSjark with the ``--config`` command line argument.
+**Format**
 
-Detailed specification can be found at `YAML website <http://www.yaml.org/spec/1.2/spec.html>`_.
+The configuration files are written in YAML_ which is a data serialization format designed to be easy to read and write. Detailed specification can be found at `YAML website <http://www.yaml.org/spec/1.2/spec.html>`_. The configuration must be put in a ``filename.yml`` file and specified when running CSjark as a command line argument (more about CLI in section :ref:`use`).
 
-The only part of configuration that is held directly in the code is the platform specific setup (file ``platform.py``).
+**Structure**
 
-Configuration definitions
--------------------------
+CSjark configuration files consist of 2 main parts. The first part is used for specifing all the configuration corresponding CSjark processing in general. More about CSjark options in `Options Configuration`_. The second part contains configuration for individual C struct definitions. That is described in section `Struct Configuration`_.
+
+The configuration file may have following strucuture: ::
+
+    Options:
+      # there will be all your CSjark processing configuration
+      use_cpp: True
+      ...
+    
+    Structs:
+      # there will be a sequence of Struct definition configurations
+      - name: struct1
+        id: [10, 12, 14]
+        # another struct1 config
+      - name: struct2
+        id: [11, 13, 15]
+        # another struct2 config
+    
+.. note::
+    One part of the configuration is held directly in the code. It represents the platform specific setup (file ``platform.py``) - see `Platform specific configuration`_.
+
+
+Struct Configuration
+____________________
+
+Each individual C struct processed by CSjark can be treated in different way. All the configuration settings must be done in the ``Structs`` section of the configuration file. Every Struct definition is one item of the sequence and may contain these attributes:
+
+==============  =============
+Attribute name  Description
+==============  =============
+name            C struct name (required field) 
+id              Dissector message id - more in `Dissector message ID`
+description     Struct name displayed in Wireshark
+size            Size of the struct in memory - more in `Unknown structs handling`_
+cnf             Conformance file name - more in `External Lua dissectors`_
+ranges          Value ranges limitations - more in `Value ranges`_
+enums           Enumeration definitions - more in `Enums`_
+bitstrings      Bitstrings definitions - more in `Bitstrings`_
+trailers        Trailers definitions - more in `Trailers`_
+customs         Definitions for custom struct member handling - more in `Custom handling of data types`_
+==============  =============
+
 
 Value ranges
 ~~~~~~~~~~~~
@@ -42,7 +82,7 @@ Example: ::
 
     Structs:
       - name: example_struct
-        id: name
+        id: 90
         ranges:
             - member: percent
               min: 0
@@ -328,34 +368,34 @@ Above listed example leads to following Lua code: ::
     The value of the referenced variable can be used after it is defined.
             
 
-Configuration of various trailers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Trailers
+~~~~~~~~
 
-CSjark only creates dissectors from c-struct, to be able to use built-in dissectors in wireshark, it is necessary to configure it. Wireshark has more than 1000 built-in dissectors. Several trailer can be configured for a packet.
+CSjark only creates dissectors from C structs defined as its input. To be able to use built-in dissectors in Wireshark, it is necessary to configure it. Wireshark has more than 1000 built-in dissectors. Several trailers can be configured for a packet.
 
-The following parameters is allowed in trailers:
+The following parameters are allowed in trailers:
 
-- name: The protocol name for the built-in dissector
-- count: The number of trailers
-- member: Struct member, that contain the amount of trailers
-- size: Size of the buffer to feed to the protocol
+    ======  =======
+    name    Protocol name for the built-in dissector
+    count   The number of trailers
+    member  Struct member, that contain the amount of trailers
+    size    Size of the buffer to feed to the protocol
+    ======  =======
 
-There are two ways to configure the trailers, specifiy the total number of trailers or give a variable in the struct, which contains the amount of trailers. The two ways to configure trailers are listed below.
-
-::
+There are two ways to configure the trailers - specify the total number of trailers or give a variable in the struct, which contains the amount of trailers. Both ways to configure trailers are shown below. In case the variable ``trailer_count`` equals 2, the definitions has the same effect. ::
 
     trailers:
-      - name: "protocol name"
-      - member: "variable in struct, which contain amount of trailers"
-      - size: "size of the buffer"
+      - name: proto1
+        member: trailer_count
+        size: 32
       
     trailers:
-      - name: "protocol name"
-      - count: "Number of trailers"
-      - size: "size of the buffer"
+      - name: proto1
+        count: 2
+        size: 32
 
 Example:
-The example below shows an example with BER [#]_, which av 4 trailers with a size of 6 bytes.
+The example below shows an example with BER [#]_, which has 4 trailers with a size of 6 bytes.
 
 .. [#] Basic Encoding Rules
 
@@ -448,6 +488,72 @@ and applies for example for this C header file: ::
 
 Both struct members are redefined. First will be displayed as ``absolute_type`` according to its type (``time_t``), second one is changed because of the struct member name (``day``).
 
+Unknown structs handling
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+
+Options Configuration
+_____________________
+
+CSjark processing behaviour can be set up in various ways. Besides letting the user to specify how the CSjark should work by the command line arguments (see section :ref:`use`), it is also possible to define the options as a part of the configuration file(s). 
+
+=========================   ==============  =============================   ==========================
+Configuration file field    CLI equivalent  Value                           Description
+=========================   ==============  =============================   ==========================
+``verbose``                 ``-v``          ``True``/``False``              Print detailed information
+``debug``                   ``-d``          ``True``/``False``              Print debugging information
+``strict``                  ``-s``          ``True``/``False``              Only generate dissectors for known structs
+``output_dir``              ``-o``          ``None`` or path                Definition of output destination
+``output_file``             ``-o``          ``None`` or file name           Writes the output to the specified file
+``generate_placeholders``   ``-p``          ``True``/``False``              Generate placeholder config file for unknown structs
+``use_cpp``                 ``-n``          ``True``/``False``              Enables/disables the C pre-processor
+``cpp_path``                ``-C``          ``None`` or file name           Specifies which preprocessor to use  
+``excludes``                ``-x``          List of excluded paths          File or folders to exclude from parsing
+``platforms``                               List of platform names          Set of platforms to support in dissectors
+``include_dirs``            ``-I``          List of directories             Directories to be searched for Cpp includes
+``includes``                ``-i``          List of includes                Process file as Cpp #include "file" directive
+``defines``                 ``-D``          List of defines                 Predefine name as a Cpp macro
+``undefines``               ``-U``          List of undefines               Cancel any previous Cpp definition of name
+``arguments``               ``-A``          List of additional arguments    Any additional C preprocessor arguments
+=========================   ==============  =============================   ==========================
+
+The last 5 options can be also specified separately for each individual input C header file. This can be achieved by adding sequence ``files`` with mandatory attribute ``name``. 
+
+Below you can see an example of such ``Options`` section: ::
+
+    Options:
+        verbose: True
+        debug: False
+        strict: False
+        output_dir: ../out
+        output_file: output.log
+        generate_placeholders: False
+        use_cpp: True
+        cpp_path: ../utils/cpp.exe
+        excludes: [examples, test]
+        platforms: [default, Win32, Win64, Solaris-sparc, Linux-x86]
+        include_dirs: [../more_includes]
+        includes: [foo.h, bar.h]
+        defines: [CONFIG_DEFINED=3, REMOVE=1]
+        undefines: [REMOVE]
+        arguments: [-D ARR=2]
+        files:
+          - name: a.h
+            includes: [b.h, c.h]
+            define: [MY_DEFINE]
+
+.. note::
+    If you give CSjark multiple configuration files with the same values defined, it takes:
+    
+    - for attributes with single value: a value from *last processed config file* is valid
+    - for attributes with list values: lists are *merged*
+
+
+
 Platform specific configuration
 -------------------------------
 
@@ -538,60 +644,6 @@ When defining new platform, following steps should be done. Referenced sections 
                  alignment=NEW_PLATFORM_C_ALIGNMENT_MAP)
 
 
-CSjark Options Configuration
-----------------------------
 
-CSjark processing behaviour can be set up in various ways. Besides letting the user to specify how the CSjark should work by the command line arguments (see section :ref:`use`), it is also possible to define the options as a part of the configuration file(s). 
-
-=========================   ==============  =============================   ==========================
-Configuration file field    CLI equivalent  Value                           Description
-=========================   ==============  =============================   ==========================
-``verbose``                 ``-v``          ``True``/``False``              Print detailed information
-``debug``                   ``-d``          ``True``/``False``              Print debugging information
-``strict``                  ``-s``          ``True``/``False``              Only generate dissectors for known structs
-``output_dir``              ``-o``          ``None`` or path                Definition of output destination
-``output_file``             ``-o``          ``None`` or file name           Writes the output to the specified file
-``generate_placeholders``   ``-p``          ``True``/``False``              Generate placeholder config file for unknown structs
-``use_cpp``                 ``-n``          ``True``/``False``              Enables/disables the C pre-processor
-``cpp_path``                ``-C``          ``None`` or file name           Specifies which preprocessor to use  
-``excludes``                ``-x``          List of excluded paths          File or folders to exclude from parsing
-``platforms``                               List of platform names          Set of platforms to support in dissectors
-``include_dirs``            ``-I``          List of directories             Directories to be searched for Cpp includes
-``includes``                ``-i``          List of includes                Process file as Cpp #include "file" directive
-``defines``                 ``-D``          List of defines                 Predefine name as a Cpp macro
-``undefines``               ``-U``          List of undefines               Cancel any previous Cpp definition of name
-``arguments``               ``-A``          List of additional arguments    Any additional C preprocessor arguments
-=========================   ==============  =============================   ==========================
-
-The last 5 options can be also specified separately for each individual input C header file. This can be achieved by adding sequence ``files`` with mandatory attribute ``name``. 
-
-Below you can see an example of such ``Options`` section: ::
-
-    Options:
-        verbose: True
-        debug: False
-        strict: False
-        output_dir: ../out
-        output_file: output.log
-        generate_placeholders: False
-        use_cpp: True
-        cpp_path: ../utils/cpp.exe
-        excludes: [examples, test]
-        platforms: [default, Win32, Win64, Solaris-sparc, Linux-x86]
-        include_dirs: [../more_includes]
-        includes: [foo.h, bar.h]
-        defines: [CONFIG_DEFINED=3, REMOVE=1]
-        undefines: [REMOVE]
-        arguments: [-D ARR=2]
-        files:
-          - name: a.h
-            includes: [b.h, c.h]
-            define: [MY_DEFINE]
-
-.. note::
-    If you give CSjark multiple configuration files with the same values defined, it takes:
-    
-    - for attributes with single value: a value from *last processed config file* is valid
-    - for attributes with list values: lists are *merged*
 
 .. _YAML: http://www.yaml.org/

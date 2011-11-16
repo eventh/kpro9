@@ -47,3 +47,15 @@ The arguments here specify the following:
 
     python csjark.py -v headerfile.h configfile.yml
 
+**Batch mode**
+
+One of the most important features of CSjark is processing multiple C header files in one run. That can be easily achieved by specifying a directory instead of a single file as command line argument (see above): ::
+
+    python csjark.py headers configs
+    
+In batch mode, CSjark only generates dissectors for structs that have a configuration file with an ID (see section :ref:`ids` for information how to specify dissector message ID), and for structs that depend on other structs. This speeds up the generation of dissectors, since it only generates dissectors that Wireshark can use.
+
+
+
+
+

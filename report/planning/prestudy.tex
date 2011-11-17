@@ -197,7 +197,7 @@ for increased speed. \Gls{lua}-scripts are mostly used as prototypes or to proce
 non time crucial data as they don't need compilation to be used. Our customer
 uses \Gls{wireshark} not only to browse through and filter regular networking
 traffic, but also for monitoring \gls{ipc} where it is
-important to have a tool which can easily be extended to dissect and display
+important to have a tool that can easily be extended to dissect and display
 structures and data types unique to the organization.
 
 Our \gls{utility} should read \Gls{c} \gls{header} files and create \Gls{wireshark} \glspl{dissector} written
@@ -221,7 +221,7 @@ which language we selected and why.
 	\vspace{-20pt}
 \end{wrapfigure}
 \Gls{lua}\footnote{\url{http://www.lua.org/}} is a multi-paradigm, dynamically typed
-programming language which is designed to be lightweight so it can easily be
+programming language that is designed to be lightweight, so it can easily be
 embedded into applications. \Gls{lua} has only a few basic data structures: boolean,
 numbers, strings and table. Still \Gls{lua} implements advanced features such as
 first-class functions, garbage collection, closures, coroutines and dynamic
@@ -293,7 +293,7 @@ Recognition, is a compiler toolkit for creating \glspl{lexer} and \glspl{parser}
 files. It can create these compilers for several different target languages,
 including \Gls{java} and \Gls{python}. There exists \gls{antlr} grammar files for the challenges
 we are facing: parsing \Gls{c}, \Gls{c} \gls{preprocessor} step and parsing \gls{asnone}. These grammars
-configure \gls{antlr} to create \Gls{java} \glspl{lexer} and \glspl{parser} which reads and validates
+configure \gls{antlr} to create \Gls{java} \glspl{lexer} and \glspl{parser} that reads and validates
 inputted source code files.
 
 \subsection{PLY}
@@ -330,9 +330,9 @@ It also depends on \Gls{aply}.
 	\vspace{-20pt}
 \end{wrapfigure}
 GNU Compiler Collection\footnote{\url{http://gcc.gnu.org/}} (\Gls{agcc}) is a
-compiler system which has front ends which parse \Gls{c} and \Gls{c++} code, and is written
-in \Gls{c} and \Gls{c++}. It can be used in our \gls{utility} as an external tool which does the
-parsing and then outputs an intermediate language representation which we can
+compiler system, which has front ends that parse \Gls{c} and \Gls{c++} code, and is written
+in \Gls{c} and \Gls{c++}. It can be used in our \gls{utility} as an external tool that does the
+parsing and then outputs an intermediate language representation, which we can
 parse/search to find the \Gls{c} \gls{struct} definitions. Its drawbacks are a lack of
 flexibility if we need to change its behaviour, and we will still need to write
 a custom \gls{parser} or use something like \gls{GCC-XML} and an \gls{axml} \gls{parser}.
@@ -439,9 +439,9 @@ section. In \autoref{sec:pre:testchoice} we describe which we selected and why.
 py.test\footnote{\url{http://pytest.org/latest/}} is a mature, full-featured testing
 tool. It runs on \Gls{python} 2.4-3.2, PyPy and Jython-2.5.1 intepreters on both
 Windows and Posix platforms. It is well documented and popular in the \Gls{python}
-community. The best known project which uses it is PyPy, which has over 16,000
-unit tests. py.test discoverers tests automatically by searching for modules,
-classes, functions and methods which starts with ''test\_''. It uses the assert
+community. The best known project that uses it is PyPy, which has over 16,000
+unit tests. py.test discovers tests automatically by searching for modules,
+classes, functions and methods that starts with ''test\_''. It uses the assert
 statement to test variables and values. These implicit behaviours make tests
 easier and faster to write, but harder to learn and understand.
 
@@ -578,7 +578,7 @@ highlighting, auto-completion, auto-indentation, searching, multiple undo and
 redo. It can be configured to support almost everything modern \Gls{ide}’s support,
 and its extensive customizability is considered parts of its strength. But it
 is also parts of its weakness, it is very difficult for new \gls{vim} users to learn
-how to use it effectively. Therefore we do not suggest any team member which is
+how to use it effectively. Therefore we do not suggest any team member that is
 not already experienced with \gls{vim} to try it.
 
 \subsection{Summary}
@@ -635,7 +635,7 @@ We looked at \hyperref[sec:pre:antlr]{\gls{antlr}} for generating a
 grammar files for creating a \Gls{c} \gls{preprocessor} in \Gls{java}. Closer evaluation revealed
 that the \Gls{c} \gls{preprocessor} grammar was written in 2006, and had stopped working in
 2008 as newer versions of \gls{antlr} was not backwards compatible. Also the
-generated \Gls{c} \gls{parser} only validated \Gls{c} code, it did not create an \gls{AST} which we could traverse.
+generated \Gls{c} \gls{parser} only validated \Gls{c} code, it did not create an \gls{AST} that we could traverse.
 This meant that using \Gls{java} and \gls{antlr} would
 require us to modify these grammars to suite our needs, and \gls{antlr}'s lack of
 documentation became a significant risk for our project.
@@ -665,7 +665,7 @@ third is to use a toolkit \gls{parser} like \hyperref[sec:pre:gcc]{\Gls{agcc}} a
 
 We felt that writing our own \Gls{c} \gls{parser} with \Gls{c} \gls{preprocessor} would possibly take
 up a lot, if not all, of the available project time. The third option would add
-a large dependency which our customer want to avoid if possible. \Gls{agcc} and \Gls{clang}
+a large dependency that our customer want to avoid if possible. \Gls{agcc} and \Gls{clang}
 can be challenging to install and use on Windows.
 
 Therefore using a \Gls{c} \gls{parser} \gls{library} would be the best solution, and as mentioned
@@ -717,13 +717,13 @@ We decided to use \hyperref[sec:pre:yaml]{YAML} for handling configuration
 files, as it covered most of our requirements. Because we decided to use the
 latest version of \Gls{python}, version 3.2.2, the range of possible configuration
 frameworks was reduced. Therefore, although \gls{asnone} and ConfigObj are very
-suitable for our task, they were eliminated (those \glspl{parser} are available
-only up to version 2.7), which left us 2 main possibilities: \Gls{yaml} and
+suitable for our task, they were eliminated as they are only available
+up to version 2.7. This left us with two main possibilities: \Gls{yaml} and
 configparser. configparser turned out to be insufficient for us, mainly because
-it lacked lists. These we need for description of hierarchical structures of
+it lacked lists. Lists are needed for description of hierarchical structures of
 the \Gls{c} \glspl{header}. \Gls{yaml} has only two minor disadvantages we should be aware of.
-First, there is no type validation mechanism, so we will have to create our
-validation manually. Second, it is an external \gls{library}. We find this drawback
+Firstly, there is no type validation mechanism, so we will have to create our
+validation manually, and secondly, it is an external \gls{library}. We find this drawback
 minor for now but it can turn out to be a problem in the future. Except for
 these issues, \Gls{yaml}, more specifically pyYAML, seems to have a good potential
 for creating flexible configuration support for our \gls{utility}.
@@ -748,7 +748,7 @@ testing framework to learn. Therefor we decided to use
 %-------------------------
 \label{sec:pre:framework}
 Our \gls{utility} will need to take as input \Gls{c} \gls{header} files, search through them to
-find \gls{struct} definitions, and create \Gls{lua} scripts which dissects the \glspl{struct} in
+find \gls{struct} definitions, and create \Gls{lua} scripts that dissects the \glspl{struct} in
 \hyperref[sec:pre:wireshark]{Wireshark}.
 
 To find the \glspl{struct} we will use \gls{pycparser} to parse the input files, create an
@@ -787,8 +787,8 @@ and that we are free to license it as open source if we want to, under
 whichever license we feel is most suited. They suggested GNU\footnote{\url{http://www.gnu.org/}} \Gls{gpl} as \Gls{wireshark}
 is released under it.
 
-We needed to consider the licenses of the \glspl{library} and tools we depend upon
-when we decided which license to use. This is summarized by
+When we decided which license to use, we had to consider the licenses of the \glspl{library} and tools we depend upon.
+ This is summarized by
 \autoref{tab:pre:licenses}.
 \begin{table}[!h] \footnotesize \center
 \vspace{-20pt}

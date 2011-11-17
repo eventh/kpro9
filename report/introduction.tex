@@ -65,8 +65,8 @@ the second part is a very brief explanation of how CSjark builds such \glspl{dis
 \autoref{luaexample1} shows what the code for the \Gls{lua} \gls{dissector}, displayed in \gls{packet} 1 in \autoref{fig:introshark}, looks like.
 The Proto variable defines a new \gls{protocol}. In this example, a \gls{dissector} for the internal\_snd \gls{struct}, called internal\_snd, is created. 
 The different fields of the \gls{struct} are created as instances of ProtoField, and put in Protocol.fields.
-For example, the "name" variable is a \gls{string} in \Gls{c}, and as such it is created as a ProtoField.\gls{string} with the 
-name "name".
+For example, the ''name'' variable is a \gls{string} in \Gls{c}, and as such it is created as a ProtoField.\gls{string} with the 
+name ''name''.
 
 The \gls{protocol} \gls{dissector} method is the method that does the actual dissecting.
 A subtree for the \gls{dissector} is created, and the description of the \gls{dissector} is appended to the information column.

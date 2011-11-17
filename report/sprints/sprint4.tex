@@ -221,7 +221,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	Header & Value \\
 	\midrule
 	ID & US45 \\
-	Requirement & FR7-A: Use Doxygen comments for "Description"  \\
+	Requirement & FR7-A: Use Doxygen comments for ''Description''  \\
 	What & The \gls{utility} will read Doxygen comments for a \gls{struct} and use that to specify the description field for the proto object in the \gls{dissector}. \\
 	How & The \gls{utility} will search the \gls{header} files for Doxygen comments before giving the file to the \gls{preprocessor}. It will note what \gls{struct} the comment
 	corresponds to and add it to the config module. The \gls{dissector} module will look up in the config module for each \gls{struct} and use the description field there if it has been found.  \\

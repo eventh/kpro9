@@ -44,11 +44,12 @@ By using configuration files, it is possible to change the behaviour of the syst
 
 \subsection{Business Requirements}
 %---------------------------------
+The following business requirements encompasses the most important needs of the customer.
 \begin{itemize}
 \item The \gls{utility} must be delivered on time as it is not possible for the developers to continue the development after the deadline
-\item The ability for the \gls{utility} to be able to create \glspl{dissector} for \Gls{c}-\glspl{struct} in \gls{header} files used by Thales
-\item The ability for the \gls{utility} to create \glspl{dissector} that run on all of the platforms used by Thales and their customers
-\item The ability for \Gls{wireshark} to be able to use the generated \glspl{dissector} to display the values in \Gls{c}-\glspl{struct} passed through the system.
+\item The \gls{utility} should be able to create \glspl{dissector} for the \Gls{c}-\glspl{struct} in \gls{header} files used by Thales
+\item The \gls{utility} should be able to create \glspl{dissector} that run on all of the platforms used by Thales and their customers
+\item Developers at Thales should be able to use Gls{wireshark} with the generated \glspl{dissector} to display the values in \Gls{c}-\glspl{struct} passed through the system.
 \end{itemize}
 
 \subsection{Design Goals}

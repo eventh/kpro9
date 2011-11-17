@@ -367,16 +367,7 @@ shall display does not exist in the files we parse. For example there are no
 clear relationship between enumerated values in messages and their names.
 These must be provided through a configuration.
 
-\subsection{\gls{asnone}}
-%-----------------
-\gls{asn1} (\gls{asnone}) for describing data
-structures, the standard is defined by \Gls{iso} 8824. \gls{asnone} is used for
-representing, encoding, transferring and decoding of data. It provides a
-fundamental tool to be used in application, which make it possible to exchange
-information in a independent way. There exist two \Gls{python} \glspl{library} for parsing
-of  \gls{asnone}, but neither support the 3.x \gls{branch} of \Gls{python}, which we require.
-
-\subsection{\Gls{yaml}}
+\subsection{YAML Ain't Markup Language}
 %----------------
 \label{sec:pre:yaml}
 \begin{wrapfigure}{r}{3cm}
@@ -690,25 +681,23 @@ different configuration frameworks we looked at in \autoref{tab:pre:config}.
 \begin{table}[htbp] \footnotesize \center
 \caption{Configuration summary\label{tab:pre:config}}
 \noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.1\textwidth}{X X X X X}
+\begin{tabularx}{1.1\textwidth}{X X X X}
 	\toprule
-	& \Gls{yaml} & configparser & ConfigObj & \gls{asnone} \\
+	& \Gls{yaml} & configparser & ConfigObj \\
 	\midrule
 	Advantages &
 	+Simplicity\newline +Flexibility &
 	+Easy to use &
-	+Easy to use\newline +Flexibility\newline +Nesting\newline +Type \newline\hspace*{3mm}validation &
-	+Customer \hspace*{3mm}wants it \\
+	+Easy to use\newline +Flexibility\newline +Nesting\newline +Type \newline\hspace*{3mm}validation \\
 	\addlinespace
 	Drawbacks &
 	-External \gls{library}\newline -No type \newline\hspace*{2mm}validation &
 	-Lacks nesting\newline -Lacks lists\newline -No type \newline\hspace*{2mm}validation &
-	-External \gls{library}\newline -Lacks lists &
-	-External \gls{library}\newline -Too generic \\
+	-External \gls{library}\newline -Lacks lists \\
 	\addlinespace
-	Latest version & 3.10 & 3.2 & 4.7.2 & 0.0.13 \\
-	\Gls{python} \gls{branch} & 2.7 and 3.3 & 2.7 and 3.3 & 2.7 & 2.7 \\
-	License & \Gls{mit} & PSF L & \Gls{bsd}-new & \Gls{bsd} \\
+	Latest version & 3.10 & 3.2 & 4.7.2 \\
+	\Gls{python} \gls{branch} & 2.7 and 3.3 & 2.7 and 3.3 & 2.7 \\
+	License & \Gls{mit} & PSF L & \Gls{bsd}-new \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -716,8 +705,8 @@ different configuration frameworks we looked at in \autoref{tab:pre:config}.
 We decided to use \hyperref[sec:pre:yaml]{YAML} for handling configuration
 files, as it covered most of our requirements. Because we decided to use the
 latest version of \Gls{python}, version 3.2.2, the range of possible configuration
-frameworks was reduced. Therefore, although \gls{asnone} and ConfigObj are very
-suitable for our task, they were eliminated as they are only available
+frameworks was reduced. Therefore, although ConfigObj are very
+suitable for our task, it was eliminated as it is only available
 up to version 2.7. This left us with two main possibilities: \Gls{yaml} and
 configparser. configparser turned out to be insufficient for us, mainly because
 it lacked lists. Lists are needed for description of hierarchical structures of

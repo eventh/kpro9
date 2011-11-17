@@ -151,15 +151,35 @@ After three sprints, the design was to a large degree set. Re-factoring introduc
 
 \subsection{System overview}
 %-----------------------
-The addition of new requirements from the customer resulted in changes in the utility's system overview. The need for more custom handling ended in a re-factoring of the code. This is visible in the class diagram REF, which was extended from the third sprint. Two new modules was added, cpp and fields. These are described below. 
-%class diagram
+The addition of new requirements from the customer resulted in changes in the utility's system overview. The need for more custom handling ended in a re-factoring of the code. This is visible in the \autoref{fig:sp2class}, which was extended from the third sprint. Two new modules was added, cpp and fields. Major changes to the class diagram are described below. The interaction between the modules is shown in \autoref{fig:sp2module}.
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/ClassDiagramSprint4v2.png}
+	\caption{Sprint 2 Class Diagram \label{fig:sp2class}}
+\end{figure}
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/sp4modulediagram.png}
+	\caption{Sprint 2 Module Diagram \label{fig:sp2module}}
+\end{figure}
+
 \subsubsection{ccp module}
-The need for preprocessing C files before they are parsed have become so comprehensive, that we decided to create a dedicated module for it. All the existing cpp concerned code was relocated, and joint with the new implementation. Requirements in the sprint backlog (REF?) made it necessary to have more functionality regarding the preprocessor step. The customer have a \#pragma field in many of their header files, which the cpp have to strip of before proceeding to the parser. More about this in the implementation.
-%Write about methods ect. 
+The need for preprocessing C files before they are parsed have become so comprehensive, that we decided to create a dedicated module for it. All the existing cpp concerned code was relocated from the cparser module, and joint with the new implementation. The requirements listed in\autoref{tab:sprint4req}, made it necessary to have more functionality regarding the preprocessor step. 
 
 \subsubsection{fields module}
-Field specific classes were moved from the dissector module to its own, fields module. For the same reason as the ccp module; the amount of code concerning fields became so great, that a own module was appropriate. 
-%Write about methods ect. 
+Field specific classes were moved from the dissector module to its own, field. For the same reason as the ccp module; the amount of code concerning fields became so great, that a own module was appropriate. 
+TODO: Write about methods ect. 
+
+\subsubsection{cparser module}
+Some changes was done in this module due to the refactoring, functionality for the c preprocessing was moved. And some new methods was added since, field and dissector module was splitted.
+
+\subsubsection{config module}
+The class FileConfig was added, to hold the configuration for specific header-files. Some methods was also added for automatic generation of header-files.
+
+\subsubsection{dissector module}
+TODO: Missing
 
 \subsection{User stories}
 \label{sec:req:stories4}

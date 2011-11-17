@@ -218,7 +218,7 @@ create_lua_valuestring()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>980.0</double> 
+     <double>1260.0</double> 
      <double>50.0</double> 
     </void> 
    </object> 
@@ -227,8 +227,8 @@ create_lua_valuestring()</string>
    <object idref="ClassNode0"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>992.0</double> 
-     <double>176.0</double> 
+     <double>1273.9999999999998</double> 
+     <double>174.0</double> 
     </void> 
    </object> 
   </void> 
@@ -236,8 +236,8 @@ create_lua_valuestring()</string>
    <object idref="ClassNode1"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>1167.0</double> 
-     <double>83.0</double> 
+     <double>1448.9999999999998</double> 
+     <double>81.0</double> 
     </void> 
    </object> 
   </void> 
@@ -245,8 +245,8 @@ create_lua_valuestring()</string>
    <object idref="ClassNode2"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>1196.0</double> 
-     <double>422.0</double> 
+     <double>1473.9999999999998</double> 
+     <double>440.0</double> 
     </void> 
    </object> 
   </void> 
@@ -254,8 +254,8 @@ create_lua_valuestring()</string>
    <object idref="ClassNode3"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>1069.0</double> 
-     <double>605.0</double> 
+     <double>1682.9999999999995</double> 
+     <double>581.0</double> 
     </void> 
    </object> 
   </void> 
@@ -263,8 +263,8 @@ create_lua_valuestring()</string>
    <object idref="ClassNode4"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>1185.0</double> 
-     <double>607.0</double> 
+     <double>1676.9999999999995</double> 
+     <double>443.0</double> 
     </void> 
    </object> 
   </void> 
@@ -272,8 +272,8 @@ create_lua_valuestring()</string>
    <object idref="ClassNode5"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>1329.0</double> 
-     <double>607.0</double> 
+     <double>1676.9999999999998</double> 
+     <double>327.00000000000006</double> 
     </void> 
    </object> 
   </void> 
@@ -281,8 +281,8 @@ create_lua_valuestring()</string>
    <object idref="PackageNode2"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>992.0</double> 
-     <double>342.0</double> 
+     <double>1273.9999999999998</double> 
+     <double>340.0</double> 
     </void> 
    </object> 
   </void> 
@@ -480,7 +480,7 @@ _dissector_func()</string>
    <object idref="ClassNode9"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>685.0</double> 
+     <double>679.0</double> 
      <double>237.0</double> 
     </void> 
    </object> 
@@ -489,8 +489,8 @@ _dissector_func()</string>
    <object idref="ClassNode10"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>513.0</double> 
-     <double>359.0</double> 
+     <double>509.0</double> 
+     <double>319.0</double> 
     </void> 
    </object> 
   </void> 
@@ -562,7 +562,7 @@ _register_type()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>90.0</double> 
+     <double>60.0</double> 
      <double>610.0</double> 
     </void> 
    </object> 
@@ -571,8 +571,8 @@ _register_type()</string>
    <object idref="ClassNode11"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>97.0</double> 
-     <double>638.0</double> 
+     <double>65.88730162779191</double> 
+     <double>824.6761902332486</double> 
     </void> 
    </object> 
   </void> 
@@ -580,8 +580,8 @@ _register_type()</string>
    <object idref="PackageNode4"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>102.0</double> 
-     <double>705.0</double> 
+     <double>67.23044737829956</double> 
+     <double>648.1471862576143</double> 
     </void> 
    </object> 
   </void> 
@@ -798,8 +798,8 @@ parse_file()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>420.0</double> 
-     <double>730.0</double> 
+     <double>490.0</double> 
+     <double>540.0</double> 
     </void> 
    </object> 
   </void> 
@@ -807,8 +807,8 @@ parse_file()</string>
    <object idref="ClassNode13"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>486.0</double> 
-     <double>758.0</double> 
+     <double>769.6051224213832</double> 
+     <double>745.8629150101525</double> 
     </void> 
    </object> 
   </void> 
@@ -816,8 +816,8 @@ parse_file()</string>
    <object idref="ClassNode14"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>473.0</double> 
-     <double>997.0</double> 
+     <double>509.96637866637093</double> 
+     <double>811.9482681718911</double> 
     </void> 
    </object> 
   </void> 
@@ -825,8 +825,8 @@ parse_file()</string>
    <object idref="ClassNode15"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>680.0</double> 
-     <double>763.0</double> 
+     <double>768.4436508138959</double> 
+     <double>854.1005050633885</double> 
     </void> 
    </object> 
   </void> 
@@ -834,8 +834,8 @@ parse_file()</string>
    <object idref="ClassNode16"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>553.0</double> 
-     <double>896.0</double> 
+     <double>656.0</double> 
+     <double>1001.0000000000001</double> 
     </void> 
    </object> 
   </void> 
@@ -843,8 +843,8 @@ parse_file()</string>
    <object idref="ClassNode17"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>892.0</double> 
-     <double>900.0</double> 
+     <double>996.0</double> 
+     <double>1001.0000000000001</double> 
     </void> 
    </object> 
   </void> 
@@ -852,8 +852,8 @@ parse_file()</string>
    <object idref="ClassNode18"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>434.0</double> 
-     <double>900.0</double> 
+     <double>538.0</double> 
+     <double>1001.0000000000001</double> 
     </void> 
    </object> 
   </void> 
@@ -861,8 +861,8 @@ parse_file()</string>
    <object idref="ClassNode19"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>779.0</double> 
-     <double>900.0</double> 
+     <double>883.0</double> 
+     <double>1001.0000000000001</double> 
     </void> 
    </object> 
   </void> 
@@ -870,8 +870,8 @@ parse_file()</string>
    <object idref="ClassNode20"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>669.0</double> 
-     <double>902.0</double> 
+     <double>773.0</double> 
+     <double>1003.0000000000001</double> 
     </void> 
    </object> 
   </void> 
@@ -879,8 +879,8 @@ parse_file()</string>
    <object idref="ClassNode21"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>499.0</double> 
-     <double>1131.0</double> 
+     <double>721.7766952966368</double> 
+     <double>578.2771285725256</double> 
     </void> 
    </object> 
   </void> 
@@ -888,8 +888,8 @@ parse_file()</string>
    <object idref="ClassNode22"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>626.0</double> 
-     <double>1157.0</double> 
+     <double>962.5929291125633</double> 
+     <double>575.9583694396575</double> 
     </void> 
    </object> 
   </void> 
@@ -897,8 +897,8 @@ parse_file()</string>
    <object idref="ClassNode23"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>791.0</double> 
-     <double>1156.0</double> 
+     <double>938.414213562373</double> 
+     <double>731.7035354437185</double> 
     </void> 
    </object> 
   </void> 
@@ -906,8 +906,8 @@ parse_file()</string>
    <object idref="PackageNode5"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>626.0</double> 
-     <double>1019.0</double> 
+     <double>498.2527419548861</double> 
+     <double>569.3654403270943</double> 
     </void> 
    </object> 
   </void> 
@@ -950,7 +950,7 @@ parse_file()</string>
   <void method="connect"> 
    <object class="com.horstmann.violet.ClassRelationshipEdge"> 
     <void property="bentStyle"> 
-     <object class="com.horstmann.violet.BentStyle" field="VHV"/> 
+     <object class="com.horstmann.violet.BentStyle" field="HVH"/> 
     </void> 
     <void property="endArrowHead"> 
      <object class="com.horstmann.violet.ArrowHead" field="TRIANGLE"/> 
@@ -1066,6 +1066,96 @@ parse_file()</string>
    </object> 
    <object idref="ClassNode20"/> 
    <object idref="ClassNode15"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="bentStyle"> 
+     <object class="com.horstmann.violet.BentStyle" field="VHV"/> 
+    </void> 
+    <void property="endArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
+    </void> 
+    <void property="lineStyle"> 
+     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
+    </void> 
+    <void property="middleLabel"> 
+     <string>Raises</string> 
+    </void> 
+   </object> 
+   <object idref="ClassNode12"/> 
+   <object idref="ClassNode11"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="bentStyle"> 
+     <object class="com.horstmann.violet.BentStyle" field="VHV"/> 
+    </void> 
+    <void property="endArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
+    </void> 
+    <void property="lineStyle"> 
+     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
+    </void> 
+    <void property="middleLabel"> 
+     <string>Raises</string> 
+    </void> 
+   </object> 
+   <object idref="ClassNode23"/> 
+   <object idref="ClassNode13"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="bentStyle"> 
+     <object class="com.horstmann.violet.BentStyle" field="HVH"/> 
+    </void> 
+    <void property="endArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
+    </void> 
+    <void property="lineStyle"> 
+     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
+    </void> 
+    <void property="middleLabel"> 
+     <string>Raises</string> 
+    </void> 
+   </object> 
+   <object idref="ClassNode15"/> 
+   <object idref="ClassNode13"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="bentStyle"> 
+     <object class="com.horstmann.violet.BentStyle" field="HVH"/> 
+    </void> 
+    <void property="endArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
+    </void> 
+    <void property="lineStyle"> 
+     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
+    </void> 
+    <void property="middleLabel"> 
+     <string>Spawns</string> 
+    </void> 
+   </object> 
+   <object idref="ClassNode14"/> 
+   <object idref="ClassNode15"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="bentStyle"> 
+     <object class="com.horstmann.violet.BentStyle" field="HVH"/> 
+    </void> 
+    <void property="endArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
+    </void> 
+    <void property="lineStyle"> 
+     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
+    </void> 
+    <void property="middleLabel"> 
+     <string>Contains</string> 
+    </void> 
+   </object> 
+   <object idref="ClassNode14"/> 
+   <object idref="ClassNode21"/> 
   </void> 
  </object> 
 </java> 

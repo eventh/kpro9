@@ -17,8 +17,8 @@ of the first sprint is covered in \autoref{sec:sp1:eval}.
 The first sprint was started with a sprint planning meeting September 14th. 
 The team is planning to implement basic and fundamental parts of the 
 \gls{utility}. The most basic functionality was chosen from the product 
-backlog, so that the team end up with a utility that can generate simple 
-\Gls{lua} \glspl{dissector}. This is important so we can see that we 
+backlog, in order to end up with a utility that can generate simple 
+\Gls{lua} \glspl{dissector} by the end of the sprint. This is important so we can see that we 
 understood the project, and that the chosen \gls{preprocessor} and 
 \gls{parser} is suitable for the utility.
 
@@ -32,7 +32,7 @@ meetings to show what we have accomplished and discuss further development.
 %-----------------------
 The overall goal of the first sprint is to create a preliminary design and
 implement the core of the application. It will be possible to run it to
-generate \Gls{lua} \glspl{dissector} which can be used by \Gls{wireshark} users. The first
+generate \Gls{lua} \glspl{dissector}, which can be used by \Gls{wireshark} users. The first
 version will contain only the basic \gls{dissector} generating features, for example,
 parsing \Gls{c} \glspl{struct} with basic data types as \glspl{member}. Also, some of the
 preprocessing capabilities will be implemented, such as handling \gls{include}
@@ -42,7 +42,7 @@ directives. Basic support for configuration will be added.
 In the first sprint we will implement eight requirements. These are listed in \autoref{tab:sprint1req}.
 The time table for the sprint can be seen in \autoref{tab:sprint1time}.
 
-\begin{table}[!htb] \small \center
+\begin{table}[!htb] \footnotesize \center
 \caption{Sprint 1 Requirements \label{tab:sprint1req}}
 \begin{tabularx}{\textwidth}{l X c c}
 	\toprule
@@ -100,7 +100,7 @@ The time table for the sprint can be seen in \autoref{tab:sprint1time}.
 \end{tabularx}
 \end{table}
 
-\begin{table}[!ht] \small \center
+\begin{table}[!ht] \footnotesize \center
 \caption{Sprint 1 Timetable\label{tab:sprint1time}}
 \begin{tabularx}{\textwidth}{X c c}
 	\toprule
@@ -200,7 +200,7 @@ protocols and fields generated earlier by the cparser module.
 In this sprint we added configuration support for ranges, this was done 
 by adding a RangeRule class to the config module. This class specifies how
 range rules should be written in the configuration. In the \gls{dissector} module
-we created a RangeField class, that interprets the rules
+we created a RangeField class that interprets the rules
 and recognizes any invalid values when generating the \glspl{dissector}.
 The RangeField class inherits from the Field class.
 
@@ -214,7 +214,7 @@ The Cli class will hold all the paramters, andl take the parameters from the com
 %-------------------
 The Cparser module is used to parse the header files, and has three methods and a class. The preprocessing is done in \emph{parse\_file()}, \emph{parse()} is used to parse the file with pycparser library. To find a struct in the abstract syntax tree, the function \emph{find\_structs()} is used.
 
-StructVisitor is a class that go through the abstract syntax tree that the pycparser library generates. The class will handle all the declaration, and return a struct with the members.
+StructVisitor is a class that go through the abstract syntax tree, which the pycparser library generates. The class will handle all the declaration, and return a struct with the members.
 
 \subsubsection{Dissector}
 %-------------------
@@ -223,7 +223,7 @@ This module has three classes that generated the Lua dissector.
 \begin{itemize}
 	\item Protocol: This class generates the Lua dissector from a c struct. It will use Field class for each of the struct members.
 	\item Field: Field is a class that generates code for each of the struct members. Field will used to generate code for basic data types, and will be a superclass for other data types and for fields that are configured.
-	\item RangeField: Is a subclass of Field. That is modified so it generate a field that will give a warning for an invalid value in Wireshark.
+	\item RangeField: Is a subclass of Field. It is modified in order to generate a field that will give a warning for an invalid value in Wireshark.
 \end{itemize}
 
 \subsubsection{Config}
@@ -261,8 +261,8 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	ID & US01 \\
 	Requirements & FR1-A: The \gls{utility} should support the following basic data types: \gls{int}, \gls{float}, \gls{char} and \gls{boolean}. \\
 	What & The administrator wants the \gls{utility} to support \glspl{struct} with \glspl{member} of basic data types in input files. 
-		These are the basic data types in \Gls{c} which we support: \gls{int}, \gls{float}, \gls{char} and \gls{boolean}.\\
-	How & The \Gls{c} \gls{parser} \gls{library}, pycparser, provides this support for us. The input is fed to the cparser module
+		These are the basic data types in \Gls{c} that we support: \gls{int}, \gls{float}, \gls{char} and \gls{boolean}.\\
+	How & The \Gls{c} \gls{parser} \gls{library}, pycparser, provides this support for us. The input is fed to the cparser module,
 	which extracts the definitions from an \gls{AST} generated by the \gls{parser}.  \\
 	Result & The \gls{utility} supports input with \Gls{c} \glspl{struct} with \gls{int}, \gls{float}, \gls{char} and \gls{boolean} \glspl{member}. \\
 	\midrule
@@ -276,17 +276,16 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	ID & US03 \\
 	Requirements & FR2-D: Recognize invalid values for a \gls{struct} \gls{member}. \\
 	What & The developer wants \Gls{wireshark} to give a warning if a \gls{struct} contains invalid values. \\
-	How & The generated \glspl{dissector} contain valid ranges for certain fields, and \Gls{lua} code which adds warning flags 
-		in \Gls{wireshark} if a specific fields value is outside the range. \Gls{wireshark} color the display tree yellow to alert the 
-		developer of the error. The range is specified by configuration files. \\
+	How & The \glspl{dissector} module will generate fields that will display warning in \Gls{wireshark} when the value is 
+	outside the configured range. \Gls{wireshark} will change the background color to yellow for fields with an invalid value, 
+	and give an error message. \\
 	Result & The developer can see when a value is out of range. \\
 	\midrule
 	ID & US04 \\
 	Requirements & FR3-A: The \gls{utility} should support \gls{include}.\\
 	What & The administrator wants the \gls{utility} to support the \gls{include}-statement inside a \gls{header} file.\\
 	How & The cparser module feeds the input into an external tool, the \Gls{c} \gls{preprocessor}, which supports 
-		\gls{include}-statements. It returns a \Gls{c} code file with all the included code from the external files. pycparser
-		provides support using a \Gls{c}-\gls{preprocessor}.  \\
+		\gls{include}-statements. It returns a \Gls{c} code file with all the included code from the external files. \\
 	Result & The \gls{utility} supports \gls{include}. \\
 	\midrule
 	ID & US05 \\
@@ -325,7 +324,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	ID & US08 \\
 	Requirements & FR6-B: Command line shall support parameter for configuration file. \\
 	What & The administrator wants to provide the \gls{utility} with one ore more configuration files. \\
-	How & The command line interface should accept arguments which specifies the path of existing configuration
+	How & The command line interface should accept arguments that specifies the path of existing configuration
 		files, and feed these to the config module. The config module should read the files and store them in configuration data 
 		structures. These data structures will be available to cparser to help when translating \glspl{struct} to Protocol and
 		Fields from the \gls{dissector} module. \\

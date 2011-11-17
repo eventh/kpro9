@@ -46,7 +46,7 @@ in three categories:
 \end{inparaenum} 
 
 \begin{description}
-	\item[High] Core functionality of the \gls{utility} which must be implemented.
+	\item[High] Core functionality of the \gls{utility} that must be implemented.
 	\item[Medium] Requirements that will improve the value of the \gls{utility}.
 	\item[Low] Requirements that will not add much value to the \gls{utility}.
 \end{description}
@@ -63,7 +63,7 @@ categories as for the prioritization of the requirements:
 \end{inparaenum} 
 
 \begin{description}
-	\item[High] Functionality which seems difficult and non-trivial to create.
+	\item[High] Functionality that seems difficult and non-trivial to create.
 	\item[Medium] Functionality that seems time consuming but straight forward.
 	\item[Low] Requirements that are trivial to implement.
 \end{description}
@@ -146,9 +146,9 @@ categories as for the prioritization of the requirements:
 	\addlinespace
 	NR3 & The \gls{utility} shall only have a command line user interface. No \Gls{gui} \& clicking! & \Gls{h} & \Gls{l} \\
 	\addlinespace
-	NR4 & The \gls{utility} must have sufficient documentation to allow a person, with no prior knowledge of the system or \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after 5 hours of reading & \Gls{m} & \Gls{m} \\
+	NR4 & The \gls{utility} must have sufficient documentation to allow a person, with no prior knowledge of the system or \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after five hours of reading & \Gls{m} & \Gls{m} \\
 	\addlinespace
-	NR5 & The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after 1 hour of reading & \Gls{m} & \Gls{m} \\
+	NR5 & The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after one hour of reading & \Gls{m} & \Gls{m} \\
 	\addlinespace
 	NR6 & The \gls{utility} must have sufficient documentation to allow a person, already proficient with the system, to be able to extend its functionality after Y hours of reading & \Gls{m} & \Gls{m} \\
 	\addlinespace
@@ -170,10 +170,10 @@ textual use cases for these diagrams.
 %------------------
 An actor specifies a role played by an external person or thing that interact
 with our \gls{utility}. We have three types of actors to consider. First is the
-primary actor which in our case is the user of our \gls{utility}. He who feeds it a
+primary actor, which in our case is the user of our \gls{utility}. He who feeds it a
 \Gls{c} file to generate \glspl{dissector}. A secondary actor is someone who configures our
-\gls{utility} to change the output of it. Finally we have an offstage actor which
-does not use our \gls{utility} himself, but uses the output \glspl{dissector} in \Gls{wireshark}.
+\gls{utility} to change the output of it. Finally, we have an offstage actor, which
+does not use our \gls{utility} himself, but uses the outputted \glspl{dissector} in \Gls{wireshark}.
 
 We have defined two use case actors for our \gls{utility}. The customer has specified
 that the offstage actor, called administrator, is the most important actor.

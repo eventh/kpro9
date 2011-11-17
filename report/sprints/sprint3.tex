@@ -20,9 +20,9 @@ After two sprint iterations, we are still trying to improve our approach to \Gls
 \\
 There will be two major changes this sprint:
 \begin {itemize}
-\item We will have a complete planning meeting. The meeting should result in a good planning document, user stories for all the requirements, complete set of work items in the sprint backlog and a early understanding of the design. This approach will be different from earlier sprints, where user stories were written in parallel with implementation. The user story should now be in place before the implementation, and the implementation should be based on the user story. This will make documenting the process easier, and will in turn give the advisors more documentation of what we are doing. Then we can receive valuable feedback from them.
+\item We will have a complete planning meeting. The meeting should result in a good planning document, user stories for all the requirements, complete set of work items in the sprint backlog and a early understanding of the design. This approach will be different from earlier sprints, where user stories were written in parallel with implementation. The user story should be in place before the implementation, and the implementation should be based on the user story. This will make documenting the process easier, and will in turn give the advisors more documentation of what we are doing. Then we can receive valuable feedback from them.
 
-\item In the sprint backlog we will have work items for every task that needs to be done throughout the sprint, including writing minutes, doing documentation, implementation and so on.  Assignment of responsibilities for items in the backlog should not be done at the planning meeting, we rather only give responsibility for one item for each team member at a time. The rest of the items will be unassigned. At each stand-up meeting we pick a task and must be done before the next meeting. This will ensure efficiency and the work done by others are easier to check and revise. It will give us a better work balance, as no team member can gap over too many tasks and leave none for the others.
+\item In the sprint backlog we will have work items for every task that needs to be done throughout the sprint, including writing minutes, doing documentation, implementation and so on.  Assignment of responsibilities for items in the backlog should not be done at the planning meeting, we rather only give responsibility for one item for each team member at a time. The rest of the items will be unassigned. At each stand-up meeting we pick a task, which we must complete before the next meeting. This will ensure efficiency and the work done by others are easier to check and revise. It will give us a better work balance, as no team member can gap over too many tasks and leave none for the others.
 \end{itemize}
 We think that these changes will improve our work efficiency, and make sprint 3 the best one so far.
 
@@ -32,7 +32,7 @@ The sprint started with the planning meeting the 19th of October and our work st
 
 \subsection{Sprint Goal}
 %-----------------------
-For the third sprint the team will update CSjark to version 0.3 which will extend the \gls{utility} so that it contains the complete functionality requested by the customer at this phase of the project. In this sprint we will pick all of the current requirements from the product backlog, as all of the underlying functionality needed for them are already in place from the previous sprints. This means that we will also aim to create a draft of the final design of the system during the sprint.
+For the third sprint the team will update CSjark to version 0.3, which will extend the \gls{utility} so that it contains the complete functionality requested by the customer at this phase of the project. In this sprint we will pick all of the current requirements from the product backlog, as all of the underlying functionality needed for them are already in place from the previous sprints. This means that we will also aim to create a draft of the final design of the system during the sprint.
 
 The most important function that is going to be implemented in this sprint is being able to display \glspl{packet} from different originating platforms properly. This will be implemented by having every \gls{packet} contain a flag specifying their originating platform, and by having our \glspl{dissector} use this flag value to influence how it handles the data in the \gls{packet}.
 
@@ -134,7 +134,7 @@ Timetable for this sprint: Table \ref{tab:sprint3time}. \\
 \section{System Design}
 %----------------------
 \label{sec:sp3:design}
-The system design defines the new modules and architecture that has to be in place to satisfy the specified requirements that we have included in the sprint 3 backlog. Most of the design are already done in earlier sprints; now we extend that and add some new elements.
+The system design defines the new modules and architecture that has to be in place to satisfy the specified requirements that we have included in the sprint 3 backlog. Most of the design are already done in earlier sprints; in this sprint we extend that and add some new elements.
 
 \subsection{System overview}
 %----------------------
@@ -148,17 +148,17 @@ The new design resulted in both major and minor changes to the class diagram, se
 
 \paragraph{Major changes}
 \begin{itemize}
-\item New module called Platform, to hold platform specific information. Ealier some information about the platform were stored in the config module, but now we have so extensive platform specifications that it is best to separate it in its own module. See the section regarding platform specific support for more info.
-\item Moved the \gls{cli} class from csjark to config, and renamed it to Options. This class holds the attributes passed from the command line interface. This will make the code more loosely coupled now that the configuration attributes are stored in the correct module. 
+\item New module called Platform, to hold platform specific information. Ealier, some information about the platform was stored in the config module, but the platform specifications have become so extensive that it is best to separate it in its own module. See the section regarding platform specific support for more info.
+\item Moved the \gls{cli} class from csjark to config, and renamed it to Options. This class holds the attributes passed from the command line interface. This will make the code more loosely coupled, because the configuration attributes are stored in the correct module. 
 \item A delegator class was added to \gls{dissector} module. This class will be responsible for delegating dissecting to \glspl{protocol}. It will be a top-level \gls{dissector} that delegates the task of dissecting specific messages to \glspl{dissector} generated by \gls{protocol} instances. It will be responisble for finding the correct \gls{dissector} for a message based on the origin of it.
-\item UnionProtocol class was added to the \gls{dissector} module. This class willl be responsible for holding the \gls{union} and its \glspl{member}. Now the \gls{utility} will be able to handle \glspl{union}. 
+\item UnionProtocol class was added to the \gls{dissector} module. This class willl be responsible for holding the \gls{union} and its \glspl{member}. The \gls{utility} will be able to handle \glspl{union}. 
 \item In the config module the class StructConfig was removed and replaced by Options and Config. As mentioned, Options holds the attributes submitted from the commandline or attributes loaded by one or more config-files. Config holds the configuration for a specific \gls{protocol}.
 
 \end{itemize}
 
 \paragraph{Minor changes}
 \begin{itemize}
-\item Config now only have one method.
+\item Config methods reduced to one.
 \item In the ConformanceFile, tokens and methods have been added.
 \item Trailers have a name variable.
 \item In the ProtocolField in the \gls{dissector} module, the \gls{protocol} is stored with a name instead of id. This has been pointed out by Thales as the correct way to do it.
@@ -168,7 +168,7 @@ The new design resulted in both major and minor changes to the class diagram, se
 \subsubsection{Platform specific support}
 We know that the various platforms behave differently, and this must be supported by our \gls{utility}. The customer has mentioned at least three platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. Thereby we will try to make the set-up for support easily understandable.
 
-We have decided that the platform definition will be a subpart of a flag-field in the \glspl{struct} \gls{header}. To ensure modifiability we will assign a 16 bit field for this, giving the developers possibility to have 65536 unique platforms. We will make the platform flag point to the platform module which has the following information about the actual platform:
+We have decided that the platform definition will be a subpart of a flag-field in the \glspl{struct} \gls{header}. To ensure modifiability we will assign a 16 bit field for this, giving the developers possibility to have 65536 unique platforms. We will make the platform flag point to the platform module, which has the following information about the actual platform:
 \begin{itemize}
 \item \Gls{endianness}
 \item Length of fields
@@ -180,7 +180,7 @@ All of these fields must be combined to enable the \gls{utility} to generate a \
 
 \subsubsection{Dictionary lookup}
 Deciding how to implement handling of different platforms ended in a design draft seen in \autoref{fig:platformhandling}. The \gls{dissector} module will make a dictionary lookup in the table of supported platforms. This table conatins all platforms that the \gls{utility} can make \glspl{dissector} for, and their information of how the \gls{dissector} shall be encoded to achieve correct handling of \gls{endianness}, length of fields and memory alignment.
-We will start out by hardcoding this into the source code, but in the end we want to have this feed to the \gls{utility} through a configuration-file which will be stored in the platform module. This is the way the customer has envisioned it.  
+We will start out by hardcoding this into the source code, but in the end we want to have this feed to the \gls{utility} through a configuration-file, which will be stored in the platform module. This is the way the customer has envisioned it.  
 
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{./sprints/img/platformhandling}
@@ -220,9 +220,9 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	\midrule
 	ID & US26 \\
 	Requirement & FR1-D: The \gls{utility} must support \glspl{member} of type \gls{union} \\
-	What & The administrator wants to generate \glspl{dissector} which contain \glspl{struct} with \glspl{union} as \glspl{member}. \\
+	What & The administrator wants to generate \glspl{dissector} that contain \glspl{struct} with \glspl{union} as \glspl{member}. \\
 	How & When the administrator feeds the \gls{utility} with a \gls{header} containing a \gls{union}, the cparser module should parse the \gls{union} and its \glspl{member} to find the total size of the 
-	\gls{union} (which equals the size of the largest \gls{member}), and then create an instance of UnionField from the \gls{dissector} module representing the \gls{union} and its \gls{member}\\
+	\gls{union}, which equals the size of the largest \gls{member}, and then create an instance of UnionField from the \gls{dissector} module representing the \gls{union} and its \gls{member}\\
 	Result & The \gls{utility} support \gls{union} \glspl{member} in \glspl{struct}. \\
 	\midrule
 	ID & US27 \\
@@ -239,14 +239,14 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	After the \glspl{packet} have been dissected, they are presented in \Gls{wireshark}. The developer will have a hard time finding 
 	attributes by manual seeking. The built-in search and filter functionality needs to be supported to accommodate the developer. \\
 	How & The functionality is already in \Gls{wireshark}. To utilize it, an abbreviation field must be provided to \Gls{wireshark}. This abbreviation field will be in the \gls{dissector} module
-	and is included in the \gls{dissector} generated by the \gls{utility}. When \Gls{wireshark} runs the \gls{dissector}, all abbreviations are collected which will make it possible to filter and search
+	and is included in the \gls{dissector} generated by the \gls{utility}. When \Gls{wireshark} runs the \gls{dissector}, all abbreviations are collected, which will make it possible to filter and search
 	on attributes. \\
 	Result & The developer will be able to search and filter by attributes. \\
 	\midrule
 	ID & US29 \\
 	Requirement & FR5-A: Flags must be specified in configuration for each platform \\
-	What & The administrator wants to generate \glspl{dissector} which are different depending on platform. \\
-	How & To be able to create \glspl{dissector} which are different depending on the originating platform, the administrator needs to specify in the configuration which platforms he wants to support.
+	What & The administrator wants to generate \glspl{dissector} that are different depending on platform. \\
+	How & To be able to create \glspl{dissector} that are different depending on the originating platform, the administrator needs to specify in the configuration which platforms he wants to support.
 	The config module should accept such configuration and store it so other modules can use it. \\ 
 	Result & The administrator can specify what platform he is using by setting a flag in the configuration. \\
 	\midrule
@@ -261,19 +261,19 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	Header & Value \\
 	\midrule
 	ID & US30 \\
-	Requirement & FR5-C: Generate \glspl{dissector} which support both little and big \gls{endian} platforms \\
-	What & The administrator wants \glspl{dissector} which handle both big and little \gls{endian} encoding. \\
+	Requirement & FR5-C: Generate \glspl{dissector} that support both little and big \gls{endian} platforms \\
+	What & The administrator wants \glspl{dissector} that handle both big and little \gls{endian} encoding. \\
 	How & The \gls{dissector} module will need to create different \Gls{lua} code for big and little \gls{endian}, when adding nodes to the \Gls{wireshark} tree and when calling other \glspl{dissector}.
-	The \gls{dissector} module shall have functionality which generates \Gls{lua} code depending on \gls{endianness}, and the different Field classes must use this function when adding 
+	The \gls{dissector} module shall have functionality that generates \Gls{lua} code depending on \gls{endianness}, and the different Field classes must use this function when adding 
 	nodes to the \Gls{wireshark} tree. \\
 	Result & \Glspl{dissector} can be created with platform specific \gls{endian}. \\
 	\midrule
 	ID & US31 \\
-	Requirement & FR5-D: Generate \glspl{dissector} which support different sizes depending on platforms \\
+	Requirement & FR5-D: Generate \glspl{dissector} that support different sizes depending on platforms \\
 	What & The administrator wants to generate \glspl{dissector} for \gls{struct} where \glspl{member} size depend on the originating platform. \\
 	How & When the administrator feeds the \gls{utility} a \gls{header} file and a config file with a set of platform he wants \glspl{dissector} for, the config module will create new \gls{header} files
-	with \Gls{c} \gls{preprocessor} directives for each platform. These files should define platform-specific macros which emulates parsing on the specific platform. 
-	The \gls{dissector} module then create different \glspl{dissector} for each message on each platform, and a mapping is added inside the master \Gls{lua} file which maps message id and
+	with \Gls{c} \gls{preprocessor} directives for each platform. These files should define platform-specific macros that emulates parsing on the specific platform. 
+	The \gls{dissector} module then create different \glspl{dissector} for each message on each platform, and a mapping is added inside the master \Gls{lua} file that maps message id and
 	platform to the correct \gls{dissector}. \\
 	Result & \Glspl{dissector} can be created with platform specific sizes of \glspl{member}.\\
 	\midrule
@@ -285,7 +285,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	How & The administrator specify the macro associated with a platform together with the platform definition configuration. The \gls{utility} then make an auxiliary \gls{header} file for each 
 	platform configuration with the specified macro definition. These \glspl{header} are forwarded to the \gls{parser} module, which uses them to generate
   	one \gls{dissector} for each platform for each \gls{struct}. All \glspl{dissector} dissecting the same \glspl{struct} are stored in the same file, but are added to a platform specific \gls{dissector} table. \\
-	Result & The generated \Gls{lua} files corresponding to \glspl{struct} now includes one \gls{dissector} for each platform defined in the configuration file. \\
+	Result & The generated \Gls{lua} files corresponding to \glspl{struct} includes one \gls{dissector} for each platform defined in the configuration file. \\
 	\midrule
 	ID & US33 \\
 	User doc & FR4-C: User documentation for configurating custom handling of specific types. \\
@@ -317,9 +317,9 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	User doc & FR5 User documentation for how to add or remove support for a platform in the \glspl{dissector} generated from the \glspl{utility}. \\
 	What & The administrator should be able to find out how to add or remove support for a platform in the \glspl{dissector} by reading the user documentation. \\
 	How & The administrator opens the user documentation and finds the section about configuration. From here he locates the sub section about platform support. 
-	This section gives a good description of how to add or remove support for a platform in the configuration, so that the administrator understands how to do
+	This section gives a good description of how to add or remove support for a platform in the configuration, in order for the administrator to understand how to do
 	this after reading the section. \\
-	Result & The administrator is now able to configure the \gls{utility} to add or remove platform support from the generated \glspl{dissector}. \\
+	Result & The administrator is able to configure the \gls{utility} to add or remove platform support from the generated \glspl{dissector}. \\
 	\midrule
 	ID & US36 \\
 	User doc & FR5 User documentation for what platform that the \gls{utility} support. \\
@@ -327,7 +327,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	How & The administrator opens the user documentation and finds the section about configuration. From here he locates the sub section about platform support.
 	This section gives a list of currently supported platforms by the \gls{utility}. It should also have some information of where to	find the documentation that describes
 	how to add support for more platforms. \\
-	Result & The administrator is now able to look up what platforms he can get the \glspl{dissector} to support. \\
+	Result & The administrator is able to look up what platforms he can get the \glspl{dissector} to support. \\
 	\midrule
 	ID & US37 \\
 	Requirement & FR6-D The \gls{utility} should not regenerate \glspl{dissector} within a single run. \\
@@ -356,9 +356,9 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} g
 	\midrule
 	ID & US39 \\
 	Requirement &  FR5-B: Generate \glspl{dissector} with correct alignment depending on platform \\
-	What & The administrator wants to generate \glspl{dissector} which are different depending on platform. \\
-	How & The \gls{dissector} module will use the configured flags from the config module to modify the generated \Gls{lua} \glspl{dissector} so that they have the right memory structure alignment and \gls{endianness}.
-	The \gls{dissector} module shall have a function which calculates the offset for each field to align it, and functions which creates fields for specific \gls{endianness}. \\
+	What & The administrator wants to generate \glspl{dissector} that are different depending on platform. \\
+	How & The \gls{dissector} module will use the configured flags from the config module to modify the generated \Gls{lua} \glspl{dissector}, to have the right memory structure alignment and \gls{endianness}.
+	The \gls{dissector} module shall have a function that calculates the offset for each field to align it, and functions which creates fields for specific \gls{endianness}. \\
 	Result & \Glspl{dissector} can be created with platform specific memory structure alignment \\
 	\bottomrule
 \end{tabularx}}
@@ -383,7 +383,7 @@ done in this sprint.
 \subsection{Specify Flags for Each Platform}
 %-----------------------
 It is necessary to specify flags for each platform to make it possible to 
-correctly detect and display packages that wireshark captures. In wireshark 
+correctly detect and display packages that wireshark captures. In Wireshark
 the flags are used to tell which platform the \gls{packet} is sent from, so that 
 the right \gls{dissector} is used to display the \glspl{packet} in \Gls{wireshark}. In the 
 \gls{utility} the flag points to what kind of \gls{endianness}, how memory is aligned and 
@@ -434,7 +434,7 @@ before and after an \gls{member} in both the definition and function part of the
 sections. In the example below there is written custom \Gls{lua} for a 
 \gls{struct}(temperature) with on \gls{integer} \gls{member} (celsius). In the conformance file 
 in \autoref{code:customcnf} there added three lines of comments as a custom 
-\Gls{lua} code, that are going to be added to the \Gls{lua} \gls{dissector}. In 
+\Gls{lua} code, which are going to be added to the \Gls{lua} \gls{dissector}. In 
 \autoref{code:customlua} it is possible to see the custom \Gls{lua} code that was 
 added to the \Gls{lua} \gls{dissector}. The first comment is added after the \gls{member} 
 definition. The two other comments are added above and below the \gls{member} in the 
@@ -494,8 +494,8 @@ listed with their values. In this case the \gls{float} value is the correct one.
 
 \subsection{Display Types \Gls{wireshark} Do Not Support}
 %-----------------------
-The \gls{utility} is able to genereate \glspl{dissector} for \Gls{c} data types, that \Gls{wireshark} 
-do not support. When such a data type occur, \Gls{wireshark} will display only 
+The \gls{utility} is able to generate \glspl{dissector} for \Gls{c} data types that \Gls{wireshark} 
+does not support. When such a data type occur, \Gls{wireshark} will display only 
 display the \gls{packet} data. An example of a data type, which \Gls{wireshark} do not 
 support is \emph{long double} on the \gls{asparc} platform, which is a 128-bit foat. 
 For this \Gls{wireshark} will display the 16 bytes in \gls{hexadecimal}.
@@ -748,7 +748,7 @@ We can expect to get more feedback on the \gls{utility} when they can fully test
 
 \subsection{The backlog and suggestions for sprint 4}
 The customer was satisfied with the backlog for sprint 3.
-They made several suggestions on features that could improve the \gls{utility}, that we could implement in sprint 4.
+They made several suggestions on features that could improve the \gls{utility}, which we could implement in sprint 4.
 These are listed below.
 
 \subsubsection{Unitialized Memory}
@@ -763,7 +763,7 @@ We should implement this by specifying a list of IDs instead of just a single on
 \subsubsection{Include dependency}
 The customer describes a scenario where a \gls{struct} is included in another \gls{struct}, which is resident in a different \gls{header} file
 that the first \gls{struct} has not included. In this scenario both files are included in a third \gls{header} file.
-This creates a dependency which we must take into consideration and implement in the \gls{utility}.
+This creates a dependency that we must take into consideration and implement in the \gls{utility}.
 
 \subsubsection{Specifying file name endings in \gls{batch mode}}
 The customer would like to be able to specify the file name endings of the files that are to be created \glspl{dissector} for,
@@ -784,14 +784,14 @@ results of this meeting is covered below.
 
 \subsection{Review}
 %--------------------------
-After some trying, failing and learning we now feel that we understand the \Gls{scrum} process and were able to do it correctly. We have done the planned actions from the prior sprints and have achieved a considerable increase in work efficiency, work completion and now have a well distributed workload.
+After some trying, failing and learning we feel that we understand the \Gls{scrum} process and were able to do it more correctly. We did the planned actions from the prior sprints and achieved a considerable increase in work efficiency, work completion and had a well distributed workload.
 
 After not assigning responsibilities at the planning meeting, the team members felt that it was easier to find a task that suited them, which increased the efficiency of task completion. We also listed all the work that needed to be done during the sprint, including meeting, minutes, sprint documentation and so on. This gave us a much better overview of the work.
 
-Looking at the planned actions, we feel that we have managed to do all of them and we are very satisfied with that. The bad experiences mentioned now are only nitpicking compared to the ones in earlier sprints. We see this as a natural evolution, as we learn to do the Scrum steps correctly and efficiently, the team as a whole works better.
+Looking at the planned actions, we feel that we have managed to do all of them and we are very satisfied with that. The bad experiences mentioned in this sprint are only nitpicking compared to the ones in earlier sprints. We see this as a natural evolution, as we learn to do the Scrum steps correctly and efficiently, the team as a whole works better.
 But the raised effort from each team member is also indispensable and the improvement we have gained is a result of dedication towards the project.
 
-The burndown chart for the sprint can be seen in \autoref{fig:sp3:burndown}. The estimated and actual hours fit almost flawlessly. This is something we have been good at in all the sprints, but now it is perfected. Even though we estimated too many hours of work for this sprint, all the team members gave their best effort and we almost completed the whole backlog. 
+The burndown chart for the sprint can be seen in \autoref{fig:sp3:burndown}. The estimated and actual hours fit almost flawlessly. This is something we have been good at in all the sprints, but in this sprint it was perfected. Even though we estimated too many hours of work for this sprint, all the team members gave their best effort and we almost completed the whole backlog. 
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{./sprints/img/burndown_chart_s3}
 	\caption{Burndown chart\label{fig:sp3:burndown}}

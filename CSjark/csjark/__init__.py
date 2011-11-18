@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2011 Even Wiik Thomassen, Erik Bergersen,
 # Sondre Johan Mannsverk, Terje Snarby, Lars Solvoll Tønder,
 # Sigurd Wien and Jaroslav Fibichr.

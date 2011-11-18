@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_26" class="java.beans.XMLDecoder"> 
+<java version="1.6.0_29" class="java.beans.XMLDecoder"> 
  <object class="com.horstmann.violet.ClassDiagramGraph"> 
   <void method="addNode"> 
    <object class="com.horstmann.violet.PackageNode"> 
@@ -21,7 +21,7 @@ main()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>510.0</double> 
+     <double>480.0</double> 
      <double>720.0</double> 
     </void> 
    </object> 
@@ -30,8 +30,8 @@ main()</string>
    <object idref="PackageNode0"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>518.0</double> 
-     <double>751.0</double> 
+     <double>489.0</double> 
+     <double>753.0</double> 
     </void> 
    </object> 
   </void> 
@@ -53,7 +53,7 @@ main()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>510.0</double> 
+     <double>480.0</double> 
      <double>590.0</double> 
     </void> 
    </object> 
@@ -62,7 +62,7 @@ main()</string>
    <object idref="PackageNode1"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>520.0</double> 
+     <double>492.0</double> 
      <double>617.0</double> 
     </void> 
    </object> 
@@ -259,7 +259,7 @@ endian: str</string>
        <void property="text"> 
         <string>map_type()
 size_of()
-alignment_size_of()</string> 
+alignment()</string> 
        </void> 
       </void> 
       <void property="name"> 
@@ -330,7 +330,9 @@ push_modifiers()
      <object id="ClassNode9" class="com.horstmann.violet.ClassNode"> 
       <void property="attributes"> 
        <void property="text"> 
-        <string>protocols: dict</string> 
+        <string>protocols: dict
+name: str
+conf: Config</string> 
        </void> 
       </void> 
       <void property="methods"> 
@@ -367,7 +369,7 @@ generate()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>660.0</double> 
+     <double>630.0</double> 
      <double>540.0</double> 
     </void> 
    </object> 
@@ -376,7 +378,7 @@ generate()</string>
    <object idref="ClassNode7"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>668.0</double> 
+     <double>644.0</double> 
      <double>566.0</double> 
     </void> 
    </object> 
@@ -385,8 +387,8 @@ generate()</string>
    <object idref="ClassNode8"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>821.0</double> 
-     <double>621.0</double> 
+     <double>800.0</double> 
+     <double>614.0</double> 
     </void> 
    </object> 
   </void> 
@@ -394,8 +396,8 @@ generate()</string>
    <object idref="ClassNode9"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>811.0</double> 
-     <double>734.0</double> 
+     <double>782.0</double> 
+     <double>751.0</double> 
     </void> 
    </object> 
   </void> 
@@ -403,8 +405,8 @@ generate()</string>
    <object idref="ClassNode10"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>681.0</double> 
-     <double>765.0</double> 
+     <double>642.0</double> 
+     <double>769.0</double> 
     </void> 
    </object> 
   </void> 
@@ -1051,6 +1053,24 @@ parse_file()</string>
    </object> 
    <object idref="ClassNode23"/> 
    <object idref="ClassNode14"/> 
+  </void> 
+  <void method="connect"> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="bentStyle"> 
+     <object class="com.horstmann.violet.BentStyle" field="VHV"/> 
+    </void> 
+    <void property="endArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
+    </void> 
+    <void property="lineStyle"> 
+     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
+    </void> 
+    <void property="middleLabel"> 
+     <string>Contains</string> 
+    </void> 
+   </object> 
+   <object idref="ClassNode9"/> 
+   <object idref="ClassNode7"/> 
   </void> 
  </object> 
 </java> 

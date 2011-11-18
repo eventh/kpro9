@@ -147,7 +147,8 @@ get_code()</string>
      <object id="ClassNode8" class="com.horstmann.violet.ClassNode"> 
       <void property="attributes"> 
        <void property="text"> 
-        <string>protocols: dict</string> 
+        <string>name: str
+conf: Config</string> 
        </void> 
       </void> 
       <void property="methods"> 
@@ -422,7 +423,7 @@ match()
    <object idref="ClassNode6"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>353.0</double> 
+     <double>360.0</double> 
      <double>788.0</double> 
     </void> 
    </object> 
@@ -440,8 +441,8 @@ match()
    <object idref="ClassNode8"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>348.86542056508426</double> 
-     <double>634.4323786549919</double> 
+     <double>351.86542056508426</double> 
+     <double>620.4323786549919</double> 
     </void> 
    </object> 
   </void> 

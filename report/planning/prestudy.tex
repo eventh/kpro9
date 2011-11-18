@@ -771,32 +771,37 @@ The versions of the different tools and \glspl{library} we are using can be foun
 \section{IP Rights \& License}
 %-----------------------------
 \label{sec:pre:license}
-The customer has explained that they do not intend to distribute our \gls{utility},
+The customer have explained that they do not intend to distribute our \gls{utility},
 and that we are free to license it as open source if we want to, under
 whichever license we feel is most suited. They suggested GNU\footnote{\url{http://www.gnu.org/}} \Gls{gpl} as \Gls{wireshark}
 is released under it.
 
 When we decided which license to use, we had to consider the licenses of the \glspl{library} and tools we depend upon.
- This is summarized by
+This is summarized by
 \autoref{tab:pre:licenses}.
 \begin{table}[!h] \footnotesize \center
-\vspace{-20pt}
+\vspace{-10pt}
 \caption{Licenses\label{tab:pre:licenses}}
 \begin{tabular}{l l}
 	\toprule
-	\Gls{wireshark} & GNU \Gls{gpl} \\
+	\Gls{wireshark} & GNU \Gls{gpl} v3 \\
 	\Gls{aply} & \Gls{bsd}-new \\
 	\gls{pycparser} & \Gls{bsd}-new \\
 	pyYAML & \Gls{mit} \\
 	\midrule
-	Our \gls{utility} & \Gls{bsd}-new \\
+	Our \gls{utility} & GNU \Gls{gpl} v3 \\
 	\bottomrule
 \end{tabular}
 \vspace{-10pt}
 \end{table}
 
 \noindent Some of the requirements for our \gls{utility} might require us to modify
-the \Gls{c} \gls{preprocessor} in \Gls{aply} and the \gls{pycparser} \gls{library}, which made us consider
-the new 2-clause \Gls{bsd} license the most suited for us. Since it also gives us the
-option to later move to a more restrictive license like \Gls{gpl}, we decided to use
-it.
+the \Gls{c} \gls{preprocessor} in \Gls{aply} and the \gls{pycparser} \gls{library},
+which made us consider the new 2-clause \Gls{bsd} license the most suited for us.
+Since it also gives us the option to later move to a more restrictive license like \Gls{gpl},
+we selected it.
+
+During sprint 3 we discovered that Lua dissectors which interfaces with the Wireshark API must
+be under \Gls{gpl} license. We therefor decided during Sprint 4 to change the license of our
+\gls{utility}, as well as the license on any generated Lua dissectors, to \Gls{gpl} version 3.
+

@@ -31,7 +31,7 @@ Since the deadline of the project is 24th November, there will also be a focus o
 
 \subsection{Back Log}
 %--------------------
-This section contains the sprint backlog \ref{tab:sprint4req} and the timetable for the sprint Table \ref{tab:sprint4time}.  
+This section contains the sprint backlog in \autoref{tab:sprint4req} and the timetable for the sprint in \autoref{tab:sprint4time}.  
 
 \begin{table}[!htbp] \small \center
 \caption{Sprint 4 Requirement Work Items \label{tab:sprint4req}}
@@ -55,7 +55,7 @@ This section contains the sprint backlog \ref{tab:sprint4req} and the timetable 
 	\addlinespace
 	\textbf{Fixes} &  & \textbf{35} & \textbf{42.5} \\
 	& TheFIX: Be able to process customer's files & 12 & 17 \\
-	 & FR2-A: Improve generated \Gls{lua} output - Remove platform prefix & 10 & 20 \\
+	 & FR2-A: Improve generated \Gls{lua} output & 10 & 20 \\
 	 & FR1-E: \Gls{array} bug in text & 2 & 1.5 \\
 	 & FR1-E: Pointer support (array) & 1 & 0.5 \\
 	 & FR1-E: \Gls{enum} in \glspl{array} & 1 & 1 \\		
@@ -169,17 +169,16 @@ The addition of new requirements from the customer resulted in changes in the ut
 The need for preprocessing C files before they are parsed have become so comprehensive, that we decided to create a dedicated module for it. All the existing cpp concerned code was relocated from the cparser module, and joint with the new implementation. The requirements listed in\autoref{tab:sprint4req}, made it necessary to have more functionality regarding the preprocessor step. 
 
 \subsubsection{fields module}
-Field specific classes were moved from the dissector module to its own, field. For the same reason as the ccp module; the amount of code concerning fields became so great, that a own module was appropriate. 
-TODO: Write about methods ect. 
+Field specific classes were moved from the dissector module to its own, field. For the same reason as the ccp module; the amount of code concerning fields became so great, that a own module was appropriate. There was some refactoring in the field module. BaseField was added and has Field as a subclass. The class Field in is the most important class in this module, and generate the most of fields for the dissector. Subtree is a class that generates fields for the dissector, that will need a subtree in Wireshark, this class has three subclasses, BitField, ArrayField and ProtocolField.
 
 \subsubsection{cparser module}
-Some changes was done in this module due to the refactoring, functionality for the c preprocessing was moved. And some new methods was added since, field and dissector module was splitted.
+Some changes was done in this module due to the refactoring, functionality for the c preprocessing was moved. And some new methods was added since, field and dissector module was splitted. 
 
 \subsubsection{config module}
 The class FileConfig was added, to hold the configuration for specific header-files. Some methods was also added for automatic generation of header-files.
 
 \subsubsection{dissector module}
-TODO: Missing
+There was several changes, all the Field classes was added to it's own module, to hold the information about the generation, the class Dissector was added to the module. UnionProtocol was renamed to UnionDissector.
 
 \subsection{User stories}
 \label{sec:req:stories4}
@@ -560,28 +559,28 @@ how Options can be added to the configuration file.
 During sprint 4, the team executed 22 new test cases as well as re-running all of the test cases from the previous sprints. This was done in an effort to ensure that all of the functionality from the earlier sprints were still intact before ending the final sprint. \autoref{STID26} shows one of the testscases ran this sprint. The rest of the new testcases for this sprint can be seen in the following list. For more information about the testcases see \autoref{sec:testcases} in the appendix.
 
 \begin{itemize}
-	\item TID26 -Including system-headers \autoref{tab:sp4TID26}
-	\item TID27 -Ignoring \#pragma directives \autoref{tab:sp4TID27}
-	\item TID28 - Improve generated Lua output by removing platform prefix \autoref{tab:stp4TID28}
-	\item TID29 - Recursive searching of subfolders \autoref{tab:sp4TID29}
-	\item TID30 - Finding include dependencies which are not explicitly set \autoref{tab:sp4TID30}
-	\item TID31 - Pointer support \autoref{tab:sp4TID31}
-	\item TID32 - Enums in arrays \autoref{tab:sp4TID32}
-	\item TID33 - Supporting \#define as a command line argument \autoref{tab:sp4TID33}
-	\item TID34 - Multiple message ID's for one dissector \autoref{tab:sp4TID34}
-	\item TID35 - Allowing configuration for unknown structs \autoref{tab:sp4TID35}
-	\item TID37 - Autogenerating configuration files for structs that has no config file of their own \autoref{tab:sp4TID36}
-	\item TID38 - Only generating dissectors for structs with a valid ID \autoref{tab:sp4TID37}
-	\item TID39 - Guessing dissectors from packet size \autoref{tab:sp4TID38}
-	\item TID40 -Invalid header \autoref{tab:sp4TID39}
-	\item TID41 -Invalid header during batch mode \autoref{tab:sp4TID40}
-	\item TID42 - Ambiguous struct IDs \autoref{tab:sp4TID41}
-	\item TID43 -Ambiguous platform IDs \autoref{tab:sp4TID42}
-	\item TID44 -Running the utility on Windows \autoref{tab:sp4TID43}
-	\item TID45 - Running the utility on Solaris \autoref{tab:sp4TID44}
-	\item TID46 - Running the dissectors on Solaris \autoref{tab:sp4TID45}
-	\item TID47 - Running the dissectors on Windows \autoref{tab:sp4TID46}
-	\item TID48 - Docstrings in code \autoref{tab:sp4TID47}
+	\item TID26 -Including system-headers \autoref{tab:sp4:testres1}
+	\item TID27 -Ignoring \#pragma directives \autoref{tab:sp4:testres1}
+	\item TID28 - Improve generated Lua output by removing platform prefix \autoref{tab:sp4:testres1}
+	\item TID29 - Recursive searching of subfolders \autoref{tab:sp4:testres1}
+	\item TID30 - Finding include dependencies which are not explicitly set \autoref{tab:sp4:testres1}
+	\item TID31 - Pointer support \autoref{tab:sp4:testres1}
+	\item TID32 - Enums in arrays \autoref{tab:sp4:testres1}
+	\item TID33 - Supporting \#define as a command line argument \autoref{tab:sp4:testres1}
+	\item TID34 - Multiple message ID's for one dissector \autoref{tab:sp4:testres1}
+	\item TID35 - Allowing configuration for unknown structs \autoref{tab:sp4:testres2}
+	\item TID37 - Autogenerating configuration files for structs that has no config file of their own \autoref{tab:sp4:testres2}
+	\item TID38 - Only generating dissectors for structs with a valid ID \autoref{tab:sp4:testres2}
+	\item TID39 - Guessing dissectors from packet size \autoref{tab:sp4:testres2}
+	\item TID40 -Invalid header \autoref{tab:sp4:testres2}
+	\item TID41 -Invalid header during batch mode \autoref{tab:sp4:testres2}
+	\item TID42 - Ambiguous struct IDs \autoref{tab:sp4:testres2}
+	\item TID43 -Ambiguous platform IDs \autoref{tab:sp4:testres3}
+	\item TID44 -Running the utility on Windows \autoref{tab:sp4:testres3}
+	\item TID45 - Running the utility on Solaris \autoref{tab:sp4:testres3}
+	\item TID46 - Running the dissectors on Solaris \autoref{tab:sp4:testres3}
+	\item TID47 - Running the dissectors on Windows \autoref{tab:sp4:testres3}
+	\item TID48 - Docstrings in code \autoref{tab:sp4:testres3}
 \end{itemize}
 
 \begin{table}[ht] \footnotesize \center
@@ -609,300 +608,160 @@ During sprint 4, the team executed 22 new test cases as well as re-running all o
 \end{tabularx}}
 \end{table}
 
-\begin{table}[!htb] \footnotesize \center
-\caption{Ignoring \#pragma directives \label{tab:sp4TID26}}
-\begin{tabular}{l l}
+\begin{table}[htbp] \footnotesize \center
+\caption{Sprint 4 test results part 1\label{tab:sp4:testres1}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
+	Test ID & TID26 \\
 	Description & Including system-headers\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 16.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Ignoring \#pragma directives \label{tab:sp4TID27}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID27 \\
 	Description & Ignoring \#pragma directives\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 14.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Improve generated Lua output by removing platform prefix \label{tab:sp4TID28}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID28 \\
 	Description & Improve generated Lua output by removing platform prefix\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 16.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Recursive searching of subfolders \label{tab:sp4TID29}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
-	Description & Improve generated Lua output by removing platform prefix\\
+	Test ID & TID29 \\
+	Description & Recursive searching of subfolders \\
 	Tester & Lars Solvoll Tønder\\
 	Date & 14.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Finding include dependencies which are not explicitly set \label{tab:sp4TID30}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID30 \\
 	Description & Finding include dependencies which are not explicitly set\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 16.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Pointer support \label{tab:sp4TID31}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID31 \\
 	Description & Pointer support\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 14.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Enums in arrays \label{tab:sp4TID32}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID32 \\
 	Description & Enums in arrays\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 16.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Supporting \#define as a command line argument \label{tab:sp4TID33}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID33 \\
 	Description & Supporting \#define as a command line argument\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 14.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Multiple message ID's for one dissector \label{tab:sp4TID34}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID34 \\
 	Description & Multiple message ID's for one dissector\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 14.11.2011\\
 	Result & Success\\
 	\bottomrule
-\end{tabular}
+\end{tabularx}}
 \end{table}
 
-\begin{table}[!htb] \footnotesize \center
-\caption{Allowing configuration for unknown structs \label{tab:sp4TID35}}
-\begin{tabular}{l l}
+\begin{table}[htbp] \footnotesize \center
+\caption{Sprint 4 test results part 2\label{tab:sp4:testres2}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
+	Test ID & TID35 \\
 	Description & Allowing configuration for unknown structs\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 16.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Autogenerating configuration files for \glspl{struct} that has no config file of their own \label{tab:sp4TID36}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID36 \\
 	Description & Autogenerating configuration files for \glspl{struct} that has no config file of their own\\
 	Tester & Even Wiik Thomassen\\
 	Date & 09.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Only generating \glspl{dissector} for \glspl{struct} with a valid ID \label{tab:sp4TID37}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID37 \\
 	Description & Only generating \glspl{dissector} for \glspl{struct} with a valid ID\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 16.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Guessing \glspl{dissector} from \gls{packet} size \label{tab:sp4TID38}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID38 \\
 	Description & Guessing \glspl{dissector} from \gls{packet} size\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 16.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Invalid \gls{header} \label{tab:sp4TID39}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID39 \\
 	Description & Invalid \gls{header}\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 14.11.2011\\
 	Result & Failure. Syntax errors are caught by the utility, but declaring variables with the same name several times in the same struct is not caught\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Invalid \gls{header} during \gls{batch mode} \label{tab:sp4TID40}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID40 \\
 	Description & Invalid \gls{header} during \gls{batch mode}\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 14.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Ambiguous \gls{struct} IDs  \label{tab:sp4TID41}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID41 \\
 	Description & Ambiguous \gls{struct} IDs \\
 	Tester & Lars Solvoll Tønder\\
 	Date & 14.11.2011\\
 	Result & Failure. The user is not even presented with a warning if there are several structs with the same ID\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\clearpage
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Ambiguous platform IDs  \label{tab:sp4TID42}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID42 \\
 	Description & Ambiguous platform IDs \\
 	Tester & Lars Solvoll Tønder\\
 	Date & 14.11.2011\\
 	Result & Success\\
 	\bottomrule
-\end{tabular}
+\end{tabularx}}
 \end{table}
 
-\begin{table}[!htb] \footnotesize \center
-\caption{Running the \gls{utility} on \Gls{Windows} \label{tab:sp4TID43}}
-\begin{tabular}{l l}
+\begin{table}[htbp] \footnotesize \center
+\caption{Sprint 4 test results part 3\label{tab:sp4:testres3}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
+	Test ID & TID43 \\
 	Description & Running the \gls{utility} on \Gls{Windows} \\
 	Tester & Lars Solvoll Tønder\\
 	Date & 14.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Running the \gls{utility} on \gls{Solaris} \label{tab:sp4TID44}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
-	Descriptio & Running the \gls{utility} on \Gls{Solaris}\\
+	Test ID & TID44 \\
+	Description & Running the \gls{utility} on \Gls{Solaris}\\
 	Tester & Even Wiik Thomassen\\
 	Date & 14.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Running the \glspl{dissector} on \Gls{Solaris} \label{tab:sp4TID45}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID45 \\
 	Description &  Running the \glspl{dissector} on \Gls{Solaris}\\
 	Tester & Even Wiik Thomassen\\
 	Date & 14.11.2011\\
 	Result & Success\\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!htb] \footnotesize \center
-\caption{Running the \glspl{dissector} on \Gls{Windows} \label{tab:sp4TID46}}
-\begin{tabular}{l l}
-	\toprule
-	Header & Description \\
 	\midrule
+	Test ID & TID46 \\
 	Description &  Running the \glspl{dissector} on \Gls{Windows}\\
 	Tester & Lars Solvoll Tønder\\
 	Date & 14.11.2011\\
 	Result & Success\\
 	\bottomrule
-\end{tabular}
+\end{tabularx}}
 \end{table}
 
 \subsection{Test Evaluation}

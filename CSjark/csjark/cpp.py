@@ -18,7 +18,11 @@
 # You should have received a copy of the GNU General Public License
 # along with CSjark.  If not, see <http://www.gnu.org/licenses/>.
 """
-Module for performing C preprocessor step on C header files.
+Module for performing the C preprocessor step on C header files.
+
+The parse_file() function calls the external C preprocessor program,
+while post_cpp() function removes output from the preprocessor which
+pycparser does not support.
 """
 import sys
 import os

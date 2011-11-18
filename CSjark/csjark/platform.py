@@ -29,7 +29,14 @@ from various platforms.
 
 
 class Platform:
-    """Represents specific attributes of an OS and/or hardware."""
+    """Represents specific attributes of a platform.
+
+    Platform here refers to a combination of Operating System,
+    Hardware platform and Compiler. An instance of this class is an
+    abstraction of all of these. It inceases the number of platforms
+    if one wish to support many, but the utility only need to handle
+    one at a time.
+    """
     big = 'big'
     little = 'little'
 
@@ -95,7 +102,7 @@ class Platform:
             return self.sizes[ctype]
         raise ValueError('No known wireshark field size for type %s' % ctype)
 
-    def alignment_size_of(self, ctype):
+    def alignment(self, ctype):
         """Find the alignment size of a C type in bytes."""
         if ctype in self.alignments:
             return self.alignments[ctype]
@@ -301,10 +308,12 @@ SPARC_MACROS = {
 
 # Register different platforms
 def merge(a, *dicts):
+    """Merge several dictinaries into a new one."""
     new = dict(a)
     for d in dicts:
         new.update(d)
     return new
+
 
 # Default platform
 Platform('default', 0, Platform.big,

@@ -645,8 +645,8 @@ main()</string>
    <object idref="PackageNode3"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>760.451097613183</double> 
-     <double>286.61866893850583</double> 
+     <double>761.451097613183</double> 
+     <double>294.61866893850583</double> 
     </void> 
    </object> 
   </void> 

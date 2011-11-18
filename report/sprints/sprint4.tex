@@ -2,8 +2,8 @@
 \chapter{Sprint 4}
 %=================
 This chapter contains the description of the work done in sprint 4. The 
-chapter is diveded into sprint planning in \autoref{sec:sp4planning}, design 
-done during the sprint in \autoref{sec:sp4design}, the implementation in 
+chapter is diveded into sprint planning in \autoref{sec:sp4:planning}, design 
+done during the sprint in \autoref{sec:sp4:design}, the implementation in 
 \autoref{sec:sp4impl}, the result of the sprint testing in 
 \autoref{sec:sp4test}, feedback the customer gave us during the sprint in 
 \autoref{sec:sp4feedback} and evaluation of the sprint in 
@@ -12,7 +12,7 @@ done during the sprint in \autoref{sec:sp4design}, the implementation in
 %------------------------
 \section{Sprint Planning}
 %------------------------
-\label{sec:sp4planning}
+\label{sec:sp4:planning}
 The fourth sprint will be the last iteration of this project. Because it is very important to make the \gls{utility} work properly on Thales' source code, most of the sprint work hours will be used on testing and bugfixing. Now the \gls{utility} fails on most of the \glspl{struct}; the customer tried to generate \glspl{dissector} for 580 \glspl{struct}, and only 4 of them succeeded. It will probably take som time to fix the issues in the customer code.
 
 We know that some of our earlier implementation do not work as intended or are incomplete. The customer has given us feedback on the fulfilled requirements, and pointed out what needs to be improved. These are important work items that were added to this sprint backlog \ref{tab:sprint4req}. In addition, we received new requirements that the customer would like us to implement, as they add some convenient functionalities for them. For the optional requirements that we might not have time to implement, we have agreed to write a specification on how to implement them. 
@@ -139,7 +139,7 @@ This section contains the sprint backlog in \autoref{tab:sprint4req} and the tim
 %----------------------
 \section{System Design}
 %----------------------
-\label{sec:sp4design}
+\label{sec:sp4:design}
 The utility lacked the last, but also most essential implementation at the start of fourth sprint; ability to run customer's source code flawlessly. To achieve this, we had to add functionality to support custom cases and the possibility for automatic configuration.
 
 The sprint design this sprint will not be as comprehensive as the design in the prior sprints. This is because of two reasons:
@@ -151,18 +151,12 @@ After three sprints, the design was to a large degree set. Re-factoring introduc
 
 \subsection{System overview}
 %-----------------------
-The addition of new requirements from the customer resulted in changes in the utility's system overview. The need for more custom handling ended in a re-factoring of the code. This is visible in the \autoref{fig:sp2class}, which was extended from the third sprint. Two new modules was added, cpp and fields. Major changes to the class diagram are described below. The interaction between the modules is shown in \autoref{fig:sp2module}.
+The addition of new requirements from the customer resulted in changes in the utility's system overview. The need for more custom handling ended in a re-factoring of the code. This is visible in the \autoref{fig:sp2class}, which was extended from the third sprint. Two new modules was added, cpp and fields. Major changes to the class diagram are described below. How the modules interact is described in \autoref{sec:sp4:design:md}.
 
 \begin{figure}[ht]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/ClassDiagramSprint4v2.png}
 	\caption{Sprint 2 Class Diagram \label{fig:sp2class}}
-\end{figure}
-
-\begin{figure}[ht]
-	\center
-	\includegraphics[width=\textwidth]{./sprints/img/sp4modulediagram.png}
-	\caption{Sprint 2 Module Diagram \label{fig:sp2module}}
 \end{figure}
 
 \subsubsection{ccp module}
@@ -179,6 +173,37 @@ The class FileConfig was added, to hold the configuration for specific header-fi
 
 \subsubsection{dissector module}
 There was several changes, all the Field classes was added to it's own module, to hold the information about the generation, the class Dissector was added to the module. UnionProtocol was renamed to UnionDissector.
+
+\subsection{Module Diagram}
+\autoref{fig:sp2module} shows the dependencies between the modules. The main 
+module for the utility is csjark, which have the the main-method. This module 
+uses config to parse and hold all the configuration, starts preprocessing in 
+cpp module, and at the end uses cparser to parse the header-files. At the end 
+it get all the ProtocolsFields from the field module, so the Lua dissectors 
+can be written to file.
+
+The cpp module uses the config module to read options given for the c 
+preprocessing.
+
+The config module uses the two modules field and dissector to create 
+configured dissector fields. The platform moduled is read, to get de 
+predefined platform configuration.
+
+When cparser have parsed all the header files, it startes the generation of all the Lua dissectors. To do this generation the StructVisitor class depends on four modules, config, platform, dissector and field.
+
+The dissector module uses the field module to generate fields for all the 
+struct members. It also uses the platform module to get the correct sizes for 
+the c types.
+
+To get alignment sizes, the field module depend on the platform module.
+
+\begin{figure}[ht]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/sp4modulediagram.png}
+	\caption{Sprint 2 Module Diagram \label{fig:sp2module}}
+\end{figure}
+
+\label{sec:sp4:design:md}
 
 \subsection{User stories}
 \label{sec:req:stories4}
@@ -556,7 +581,7 @@ how Options can be added to the configuration file.
 %-----------------------
 \label{sec:sp4test}
 
-During sprint 4, the team executed 22 new test cases as well as re-running all of the test cases from the previous sprints. This was done in an effort to ensure that all of the functionality from the earlier sprints were still intact before ending the final sprint. \autoref{STID26} shows one of the testscases ran this sprint. The rest of the new testcases for this sprint can be seen in the following list. For more information about the testcases see \autoref{sec:testcases} in the appendix.
+During sprint 4, the team executed 22 new test cases as well as re-running all of the test cases from the previous sprints. This was done in an effort to ensure that all of the functionality from the earlier sprints were still intact before ending the final sprint. \autoref{tab:STID26} shows one of the testscases ran this sprint. The rest of the new testcases for this sprint can be seen in the following list. For more information about the testcases see \autoref{sec:testcases} in the appendix.
 
 \begin{itemize}
 	\item TID26 -Including system-headers \autoref{tab:sp4:testres1}

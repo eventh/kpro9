@@ -46,14 +46,14 @@ This section contains the sprint backlog in \autoref{tab:sprint4req} and the tim
  	\hyperref[tab:req:stories10]{US40} & FR3-A mod: Support \gls{include} of system \glspl{header} &  8  & 3 \\
 	\hyperref[tab:req:stories10]{US41} & FR3-D mod: Ignore \#pragma directives & 2 & 1 \\
 	\hyperref[tab:req:stories10]{US42} & FR3-E: Find include dependencies which are not explicitly set & 16  & 11 \\
-	\hyperref[tab:req:stories11]{US47} & FR4-B mod: Custom \Gls{lua} files support for offset and value inside a .cnf file & 4 & 1 \\
+	\hyperref[tab:req:stories11]{US47} & FR4-B mod: Custom \Gls{lua} files support inside a .cnf file & 4 & 1 \\
 	\hyperref[tab:req:stories12]{US49} & FR4-D mod: Multiple message ID's for one \gls{dissector} & 2 & 1 \\
 	\hyperref[tab:req:stories12]{US52} & FR4-H: Autogenerate configuration files for \glspl{struct} without a config file & 1  & 0.5\\
 	\hyperref[tab:req:stories12]{US51} & FR4-I: Allow configuration of size for unknown \glspl{struct} & 4 & 1 \\
 	\hyperref[tab:req:stories10]{US43} & FR6-E: Support \Gls{c} macros from \gls{cli} & 1 & 1 \\
 	\hyperref[tab:req:stories12]{US54} & FR6-F: Only generate \glspl{dissector} for \glspl{struct} with valid a id and their dependencies & 4 & 1.5 \\
 	\addlinespace
-	\textbf{Fixes} &  & \textbf{35} & \textbf{42.5} \\
+	\textbf{Fixes} &  & \textbf{35} & \textbf{43.5} \\
 	& TheFIX: Be able to process customer's files & 12 & 17 \\
 	 & FR2-A: Improve generated \Gls{lua} output & 10 & 20 \\
 	 & FR1-E: \Gls{array} bug in text & 2 & 1.5 \\
@@ -61,6 +61,7 @@ This section contains the sprint backlog in \autoref{tab:sprint4req} and the tim
 	 & FR1-E: \Gls{enum} in \glspl{array} & 1 & 1 \\		
 	 & FR6-C: \Gls{batch mode} (recursive search for subfolders) &  8  & 2 \\
 	 & FR6-C: Support command line arguments for Cpp & 1 & 0.5\\
+	 & Exclude certain folders and files in batch mode & 1 & 1 \\
 	\addlinespace
 	\textbf{Testing} &  & \textbf{16} & \textbf{7.5} \\
 	 & Fixing existing tests & 3 & 3.5 \\
@@ -71,7 +72,7 @@ This section contains the sprint backlog in \autoref{tab:sprint4req} and the tim
 	 & Add more tests for platform module & 1 & 0 \\
 	 & Add sprint 4 end-to-end tasks & 2 & 1.5 \\
 	\addlinespace
-	\textbf{Doc.} &  & \textbf{10} & \textbf{17.5} \\
+	\textbf{Doc.} &  & \textbf{15} & \textbf{17.5} \\
 	\hyperref[tab:req:stories10]{US44} & Update command line interface document & 1 & 1 \\
 	\hyperref[tab:req:stories11]{US48} & Update user documentation for custom \Gls{lua} & 1 & 1.5 \\
 	\hyperref[tab:req:stories12]{US50} & Update user documentation for message ID & 1 & 1 \\
@@ -82,7 +83,7 @@ This section contains the sprint backlog in \autoref{tab:sprint4req} and the tim
 	\hyperref[tab:req:stories9]{US37} & Create developer manual from python docstrings & 2 & 2 \\
 	& Updates and polishing & 5 & 5.5 \\
 	\midrule
-	& Total: & 108 & 91.5 \\
+	& Total: & 113 & 92.5 \\
 	\bottomrule
 \end{tabularx}
 \end{table}
@@ -97,11 +98,11 @@ This section contains the sprint backlog in \autoref{tab:sprint4req} and the tim
 	\midrule
 	\textbf{Sprint planning} & \textbf{30} & \textbf{27} \\
 	\addlinespace
-	\textbf{Sprint 4 requirements} & \textbf{109} & \textbf{-} \\
-	Implementation & 47 & - \\
-	Fixes & 35 & - \\
-	Testing & 16 & - \\
-	User Documentation & 11 & - \\
+	\textbf{Sprint 4 requirements} & \textbf{113} & \textbf{92.5} \\
+	Implementation & 47 & 24 \\
+	Fixes & 35 & 43.5 \\
+	Testing & 16 & 7.5 \\
+	User Documentation & 15 & 17.5 \\
 	\addlinespace
 	\textbf{Sprint review} & \textbf{20} & \textbf{20} \\
 	\addlinespace
@@ -129,9 +130,9 @@ This section contains the sprint backlog in \autoref{tab:sprint4req} and the tim
 	Customer meetings & 14 & 10 \\
 	Stand-up meetings & 21 & 18.5 \\
 	\addlinespace
-	\textbf{Project management} & \textbf{17} & \textbf{17.5} \\
+	\textbf{Project management} & \textbf{17} & \textbf{27} \\
 	\midrule
-	Total: & 351 & - \\
+	Total: & 351 & 344.5 \\
 	\bottomrule
 \end{tabularx}
 \end{table}
@@ -926,7 +927,7 @@ The customer has previously specified that a person without prior knowledge of W
 %----------------
 As this was the last sprint, the pressure for completing the remaining work were high. Even though the report is the most significant factor of our grade, we wanted to satisfy the customer as much as we could. This meant finishing the implementation and making the utility work on their source code, in addition to completing the report work.
 
-All the team members raised their effort this sprint, both in hours and efficiency. We started out slow, which might be because we worked hard in the previous sprint, but after some days we were back in a high work pace. In the end we managed to complete all the tasks in the backlog.
+All the team members raised their effort this sprint, both in hours and efficiency. We started out slow, which might be because we worked hard in the previous sprint, but after some days we were back in a high work pace. In the end we managed to complete all the tasks in the backlog. See the backlog in  \autoref{fig:sp4:burndown}.
 
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{./sprints/img/burndown_chart_s4}
@@ -956,8 +957,8 @@ The final testing and patching of the utility was done at the customers site. Tw
 
 \subsection{Barriers}
 %--------------------------
-\begin{itemize}
-\item External factors
-\item Security block
-\end{itemize}
+\subsubsection{External Factors}
+The customer asked if we could do a presentation of the utility for the developers at Thales, when it was finished. This would be beneficial for the final presentation and the customer would be pleased, so we accepted. To make the presentation and rehearse for it, two team members had to be excluded from the sprint work for several hours. External factors like this are not always possible to foresee, and it affected the project.
 
+\subsubsection{Thales Security}
+It was completely necessary to have Thales source code for the last test- and bug fixing-phase. As a result of the strict rules at Thales, we had to wait with critical implementation and fixing until the middle of the sprint. We managed to have the utility work on their code in the end.

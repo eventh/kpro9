@@ -1,7 +1,22 @@
-.. CSjark documentation master file, created by
-   sphinx-quickstart on Thu Sep 22 18:47:43 2011.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+..
+    Copyright (C) 2011 Even Wiik Thomassen, Erik Bergersen,
+    Sondre Johan Mannsverk, Terje Snarby, Lars Solvoll Tønder,
+    Sigurd Wien and Jaroslav Fibichr.
+    
+    This file is part of CSjark.
+    
+    CSjark is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    CSjark is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with CSjark.  If not, see <http://www.gnu.org/licenses/>.
 
 Welcome to CSjark's documentation!
 ==================================
@@ -16,7 +31,7 @@ User Documentation
 
 .. toctree::
    :maxdepth: 2
-   
+
    user/install
    user/use
    user/use_ws
@@ -25,11 +40,11 @@ User Documentation
 ..
     Developer Documentation
     -----------------------
-   
+
     .. toctree::
        :maxdepth: 2
 
-    .. 
+    ..
         deve/devel
 
 Other Information
@@ -37,15 +52,15 @@ Other Information
 
 .. toctree::
    :maxdepth: 2
-   
+
    other/license
    other/about
-   
-------------   
+
+------------
 
 ..
     **Feature list** (TBD)
-    
+
     - C header files
     - Batch mode
     - Searching and filtering in Wireshark
@@ -67,7 +82,7 @@ Other Information
 ..
     Indices and tables
     ------------------
-    
+
     * :ref:`genindex`
     * :ref:`modindex`
     * :ref:`search`

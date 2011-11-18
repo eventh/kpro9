@@ -6,11 +6,9 @@ Copyright (c) 2011, Erik Bergersen, Jaroslav Fibichr, Sondre Johan Mannsverk, Te
 
 .. _license:
 
-==================
-License & Warranty
-==================
-
-**License**
+=======
+License
+=======
 
 CSjark is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

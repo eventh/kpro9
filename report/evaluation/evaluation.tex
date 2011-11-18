@@ -18,26 +18,30 @@
 %------------------------
 \section{Further development}
 %------------------------
-During sprint 3 it became clear we would not have sufficient requirements for a sprint 4. We requested more possible features from the customer, which provided us with a list of new functional requirements and their prioritization.
+During the third sprint it became clear we would not have sufficient requirements for a fourth sprint. We requested more possible features from the customer, which provided us with a list of new functional requirements and their prioritization.
 
-In sprint 4 planning meeting we estimated the work hours to complete each of these new requirements, including implementation, testing and documentation. Based on the customers prioritization and our estimates we designed 4 of them optional, as we did not deem it possible to fulfill them in sprint 4. The customer asked us to provide a description of how unfulfilled requirements could be implemented.
+In the fourth sprint planning meeting we estimated the work hours to complete each of these new requirements, including implementation, testing and documentation. Based on the customers prioritization and our estimates we classified four of them as optional, as we did not deem it possible to fulfill them in the fourth sprint. 
+
+The customer asked us to provide a description of how unfulfilled requirements could be implemented.
 
 \subsection{Optional Requirements}
-These are the optional requirements, and how they can be implemented is described in the next four sections.
+These are the optional requirements:
 \begin{enumerate}
 \item Don't regenerate dissectors across multiple runs
 \item Use Doxygen comments for "Description"	
 \item Read int-enum config from header files
 \item Display if struct member contains uninitialized memory
-\end {enumerate} 
+\end {enumerate}
+The following sections describe how they could be implemented.
+
 
 1. Don't regenerate dissectors across multiple runs
 
-To be able to decide if we have already generated dissectors in earlier runs, we need to store some state on disk. We need to store the last modified timestamp which the operating system reports for each single input file, both headers and config file, at the time we last read them. Since command line arguments will affect the output, they must also be stored. The main challenge with this task is the fact that handling #include directives are performed by the external C preprocessor program, so we will not know which files need to be considered when evaluating if which files have been modified since last run.
+To be able to decide if we have already generated dissectors in earlier runs, we need to store some state on disk. We need to store the last modified timestamp which the operating system reports for each single input file, both headers and config file, at the time we last read them. Since command line arguments will affect the output, they must also be stored. The main challenge with this task is the fact that handling \#include directives are performed by the external C preprocessor program, so we will not know which files need to be considered when evaluating if which files have been modified since last run.
 
-One could look at #line directives outputted by the C preprocessor before we start parsing files, but the benefit of not regenerating dissectors would be diminished.
+One could look at \#line directives outputted by the C preprocessor before we start parsing files, but the benefit of not regenerating dissectors would be diminished.
 
-We estimate this task would require implementing our own C preprocessor or using a library instead of an external tool, to be able to extract the needed file dependencies. Our utility depends on PLY, which have a 95% finished implementation of a C preprocessor, which might prove valuable for this task.
+We estimate this task would require implementing our own C preprocessor or using a library instead of an external tool, to be able to extract the needed file dependencies. Our utility depends on PLY, which have a 95\% finished implementation of a C preprocessor, which might prove valuable for this task.
 
 When we are able to know which files depend on each other, and the last time they were modified, the task is simply to find a suitable data structure to store on disk between runs.
 2. Use Doxygen comments for "Description"
@@ -51,7 +55,7 @@ Integers which should act as enums in Wireshark are defined by some specific C p
 
 Like the two previous task, this will require us to parse C preprocessor directives before they are removed by the C preprocessor, which means we must implement our own C preprocessor or use a library.
 
-To avoid having to parse both C preprocessor directives and C code at the same time, we could design a syntax for describing which struct member(s) the macro define directives refer to. For example #define BEGIN_CSJARK_ENUM_FOR_NAME could be placed right before the current enum macro directives start, which would tell us that they refer to struct member NAME.
+To avoid having to parse both C preprocessor directives and C code at the same time, we could design a syntax for describing which struct member(s) the macro define directives refer to. For example \#define BEGIN\_CSJARK\_ENUM\_FOR\_NAME could be placed right before the current enum macro directives start, which would tell us that they refer to struct member NAME.
 
 This task becomes trivial to implement if we had a custom C preprocessor we could modify.
 4. Display if struct member contains uninitialized memory

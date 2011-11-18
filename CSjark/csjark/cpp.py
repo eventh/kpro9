@@ -90,17 +90,21 @@ def parse_file(filename, platform=None, folders=None, includes=None):
 
 
         feed = '\n'.join('#include "%s"' % i for i in all_includes) + '\n'
+        #print(feed)
     else:
         path_list.append(filename)
         feed = ''
 
     # Missing universal newlines forces input to expect bytes
-    if sys.platform.startswith('sunos'):
+    if sys.platform.startswith('win'):
+        newlines = True
+    else:
         feed = bytes(feed, 'ascii')
+        newlines = False
 
     # Call C preprocessor with args and file
     with Popen(path_list, stdin=PIPE, stdout=PIPE,
-            stderr=PIPE, universal_newlines=True) as proc:
+            stderr=PIPE, universal_newlines=newlines) as proc:
         text, warnings = proc.communicate(input=feed)
     if warnings:
         print(warnings.strip(), file=sys.stderr)

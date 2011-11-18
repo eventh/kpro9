@@ -43,6 +43,7 @@ visit_TypeDecl()
       <void property="contents"> 
        <void property="text"> 
         <string>parse()
+parse_file()
 find_structs()
 </string> 
        </void> 

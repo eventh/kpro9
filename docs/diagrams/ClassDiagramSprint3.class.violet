@@ -44,6 +44,7 @@ visit_TypeDecl()
       <void property="contents"> 
        <void property="text"> 
         <string>parse()
+parse_file()
 find_structs()
 </string> 
        </void> 
@@ -450,8 +451,8 @@ match()
    <object idref="ClassNode9"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>507.0</double> 
-     <double>557.0</double> 
+     <double>506.0</double> 
+     <double>564.0</double> 
     </void> 
    </object> 
   </void> 

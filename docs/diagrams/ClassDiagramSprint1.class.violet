@@ -22,6 +22,7 @@
       <void property="contents"> 
        <void property="text"> 
         <string>parse()
+parse_file()
 find_structs()</string> 
        </void> 
       </void> 
@@ -53,7 +54,7 @@ find_structs()</string>
      <object id="ClassNode2" class="com.horstmann.violet.ClassNode"> 
       <void property="attributes"> 
        <void property="text"> 
-        <string>newAttr: int</string> 
+        <string>name: str</string> 
        </void> 
       </void> 
       <void property="methods"> 
@@ -101,11 +102,6 @@ newOperation()</string>
    <object class="com.horstmann.violet.PackageNode"> 
     <void method="addChild"> 
      <object id="ClassNode4" class="com.horstmann.violet.ClassNode"> 
-      <void property="methods"> 
-       <void property="text"> 
-        <string>newOperation()</string> 
-       </void> 
-      </void> 
       <void property="name"> 
        <void property="text"> 
         <string>RangeRule</string> 

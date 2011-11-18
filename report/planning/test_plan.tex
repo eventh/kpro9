@@ -107,7 +107,11 @@ An item will be considered to have passed a test if the actual result from the t
 %---------------------------------
 \section{Testing Responsibilities}
 %---------------------------------
-Each team member is responsible for writing their own unit tests while the test leader is responsible for the quality of the test plan and the tests. The tests will mainly not be executed by the same developers who wrote the code that is to undergo testing, but by others in the testing team with as little ownership of the code as possible. 
+Each team member is responsible for writing their own unit tests while the test leader is responsible for the quality of the test plan and the tests. The tests will mainly not be executed by the same developers who wrote the code that is to undergo testing, but by others in the testing team with as little ownership of the code as possible.
+
+\subsection{Testing Routines}
+%---------------------------------
+In each sprint we decided that the unit tests would be run continuously throughout the sprints in order to make sure that no new functionality broke any of the earlier code. As the test cases depended somewhat on having completed most of the functionalities for a sprint, as well as requiring a lot of manually generated testing data, it was decided that they would be run towards the end of the sprint. The test results would then be presented a few days before the sprint evaluation, giving the developers some time to fix any bugs discovered by the testcases. 
 
 %---------------------
 \section{Changelog}

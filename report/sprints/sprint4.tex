@@ -190,7 +190,9 @@ The config module uses the two modules field and dissector to create
 configured dissector fields. The platform moduled is read, to get de 
 predefined platform configuration.
 
-When cparser have parsed all the header files, it startes the generation of all the Lua dissectors. To do this generation the StructVisitor class depends on four modules, config, platform, dissector and field.
+When cparser have parsed all the header files, it startes the generation of 
+all the Lua dissectors. To do this generation the StructVisitor class depends 
+on four modules, config, platform, dissector and field.
 
 The dissector module uses the field module to generate fields for all the 
 struct members. It also uses the platform module to get the correct sizes for 

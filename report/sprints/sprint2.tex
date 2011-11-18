@@ -294,7 +294,7 @@ The developer is the person that uses \Gls{wireshark} with the \gls{dissector} f
 	Requirement & FR2-B: The \gls{dissector} shall be able to support \glspl{struct} within \glspl{struct} \\
 	What & The \gls{utility} should be able to create a \Gls{lua} \gls{dissector} that correctly
 	displays \glspl{struct} within \glspl{struct} in \Gls{wireshark}. \\
-	How & For each \gls{struct} definition encountered in cparser, a prototype object is created. This object will include an 	identifier number used to locate
+	How & For each \gls{struct} definition encountered in cparser, a prototype object is created. This object will include an identifier number used to locate
 		the \Gls{lua} \gls{dissector} for that \gls{struct}. When a \gls{struct} \gls{member} is located inside an outer \gls{struct}. The \gls{dissector} module encodes the identification number 
 		and the size for the inner \gls{struct} into the \Gls{lua} \gls{dissector} for the outer \gls{struct}. The identification number is used to access the \gls{dissector} for the inner
 		\gls{struct} when the outer \gls{struct} \gls{dissector} is used. The outer \gls{struct} \gls{dissector} uses the size of the inner \gls{struct} to know how much of the network package

@@ -51,6 +51,10 @@ class Config:
     """Holds configuration for a specific protocol."""
 
     def __init__(self, name):
+        """Create a new Config instance.
+
+        'name' is the name of the struct to match.
+        """
         self.name = name
         self.id = None # Message id
         self.description = None
@@ -61,16 +65,27 @@ class Config:
         self.trailers = [] # Rules for protocol trailers
 
     def add_member_rule(self, member, rule):
+        """Add a new rule for a specific member.
+
+        'member' is the member of a struct to match
+        'rule' is the new rule to add
+        """
         if member not in self.members.keys():
             self.members[member] = []
         self.members[member].append(rule)
 
     def add_type_rule(self, type, rule):
+        """Add a new rule for all members of a specific type.
+
+        'type' is the C type to match members against
+        'rule' is the new rule to add
+        """
         if type not in self.types.keys():
             self.types[type] = []
         self.types[type].append(rule)
 
     def get_rules(self, member, type):
+        """Return all rules which match 'member' or 'type'."""
         rules = self.members.get(member, [])
         rules.extend(self.types.get(type, []))
         return rules
@@ -121,6 +136,7 @@ class BaseRule:
     """A base class for rules referring to protocol fields."""
 
     def __init__(self, conf, obj):
+        """Read member or type info from a sub-class instance."""
         # A field rule refers either to a type or a member
         self.member = self.type = None
         if 'member' in obj:
@@ -139,6 +155,7 @@ class Range(BaseRule):
     """Rule for specifying a valid range for a member or type."""
 
     def __init__(self, conf, obj):
+        """Create a new Range rule instance."""
         super().__init__(conf, obj)
 
         # Min and max represents the endpoints of the valid range
@@ -155,6 +172,7 @@ class Enum(BaseRule):
     """Rule for emulating enum with int-like types."""
 
     def __init__(self, conf, obj):
+        """Create a new Enum rule instance."""
         super().__init__(conf, obj)
         self.strict = obj.get('strict', True)
 
@@ -170,6 +188,7 @@ class Bitstring(BaseRule):
     """Rule for representing ints which are bit strings."""
 
     def __init__(self, conf, obj):
+        """Create a new Bitstring rule instance."""
         super().__init__(conf, obj)
 
         # Find all bitstring definitions
@@ -211,6 +230,7 @@ class Trailer(BaseRule):
     """Rule for specifying one or more trailer protocol(s)."""
 
     def __init__(self, conf, obj):
+        """Create a new Trailer rule instance."""
         # Name of the dissector to call for the trailer
         self.name = str(obj['name'])
         if not self.name:
@@ -237,6 +257,7 @@ class Custom(BaseRule):
     """Rule for specifying a custom field handling."""
 
     def __init__(self, conf, obj):
+        """Create a new Custom rule instance."""
         super().__init__(conf, obj)
         self.field = str(obj.get('field', ''))
         if not self.field:
@@ -253,6 +274,7 @@ class Custom(BaseRule):
         self.desc = obj.get('desc', None)
 
     def create(self, proto, name, ctype, size, alignment, endian):
+        """Create a new Field based on this rule."""
         if self.size is not None:
             size = self.size
         else:

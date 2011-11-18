@@ -156,7 +156,7 @@ def parse_args(args=None):
     Options.verbose = namespace.verbose
     Options.debug = namespace.debug
     Options.strict = namespace.strict
-    Options.excludes.extend(os.path.normpath(i) for i in namespace.exclude)
+    Options.excludes.extend(namespace.exclude)
     Options.generate_placeholders = namespace.placeholders
     Options.use_cpp = namespace.nocpp
     Options.cpp_path = namespace.CPP
@@ -214,6 +214,9 @@ def parse_args(args=None):
     files_in_folder(headers, ('.h', '.hpp'))
     files_in_folder(configs, ('.yml', ))
 
+    # Normalize all header paths
+    headers = [os.path.normpath(i) for i in headers]
+
     return headers, configs
 
 
@@ -229,12 +232,11 @@ def parse_headers(headers):
         if 'before: ' in msg:
             key = msg.rsplit('before: ', 1)[1].strip()
             include = cparser.StructVisitor.all_known_types.get(key, None)
-        #print(filename, include)
         if include is None:
             return False, None
 
         # Problem with typedef, TODO: improve this error handling
-        if os.path.normpath(filename) == os.path.normpath(include):
+        if filename == include:
             return False, None
 
         new_error = create_dissector(filename, platform, folders, [include])

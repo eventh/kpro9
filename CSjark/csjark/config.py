@@ -456,7 +456,7 @@ class FileConfig:
         if obj.filename != filename:
             obj = FileConfig(filename)
             Options.files[filename] = obj
-        if obj.filename != os.path.normpath(include):
+        if obj.filename != include:
             obj.includes.append(include)
 
 
@@ -487,7 +487,6 @@ class Options:
     @classmethod
     def match_file(cls, filename):
         """Find file config object for 'filename'."""
-        filename = os.path.normpath(filename)
         if filename in cls.files:
             return cls.files[filename]
         filename = os.path.basename(filename)
@@ -516,7 +515,7 @@ class Options:
         # Handle exclude arguments, files and folders to NOT parse
         excludes = obj.get('excludes', None)
         if excludes:
-            cls.excludes.extend(os.path.normpath(i) for i in excludes)
+            cls.excludes.extend(excludes)
 
         # Handle default C preprocessor arguments
         cls.default.update(obj)
@@ -532,6 +531,15 @@ class Options:
     @classmethod
     def prepare_for_parsing(cls):
         """Prepare options before parsing starts.."""
+        # Normalize all filename paths of interest
+        def normpaths(filenames):
+            return [os.path.normpath(i) for i in filenames]
+        cls.excludes = normpaths(cls.excludes)
+        for fconf in list(cls.files.values()) + [cls.default]:
+            fconf.filename = os.path.normpath(fconf.filename)
+            fconf.include_dirs = normpaths(fconf.include_dirs)
+            fconf.includes = normpaths(fconf.includes)
+
         # Map current platform to a platform configuration
         if not cls.platforms:
             mapping = {'win': 'Win32', 'darwin': 'Macos',

@@ -90,7 +90,6 @@ def parse_file(filename, platform=None, folders=None, includes=None):
 
 
         feed = '\n'.join('#include "%s"' % i for i in all_includes) + '\n'
-        #print(feed)
     else:
         path_list.append(filename)
         feed = ''

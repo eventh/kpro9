@@ -434,5 +434,5 @@ class StructVisitor(c_ast.NodeVisitor):
         """Register the type 'name' in the known types mapping."""
         if name is None:
             name = node.name
-        StructVisitor.all_known_types[name] = node.coord.file
+        StructVisitor.all_known_types[name] = os.path.normpath(node.coord.file)
 

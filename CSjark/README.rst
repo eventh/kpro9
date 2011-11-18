@@ -27,9 +27,9 @@ To run the unittests checkout sources and run:
 
 Documentation
 -------------
-User documentation: http://csjark.readthedocs.org/
-Development documentation: http://csjark.readthedocs.org/
-GitHub project page: https://github.com/eventh/kpro9
+* User documentation: http://csjark.readthedocs.org/
+* Development documentation: http://csjark.readthedocs.org/
+* GitHub project page: https://github.com/eventh/kpro9
 
 License
 -------

@@ -103,6 +103,8 @@ categories as for the prioritization of the requirements:
 	FR2-B & The \gls{dissector} shall be able to support \glspl{struct} within \glspl{struct} & \Gls{m} & \Gls{m} \\
 	FR2-C & The \gls{dissector} must support \Gls{wireshark}'s built-in filter and search on attributes & \Gls{h} & \Gls{l} \\
 	FR2-D & The \gls{dissector} shall be able to recognize invalid values for a \gls{struct} \gls{member} & \Gls{l} & \Gls{l} \\
+	FR2-E & The \gls{dissector} shall be able to guess dissector from packets size & ? & ? \\
+	FR2-F & The \gls{dissector} shall display an warning if a struct member contains uninitialized memory & O & ? \\
 	\midrule
 	FR3 & The \gls{utility} must support \Gls{c} \gls{preprocessor} directives and macros & \Gls{h} & \\
 	FR3-A & The \gls{utility} shall support \gls{include} & \Gls{h} & \Gls{l} \\
@@ -117,21 +119,33 @@ categories as for the prioritization of the requirements:
 	FR4-E & Configuration must support various trailers (other registered \gls{protocol}) & \Gls{l} & \Gls{h} \\
 	FR4-F & Configuration must support integer \glspl{member} which represent enumerated named value & \Gls{m} & \Gls{l} \\	
 	FR4-G & Configuration must support \glspl{member} which are \gls{bit string} & \Gls{m} & \Gls{l} \\
+	FR6-H & The utility shall support automatic generation of configuration files for unknown structs & ? & ? \\
+	FR6-I & Configurtion must support specifying the size of a struct members & ? & ? \\
 	\midrule
 	FR5 & The \glspl{dissector} must be able to handle \gls{binary} input which size and \gls{endian} depends on originating platform & \Gls{m} & \\
 	FR5-A & Flags must be specified in configuration for each platform & \Gls{m} & \Gls{m} \\
 	FR5-B & Generate \glspl{dissector} with correct alignment depending on platform & \Gls{m} & \Gls{m} \\
 	FR5-C & Generate \glspl{dissector} which support both little and big \gls{endian} platforms & \Gls{h} & \Gls{m} \\
 	FR5-D & Generate \glspl{dissector} which support different sizes depending on platforms & \Gls{m} & \Gls{h} \\
-	\midrule
+	\bottomrule
+\end{tabularx}}
+\end{table}
+\begin{table}[htbp] \footnotesize \center
+\caption{Functional Requirements part 2\label{tab:req:func2}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X c c}
+	\toprule
 	FR6 & The \gls{utility} shall support parameters from command line & \Gls{h} & \\
 	FR6-A & Command line shall support parameter for \Gls{c} \gls{header} file & \Gls{h} & \Gls{l} \\
 	FR6-B & Command line shall support parameter for configuration file & \Gls{h} & \Gls{l} \\
 	FR6-C & Command line shall support batch processing of \Gls{c} \gls{header} and configuration files & \Gls{l} & \Gls{m} \\
-	FR6-D & When running \gls{batch mode}, \glspl{dissector} that already are generated, shall not be regenerated, if the source are not modified since last run & \Gls{l} & \Gls{m} \\
+	FR6-D & When running \gls{batch mode}, \glspl{dissector} that already are generated, shall not be regenerated, if the source are not modified since last run & O & \Gls{m} \\
+	FR6-E & Command line shall support \#define directives & ? & ? \\
+	FR6-F & The utility shall only generate dissectors from structs with valid id and theirs' dependencies & ? & ? \\
 	\midrule
-	FR7 & Fetch configuration directly from source code & ? & ? \\
-	FR7-A & Use Doxygen comments for strut members as "Description" & - & \\
+	FR7 & Fetch configuration directly from source code & O & ? \\
+	FR7-A & The utility shall support generation of struct member description from Doxygen comments & O & ?\\
+	FR7-B & The utility shall suppot reading configuration for \#define enums from the header files & O & ? \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -163,7 +177,7 @@ categories as for the prioritization of the requirements:
 \end{table}
 
 %------------------
-\section{Use Cases}d
+\section{Use Cases}
 %------------------
 \label{sec:req:usecases}
 This sections contains use case diagrams for our two actors, and detailed

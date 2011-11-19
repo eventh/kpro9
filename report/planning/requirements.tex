@@ -141,7 +141,7 @@ The team has estimated the complexity for each requirement. We use the following
 	FR6-B & Command line shall support parameter for configuration file & \Gls{h} & \Gls{l} \\
 	FR6-C & Command line shall support batch processing of \Gls{c} \gls{header} and configuration files & \Gls{l} & \Gls{m} \\
 	FR6-D & When running \gls{batch mode}, \glspl{dissector} that already are generated, shall not be regenerated, if the source are not modified since last run & O & \Gls{m} \\
-	FR6-E & Command line shall support \#define directives & ? & ? \\
+	FR6-E & Command line shall support \#define directives & ? &  \\
 	FR6-F & The utility shall only generate dissectors from structs with valid id and theirs' dependencies & ? & ? \\
 	\midrule
 	FR7 & The utility shall be able to etch configuration directly from source code & O & ? \\
@@ -176,6 +176,46 @@ The team has estimated the complexity for each requirement. We use the following
 	\bottomrule
 \end{tabularx}}
 \end{table}
+
+
+%------------------
+\section{Requirement Description}
+%------------------
+\label{sec:req:desc}
+This section gives a short description of the requirements, to give the reader 
+of the paper a better understanding of the requirements. The description for 
+each group of requirement are described below:
+
+\begin{description}
+	\item[FR1] To be able to parse the header-files, the utility need to have
+		 support for different C data types and definitions. This requirement list 
+		the different members that the utility shall support.
+	\item[FR2] The requirement specify what the dissector shall support, to be 
+		able to be display the packet correctly in Wireshark. 
+	\item[FR3] To be able to parse the header-files, the utility will need to 
+		support some c preprocessor directives and macros. This requirement covers 
+		what the utility need to support.
+	\item[FR4] To make the utility flexible, there is a need to support 
+		configuration of how the utility should handle different data types, custom 
+		code and configuration how to display members in Wireshark. This requirement 
+		specify what the utility should support configuration of.
+	\item[FR5] To be able to support diffent platforms, the utility will need 
+		functionality that can be different between the platforms. The requirement 
+		lists what the utility must support, to handle different platforms.
+	\item[FR6] These requirement tells what kind of command-line paramters the 
+		utility should support. 
+	\item[FR7] The requirement in this category, is for automatic genereation 
+		from the header-files. With automatic generation there will be faster the 
+		configure the system.
+\end{description}
+
+The relationship between the requirements can be seen in \autoref{fig:req:relationship}.
+
+\begin{figure}[htbp]
+	\center
+	\includegraphics[width=\textwidth]{./planning/img/requirement_relationship}
+	\caption{Relationship Between Requirements \label{fig:req:relationship}}
+\end{figure}
 
 %------------------
 \section{Use Cases}

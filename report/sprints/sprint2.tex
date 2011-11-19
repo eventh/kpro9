@@ -203,7 +203,9 @@ The main differences from sprint 1 are the additions of new classes, extending
 the functionality of the \gls{utility} so it can handle 
 more complex \gls{header} files than it could before. The developers also 
 generalized some of the modules and used inheritance to support the re-use of 
-code.
+code. \autoref{fig:sp2:module} shows the dependencies between the modules,
+the only difference here, is that csjark do not use dissector, after som refactoring
+of the code.
 
 The addition to the class diagram have been mainly to support more data types 
 for C in the cparser and support for more configuration options in config 
@@ -211,9 +213,16 @@ module, and generation of the fields in dissector module.
  
 \begin{figure}[!htb]
 	\center
-	\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s2}
+	\includegraphics[width=\textwidth]{./sprints/img/ClassDiagramSprint2v2}
 	\caption{Class Diagram\label{fig:sp2:class}}
 \end{figure}
+
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width=0.5\textwidth]{./sprints/img/sp2modulediagram}
+	\caption{Module Diagram\label{fig:sp2:module}}
+\end{figure}
+sp2modulediagram
 
 \subsubsection{Csjark}
 The main differences in this module was changes in the Cli class, which now 
@@ -668,17 +677,8 @@ CSjark supports.
 \label{sec:sp2:test}
 This section introduces the tests preformed during the sprint and their results. For sprint 2 it was also decided that the larger unit tests should also be documented and added to the test documents.
 
-%subsection{Tests}
-During the sprint, the team executed a total of seven test cases. An example of a testcase can be seen in \autoref{tab:STID08} while the rest of the  test cases can be found in \autoref{sec:testcases}.The following list shows the test cases executed this sprint:
-\begin{itemize}
-	\item TID08 - Supporting \glspl{member} of type \gls{enum}
-	\item TID09 - Supporting \glspl{member} of type \gls{array}
-	\item TID10 - Supporting the display of \glspl{struct} within \glspl{struct}
-	\item TID11 - Supporting \glspl{enumerated named value}
-	\item TID12 - Supporting \glspl{bit string}
-	\item TID13 - Supporting \glspl{struct} with various \gls{trailers}
-	\item TID14 - Sprint 2 functionality test
-\end{itemize}
+\subsection{Test Results}
+During the sprint, the team executed a total of seven test cases. An example of a testcase can be seen in \autoref{tab:STID08} while the rest of the  test cases can be found in \autoref{sec:testcases}.The results are listed in \autoref{tab:sp2TIDS}.
 
 \begin{table}[ht] \footnotesize \center
 \caption{Test case TID08}\label{tab:STID08}
@@ -704,10 +704,6 @@ During the sprint, the team executed a total of seven test cases. An example of 
 	\bottomrule
 \end{tabularx}}
 \end{table}
-
-\subsection{Test Results}
-%----------------------------
-The results are listed in \autoref{tab:sp2TIDS}.
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Sprint 1 test results\label{tab:sp2TIDS}}
@@ -760,10 +756,6 @@ The results are listed in \autoref{tab:sp2TIDS}.
 	\bottomrule
 \end{tabularx}}
 \end{table}
-
-\subsection{Test Evaluation}
-%-------------------------------
-For the second sprint the developers focused a lot more on testing during implementation. The team also decided that the testers should check how much of the code was covered in the unit tests. This made the team focus more on making proper unit tests that tests as much functionality as possible. This had a very positive effect on the tests that were run at the end of the sprint, where not a single test failed, except for one which ended up exposing a bug in \Gls{wireshark}
 
 \subsection{Test Coverage}
 This section introduces the amount of code covered by our unit tests and how it relates to the test coverage from the previous sprints.
@@ -826,8 +818,9 @@ The following list contains the unit tests used in the second sprint and the cod
 	\caption{Code coverage progress from previous sprints\label{fig:sp2CoverageChart}}
 \end{figure}
 
-
- 
+\subsection{Test Evaluation}
+%-------------------------------
+For the second sprint the developers focused a lot more on testing during implementation. The team also decided that the testers should check how much of the code was covered in the unit tests. This made the team focus more on making proper unit tests that tests as much functionality as possible. This had a very positive effect on the tests that were run at the end of the sprint, where not a single test failed, except for one which ended up exposing a bug in \Gls{wireshark}
 
 
 %--------------------------

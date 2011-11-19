@@ -19,12 +19,12 @@ improving existing features and making sure the \gls{utility} work properly
 on Thales' source code.
 
 Before the sprint the customer tried our \gls{utility} on close to 200 C
-header files, but was only able to generate 4 \glspl{dissector}.
+header files, but was only able to generate four \glspl{dissector}.
 For the \gls{utility} to be of value to Thales we must improve this.
 
 Feedback from the customer before sprint 4 revealed that certain requirements
 were not fulfilled, and needed to be improved. These were added as work items
-to this sprint backlog \ref{tab:sprint4req}. In addition, we received new
+to this sprint backlog in \autoref{tab:sprint4req}. In addition, we received new
 requirements that the customer would like us to implement.
 
 As this is the last sprint, and with the new requirements from the customer it
@@ -51,7 +51,7 @@ Since the deadline of the project is 24th November, there will also be a focus o
 %--------------------
 This section contains the sprint backlog in \autoref{tab:sprint4req} and the timetable for the sprint in \autoref{tab:sprint4time}.  
 
-\begin{table}[!htbp] \small \center
+\begin{table}[htbp] \small \center
 \caption{Sprint 4 Requirement Work Items \label{tab:sprint4req}}
 \begin{tabularx}{\textwidth}{l X c c}
 	\toprule
@@ -106,7 +106,7 @@ This section contains the sprint backlog in \autoref{tab:sprint4req} and the tim
 \end{tabularx}
 \end{table}
 
-\begin{table}[!htb] \small \center
+\begin{table}[htbp] \small \center
 \caption{Sprint 4 Timetable\label{tab:sprint4time}}
 \begin{tabularx}{\textwidth}{X c c}
 	\toprule
@@ -159,42 +159,53 @@ This section contains the sprint backlog in \autoref{tab:sprint4req} and the tim
 \section{System Design}
 %----------------------
 \label{sec:sp4:design}
-The utility lacked the last, but also most essential implementation at the start of fourth sprint; ability to run customer's source code flawlessly. To achieve this, we had to add functionality to support custom cases and the possibility for automatic configuration.
 
-The sprint design this sprint will not be as comprehensive as the design in the prior sprints. This is because of two reasons:
+At the start of the fourth sprint our utility was only able to successfully
+parse a few of the header files in the customer's code base. We had to add
+functionality to support corner cases of features we already had, and to
+remove C code which \gls{pycparser} does not accept, like \#pragma directives.
+
+This sprint the design will not be as comprehensive as in prior sprints, for two reasons:
 \begin{itemize}
 	\item This was the last sprint, if we were to implement many new features we also had to use time for testing and writing documentation for them, which we did not have.
-	\item The existing features had to be extensively tested and documented before the project was over, leaving little time for other work. Testing and bug fixing was essential this sprint.
+	\item The existing features had to be extensively tested and documented before the project was over, leaving less time for other work. Testing and bug fixing was essential this sprint.
 \end{itemize}
-After three sprints, the design was to a large degree set. Re-factoring introduced some new modules, but it was just to make the code more logic and to distribute it so testing can be done more easily. This is described in the system overview section.
+After three sprints, the design was to a large degree set. To make the
+individual modules less complex, we re-factored some code and introduced
+some new modules, which is described below.
 
 \subsection{System overview}
-%-----------------------
-The addition of new requirements from the customer resulted in changes in the utility's system overview. The need for more custom handling ended in a re-factoring of the code. This is visible in the \autoref{fig:sp2class}, which was extended from the third sprint. Two new modules was added, cpp and fields. Major changes to the class diagram are described below. How the modules interact is described in \autoref{sec:sp4:design:md}.
+%---------------------------
+The addition of new requirements from the customer resulted in changes in the utility's system overview. The need for more custom handling resultet in a re-factoring of the code. This is visible in the class diagram in \autoref{fig:sp4class}, which was extended from the third sprint. Two new modules was added, cpp and field. Major changes to the class diagram are described below. How the modules interact is described in \autoref{sec:sp4:design:md}.
 
-\begin{figure}[ht]
-	\center
-	\includegraphics[width=\textwidth]{./sprints/img/ClassDiagramSprint4v2.png}
-	\caption{Sprint 2 Class Diagram \label{fig:sp2class}}
+\begin{figure}[htbp]
+	\noindent\makebox[\textwidth]{%
+	\includegraphics[width=1.2\textwidth]{./sprints/img/ClassDiagramSprint4v2.png}}
+	\caption{Sprint 4 Class Diagram \label{fig:sp4class}}
 \end{figure}
 
 \subsubsection{ccp module}
-The need for preprocessing C files before they are parsed have become so comprehensive, that we decided to create a dedicated module for it. All the existing cpp concerned code was relocated from the cparser module, and joint with the new implementation. The requirements listed in\autoref{tab:sprint4req}, made it necessary to have more functionality regarding the preprocessor step. 
+The need for preprocessing C files before they are parsed have become so comprehensive, that we decided to create a dedicated module for it. All the existing cpp concerned code was relocated from the cparser module, and joint with the new implementation. The requirements listed in\autoref{tab:sprint4req}, made it necessary to have more functionality regarding the preprocessor step. Especially we need to remove parts of the output of the C preprocessor before forwarding it to the \gls{pycparser} library.
 
-\subsubsection{fields module}
-Field specific classes were moved from the dissector module to its own, field. For the same reason as the ccp module; the amount of code concerning fields became so great, that a own module was appropriate. There was some refactoring in the field module. BaseField was added and has Field as a subclass. The class Field in is the most important class in this module, and generate the most of fields for the dissector. Subtree is a class that generates fields for the dissector, that will need a subtree in Wireshark, this class has three subclasses, BitField, ArrayField and ProtocolField.
+\subsubsection{field module}
+Field specific classes were moved from the dissector module to its own module, field. For the same reason as the ccp module; the amount of code concerning fields became so great, that an own module was appropriate. There was some refactoring in the field module. An interface, BaseField, was added and has Field as a subclass. The class Field is the most important class in this module, and generate code for most of fields used by dissector. Subtree is a class that generates fields for the dissector, that will need a subtree in Wireshark, this class has three subclasses, BitField, ArrayField and ProtocolField.
 
 \subsubsection{cparser module}
-Some changes was done in this module due to the refactoring, functionality for the c preprocessing was moved. And some new methods was added since, field and dissector module was splitted. 
+Some changes was done in this module due to the refactoring, functionality for C preprocessing was moved, and some new methods was added. 
 
 \subsubsection{config module}
 The class FileConfig was added, to hold the configuration for specific header-files. Some methods was also added for automatic generation of header-files.
 
 \subsubsection{dissector module}
-There was several changes, all the Field classes was added to it's own module, to hold the information about the generation, the class Dissector was added to the module. UnionProtocol was renamed to UnionDissector.
+There was several changes, all the Field classes was added to it's own module.
+The Dissector-class was added, which holds fields representing one struct for
+a specific platform. Protocol is now a collection of Dissectors, one for each
+platform. UnionProtocol was renamed to UnionDissector.
 
 \subsection{Module Diagram}
-\autoref{fig:sp2module} shows the dependencies between the modules. The main 
+%--------------------------
+\label{sec:sp4:design:md}
+\autoref{fig:sp4module} shows the dependencies between the modules. The main 
 module for the utility is csjark, which have the the main-method. This module 
 uses config to parse and hold all the configuration, starts preprocessing in 
 cpp module, and at the end uses cparser to parse the header-files. At the end 
@@ -218,13 +229,11 @@ the c types.
 
 To get alignment sizes, the field module depend on the platform module.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/sp4modulediagram.png}
-	\caption{Sprint 2 Module Diagram \label{fig:sp2module}}
+	\caption{Sprint 4 Module Diagram \label{fig:sp4module}}
 \end{figure}
-
-\label{sec:sp4:design:md}
 
 \subsection{User stories}
 \label{sec:req:stories4}

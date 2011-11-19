@@ -113,7 +113,7 @@ normal use. Maintenance may also include developing new features that the
 customer finds the need for.
 
 \subsection{\Gls{scrum}}
-%-----------------
+%-----------------------
 \label{sec:pre:scrum}
 \Gls{scrum} is an agile development methodology based on the philosophy that it is
 impossible to completely and accurately plan everything in a software project
@@ -174,9 +174,9 @@ went and on how we could improve for the next sprint. This is important for impr
 process.
 
 
-%------------------
+%------------------------
 \section{\Gls{wireshark}}
-%------------------
+%------------------------
 \label{sec:pre:wireshark}
 \begin{wrapfigure}{r}{3.5cm}
 	\vspace{-10pt}
@@ -215,7 +215,7 @@ describe these different languages. In \autoref{sec:pre:langchoice} we describe
 which language we selected and why.
 
 \subsection{\Gls{lua}}
-%---------------
+%---------------------
 \begin{wrapfigure}{r}{2.5cm}
 	\vspace{-10pt}
 	\includegraphics[width=2.5cm]{./planning/img/lua_logo}
@@ -235,7 +235,7 @@ because they can be added without recompiling \Gls{wireshark}. This is important
 interface with \Gls{wireshark} through a simple \Gls{api}.
 
 \subsection{\Gls{java}}
-%----------------
+%----------------------
 \label{sec:pre:java}
 \begin{wrapfigure}{r}{1.3cm}
 	\vspace{-30pt}
@@ -252,8 +252,8 @@ management, security, good documentation and an extensive standard \gls{library}
 for example \gls{antlr} and \gls{javacc}. A detailed description of \gls{antlr} can be found in 
 \autoref{sec:pre:antlr}.
 
-\subsection{python}
-%------------------
+\subsection{\Gls{python}}
+%------------------------
 \label{sec:pre:python}
 \begin{wrapfigure}{r}{2cm}
 	\vspace{-20pt}
@@ -282,7 +282,7 @@ justification for the \glspl{library} we selected can be found in
 \autoref{sec:pre:parserchoice}.
 
 \subsection{\gls{antlr}}
-%-----------------
+%-----------------------
 \label{sec:pre:antlr}
 \begin{wrapfigure}{r}{2.5cm}
 	\vspace{-20pt}
@@ -306,7 +306,7 @@ for our \gls{utility}. Other special purpose \glspl{parser} like \gls{pycparser}
 cppheaderparser depends on \Gls{aply}. These are described later in this section.
 
 \subsection{\gls{pycparser}}
-%---------------------
+%---------------------------
 \label{sec:pre:pycparser}
 There are two \Gls{python} \glspl{library} for parsing \Gls{c} with the same name, but different
 capitalization, \gls{pycparser}\footnote{\url{http://code.google.com/p/pycparser/}}
@@ -339,7 +339,7 @@ flexibility if we need to change its behaviour, and we will still need to write
 a custom \gls{parser} or use something like \gls{GCC-XML} and an \gls{axml} \gls{parser}.
 
 \subsection{\Gls{clang}}
-%-----------------
+%-----------------------
 \label{sec:pre:clang}
 \begin{wrapfigure}{r}{2.5cm}
 	\vspace{-20pt}
@@ -369,7 +369,7 @@ clear relationship between enumerated values in messages and their names.
 These must be provided through a configuration.
 
 \subsection{YAML Ain't Markup Language}
-%----------------
+%--------------------------------------
 \label{sec:pre:yaml}
 \begin{wrapfigure}{r}{3cm}
 	\vspace{-30pt}
@@ -556,8 +556,8 @@ code navigation is a little lacking. It will for example not suggest importing
 files if you reference a class from another module and it cannot give a
 complete list of usages of a function.
 
-\subsection{\gls{vim}}
-%---------------
+\subsection{\Gls{vim}}
+%---------------------
 \begin{wrapfigure}{r}{1.5cm}
 	\vspace{-20pt}
 	\includegraphics[width=1.5cm]{./planning/img/vim_logo}
@@ -680,9 +680,8 @@ need to modify a \Gls{c} \gls{preprocessor} we might use \Gls{aply}'s incomplete
 We have listed a summary of some of the advantages and drawbacks of the
 different configuration frameworks we looked at in \autoref{tab:pre:config}.
 \begin{table}[htbp] \footnotesize \center
-\caption{Configuration summary\label{tab:pre:config}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.1\textwidth}{X X X X}
+\caption{Configuration Summary\label{tab:pre:config}}
+\begin{tabularx}{\textwidth}{X X X X}
 	\toprule
 	& \Gls{yaml} & configparser & ConfigObj \\
 	\midrule
@@ -700,7 +699,7 @@ different configuration frameworks we looked at in \autoref{tab:pre:config}.
 	\Gls{python} \gls{branch} & 2.7 and 3.3 & 2.7 and 3.3 & 2.7 \\
 	License & \Gls{mit} & PSF L & \Gls{bsd}-new \\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 We decided to use \hyperref[sec:pre:yaml]{YAML} for handling configuration

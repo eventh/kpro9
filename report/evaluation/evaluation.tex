@@ -1,71 +1,25 @@
 %===========================
 \chapter{Project Evaluation}
 %===========================
+This chapter gives an evaluation of the project.
 
-%-----------------------
-\section{Group Dynamics}
-%-----------------------
-
-%---------------------
-\section{Use of Scrum}
-%---------------------
+%----------------------------------
+\section{The team}
+%----------------------------------
+%how we managed the process
+%scrum
 
 %------------------------
 \section{Time Estimation}
 %------------------------
 
+%----------------
+\section{Advisors}
+%----------------
 
-%------------------------
-\section{Further development}
-\label{sec:eval:furtherdev}
-%------------------------
-During the third sprint it became clear we would not have sufficient requirements for a fourth sprint. We requested more possible features from the customer, which provided us with a list of new functional requirements and their prioritization.
-
-In the fourth sprint planning meeting we estimated the work hours to complete each of these new requirements, including implementation, testing and documentation. Based on the customers prioritization and our estimates we classified four of them as optional, as we did not deem it possible to fulfill them in the fourth sprint. 
-
-The customer asked us to provide a description of how unfulfilled requirements could be implemented.
-
-\subsection{Optional Requirements}
-These are the optional requirements:
-\begin{enumerate}
-\item Don't regenerate dissectors across multiple runs
-\item Use Doxygen comments for "Description"	
-\item Read int-enum config from header files
-\item Display if struct member contains uninitialized memory
-\end {enumerate}
-The following sections describe how they can be implemented.
-
-\subsubsection{1. Don't regenerate dissectors across multiple runs}
-To be able to decide if we have already generated dissectors in earlier runs, we need to store some state on disk. We need to store the last modified timestamp which the operating system reports for each single input file, both headers and config file, at the time we last read them. Since command line arguments will affect the output, they must also be stored. The main challenge with this task is the fact that handling \#include directives are performed by the external C preprocessor program, so we will not know which files need to be considered when evaluating if which files have been modified since last run.
-
-One could look at \#line directives outputted by the C preprocessor before we start parsing files, but the benefit of not regenerating dissectors would be diminished.
-
-We estimate this task would require implementing our own C preprocessor or using a library instead of an external tool, to be able to extract the needed file dependencies. Our utility depends on PLY, which have a 95\% finished implementation of a C preprocessor, which might prove valuable for this task.
-
-When we are able to know which files depend on each other, and the last time they were modified, the task is simply to find a suitable data structure to store on disk between runs.
-
-\subsubsection{2. Use Doxygen comments for "Description"}
-Comments are removed by the C preprocessor, which means we must parse them before it is run. As the preprocessor evaluates which files to open, we would be required to implement our own or use a library, or try to evaluate applicable files in all include folders.
-
-The task if such support were available would simply be to search for doxygen comments, and when one is found parse it to extract the correct information.
-
-\subsubsection{3. Read int-enum config from header files}
-Integers which should act as enums in Wireshark are defined by some specific C preprocessor macro define directives in customers current header files. This task is to automatically extract such information, to require less manual configuration of our utility.
-
-Like the two previous task, this will require us to parse C preprocessor directives before they are removed by the C preprocessor, which means we must implement our own C preprocessor or use a library.
-
-To avoid having to parse both C preprocessor directives and C code at the same time, we could design a syntax for describing which struct member(s) the macro define directives refer to. For example \#define BEGIN\_CSJARK\_ENUM\_FOR\_NAME could be placed right before the current enum macro directives start, which would tell us that they refer to struct member NAME.
-
-This task becomes trivial to implement if we had a custom C preprocessor we could modify.
-
-\subsubsection{4. Display if struct member contains uninitialized memory}
-Uninitialized memory will look different depending on the compiler, so therefor we need to add support for specifying how it will look for each Platform instance in platform module. Since we can only evaluate the actual memory on the wireshark end of things, most of the functionality must be written in lua code.
-
-These two conditions suggest that the dissector module should, inside the Delegator class, generate a suitable lua function in luastructs.lua which accepts a buffer value for a field and the field node. This function should, if the buffer value match uninitialized memory,  set an appropriate warning on the field node.
-
-This new function must be called for every field defined in every dissector we generate, inside the appropriate dissector functions.
-
-In addition to implementation, the task involves researching how uninitialized memory looks on different platforms we support and creating pcap files for testing the functionality.
+%----------------
+\section{Customer}
+%----------------
 
 %----------------
 \section{Summary}

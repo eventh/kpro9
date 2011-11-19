@@ -47,9 +47,8 @@ class ParseError(plyparser.ParseError):
     pass
 
 
-def parse(text, filename=''):
+def parse(text, filename='', parser=c_parser.CParser()):
     """Parse C code and return an AST."""
-    parser = c_parser.CParser()
     return parser.parse(text, filename)
 
 

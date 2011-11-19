@@ -1,7 +1,8 @@
 \section{Product Backlog}
 %---------------------------
 \label{sec:prodbacklog}
-\autoref{tab:prodbacklog} contains a complete product backlog.
+The product backlog can be seen in \autoref{tab:prodbacklog}. The requirements with * in actual hours, are requirements that we have not implemented. These requirements are described in the further development section in \autoref{sec:eval:furtherdev}.
+
 \begin{table}[ht] \small \center
 \caption{Product Backlog, part I \label{tab:prodbacklog}}
 \begin{tabularx}{\textwidth}{l X c c}
@@ -10,21 +11,21 @@
 	\cmidrule(r){3-4}
 	Req. & Description & Est. & Act. \\
 	\midrule
-	FR1 & Read basic \Gls{c} \gls{struct} definitions & & \\
+	FR1 & Read basic \Gls{c} \gls{struct} definitions & \textbf{52}  & \textbf{51}  \\
 	FR1-A & Support data types: \gls{int}, \gls{float}, \gls{char} and \gls{boolean} & 24 & 21 \\
 	FR1-B & Support \glspl{member} of type \gls{enum} & 6 & 5 \\
 	FR1-C & Support \glspl{member} of type \gls{struct} & 7 & 3.5 \\
-	FR1-D & Support \glspl{member} of type \gls{union}& 5 & - \\
+	FR1-D & Support \glspl{member} of type \gls{union}& 5 & 6 \\
 	FR1-E & Support \glspl{member} of type \gls{array} & 7 & 12 \\
 	FR1-F & Detect \glspl{struct} with same name & 3 & 3.5 \\
 	\addlinespace
 	FR2 & Generate \Gls{wireshark} \glspl{dissector} in \Gls{lua} & & \\
 	FR2-A & Display simple \glspl{struct} & 28 & 25 \\
 	FR2-B & Support display of \glspl{struct} within \glspl{struct} & 11 & 15 \\
-	FR2-C & Support \Gls{wireshark} filter and search on attributes & 3 & - \\
+	FR2-C & Support \Gls{wireshark} filter and search on attributes & 3 & 1.5 \\
 	FR2-D & Recognize invalid values for a \gls{struct} \gls{member} & 22 & 15 \\
-	FR2-E & Guess \glspl{dissector} from packet size & 5 & \\
-	FR2-F & Display if struct member contains uninitialized memory & 8 & \\
+	FR2-E & Guess \glspl{dissector} from packet size & 5 & 3\\
+	FR2-F & Display if struct member contains uninitialized memory & 8 & * \\
     \addlinespace
 	FR3 & Support \Gls{c} \gls{preprocessor} directives and macros & & \\
 	FR3-A & Support \gls{include} & 8 & 2 \\

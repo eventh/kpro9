@@ -140,10 +140,18 @@ The system design defines the new modules and architecture that has to be in pla
 %----------------------
 Now that the \gls{utility} has both basic and advanced features, it is time to specialize and make support for environmental variables that can be found in Thales' source code. This basically include various platform specific support, \gls{endian} handling and minor technicalities. The latter one is vital for the customer in order for the \gls{utility} to be efficient and adequate. \\
 \\
-The new design resulted in both major and minor changes to the class diagram, see \autoref{fig:ClassDiagramSprint3}.
+The new design resulted in both major and minor changes to the class diagram, see \autoref{fig:ClassDiagramSprint3}. \autoref{fig:modulesp3} shows the interaction between the modules, the main differences here is that platform is added, and that the config, cparser and dissector modules uses this module to generate correct dissectors for each platform.
+
 \begin{figure}[!htb]
-	\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s3}
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/ClassDiagramSprint3v2}
 	\caption{Sprint 3 class diagram\label{fig:ClassDiagramSprint3}}
+\end{figure}
+
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width=0.5\textwidth]{./sprints/img/sp3modulediagram}
+	\caption{Sprint 3 module diagram\label{fig:modulesp3}}
 \end{figure}
 
 \paragraph{Major changes}
@@ -541,21 +549,10 @@ definition in \Gls{c} is shown in \autoref{code:typedefarray}. Also support for
 \section{Sprint Testing}
 %-----------------------
 \label{sec:sp3:test}
-During sprint 3, the team executed a total of 11 test cases, but no additional testing features were added during the sprint. The test cases executed in this sprint can be found in \autoref{sec:testcases}. An example of such a test case can be seen in \autoref{tab:STID15} while the rest of the test cases can be found in the listing below:
+During sprint 3, the team executed a total of 11 test cases, but no additional testing features were added during the sprint. 
 
-\begin{itemize}
-	\item TID15 - Supporting \gls{batch mode} of \Gls{c} \gls{header} and configuration files
-	\item TID16 - Supporting custom \Gls{lua} configuration
-	\item TID17 - Supporting \glspl{union} 
-	\item TID18 - Supporting filter and search in \Gls{wireshark} 
-	\item TID19 - Supporting WIN32, \_WIN64, \_\gls{asparc} etc 
-	\item TID20 -  Supporting the use of flags specifying platforms to display \gls{member} values correctly 
-	\item TID21 - Supporting platforms with different \glspl{endian} 
-	\item TID22 - Supporting alignments 
-	\item TID 23 - Handling \Gls{lua} keywords 
-	\item TID24 - Sprint 3 functionality test 
-	\item TID25 - Sprint 3 requirements test
-\end{itemize}
+\subsection{Test Results}
+The test cases executed in this sprint can be found in \autoref{sec:testcases}. An example of such a test case can be seen in \autoref{tab:STID15}. The results from the tests are listed in \autoref{tab:sp3:testres1} and \autoref{tab:sp3:testres2}.
 
 \begin{table}[ht] \footnotesize \center
 \caption{Test case TID15}\label{tab:STID15}
@@ -577,8 +574,6 @@ During sprint 3, the team executed a total of 11 test cases, but no additional t
 \end{tabularx}}
 \end{table}
 
-\subsection{Test Results}
-The results from the tests are listed in \autoref{tab:sp3:testres1} and \autoref{tab:sp3:testres2}.
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Sprint 3 test results part 1\label{tab:sp3:testres1}}
@@ -666,9 +661,6 @@ The results from the tests are listed in \autoref{tab:sp3:testres1} and \autoref
 \end{tabularx}}
 \end{table}
 
-\subsection{Test Evaluation}
-In this sprint we saw a massive improvement in code coverage due to finally having been able to use the coverage tool to monitor our unit tests. There were also many bugs discovered during this sprint, and while most of them were fixed, some of the bugfixing had to be pushed to next sprint due to time constraints. Some test cases also failed due to poor communication between the ones responsible for creating the testcases and the ones responsible for generating the test data. It was therefore decided that we not split up these two types of tasks but rather have the same person design a test case and create the required data for it as well.
-
 \subsubsection{Test Coverage}
 As can be seen in both \autoref{tab:sp3CoverageReport} and \autoref{fig:sp3CoverageChart}, the team finally managed to hit the goal of having a code coverage of at least 80\% in this sprint. This was achieved mostly by improving the black\_box.py, which is a test of all the major parts of the \gls{utility}. The following list shows the unit tests ran in sprint 3:
 
@@ -701,6 +693,9 @@ As can be seen in both \autoref{tab:sp3CoverageReport} and \autoref{fig:sp3Cover
 	\includegraphics[width=\textwidth]{./sprints/img/sprint3_code_coverage_chart.png}
 	\caption{Code coverage progress from previous sprints\label{fig:sp3CoverageChart}}
 \end{figure}
+
+\subsection{Test Evaluation}
+In this sprint we saw a massive improvement in code coverage due to finally having been able to use the coverage tool to monitor our unit tests. There were also many bugs discovered during this sprint, and while most of them were fixed, some of the bugfixing had to be pushed to next sprint due to time constraints. Some test cases also failed due to poor communication between the ones responsible for creating the testcases and the ones responsible for generating the test data. It was therefore decided that we not split up these two types of tasks but rather have the same person design a test case and create the required data for it as well.
 
 
 %--------------------------

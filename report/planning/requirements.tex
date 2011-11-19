@@ -119,8 +119,8 @@ categories as for the prioritization of the requirements:
 	FR4-E & Configuration must support various trailers (other registered \gls{protocol}) & \Gls{l} & \Gls{h} \\
 	FR4-F & Configuration must support integer \glspl{member} which represent enumerated named value & \Gls{m} & \Gls{l} \\	
 	FR4-G & Configuration must support \glspl{member} which are \gls{bit string} & \Gls{m} & \Gls{l} \\
-	FR6-H & The utility shall support automatic generation of configuration files for unknown structs & ? & ? \\
-	FR6-I & Configurtion must support specifying the size of a struct members & ? & ? \\
+	FR4-H & The utility shall support automatic generation of configuration files for unknown structs & ? & ? \\
+	FR4-I & Configuration must support specifying the size of a struct members & ? & ? \\
 	\midrule
 	FR5 & The \glspl{dissector} must be able to handle \gls{binary} input which size and \gls{endian} depends on originating platform & \Gls{m} & \\
 	FR5-A & Flags must be specified in configuration for each platform & \Gls{m} & \Gls{m} \\
@@ -143,7 +143,7 @@ categories as for the prioritization of the requirements:
 	FR6-E & Command line shall support \#define directives & ? & ? \\
 	FR6-F & The utility shall only generate dissectors from structs with valid id and theirs' dependencies & ? & ? \\
 	\midrule
-	FR7 & Fetch configuration directly from source code & O & ? \\
+	FR7 & The utility shall be able to etch configuration directly from source code & O & ? \\
 	FR7-A & The utility shall support generation of struct member description from Doxygen comments & O & ?\\
 	FR7-B & The utility shall suppot reading configuration for \#define enums from the header files & O & ? \\
 	\bottomrule
@@ -187,13 +187,13 @@ textual use cases for these diagrams.
 %------------------
 An actor specifies a role played by an external person or thing that interact
 with our \gls{utility}. We have three types of actors to consider. First is the
-primary actor, which in our case is the user of our \gls{utility}. He who feeds it a
-\Gls{c} file to generate \glspl{dissector}. A secondary actor is someone who configures our
+primary actor, that uses the \gls{utility} to generate \glspl{dissector} from 
+\Gls{c} header-files. A secondary actor is the user who configures the
 \gls{utility} to change the output of it. Finally, we have an offstage actor, which
 does not use our \gls{utility} himself, but uses the outputted \glspl{dissector} in \Gls{wireshark}.
 
 We have defined two use case actors for our \gls{utility}. The customer has specified
-that the offstage actor, called administrator, is the most important actor.
+that the offstage actor, called developer, is the most important actor.
 \begin{description}
 	\item[Developer] User of the generated \Gls{wireshark} \glspl{dissector}, offstage actor
 	\item[Administrator] User and configurer of \gls{utility}, primary and secondary actor
@@ -221,3 +221,5 @@ diagram for the developer.
 %-----------------------------
 %TODO!!!
 
+\subsection{User Stories}
+Write something here TODO TODO TODO TODO TODO

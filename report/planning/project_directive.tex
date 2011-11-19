@@ -10,7 +10,8 @@ This chapter will briefly introduce the project, its background and purpose.
 The purpose of this project is to develop a \gls{utility} that automatically creates \Gls{lua}-\glspl{dissector} for \Gls{wireshark}, from \Gls{c}-\gls{header} files. This report presents the planning, implementation
  and testing of the team’s product, and documents the process from the initial requirement specification to the finished product. 
 
-The title of the project is ''\Gls{wireshark} - Automated generation of \gls{protocol} \glspl{dissector}'', it was given to us by the customer and describes exactly what we are planning to accomplish.\cite{Compendium} The name chosen for the \gls{utility} is ''CSjark''. Sjark is the Norwegian name for an iconic type of fishing boat, most commonly used in Northern Norway. The reason why the team picked this name was because of the way the \gls{utility} ''fishes'' for \Gls{c}-\glspl{struct} in \gls{header} files. The \gls{utility} then creates \glspl{dissector} for these \glspl{struct}, in order for \Gls{wireshark} to display the \gls{struct} information properly. This reminded the team of what fishermen do to prepare the fish for the market. The word Sjark is also pronounced in a similar way to ''shark'', which makes our \gls{utility}-name a play on words when comparing it to ''\Gls{wireshark}'', the program our \gls{utility} is supposed to work with.
+The title of the project is ''\Gls{wireshark} - Automated generation of \gls{protocol} \glspl{dissector}''~\cite{Compendium}.
+It was given to us by the customer and describes exactly what we are planning to accomplish. The name chosen for the \gls{utility} is ''CSjark''. Sjark is the Norwegian name for an iconic type of fishing boat, most commonly used in Northern Norway. The reason why the team picked this name was because of the way the \gls{utility} ''fishes'' for \Gls{c}-\glspl{struct} in \gls{header} files. The \gls{utility} then creates \glspl{dissector} for these \glspl{struct}, in order for \Gls{wireshark} to display the \gls{struct} information properly. This reminded the team of what fishermen do to prepare the fish for the market. The word Sjark is also pronounced in a similar way to ''shark'', which makes our \gls{utility}-name a play on words when comparing it to ''\Gls{wireshark}'', the program our \gls{utility} is supposed to work with.
 
 
 %-------------------
@@ -22,12 +23,12 @@ international electronics and systems group, which focuses on defence,
 aerospace and security markets worldwide. The Norwegian branch primarily
 supplies military communication systems, used by the Norwegian Armed Forces
 and other members of \Gls{nato}. Thales Norway AS consists of 180 highly skilled
-employees, which offers a wide range of technical competence.\cite{ThalesNO}
+employees, which offers a wide range of technical competence~\cite{ThalesNO}.
 	
 %--------------------------------
 \section{Involved parties}
 %--------------------------------
-The following parties are involved in this project.
+Three parties are involved in this project: a) the client, b) the project team, and c) the advisors.
 
 The client, described in the section above, is represented by Christian Tellefsen and Stig Bjørlykke. See \autoref{tab:plan:customer} for their contact information.
 The project team consists of seven computer engineering students from \Gls{ntnu}, as described in \autoref{tab:plan:devs}.
@@ -40,12 +41,12 @@ She will be assisted by Maria Carolina Passos. Their contact information can be 
 Thales currently uses \Gls{wireshark} to analyze traffic data between different network nodes, for example, \Gls{ip} \glspl{packet} sent between a client and a server.
 Thales' programs send \Gls{c} \glspl{struct} internally between processes, and when Thales debug their programs they want to look at the contents of these \glspl{packet}.
 To be able to use \Gls{wireshark} for examining \glspl{packet} containing \Gls{c} \glspl{struct}, \Gls{wireshark} has to be extended with \gls{protocol} \glspl{dissector}.
-Thales can write these manually, but they have 3000 \glspl{struct}, and creating \glspl{dissector} for
+Thales can write these manually, but they have over 4000 \Gls{c} header files with structs, and creating \glspl{dissector} for
 all of them would take too much time for this type of debugging to be time efficient. 
 
 To make debugging inter-process communication in \Gls{wireshark} viable, the customer wants us to develop a \gls{utility} that can generate \glspl{dissector} automatically.
 The generated \glspl{dissector} from this \gls{utility} will be used by \Gls{wireshark}'s developers when they are solving problems in their programs.
-Thales' hope is therefore that our \gls{utility} can save them valuable time.
+Thales expects therefore that our \gls{utility} can save them valuable time.
 
 %--------------------------
 \section{Project Objective}

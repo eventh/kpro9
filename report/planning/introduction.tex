@@ -37,7 +37,7 @@ preliminary study in \autoref{cha:prestudy}.
 Dissectors, in general, are explained more in detail below.
 
 \begin{figure}[htb]
-	\includegraphics[width=\textwidth]{./img/wireshark_example.png}
+	\includegraphics[width=\textwidth]{./planning/img/wireshark_example}
 	\caption{Wireshark Screenshot\label{fig:introshark}}
 \end{figure}
 
@@ -57,7 +57,7 @@ When opening a capture file in \Gls{wireshark} , this \gls{protocol} maps the id
 and calls them.
 
 \lstset{language=C,caption={Example C Struct},label=structexample}
-\lstinputlisting[language=C]{./code/struct.h}
+\lstinputlisting[language=C]{./planning/code/struct.h}
 
 %------------------------------------------------------------------
 \section{From \Gls{struct} definition to \Gls{lua} \Gls{dissector}}
@@ -88,7 +88,7 @@ When running a capture file, where the internal\_snd \gls{struct} is being sent 
 
 \newpage
 \lstset{language=C,caption={Example Lua File},label=luaexample1}
-\lstinputlisting[language=C]{./code/luaexample1.lua}
+\lstinputlisting[language=C]{./planning/code/luaexample1.lua}
 
 \begin{comment}
 \subsection{CSjark - Automated generation of \Gls{lua} \glspl{dissector}}

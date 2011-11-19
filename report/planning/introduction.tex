@@ -43,11 +43,11 @@ Dissectors, in general, are explained more in detail below.
 
 \subsection{Dissectors}
 %----------------------
-In short, a \gls{dissector} is a piece of code, run on a blob of data, which can dissect the
+In short, a \gls{dissector} is a piece of code run on a blob of data, which can dissect the
 data and display it in a readable format in \Gls{wireshark}, instead of the \gls{binary} representation.
 
 \autoref{fig:introshark} displays four \glspl{packet}, with \gls{packet} number 1 highlighted.
-The content of the \gls{packet} is a \Gls{c} \gls{struct} with two \glspl{member}, name and time, and it is displayed inside the green box.
+The content of the \gls{packet} is a \Gls{c} \gls{struct} with three \glspl{member}, type, name and time, and is displayed inside the box in the figure.
 The \Gls{c} code for the \gls{struct} is shown in \autoref{structexample}.
 The \gls{dissector} takes the \Gls{c} \gls{struct}, decodes its \gls{binary} representation and makes it readable by humans.
 Without a \gls{dissector}, \Gls{wireshark} would just display the \gls{struct} and \gls{struct} \glspl{member} as a \gls{binary} blob.
@@ -72,15 +72,16 @@ the second part is a very brief explanation of how CSjark builds such \glspl{dis
 
 \subsection{\Gls{lua} \Glspl{dissector}}
 %---------------------------------------
-\autoref{luaexample1} shows what the code for the \Gls{lua} \gls{dissector}, displayed in \gls{packet} 1 in \autoref{fig:introshark}, looks like.
+\autoref{luaexample1} shows what the code for the \Gls{lua} \gls{dissector}, used to display the content of \gls{packet} 1 in \autoref{fig:introshark}, looks like.
 The Proto variable defines a new \gls{protocol}. In this example, a \gls{dissector} for the internal\_snd \gls{struct}, called internal\_snd, is created. 
 The different fields of the \gls{struct} are created as instances of ProtoField, and put in Protocol.fields.
 For example, the ''name'' variable is a \gls{string} in \Gls{c}, and as such it is created as a ProtoField.\gls{string} with the 
 name ''name''.
 
-The \gls{protocol} \gls{dissector} method is the method that does the actual dissecting.
+The \gls{protocol} \gls{dissector} function is the function that does the actual dissecting.
 A subtree for the \gls{dissector} is created, and the description of the \gls{dissector} is appended to the information column.
-All the ProtoFields are added to the subtree. Here you can see that the type, name and time fields are added to the subtree for the internal\_snd \gls{dissector}.
+All the ProtoFields are added to the subtree. Here you can see that the type, name and time fields are added for the internal\_snd \gls{dissector}.
+The content of the subtree is what is actually displayed when a \gls{struct} is dissected in \Gls{wireshark}.
 The buffer size allocated to the fields is the size of the \glspl{member} in \Gls{c}.
 
 In the last line the \gls{dissector} is added to the \gls{dissector} table as a subdissector for the luastructs \gls{protocol}.

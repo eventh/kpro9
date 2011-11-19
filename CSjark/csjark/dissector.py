@@ -221,31 +221,20 @@ class Protocol:
 
     protocols = {} # Map protocol name to instance
 
-    def __init__(self, name, conf, platform):
+    def __init__(self, name, id=None, description=None):
         """Create a Protocol, for generating a dissector.
 
         'name' is the name of the Protocol to dissect
-        'conf' is the configuration for this Protocol
-        'platform' is the platform the dissector should run on
+        'id' a list of message id's
+        'description' the description of the protocol to dissect
         """
+        if description is None:
+            description = 'struct %s' % name
         self.name = name
-        self.conf = conf
-        self.platform = platform
-        self.var = create_lua_var('proto_%s' % name)
-
+        self.id = id
+        self.description = description
         self.dissectors = {} # Map platform names to dissectors
-
-        # Dissector ID
-        if self.conf and self.conf.id is not None:
-            self.id = self.conf.id
-        else:
-            self.id = None
-
-        # Dissector description
-        if self.conf and self.conf.description is not None:
-            self.description = self.conf.description
-        else:
-            self.description = 'struct %s' % name
+        self.var = create_lua_var('proto_%s' % name)
 
     def get_dissector(self, platform):
         """Get a dissector for a given 'platform'."""
@@ -258,21 +247,22 @@ class Protocol:
             platform = Platform.mappings['default']
 
         # Create a new Protocol if one does not already exists
-        if name in cls.protocols:
+        try:
             proto = cls.protocols[name]
-        else:
-            proto = Protocol(name, conf, platform)
+        except KeyError:
+            vargs = {}
+            if conf is not None:
+                vargs['id'] = conf.id
+                vargs['description'] = conf.description
+            proto = Protocol(name, **vargs)
             cls.protocols[name] = proto
 
         # Create the actual dissector or union dissector
-        if platform.name in proto.dissectors:
-            dissector = proto.dissectors[platform.name]
+        if not union:
+            dissector = Dissector(name, platform, conf)
         else:
-            if not union:
-                dissector = Dissector(name, platform, conf)
-            else:
-                dissector = UnionDissector(name, platform, conf)
-            proto.dissectors[platform.name] = dissector
+            dissector = UnionDissector(name, platform, conf)
+        proto.dissectors[platform.name] = dissector
 
         return proto, dissector
 
@@ -403,8 +393,8 @@ class Protocol:
         data = []
         for id in message_ids:
             data.append('{func}({var}, "{name}", {id}, {sizes})'.format(
-                    func=self.REGISTER_FUNC, var=self.var, name=self.name,
-                    platform=self.platform.name, id=id, sizes=sizes))
+                    func=self.REGISTER_FUNC, var=self.var,
+                    name=self.name, id=id, sizes=sizes))
         data.extend(['', ''])
         return '\n'.join(i for i in data if i is not None)
 

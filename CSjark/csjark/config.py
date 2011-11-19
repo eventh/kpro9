@@ -622,8 +622,8 @@ def generate_placeholders(protocols):
     bitstrings:
     trailers:'''
     protos = {p.name: p for key, p in protocols.items()}
-    data = ['%s%s\n' % (placeholder(i), structs)
-            for i in protos.values() if i.conf is None]
+    data = ['%s%s\n' % (placeholder(v), structs)
+            for k, v in protos.items() if k not in Options.configs]
     preample = '''\
 Options:
     platforms: []

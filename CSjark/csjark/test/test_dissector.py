@@ -438,11 +438,13 @@ def protos_id(proto):
 @protos.test
 def protos_trailer(proto):
     """Test that the Protocol has trailers."""
-    assert proto.conf
-    assert proto.conf.trailers
-    assert len(proto.conf.trailers) == 4
-    assert proto.conf.trailers[2].name == 'bur'
-    assert proto.conf.trailers[3].count is None
+    diss = proto.get_dissector(Platform.mappings['default'])
+    assert diss
+    assert diss.conf
+    assert diss.conf.trailers
+    assert len(diss.conf.trailers) == 4
+    assert diss.conf.trailers[2].name == 'bur'
+    assert diss.conf.trailers[3].count is None
 
 @protos.test
 def protos_create_dissector(proto):

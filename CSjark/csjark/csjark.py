@@ -256,8 +256,7 @@ def parse_headers(headers):
             msg = 'Successfully parsed all %i' % len(headers)
         else:
             msg = 'Failed to parse %i out of %i' % (tries[-1], len(headers))
-        print('[%i] %s header files (%i platforms)' % (
-                len(tries), msg, len(Options.platforms)))
+        print('[%i] %s header files' % (len(tries), msg))
 
     def filenames_have_shared_path(f1, f2):
         p1 = os.path.dirname(f1)
@@ -268,14 +267,11 @@ def parse_headers(headers):
     print('[0] Attempting to parse %i header files' % len(headers))
 
     # First try, in the order given through the CLI
-    counter = 0
     for filename in headers:
         for platform in Options.platforms:
             error = create_dissector(filename, platform, folders)
             if error is not None:
                 failed.append([filename, platform, error])
-        counter += 1
-        print("Parsed file %i '%s'" % (counter, filename))
     print_status()
 
     # Try to include files based on decoding the error messages
@@ -344,7 +340,15 @@ def create_dissector(filename, platform, folders=None, includes=None):
     except OSError:
         raise
     except Exception as err:
-        # TODO some cleanup, now half-finished things might linger!
+        # Clean up a bit
+        try:
+            del cparser.StructVisitor._last_proto.dissectors[platform]
+            del cparser.StructVisitor._last_visitor
+            del cparser.StructVisitor._last_diss
+            del cparser.StructVisitor._last_proto
+        except Exception:
+            pass
+
         if Options.verbose:
             print('Failed "%s":%s which raised %s' % (
                     filename, platform.name, repr(err)))
@@ -358,6 +362,25 @@ def create_dissector(filename, platform, folders=None, includes=None):
 
     #if Options.debug:
     #    ast.show()
+
+
+def _write_dissector(name, proto):
+    """Write a single dissector to file."""
+    path = '%s.lua' % name
+    flag = 'w'
+    if Options.output_dir:
+        path = '%s/%s' % (Options.output_dir, path)
+    elif Options.output_file:
+        path = Options.output_file
+        flag = 'a'
+
+    code = proto.generate()
+    with open(path, flag) as f:
+        f.write(code)
+
+    if Options.verbose:
+        print("Wrote %s to '%s' (%i platform(s))" %
+                (name, path, len(proto.dissectors)))
 
 
 def write_dissectors_to_file(all_protocols):
@@ -385,21 +408,7 @@ def write_dissectors_to_file(all_protocols):
 
     # Generate and write lua dissectors
     for name, proto in protocols.items():
-        path = '%s.lua' % name
-        flag = 'w'
-        if Options.output_dir:
-            path = '%s/%s' % (Options.output_dir, path)
-        elif Options.output_file:
-            path = Options.output_file
-            flag = 'a'
-
-        code = proto.generate()
-        with open(path, flag) as f:
-            f.write(code)
-
-        if Options.verbose:
-            print("Wrote %s to '%s' (%i platform(s))" %
-                    (name, path, len(proto.children)))
+        _write_dissector(name, proto)
 
     return len(protocols)
 

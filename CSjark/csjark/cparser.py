@@ -59,7 +59,6 @@ def find_structs(ast, platform=None):
 
     visitor = StructVisitor(platform)
     visitor.visit(ast)
-    del visitor
     return list(StructVisitor.all_protocols.values())
 
 
@@ -79,11 +78,16 @@ class StructVisitor(c_ast.NodeVisitor):
     all_protocols = {} # Map struct name to Protocol instances
     all_known_types = {} # Map type name to source filename
 
+    _last_visitor = None
+    _last_diss = None
+    _last_proto = None
+
     def __init__(self, platform):
         """Create a new instance to visit all nodes in the AST.
 
         'platform' is the platform the header was parsed for
         """
+        StructVisitor._last_visitor = self
         self.platform = platform
         self.map_type = platform.map_type
         self.size_of = platform.size_of
@@ -367,6 +371,8 @@ class StructVisitor(c_ast.NodeVisitor):
         proto._file = node.coord.file
         proto._line = node.coord.line
         StructVisitor.all_protocols[node.name] = proto
+        StructVisitor._last_diss = diss
+        StructVisitor._last_proto = proto
         return diss
 
     def _create_field(self, name, ctype, size=None, alignment=None):

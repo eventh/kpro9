@@ -804,11 +804,15 @@ For more information about the test cases see \autoref{sec:testcases} in the app
 \end{table}
 
 \subsection{Test Evaluation}
-%-------------------------------
-This sprint was very test intensive as it had been decided that the team would run regression tests with all of the testcases from the previous sprints. It was therefore heartening to see that all but two test cases failed, and that all of the functionality from the previous sprints were still intact. The bugs that caused the one use cases to fail was also not deemed severe enough that it would warrant a fix. This was due to the fact that they both included processing invalid input and the complexity of having to fix the bugs.The customer had also expressed that not having CSjark function properly would be the least of their problems if they had header files with invalid C-code. 
+%---------------------------
+This sprint was very test intensive as it had been decided that the team would run regression tests with all of the test cases from the previous sprints.
+It was therefore heartening to see that all but two test cases failed, and that all of the functionality from the previous sprints were still intact.
+The bugs that caused the one use cases to fail was also not deemed severe enough that it would warrant a fix. This was due to the fact that they both
+included processing invalid input and the complexity of having to fix the bugs. The customer had also expressed that not having CSjark function properly
+would be the least of their problems if they had header files with invalid C-code.
 
 \subsubsection{Test Coverage}
-As can be seen in \autoref{tab:sp4CoverageReport} and \autoref{fig:sp4CoverageChart}, the team managed to have a healthy increase in code coverage for sprint 4. This was done in spite of having to add a lot of new functionality to the utility during the sprint, as the team focused on improving the already existing unit tests as well as creating new ones. It also proved difficult to improve the unit tests for the csjark module as it is the module that has to be run with the most test input in order to get proper coverage. This on the other hand was not considered a problem as all but two testcases failed during this sprint even with the addition of regression testcases. The following list shows the unit tests ran in sprint 4:
+As can be seen in \autoref{tab:sp4CoverageReport} and \autoref{fig:sp4CoverageChart}, the team managed to have a healthy increase in code coverage for sprint 4. This was done in spite of having to add a lot of new functionality to the utility during the sprint, as the team focused on improving the already existing unit tests as well as creating new ones. The following list shows the unit tests modules ran in sprint 4:
 
 \begin{itemize}
 	\item black\_box.py
@@ -821,7 +825,7 @@ As can be seen in \autoref{tab:sp4CoverageReport} and \autoref{fig:sp4CoverageCh
 \end{itemize}
 
 \begin{table}[!htb]\footnotesize\center
-	\caption{Sprint 3 Coverage Report\label{tab:sp4CoverageReport}}
+	\caption{Sprint 4 Coverage Report\label{tab:sp4CoverageReport}}
 	\begin{tabular}{l l l l l}
 		\toprule
 		Module & Statements & Missing & Excluded & Coverage\\
@@ -850,92 +854,97 @@ As can be seen in \autoref{tab:sp4CoverageReport} and \autoref{fig:sp4CoverageCh
 %--------------------------
 \label{sec:sp4feedback}
 This sprint we have mostly gotten feedback on implementation of requirements, and of new features that the customer would like in the utility. In addition they have given some thoughts on how to organize this sprint and of how to test some of the non functional requirements.
-%---------------------
+
 \subsection{Process Improvement Points}
+%--------------------------------------
 The customer would like the fourth and final sprint to be split into two one week sprints. The benefit of this is that the customer would have a stable version of the utility after the first sprint to test on their files. Considering the overhead of an additional sprint, both in planning, evaluation and documentation, the team and the customer instead agreed to keep the customer updated with the progress of the utility. The customer could then test the utility on their code when certain blocking features were done, and then give feedback of additional bugs.
-%---------------------
+
 \subsection{Implementation Feedback}
-%-----------------------
+%-----------------------------------
 In this section we have listed the feedback from the customer regarding the implementation. These points have been considered and changes have been made to the implementation to fulfill the customers demands.
+
 \subsubsection{Sub-Dissectors}
 The customer wanted us to remove the platform sting when calling sub-dissectors, as it does not contain any useful information that is not already given (by the base dissector), while it clutters the Wireshark display.
-%---------------------
+
 \subsubsection{Custom Lua Files}
 The customer wanted a way to be able to fetch the buffer offset value to be able to both use it to pick specific parts of the message and modify it.
-%---------------------
+
 \subsubsection{Filter and Search}
 The filter and search will not give automatic suggestions because we have the platform name as a prefix to the proto description. We should remove this to improve the search and filtering feature.
-%---------------------
+
 \subsubsection{FR3-A Support \#include Directives}
 Need to be split up into one category for normal headers and one for system headers. The system headers will be platform specific and since we want to generate dissectors for all supported platforms, we need to fake them in order to satisfy the dependencies.
-%---------------------
+
 \subsubsection{FR3-C The utility shall support platform specific C macroes}
 The utility raised an error because it got into an mutually exclusive \#ifdef directive because we defined both Solaris v8 and v9. The customer only uses Solars v10, so the solution is just to remove Solaris v8.
-%---------------------
+
 \subsubsection{FR6-C Batch Mode}
 A bug in batch mode prevents the utility from going into sub-folders of the folder specified on some platforms.
-%---------------------
+
 \subsubsection{FR6 The -I argument}
 The -I argument (for extra includes) does not seem to work.
 
 \subsection{New requirements}
 %----------------------------
 For the fourth sprint we were provided with new requirements. Here these requirements are listed and briefly explained. 
+
 \subsubsection{FR4-D Support for the \#pragma directive}
 The customer uses the \#pragma directive to identify the version of the file. This will not affect the dissectors generated in any way. \#pragma will, however, crash CSjark if they are not removed, so the solution is to pass over the files before parsing them to remove them from the file.
-%---------------------
+
 \subsubsection{Auto-generation of configuration files}
 The customer asked if we could make the utility auto-generate a template configuration file for each struct it can generate a dissector for. This would make it easier for the user to configure structs, as the user only needs to fill in an id number in most of the cases.
-%---------------------
+
 \subsubsection{Only generate useful dissectors}
 The customer wants a mode where the utility only generates dissectors for structs with an corresponding configuration file containing an id, and for structs and unions that are inside these structs.
-%---------------------
+
 \subsubsection{Finding missing includes}
 Some of the header files that the customer wants to generate dissectors for depends on header files not directly included (the dependency might be included above an include to this header file inside a source file). These dependencies must be found so that the file may be parsed correctly. We cannot read the source files, that contains the correct includes, because the customer also has c++ files, which our parser does not support.
-%---------------------
+
 \subsubsection{Set a compile flag from the command line}
 The customer want the utility to be able to take compile flags as command line arguments and then apply then to all the header files. This makes the customer able to supply flags specific to a certain compilation configuration without editing the source of the utility.
-%---------------------
+
 \subsubsection{Multiple message ID’s for one dissector}
-The utility should be able to support having multiple message ID’s that corresponds to the same struct. The configuration will then have to support a list of ID’s and the dissector will ned to add multiple entries in the dissector table for the same dissector. Multiple IDs make the customer able to signal for example what member in a union is the valid member.
-%---------------------
-\subsubsection{SRCCFG 1 Pick out doxygen commets for descriptions of struct members}
+The utility should be able to support having multiple message ID’s that corresponds to the same struct. The configuration will then have to support a list of ID’s and the dissector will need to add multiple entries in the dissector table for the same dissector. Multiple IDs make the customer able to signal for example what member in a union is the valid member.
+
+\subsubsection{SRCCFG 1 Pick out doxygen comments for descriptions of struct members}
 The customer would like the utility to be able to read comments corresponding to the struct and use these for the description filed in the dissector. This feature would make the generated dissectors require less manual configuration.
-%---------------------
+
 \subsubsection{SRCCFG 2 Read int-enum configuration form the header files}
 Some of the integer members may really be intended to be used as an enum, with the numerical values corresponding to stings, along with the rest of the values the int can have being considered as invalid. Some of the headers contains defines that define these string and integer pairs. The customer would like the utility to be able to find these and encode it in a configuration file. The benefit is that the customer then does not have to configure this member manually.
-%---------------------
+
 \subsubsection{Marking uninitialized memory}
 In debug mode some compilers will fill uninitialized memory with a certain pattern. The customer wants the dissectors to be able to recognise such patterns and highlight them in Wireshark, so that it easier to see bugs related to memory management.
-%---------------------
+
 \subsubsection{Guess the dissector from packed size}
 The customer want Wireshark to be able to guess what dissectors to use from the size of the packet. It could compare this size to the size the dissector expects. If multiple dissectors fit, it could try to display the message with all the fitting dissectors. This makes the customer able to use some dissectors without manually configuring the message ID for the struct it represents.
-%---------------------
+
 \subsubsection{A way to ignore headers in a specified folder}
 The customer wants a way to specify what folder to ignore in batch mode. This is to avoid complex headers that are irrelevant to the customers goal (does not include structs) and would require significantly more developer time on the tool to get though the parser.
-%------------------------
+
 \subsection{Non functional requirement agreement}
-%------------------------------
-We agreed on how some of the non functional requirements were to be tested, and the importance of them. 
-\subsubsection{Testing on Sparc}
-The customer thought code inspections would be enough to verify that the dissectors would work on sparc machines, since the team has no access to sparc machines to test them.
+%------------------------------------------------
+We agreed on how some of the non functional requirements were to be tested, and the importance of them.
+
+\subsubsection{Testing on SPARC}
+The customer thought code inspections would be enough to verify that the dissectors would work on SPARC machines, since the team has no access to SPARC machines to test them.
 
 The utility itself does not have to be able to run on a sparc machine.
-%----------------------------
+
 \subsubsection{NR4 Testing user documentation on a person with Wireshark and C experience}
 The customer said that they have a person, with the relevant qualifications who, is willing to spend the hour necessary to test CSjark.
-%--------------------------
+
 \subsubsection{NR5 Testing user documentation on a person without experience with Wireshark, but with some C experience}
 The customer has previously specified that a person without prior knowledge of Wireshark, but with a good understanding of C should use about 5 hours to be able to use the utility. Due to the duration of this task it is, how every, unlikely that we find a person willing to do this test that meets the qualifications. The customer therefore said that we should not prioritize testing this requirement.
+
 
 %--------------------------
 \section{Sprint Evaluation}
 %--------------------------
 \label{sec:sp4eval}
 The fourth sprint ended 15th of November with an evaluation meeting. This section gives a summary of our findings.
-%----------------
+
 \subsection{Review}
-%----------------
+%------------------
 As this was the last sprint, the pressure for completing the remaining work was high. Even though the report was the most significant factor, we wanted to satisfy the customer as much as we could. Finishing the implementation and making the utility work on their source code would be important, in addition to completing the report work.
 
 All the team members raised their effort this sprint, both in hours and efficiency. All the tasks in the backlog were completed by the end of the sprint. See the burndown chart in \autoref{fig:sp4:burndown}.
@@ -951,7 +960,7 @@ It took long time to get the security clearance needed, so the testing was block
 Some of the tasks had to be postponed, until the testing and bug fixing were completed, because of dependencies. 
 
 \subsection{Positive Experiences}
-%--------------------------
+%--------------------------------
 \begin{itemize}
 \item We all completed a great amount of work.
 \item Finished all the items in the sprint backlog.
@@ -960,7 +969,7 @@ Some of the tasks had to be postponed, until the testing and bug fixing were com
 \end{itemize}
 
 \subsection{Negative Experiences}
-%--------------------------
+%--------------------------------
 \begin{itemize}
 \item Meetings were ineffective
 \item Stumbled into blocked tasks because of dependencies.
@@ -968,9 +977,11 @@ Some of the tasks had to be postponed, until the testing and bug fixing were com
 \end{itemize}
 
 \subsection{Barriers}
-%--------------------------
+%--------------------
+
 \subsubsection{External Factors}
 The customer asked if we could do a presentation of the utility for the developers at Thales, when it was finished. This would be beneficial for the final presentation and the customer would be pleased, so we accepted. To make the presentation and rehearse for it, two team members had to be excluded from the sprint work for several hours. External factors like this are not always possible to foresee, and it affected the project.
 
 \subsubsection{Thales Security}
 It was completely necessary to have Thales source code for the last test- and bug fixing-phase. As a result of the strict rules at Thales, we had to wait with critical implementation and fixing until the middle of the sprint. We managed to have the utility work on their code in the end.
+

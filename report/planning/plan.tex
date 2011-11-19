@@ -1,4 +1,4 @@
-%================
+%=================
 \chapter{Planning}
 %=================
 This chapter explains the administrative part of the project. The project plan 
@@ -23,7 +23,7 @@ Before the project start, \Gls{c} \glspl{struct} were investigated in two ways. 
 
 According to the customer, there are approximately 3000 messages that include \Gls{c} \glspl{struct} and those need to be dissected by the solution. Time spent to write a \gls{dissector} for a message manually depends on the \gls{struct}’s complexity. For simple \glspl{struct}, this takes 15 minutes. It took about one hour for the most complicated \glspl{dissector} that the customer had developed so far.
 
-If one hour is the average time for creating a \gls{dissector} for one message, our solution will save about 3000 hours of work. Due to everyday workload of the customer’s development team, this amount of time could never be used to accomplish such a task.
+If one hour is the average time for creating a \gls{dissector} for one message, our solution will save about 3000 hours of work, not considering further changes to their code base. Due to everyday workload of the customer’s development team, this amount of time could never be used to accomplish such a task.
 
 None of the workaround methods mentioned above is capable of processing messages with \Gls{c} \glspl{struct} that are big and complex. Time savings in these cases are not easily estimated.
 
@@ -46,7 +46,7 @@ As in all other projects, the project members have to deal with various limitati
 \begin{description}
 	\item[Experience] No team members have experience with \Gls{lua}-\glspl{script},
 		running a project with a larger team, or have planned a project before.
-	\item[Time] The project team has a limited time of 12 weeks and a project
+	\item[Time] The project team has a limited time of 13 weeks with a project
 		deadline that cannot be changed. Also, the team consists of seven members
 		that have different schedules so finding a time when everyone is
 		available for a meeting might be difficult. These limitations might
@@ -273,7 +273,7 @@ work breakdown structure, and the project timeline is in \autoref{fig:gantt}.
 \begin{figure}[!htb]
 	\noindent\makebox[\textwidth]{%
 	\includegraphics[scale=0.48]{./planning/img/gantt}}
-	\caption{Gantt diagram\label{fig:gantt}}
+	\caption{Gantt Diagram\label{fig:gantt}}
 \end{figure}
 
 

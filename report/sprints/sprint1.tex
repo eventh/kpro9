@@ -186,7 +186,8 @@ the \gls{header} files specified by the user.
 \subsection{Utility}
 %-------------------
 Figure \ref{fig:sp1_class} illustrates the current class diagram for our
-\gls{utility} after the end of the first sprint. The csjark module contains the main
+\gls{utility} after the end of the first sprint. The relationship between 
+the modules can be seen in \autoref{fig:sp1_module}. The csjark module contains the main
 method of the \gls{utility} and is responsible for running the program.
 It is in this module we have implemented the functionality for the command line interface.
 
@@ -203,6 +204,18 @@ range rules should be written in the configuration. In the \gls{dissector} modul
 we created a RangeField class that interprets the rules
 and recognizes any invalid values when generating the \glspl{dissector}.
 The RangeField class inherits from the Field class.
+
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/ClassDiagramSprint1v2}
+	\caption{Class Diagram\label{fig:sp1_class}}
+\end{figure}
+
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width=0.50\textwidth]{./sprints/img/sp1modulediagram}
+	\caption{Module Diagram\label{fig:sp1_module}}
+\end{figure}
 
 \subsubsection{Csjark}
 %-------------------
@@ -234,12 +247,6 @@ This module consist of three classes, and a method to parse all the configuratio
 	\item RangeRule: This class is for range rules, stores information of minimum and maximum values, and the struct member.
 	\item ConfigError: This class will raise an exception, if pyYAML is unable to parse the config file due to a error message.
 \end{itemize}
-
-\begin{figure}[!htb]
-	\center
-	\includegraphics[width=\textwidth]{./sprints/img/class_diagram_s1}
-	\caption{Class Diagram\label{fig:sp1_class}}
-\end{figure}
 
 %---------------------
 \subsection{User Stories}
@@ -448,20 +455,10 @@ user with a message and description, this make it easier for debugging.
 This section introduces the tests preformed during the sprint and their
 results.
 
-\subsection{Tests}
+\subsection{Test Results}
 %-----------------
-During the sprint the team executed a total of seven test cases with names as seen
-below. An example of a testcase run this sprint can be seen in \autoref{tab:STID01} while the rest of the test cases can be found in \autoref{sec:testcases}. 
-Test cases executed in this sprint:
-\begin{itemize}
-	\item TID01 - Supporting parameters for \Gls{c}-\gls{header} file.
-	\item TID02 - Supporting basic data types.
-	\item TID03 - Displaying simple \glspl{struct}.
-	\item TID04 - Supporting \Gls{c}-\gls{header} files with the \gls{include} directive.
-	\item TID05 - Supporting \gls{define} and \gls{if}.
-	\item TID06 - Supporting configuration files. 
-	\item TID07 - Recognizing invalid values.
-\end{itemize}
+During the sprint the team executed a total of seven test cases. An example of a testcase run this sprint can be seen in \autoref{tab:STID01} while the rest of the test cases can be found in \autoref{sec:testcases}. These are the results for the tests the team ran for sprint 1 as according to \autoref{tab:testreport} discussed in the test plan.
+The test results of the tests can be seen in \autoref{tab:sp1TIDS}.
 
 \begin{table}[ht] \footnotesize \center
 \caption{Test case TID01}\label{tab:STID01}
@@ -483,10 +480,6 @@ Test cases executed in this sprint:
 \end{tabularx}}
 \end{table}
 
-\subsection{Test Results}
-%------------------------
-These are the results for the tests the team ran for sprint 1 as according to \autoref{tab:testreport} discussed in the test plan.
-The test results can be seen in \autoref{tab:sp1TIDS}.
 \begin{table}[!htb] \footnotesize \center
 \caption{Sprint 2 test results \label{tab:sp1TIDS}}
 \noindent\makebox[\textwidth]{%

@@ -190,8 +190,9 @@ each group of requirement are described below:
 	\item[FR1] To be able to parse the header-files, the utility need to have
 		 support for different C data types and definitions. This requirement list 
 		the different members that the utility shall support.
-	\item[FR2] The requirement specify what the dissector shall support, to be 
-		able to be display the packet correctly in Wireshark. 
+	\item[FR2] The requirement specify what the utility shall create dissector 
+		for, and what they shall support to be able to be display the packet 
+		correctly in Wireshark. 
 	\item[FR3] To be able to parse the header-files, the utility will need to 
 		support some c preprocessor directives and macros. This requirement covers 
 		what the utility need to support.
@@ -269,50 +270,30 @@ a
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
+	 & \includegraphics[scale=0.6]{./planning/img/usecase1} \\
+	\toprule
 	Element & Description\\
 	\midrule
-	Use case & \includegraphics[scale=1]{./planning/img/usecase1} \\
-	Brief description &  \\
-	Flow of Events &  \\
-	Preconditions & Filter and search \\
-	\addlinespace
-	Use case & Filter and search \\
+	Brief description & The user would like to filter and search for attributes in the packets displayed in Wireshark \\
+	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
+	Special requirements & The utility must support the built-in functionality. \\
+	Preconditions & The user have Wireshark running with dissectors. \\
+	Postconditions & Wireshark display the results.\\
+	Extension points & N/A \\
+	\bottomrule
+	 & \includegraphics[scale=0.6]{./planning/img/usecase1} \\
+	\toprule
+	Element & Description\\
+	\midrule
+	Brief description & The user would like to filter and search for attributes in the packets displayed in Wireshark \\
+	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
+	Special requirements & The utility must support the built-in functionality. \\
+	Preconditions & The user have Wireshark running with dissectors. \\
+	Postconditions & Wireshark display the results.\\
+	Extension points & N/A \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
-
-
-Element Description
-Name The name of the use case.
-Brief Description A brief description of the role and purpose of the use
-case.
-Flow of Events A textual description of what the system does in regard
-to the use case (not how specic problems are solved by
-the system). The description is understandable by the
-customer.
-Special Requirements A textual description that collects all requirements, such
-as non-functional requirements, on the use case, that are
-not considered in the use-case model, but that need to
-be taken care of during design or implementation.
-Preconditions A textual description that denes a constraint on the
-system when the use case may start.
-Postconditions A textual description that denes a constraint on the
-system when the use cases have terminated.
-Extension points A list of locations within the ow of events of the use
-case at which additional 
-%\begin{figure}[htbp]
-%	\center
-%	\includegraphics[width=0.8\textwidth]{./planning/img/developer}
-%	\caption{Use Case Diagram: Developer\label{fig:req:ucdev}}
-%\end{figure}
-
-
-
-
-
-
-
-
 
 \subsection{User Stories}
 Write something here TODO TODO TODO TODO TODO

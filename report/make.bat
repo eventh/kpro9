@@ -16,7 +16,7 @@ goto :eof
     goto :eof
 
 :all
-    for %%v in (plan prestudy requirements sprint1 sprint2 test) do (
+    for %%v in (plan prestudy requirements sprint1 sprint2 sprint3 sprint4 evaluation introduction manual test) do (
         pdflatex -output-directory tmp %%v_standalone.tex
         pdflatex -output-directory tmp %%v_standalone.tex
         move /Y tmp\%%v_standalone.pdf %%v.pdf

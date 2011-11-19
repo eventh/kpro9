@@ -206,28 +206,30 @@ platform. UnionProtocol was renamed to UnionDissector.
 %--------------------------
 \label{sec:sp4:design:md}
 \autoref{fig:sp4module} shows the dependencies between the modules. The main 
-module for the utility is csjark, which have the the main-method. This module 
+module for the utility is csjark, which have the main-method. This module 
 uses config to parse and hold all the configuration, starts preprocessing in 
-cpp module, and at the end uses cparser to parse the header-files. At the end 
-it get all the ProtocolsFields from the field module, so the Lua dissectors 
-can be written to file.
+cpp module, and then uses cparser to parse the header files which returns
+all the generated protocols. At the end the dissector module generates
+Lua dissectors, which the csjark module writes to files.
 
 The cpp module uses the config module to read options given for the c 
 preprocessing.
 
 The config module uses the two modules field and dissector to create 
-configured dissector fields. The platform moduled is read, to get de 
-predefined platform configuration.
+configured dissector fields and the delegator class.
+The platform module is read, to get de predefined platform configurations.
 
-When cparser have parsed all the header files, it startes the generation of 
-all the Lua dissectors. To do this generation the StructVisitor class depends 
-on four modules, config, platform, dissector and field.
+When the cparser have parsed a header file it traverses the abstract syntax
+tree to create Protocol instances which represents Structs and Unions. To do
+this the cparser module depends on four modules: config, platform, dissector
+and field.
 
 The dissector module uses the field module to generate fields for all the 
-struct members. It also uses the platform module to get the correct sizes for 
-the c types.
+struct members. It also uses the platform module to a list of all platforms
+to support.
 
-To get alignment sizes, the field module depend on the platform module.
+The field module depends on the platform module to test if field endian is big
+or little.
 
 \begin{figure}[htbp]
 	\center

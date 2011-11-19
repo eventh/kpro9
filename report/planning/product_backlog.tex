@@ -5,72 +5,72 @@ The product backlog can be seen in \autoref{tab:prodbacklog}. The requirements w
 
 \begin{table}[ht] \small \center
 \caption{Product Backlog, part I \label{tab:prodbacklog}}
-\begin{tabularx}{\textwidth}{l X c c}
+\begin{tabularx}{\textwidth}{l X c c c}
 	\toprule
-	& & \multicolumn{2}{c}{Hours} \\
-	\cmidrule(r){3-4}
-	Req. & Description & Est. & Act. \\
+	& & & \multicolumn{2}{c}{Hours} \\
+	\cmidrule(r){4-5}
+	Req. & Description & Sprint & Est. & Act. \\
 	\midrule
-	FR1 & Read basic \Gls{c} \gls{struct} definitions & \textbf{52}  & \textbf{51}  \\
-	FR1-A & Support data types: \gls{int}, \gls{float}, \gls{char} and \gls{boolean} & 24 & 21 \\
-	FR1-B & Support \glspl{member} of type \gls{enum} & 6 & 5 \\
-	FR1-C & Support \glspl{member} of type \gls{struct} & 7 & 3.5 \\
-	FR1-D & Support \glspl{member} of type \gls{union}& 5 & 6 \\
-	FR1-E & Support \glspl{member} of type \gls{array} & 7 & 12 \\
-	FR1-F & Detect \glspl{struct} with same name & 3 & 3.5 \\
+	FR1 & Read basic \Gls{c} \gls{struct} definitions & & \textbf{52}  & \textbf{51}  \\
+	FR1-A & Support data types: \gls{int}, \gls{float}, \gls{char} and \gls{boolean} & SP1 & 24 & 21 \\
+	FR1-B & Support \glspl{member} of type \gls{enum} & SP2 & 6 & 5 \\
+	FR1-C & Support \glspl{member} of type \gls{struct} & SP2 & 7 & 3.5 \\
+	FR1-D & Support \glspl{member} of type \gls{union} & SP3 & 5 & 6 \\
+	FR1-E & Support \glspl{member} of type \gls{array} & SP2 & 7 & 12 \\
+	FR1-F & Detect \glspl{struct} with same name & SP2 & 3 & 3.5 \\
 	\addlinespace
-	FR2 & Generate \Gls{wireshark} \glspl{dissector} in \Gls{lua} &  \textbf{} &  \textbf{} \\
-	FR2-A & Display simple \glspl{struct} & 28 & 25 \\
-	FR2-B & Support display of \glspl{struct} within \glspl{struct} & 11 & 15 \\
-	FR2-C & Support \Gls{wireshark} filter and search on attributes & 3 & 1.5 \\
-	FR2-D & Recognize invalid values for a \gls{struct} \gls{member} & 22 & 15 \\
-	FR2-E & Guess \glspl{dissector} from packet size & 5 & 3\\
-	FR2-F & Display if struct member contains uninitialized memory & 8 & * \\
+	FR2 & Generate \Gls{wireshark} \glspl{dissector} in \Gls{lua} & & \textbf{77} &  \textbf{59.5} \\
+	FR2-A & Display simple \glspl{struct} & SP1 & 28 & 25 \\
+	FR2-B & Support display of \glspl{struct} within \glspl{struct} & SP2 & 11 & 15 \\
+	FR2-C & Support \Gls{wireshark} filter and search on attributes & SP3 & 3 & 1.5 \\
+	FR2-D & Recognize invalid values for a \gls{struct} \gls{member} & SP1 & 22 & 15 \\
+	FR2-E & Guess \glspl{dissector} from packet size & SP4 & 5 & 3\\
+	FR2-F & Display if struct member contains uninitialized memory & - & 8 & * \\
     \addlinespace
-	FR3 & Support \Gls{c} \gls{preprocessor} directives and macros &  \textbf{24} &  \textbf{7.5}\\
-	FR3-A & Support \gls{include} & 8 & 2 \\
-	FR3-B & Support \gls{define} and \gls{if} & 11 & 3 \\
-	FR3-C & Support \verb+WIN32+, \verb+_WIN64+, \verb+__sparc+ etc & 5 & 2.5 \\
+	FR3 & Support \Gls{c} \gls{preprocessor} directives and macros & & \textbf{24} &  \textbf{7.5}\\
+	FR3-A & Support \gls{include} & SP1 & 8 & 2 \\
+	FR3-B & Support \gls{define} and \gls{if} & SP1 & 11 & 3 \\
+	FR3-C & Support \verb+WIN32+, \verb+_WIN64+, \verb+__sparc+ etc & SP3 & 5 & 2.5 \\
 	\addlinespace
-	FR4 & Support user configuration &  \textbf{91} & \textbf{71}\\
-	FR4-A & Support valid ranges for \gls{struct} \glspl{member} & 30 & 15 \\
-	FR4-B & Support custom \Gls{lua} files for specific protocols & 10 & 7.5 \\
-	FR4-C & Support custom handling of specific data types & 6 & 5 \\
-	FR4-D & Support specifying the ID of \glspl{dissector} & 7 & 9 \\
-	FR4-E & Support various \gls{trailers} (other registered protocols) & 18 & 15 \\
-	FR4-F & Support \glspl{enumerated named value}  & 5 & 6.5 \\
-	FR4-G & Support bit strings & 10 & 11.5 \\
-	FR4-H & Automatic generation configuration for unknown structs & 1 & 0.5\\
-	FR4-I & Support specifying the size of unknown struct members & 4 & 1\\
+	FR4 & Support user configuration & & \textbf{91} & \textbf{71}\\
+	FR4-A & Support valid ranges for \gls{struct} \glspl{member} & SP1 & 30 & 15 \\
+	FR4-B & Support custom \Gls{lua} files for specific protocols & SP3 & 10 & 7.5 \\
+	FR4-C & Support custom handling of specific data types & SP2 & 6 & 5 \\
+	FR4-D & Support specifying the ID of \glspl{dissector} & SP2 & 7 & 9 \\
+	FR4-E & Support various \gls{trailers} (other registered protocols) & SP2 & 18 & 15 \\
+	FR4-F & Support \glspl{enumerated named value} & SP2 & 5 & 6.5 \\
+	FR4-G & Support bit strings & SP2 & 10 & 11.5 \\
+	FR4-H & Automatic generation configuration for unknown structs & SP4 & 1 & 0.5\\
+	FR4-I & Support specifying the size of unknown struct members & SP4 & 4 & 1\\
 	\addlinespace
-	FR5 & Handle input which size and \gls{endian} depends on platform & \textbf{40} & \textbf{23.5} \\
-	FR5-A & Flags specified for each platform & 8 & 11 \\
-	FR5-B & \Glspl{dissector} support memory alignment & 12 & 6.5 \\
-	FR5-C & \Glspl{dissector} support both little and big \gls{endian} & 6 & 4 \\
-	FR5-D & \Glspl{dissector} support different sizes from flags & 14 & 2 \\	
+	FR5 & Handle input which size and \gls{endian} depends on platform & & \textbf{40} & \textbf{23.5} \\
+	FR5-A & Flags specified for each platform & SP3 & 8 & 11 \\
+	FR5-B & \Glspl{dissector} support memory alignment & SP3 & 12 & 6.5 \\
+	FR5-C & \Glspl{dissector} support both little and big \gls{endian} & SP3 & 6 & 4 \\
+	FR5-D & \Glspl{dissector} support different sizes from flags & SP3 & 14 & 2 \\	
     \bottomrule
 \end{tabularx}
 \end{table}	
 	
 \begin{table}[ht] \small \center
 \caption{Product Backlog, part II \label{tab:prodbacklog2}}
-\begin{tabularx}{\textwidth}{l X c c}
+\begin{tabularx}{\textwidth}{l X c c c}
 	\toprule
-	& & \multicolumn{2}{c}{Hours} \\
-	\cmidrule(r){3-4}
-	Req. & Description & Est. & Act. \\
+	& & & \multicolumn{2}{c}{Hours} \\
+	\cmidrule(r){4-5}
+	Req. & Description & Sprint & Est. & Act. \\
 	\midrule	
-	FR6 & Support parameters from command line &  \textbf{51} & \textbf{24}\\
-	FR6-A & Support parameter for \Gls{c} \gls{header} file & 9 & 9 \\
-	FR6-B & Support parameter for configuration file & 28 & 8 \\
-	FR6-C & Support batch processing of \Gls{c} \gls{header} and configuration & 7 & 4.5 \\
-	FR6-D & Do not regenerate dissectors across multiple runs & 2 & *\\
-	FR6-E & Support C \#defines from CLI & 1 & 1 \\
-	FR6-F & Only generate dissectors for structs with valid id and their dependences & 4 & 1.5\\
+	FR6 & Support parameters from command line & & \textbf{51} & \textbf{24}\\
+	FR6-A & Support parameter for \Gls{c} \gls{header} file & SP1 & 9 & 9 \\
+	FR6-B & Support parameter for configuration file & SP1 & 28 & 8 \\
+	FR6-C & Support batch processing of \Gls{c} \gls{header} and configuration & SP2 & 7 & 4.5 \\
+	FR6-D & Do not regenerate dissectors across multiple runs & - & 2 & *\\
+	FR6-E & Support C \#defines from CLI & SP4 & 1 & 1 \\
+	FR6-F & Only generate dissectors for structs with valid id and their dependences & SP4 & 4 & 1.5\\
     \addlinespace
-	FR7 & Fetch configuration directly from source code & \textbf{40} &  \textbf{*} \\
-	FR7-A & Use Doxygen comments for struct members as ''Description'' & 20 & *\\
-	FR7-B & Read int-enum configuration from header files & 20 & * \\
+	FR7 & Fetch configuration directly from source code & & \textbf{40} &  \textbf{*} \\
+	FR7-A & Use Doxygen comments for struct members as ''Description'' & - & 20 & *\\
+	FR7-B & Read int-enum configuration from header files & - & 20 & * \\
 	\bottomrule
 \end{tabularx}
 \end{table}

@@ -74,7 +74,7 @@ the second part is a very brief explanation of how CSjark builds such \glspl{dis
 %---------------------------------------
 \autoref{luaexample1} shows what the code for the \Gls{lua} \gls{dissector}, used to display the content of \gls{packet} 1 in \autoref{fig:introshark}, looks like.
 The Proto variable defines a new \gls{protocol}. In this example, a \gls{dissector} for the internal\_snd \gls{struct}, called internal\_snd, is created. 
-The different fields of the \gls{struct} are created as instances of ProtoField, and put in Protocol.fields.
+The different fields of the \gls{struct} are created as instances of ProtoField, and put into Protocol.fields.
 For example, the ''name'' variable is a \gls{string} in \Gls{c}, and as such it is created as a ProtoField.\gls{string} with the 
 name ''name''.
 
@@ -85,7 +85,7 @@ The content of the subtree is what is actually displayed when a \gls{struct} is 
 The buffer size allocated to the fields is the size of the \glspl{member} in \Gls{c}.
 
 In the last line the \gls{dissector} is added to the \gls{dissector} table as a subdissector for the luastructs \gls{protocol}.
-When running a capture file, where the internal\_snd \gls{struct} is being sent to another \gls{process}, it is possible to see the exact contents of the \gls{struct}, as the example screenshot of \Gls{wireshark} shows.
+When running a capture file, where the internal\_snd \gls{struct} is being sent to another \gls{process}, it is possible to see the exact contents of the \gls{struct}. An example of this is shown in \autoref{fig:introshark}.
 
 \newpage
 \lstset{language=C,caption={Example Lua File},label=luaexample1}

@@ -6,7 +6,7 @@ This chapter descriptes the results and process of sprint 2. In
 the planning of this sprint is covered in \autoref{sec:sp2:planning}, and the 
 design of the first sprint is explained in \autoref{sec:sp2:design}. To give a 
 better understanding of the requirements, \autoref{sec:sp2:impl} explains the 
-features implemented in this sprint. The results from the tests done is 
+features implemented in this sprint. The results from the tests ran is 
 described in \autoref{sec:sp2:test}. The feedback from the customer is covered 
 in \autoref{sec:sp2:feedback}. In \autoref{sec:sp2:eval}, the results from the 
 sprint retrospective is covered.
@@ -26,17 +26,17 @@ In this planning meeting we will try to create more descriptive work items for t
 \label{sec:sp2:planning}
 The first sprint resulted in a solid core for the \gls{utility}. During the next sprint iteration, the core will be extended with more advanced functionality. After this sprint, the \gls{utility} will have most of the functionalities it need to work in a real environment, and will probably be able to aid Thales in some of their operations.
 
-Since it is difficult to the understand the complexity of all the requirements in the sprint backlog, the team ended in up with an uncertain person-hours estimate for some work objects. After the sprint is finished, we will see if we understood the complexity, and assigned enough hours to implement it. The more complex, but not so critical functionalities will be part of sprint 3 and 4.   
+Since it is difficult to understand the complexity of all the requirements in the sprint backlog, the team ended in up with an uncertain person-hours estimate for some work objects. After the sprint is finished, we will see if we understood the complexity, and assigned enough hours to implement it. The more complex, but not so critical functionalities will be part of sprint 3 and 4.   
 
 \subsection{Duration}
 %--------------------
-According to the work breakdown structure, \autoref{tab:wbs}, the planning meeting of the second sprint should have been conducted the 5th of October. After a request from the customer to see our planning for the second sprint at the weekly customer meeting, which was scheduled to be before our planning meeting the same day, we decided to advance the planning to the 4th of October. This is to maintain the good relationship to the customer and submit to their preference.
+According to the work breakdown structure, \autoref{tab:wbs}, the planning meeting of the second sprint should have been conducted the 5th of October. After a request from the customer to see our planning for the second sprint at the weekly customer meeting, which was scheduled to be before our planning meeting the same day, we decided to advance the planning to the 4th of October. This is to maintain the good relationship with the customer and submit to their preference.
 
 The sprint started with the planning meeting the 4th of October and our work started the following day. The sprint duration is 14 days, and will end the 18th of October with a review meeting.  
 
 \subsection{Sprint Goal}
 %-----------------------
-The second sprint will build on the core created in the first sprint. During the sprint, we will extend the functionality with more comprehensive and advanced features. Most of the requirements we intend to fulfill in this sprint had to be done subsequent to the first sprint, because the structure and design of the core had to be in place first. The requirements that we selected for this sprint are a natural advancement on the road to making the \gls{utility} that the customer wants. 
+In the second sprint we will build on the core created in the first sprint. During the sprint, we will extend the functionality with more comprehensive and advanced features. Most of the requirements we intend to fulfill in this sprint had to be done subsequent to the first sprint, because the structure and design of the core had to be in place first. The requirements that we selected for this sprint are a natural advancement on the road to making the \gls{utility} that the customer wants. 
 
 One of the most crucial functions to work in a real environment, is the support for nested \gls{header}-files. The handling of the \gls{include}-statement gives the \gls{utility} this feature. The goal of the sprint is to implement the \gls{include} and mainly to have support for \glspl{enum}, \glspl{bit string}, \gls{endianness} and \gls{batch mode}. 
 
@@ -194,7 +194,7 @@ The second sprint we will implement thirteen requirements. These are listed in T
 \section{System Design}
 %----------------------
 \label{sec:sp2:design}
-For sprint 2 the team decided to refactor some of the code in order to make it easier to read and to split the functionalities of the \gls{utility} in such a way that it reduces coupling within the system. Some new functionality was also added on the \gls{parser} side in order to get the \gls{utility} to recognize the datatypes mentioned in the sprint 2 backlog. This new functionality is represented by the addition of new classes in the \gls{dissector} and config modules. These classes include the BitField, ArrayField, EnumField and ProtocolField classes, which contain the functionality required to handle Bitstrings, \glspl{array}, \glspl{enum} and \glspl{struct} within \glspl{struct} respectively. The classes added to the config module include the Trailer, Bitstring, Custom and Enum classes which handles the configuration needs for \glspl{struct} with \gls{trailers}, \glspl{bit string}, custom handling of data types and \glspl{enum} respectively. Other than that, there were no other changes or additions made to the design during sprint 2.
+For sprint 2 the team decided to refactor some of the code in order to make it easier to read and to split the functionalities of the \gls{utility} in such a way that it reduces coupling within the system. Some new functionality was also added on the \gls{parser} side in order to get the \gls{utility} to recognize the datatypes mentioned in the sprint 2 backlog. This new functionality is represented by the addition of new classes in the \gls{dissector} and config modules. These classes include the BitField, ArrayField, EnumField and ProtocolField classes, which contain the functionality required to handle Bitstrings, \glspl{array}, \glspl{enum} and \glspl{struct} within \glspl{struct} respectively. The classes added to the config module include the Trailer, Bitstring, Custom and Enum classes, which handles the configuration needs for \glspl{struct} with \gls{trailers}, \glspl{bit string}, custom handling of data types and \glspl{enum} respectively. Other than that, there were no other changes or additions made to the design during sprint 2.
 
 \subsection{Utility}
 %--------------------
@@ -231,8 +231,8 @@ running CSjark, with the \emph{files\_in\_folder()}. This method used for the
 support of batch mode generation.
 
 \subsubsection{Cparser}
-In the cparser module, there was added a class names ParserError, the main 
-thing class to is to raise an exception when our utility do not support a C 
+In the cparser module, a class named ParserError was added, its main purpose
+is to raise an exception when our utility does not support a C 
 data type. StructVisitor has been extended to support more data types, for 
 example structs, arrays and enums.
 
@@ -240,7 +240,7 @@ example structs, arrays and enums.
 For all the configuration added in this sprint, there has been added a class 
 for each configuration. For this there has been added a superclass, named 
 BaseRule. This class have all the functionality that the configuration rules 
-shares. 
+share. 
 
 BaseRule has five subclasses, Custom, Enum, Range, Bitstring and Trailer. 
 These subclasses have the configuration that are specific for these 
@@ -467,7 +467,7 @@ look at the user stories for sprint 2 in \autoref{sec:req:stories2}.
 
 %----------------------
 \label{sec:supportenum}
-\Gls{enum} is a type declaration in \Gls{c}, which specifies enumeration constants.  \Gls{enum} 
+\Gls{enum} is a type declaration in \Gls{c} that specifies enumeration constants.  \Gls{enum} 
 is supported because it is a basic datatype in the \Gls{c} language. 
 \autoref{code:cenum} shows an example of an \gls{enum} in a \Gls{c}-\gls{header} file. The 
 \Gls{wireshark} \gls{dissector} will display the named value, making it 
@@ -517,7 +517,7 @@ expanded. \autoref{fig:wsstructstruct} is a screenshot of this \gls{dissector} i
 In \Gls{c} there are two ways to do enumerations, the first option was explained in 
 \autoref{sec:supportenum}, the other way is to use \gls{define} which is shown in 
 \autoref{code:defenum}. The advantage of using \gls{define} is that the values 
-can be generated. Since this cannot be understood by the \gls{parser}, it can be 
+can be generated. Since this cannot be understood by the \gls{parser}, it cannot be 
 generated directly from the \gls{header} file, so it have to be supported by 
 configuration. \autoref{code:enumconf}. The \gls{enum} will be displayed in 
 the same way as in \autoref{sec:supportenum}.
@@ -534,7 +534,7 @@ All bits in a basic data type can represent different values. An \gls{integer} i
 represented by four bytes(32 bits), each of these bits can for example represent 
 32 ''true/false' values. Our \gls{utility} support configuration of these bits. Bits 
 can be in groups, so they can represent more than two values. 
-\autoref{code:bitstring} shows how \gls{bit string} can be configured. 
+\autoref{code:bitstring} shows how \glspl{bit string} can be configured. 
 \autoref{fig:wsbitstring} shows an example of how \glspl{bit string} are displayed in 
 \Gls{wireshark}. Each group of bits is masked, so it is easier to see the values. 
 The values are also named, if they are configured.
@@ -566,14 +566,14 @@ implemented so far. The \Gls{wireshark} \gls{dissector} can display multidimensi
 %----------------------
 The \gls{utility} is able to support all kinds of \gls{trailers} that \Gls{wireshark} have 
 built-in \glspl{dissector} for. Trailers are data that follows a \gls{struct}, this can be 
-any kind of data, but only trails that have built-in support in \Gls{wireshark} can 
+any kind of data, but only trailers that have built-in support in \Gls{wireshark} can 
 be displayed.  To be able to use the \Gls{wireshark} \glspl{dissector}, they have to be 
 configured. In the example below, the \Gls{wireshark} \gls{dissector} for \gls{asnone} 
 \gls{ber} is used.  In \autoref{code:trailer}, we 
 specify ''asn1\_count'' as a \gls{member} in the \gls{struct}, this is used to tell the 
 number of \gls{asnone} fields. The config in  \autoref{code:trailerconf} specifies 
-fields with size of six bytest, the number of fields are specified by the data 
-sent with the \gls{struct}. At the end there is aa field of size five bytes. An 
+fields with a size of six bytes, the number of fields are specified by the data 
+sent with the \gls{struct}. At the end there is a field with a size of five bytes. An 
 example of \gls{asnone} in \Gls{wireshark}, can be seen in \autoref{fig:wstrailer}.
 
 \begin{figure}[ht]
@@ -592,17 +592,17 @@ example of \gls{asnone} in \Gls{wireshark}, can be seen in \autoref{fig:wstraile
 %----------------------
 CSjark can support custom \Gls{lua} configuration, by including \Gls{lua}-\glspl{script} from a 
 file specified in the configuration file. The reason for supporting custom \Gls{lua} 
-configuration is for protocols that are not built-in \glspl{dissector} in \Gls{wireshark}, 
-and are not \glspl{struct}, or display the members in a struct in a different way 
-than our utility do . The only way to support this, is to write \Gls{lua} code for 
-it. To be able to insert the \Gls{lua} code in correct places in the lua files, the 
+configuration is to add support for protocols that are not built-in \glspl{dissector} in \Gls{wireshark}, 
+and are not \glspl{struct}, or that display the members in a struct in a different way 
+than our utility does. The only way to support this, is to write \Gls{lua} code for 
+it. To be able to insert the \Gls{lua} code in correct places in the \Gls{lua} files, the 
 utility use a conformance file, which make it possible to specify where in the 
-dissector the code should be inserted. This feature was not completly finished 
+dissector the code should be inserted. This feature was not completely finished 
 in this sprint, and will be finished in sprint 3.
 
 \subsection{\Gls{dissector} ID}
 %----------------------
-All luastructs-\glspl{packet} that \Gls{wireshark} captures, has a \gls{header}, one of the fields in 
+All luastructs-\glspl{packet} that \Gls{wireshark} captures have a \gls{header}. One of the fields in 
 the \gls{header} is the message id. This id is used to load the the correct 
 \gls{dissector} when a \gls{packet} is captured. Each \gls{dissector} should have a unique id, 
 to avoid possible conflicts. This functionallity is implemented and the 
@@ -638,7 +638,7 @@ generates \glspl{dissector} from the folder ''\gls{header}/'' and configurations
 The \gls{utility} supports custom handling of specific data types, this includes 
 functionality to support  time\_t and nstime\_t. All basic data types and 
 \gls{struct} \glspl{member} can be configured to be handled in a special way. 
-\autoref{code:customstruct} show an example of a \gls{struct} with four \glspl{member}, two 
+\autoref{code:customstruct} shows an example of a \gls{struct} with four \glspl{member}, two 
 of them are time fields, and the last two is a BOOL and an \gls{integer} to be 
 handled in a custom way. This \gls{struct} is configured in 
 \autoref{code:customconfig}, in the config the two time fields are configured 
@@ -672,10 +672,10 @@ CSjark supports.
 \section{Sprint Testing}
 %-----------------------
 \label{sec:sp2:test}
-This section introduces the tests preformed during the sprint and their results. For sprint 2 it was also decided that the larger unit tests should also be documented and added to the test documents.
+This section introduces the tests performed during the sprint and their results. For sprint 2 it was also decided that the larger unit tests should also be documented and added to the test documents.
 
 \subsection{Test Results}
-During the sprint, the team executed a total of seven test cases. An example of a testcase can be seen in \autoref{tab:STID08} while the rest of the  test cases can be found in \autoref{sec:testcases}.The results are listed in \autoref{tab:sp2TIDS}.
+During the sprint, the team executed a total of seven test cases. An example of a test case can be seen in \autoref{tab:STID08} while the rest of the test cases can be found in \autoref{sec:testcases}. The results are listed in \autoref{tab:sp2TIDS}.
 
 \begin{table}[ht] \footnotesize \center
 \caption{Test Case TID08}\label{tab:STID08}
@@ -783,7 +783,7 @@ As the team had not started measuring code coverage in sprint 1, the testing tea
 \end{table}
 
 \subsubsection{Sprint 2}
-The following list contains the unit tests used in the second sprint and the code coverage can be seen in \autoref{tab:sp2CoverageReport}. We also ran a comparizon from the previous sprint and created a chart that we would use to monitor the progress of the code coverage. As can be seen in \autoref{fig:sp2CoverageChart} there was not a tremendous amount of progress from the previous sprint regarding code coverage. This is mostly due to the amount of new features that were added this sprint and the fact that using code coverage got implemented very late in the sprint, giving the developers and testers little time to use the metrics to improve the tests.
+The following list contains the unit tests used in the second sprint, and the code coverage can be seen in \autoref{tab:sp2CoverageReport}. We also ran a comparison from the previous sprint and created a chart that we would use to monitor the progress of the code coverage. As can be seen in \autoref{fig:sp2CoverageChart}, there was not a tremendous amount of progress from the previous sprint regarding code coverage. This is mostly due to the amount of new features that were added this sprint and the fact that using code coverage got implemented very late in the sprint, giving the developers and testers little time to use the metrics to improve the tests.
 
 \begin{itemize}
 \item black\_box.py
@@ -843,15 +843,15 @@ This section contains the team evaluation of the second sprint.
 %--------------------------
 The first sprint evaluation resulted in some planned actions for the forthcoming sprints. Looking back at these at now, we quickly realized that we fell into the same pitfalls again: lack of documentation, bad work distribution and reverse engineering of vital parts. The documentation was improved to some degree, but we did not manage to continuously provide it for the advisors. This way we lost valuable feedback. These matters will be basis for planned actions for forthcoming sprints. 
 
-The sprint started out very good. We had a four-hour long planning meeting, and ended up with a good backlog and a common understanding of the technical aspects of the sprint. Even though the meeting was significantly better this time, we failed in doing the design early. User stories was postponed till the middle of the sprint and they were written by team members that had no understanding of the code. This is something we definitely have to change in the next sprints, if we want to do Scrum properly.
+The sprint started out very good. We had a four-hour long planning meeting, and ended up with a good backlog and a common understanding of the technical aspects of the sprint. Even though the meeting was significantly better this time, we failed in doing the design early. User stories was postponed till the middle of the sprint and they were written by team members that had a limited understanding of the code. This is something we definitely have to change in the next sprints, if we want to do Scrum properly.
 
 The rest of the sprint went as expected. Implementation went smoothly and the customer is satisfied with our progress.
 
-In our sprint backlog, which we made at the sprint planning meeting, we listed responsible for each task. In retrospect this did not work out very well. The problem we encountered was that the most experienced programmer was assigned almost all the programming tasks, leaving documentation tasks for the rest of the team. This could have worked out well, if the documentation and implementation were independent of each other. We know that the implementation and documentation are highly dependent, and the fact that it is not easy to write documentation for code you have not written yourself made it even worse. So all team members had to ask the implementer how he did it and how it works, which was not very efficient. 
+In our sprint backlog, which we made at the sprint planning meeting, we listed a responsible for each task. In retrospect this did not work out very well. The problem we encountered was that the most experienced programmer was assigned almost all the programming tasks, leaving documentation tasks for the rest of the team. This could have worked out well, if the documentation and implementation were independent of each other. We know that the implementation and documentation are highly dependent, and the fact that it is not easy to write documentation for code you have not written yourself made it even worse. So all team members had to ask the implementer how he did it and how it works, which was not very efficient. 
 This actually resulted in two bad experiences:
 \begin{itemize}
-\item Work distribution was uneven. Those with responsibilities were expected to do their task, but we did not think that a task might have been poorly estimated. Some tasks which seemed simple ended up being hard and consumed a lot of person hours.
-\item Not all items in the sprint backlog were completed. Because of the uneven work distribution, we realised too late that some of the backlog items would take considerable more time to complete. The person responsible for a task might have had a lot of other tasks that he needed to complete before starting on the current task, and thereby he could not get help from the other team members to complete it.
+\item Work distribution was uneven. Those with responsibilities were expected to do their task, but we did not think that a task might have been poorly estimated. Some tasks that seemed simple ended up being hard and consumed a lot of person hours.
+\item Not all items in the sprint backlog were completed. Because of the uneven work distribution, we realised too late that some of the backlog items would take considerably more time to complete. The person responsible for a task might have had a lot of other tasks that he needed to complete before starting on the current task, and thereby he could not get help from the other team members to complete it.
 \end{itemize} 
  All in all we feel that we are still learning to do Scrum properly and if we take the new planned actions in true consideration, we most likely will perform considerable better at the next iteration. 
 \\
@@ -907,7 +907,7 @@ We will strive to give our advisors more documentation to look at. We need their
 \subsection{Barriers}
 %--------------------------
 \subsubsection{The work distribution} 
-As mentioned in the review, the team had an uneven work distribution. Some team members were eager to start implementing and took all the implementation tasks, leaving mostly documentation tasks for the rest of the team. The documentation tasks are closely connected to the implementation, so this resulted in problems. Documentation were postponed till the end.The planned actions section describes how we are planning to avoid that this happens again. 
+As mentioned in the review, the team had an uneven work distribution. Some team members were eager to start implementing and took all the implementation tasks, leaving mostly documentation tasks for the rest of the team. The documentation tasks are closely connected to the implementation, so this resulted in problems. Documentation were postponed till the end. The planned actions section describes how we are planning to avoid that this happens again. 
 
 \subsubsection{\Gls{wireshark}} 
 We identified several bugs in \Gls{wireshark}, which ended up crashing it when we tried to run our \gls{utility}. Most of them were fixed by Stig Bjørlykke, as he works as a core developer for \Gls{wireshark}. Unfixed bugs either will be fixed or dropped because they are not really relevant to us. Time can be lost while we wait for a patch.

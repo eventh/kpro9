@@ -184,7 +184,7 @@ sprint.
 		Solaris x86, Solaris x86-64 and Solaris SPARC.
 		& M & M \\
 	\addlinespace
-	NR3 & The utilities user interface shall be command line. No clicking!.
+	NR3 & The utilities user interface shall be command line.
 		& H & L \\
 	\addlinespace
 	NR4 & The configuration shall have sufficient documentation to allow a
@@ -219,6 +219,7 @@ are described in this section. The final requirements are described in
 \autoref{sec:req:finalreq}.
 
 \subsubsection{Sprint 1}
+\label{sec:req:sprint1evo}
 The following new requirements were added during this sprint based on feedback from customer.
 \begin{description}
 	\item[FR2-D] The dissector shall be able to recognize invalid values for a struct member.
@@ -229,8 +230,9 @@ The following new requirements were added during this sprint based on feedback f
 \end{description}
 
 \subsubsection{Sprint 2}
-Based on feedback from the customer we added four new requirements in sprint 4,
-in addition to other small changes.
+\label{sec:req:sprint2evo}
+Based on feedback from the customer we added four new requirements in sprint
+2, in addition to other small requirements changes.
 
 Requirement FR4-B was split into two new requirements, FR4-F and FR4-G.
 Requirement FR6-B was completely rewritten, and the following requirements
@@ -249,14 +251,50 @@ The following new requirements were added in sprint 2.
 	\item[FR5-B] Generate dissectors with correct alignment depending on platform.
 \end{description}
 
+\noindent The customer gave also further descriptions for the following requirements. 
+\paragraph{FR1-E: Support member of type array}
+\Glspl{array} should be displayed as a sublevel. Multidimensional
+\glspl{array} should have one sublevel per dimension. \Glspl{dissector} should
+also display the type of the \gls{array} and show indexes for sublevels.
+
+\paragraph{FR2-B: Struct within structs}
+Inner \glspl{struct} should be displayed as a
+sub-level of the outer \gls{struct}. When an external \gls{dissector} is
+called, it should be called with a name and not an id, in order to not
+assign an id to \glspl{struct} that are never used as a base.
+
+\paragraph{FR4-E: Headers/trailers}
+The customer specified this mean that a given \gls{struct} is a \gls{header},
+and that it can have various \gls{trailers}. A configuration file should
+specify the kind of trailer, and what variable inside the \gls{struct} which
+specify how many trailer items to expect.
+
+\paragraph{FR5-C: \Gls{endian} handling}
+The \gls{header} part of the \gls{packet}, which include the platform flag,
+will always be in big \gls{endian} (network order).
+
+\paragraph{FR6-C: Batch mode}
+The customer clarified this to mean that the \gls{utility} should be able to
+run completely unattended given a set of command line arguments. For example
+it should not ask the users any questions under this mode. This is to be able
+to run it as a \gls{cron} job at night.
+
+\paragraph{Data Alignment}
+The customer said that we could have some problems with alignment with the
+current offsets, because the different platforms may pad the data
+\glspl{member} of a \gls{struct} to match an \gls{integer} number of words on
+that platform.
+
 \subsubsection{Sprint 3}
-Customer feedback during sprint 3 resulted in the following new non-functional requirement:
+\label{sec:req:sprint3evo}
+Customer feedback during sprint 3 resulted in one new non-functional requirement.
 \begin{description}
 	\item[NR5] The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after 1 hour of reading.
 \end{description}
 Non-functional requirements NR5 to NR7 had their id increased by one.
 
 \subsubsection{Sprint 4}
+\label{sec:req:sprint4evo}
 As it became clear in sprint 3 that we would complete all the given
 requirements before the end of sprint 4, we requested new features which we
 would consider to implement. The following new requirements were suggest by

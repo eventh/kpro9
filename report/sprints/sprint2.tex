@@ -824,69 +824,14 @@ For the second sprint the developers focused a lot more on testing during implem
 \section{Customer Feedback}
 %--------------------------
 \label{sec:sp2:feedback}
-\subsection{Requirement Changes and Feedback}
-In sprint 2 we were able to demonstrate many of the requirements for the customer, and as a result we got some feedback of some changes and refinements that the customer wants. The customer also added some new features they would like to have. The changes and additions are listed below.
+In sprint 2 we were able to demonstrate many of the requirements for the
+customer, and as a result we got feedback on some changes and refinements.
+The customer also added some new features they would like to have.
+These changes and additions are described in \autoref{sec:req:sprint2evo}.
 
-\subsubsection{FR1-E: Support \Glspl{member} of Type \Gls{array}}
-\Glspl{array} should be displayed as a sublevel. Multidimensional \glspl{array} should have one sublevel per dimension. The \gls{dissector} should also display the type of the \gls{array} and show the different indexes for the sublevels.
-
-\subsubsection{FR2-B: \Gls{struct} within \Glspl{struct}}
-The customer stated that the inner \gls{struct} should be displayed as a sublevel of the outer \gls{struct}.
-When an external \gls{dissector} is called, it should be called with a name and not an id, in order to not assign an id to \glspl{struct} that are never used as a base.
-
-\subsubsection{FR4-C Custom Handling of Specific Types}
-The customer stated that they would like certain types to be interpreted in a certain way as default behaviour, but that the user should be able to configure specific behaviour for a specific \gls{member} of a \gls{struct}.
-
-\subsubsection{FR4-E: \Glspl{header}/\Gls{trailers}}
-The customer originally stated that this feature included both \glspl{header} and trailer \glspl{struct} for a given \gls{struct}. This is now refined to mean that the given \gls{struct} is the \gls{header}, and that it can have various \gls{trailers} (could be one or more \Gls{c} \glspl{struct}, \gls{asnone}, etc.). A configuration file should specify the kind of trailer, and what variable inside the \gls{header} \gls{struct} which specify how many trailer items to expect. If the \gls{header} does not specify the length of the trailer the \gls{dissector} should just use the rest of the buffer, or the \gls{dissector} is responsible to return the length used from the buffer, so the caller can give the rest to the next \gls{dissector}.
-In \Gls{wireshark} it should be displayed as a sequence of \glspl{struct}.
-
-\subsubsection{FR4-F: Support for Enumerated Values and Bit Strings}
-The customer clarified this by explaining that they wanted \glspl{integer} that represents an enumerated value to be displayed like an \gls{enum} (\gls{member} name and the \gls{string} that represents the \gls{integer} value) and that the \glspl{bit string} should be displayed as a list with the name and value (1 / 0 or yes / no) of the different bits in the \gls{integer}. It should also display the original \gls{integer} I hex. As a result of this, the requirement was split into two:
-\begin{itemize}
-\item FR4-F	Support \glspl{enumerated named value}
-\item FR4-G	Support for \glspl{bit string}
-\end{itemize}
-The customer also confirmed that the \glspl{bit string} are \gls{endian} specific and that they would like them to start counting from 1 (not zero, as in our first implementation).
-
-\subsubsection{FR5-C \Gls{endian} Handling}
-The customer stated that the \gls{header} part of the \gls{packet}, which include the platform flag, will always be in big \gls{endian} (network order).
-
-\subsubsection{FR7-C: Batch Mode}
-The customer clarified this to mean that the \gls{utility} should be able to run completely unattended given a set of command line arguments. For example it should not ask the users any questions under this mode. This is to be able to run it as a \gls{cron} job at night.
-
-\subsubsection{NR4: A user without prior knowledge should be able to use the tool within X hours.}
-The customer defined X as five.
-
-\subsubsection{NR5: A user with prior knowledge should be able to use the tool within Y hours.}
-The customer defined Y as one.
-
-\subsubsection{Detecting ambiguous \Gls{struct} Definitions}
-The \gls{utility} should detect if there are more that one \gls{struct} with the same name. If found, the \gls{utility} should exit with a proper error message because 
-
-\subsubsection{Data Alignment}
-The customer said that we could have some problems with alignment with the current offsets, because the different platforms may pad the data \glspl{member} of a \gls{struct} to match an \gls{integer} number of words on that platform.
-
-\subsubsection{Testability}
-The customer suggested that we might want to refine some of the requirement to make them more testable. This can be done by adding more measurable goals.
-
-\subsubsection{Documentation}
-The documentation should specify what parameters are needed, like what parameters that should be passed to a \gls{dissector}.
-
-\subsubsection{Locating \Gls{header} Files}
-Some of the \gls{header} files specified in a file might be located in an unknown location. The customer suggested that we should include a way to configure \gls{header} location.
-
-\subsubsection{What \glspl{header} should the \gls{utility} generate \glspl{dissector} for}
-The customer suggested that we include a way to specify the relevant \gls{header} files in a configuration file.
-
-\subsubsection{\Gls{dissector} id}
-Only \glspl{struct} explicitly configured with an id should be assigned an id. The rest should be called by their textual name. This is to avoid id collisions and limit the amount of configuration needed.
-
-\subsubsection{\Glspl{header} and configuration the \gls{utility} cannot handle}
-The customer stated that they wanted the tool to continue generating \glspl{dissector} even if it encounters a file it cannot handle. The tool should just give an appropriate error message and carry on with the next file.
-
-\subsection{Customers feedback on the product}
-The customer is satisfied with the progress of the \gls{utility} and is so far pleased with its functionality. They also feel that the team are flexible regarding feature refinement and additions. 
+The customer was satisfied with the progress of the \gls{utility} and was so
+far pleased with the functionality. They wre also pleased that the team was
+flexible regarding feature refinement and additions.
 
 %--------------------------
 \section{Sprint Evaluation}

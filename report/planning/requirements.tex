@@ -248,22 +248,19 @@ diagram for the administrator, and \autoref{fig:req:ucdev} is the use case
 diagram for the developer.
 \begin{figure}[htbp]
 	\center
-	\includegraphics[width=0.8\textwidth]{./planning/img/administrator}
+	\includegraphics[width=0.6\textwidth]{./planning/img/uc_administrator}
 	\caption{Use Case Diagram: Administrator\label{fig:req:ucadm}}
 \end{figure}
 
 \begin{figure}[htbp]
 	\center
-	\includegraphics[width=0.8\textwidth]{./planning/img/developer}
+	\includegraphics[width=0.6\textwidth]{./planning/img/uc_developer}
 	\caption{Use Case Diagram: Developer\label{fig:req:ucdev}}
 \end{figure}
 
 \subsection{Textual Use Cases}
 %-----------------------------
 Here each of the use cases are described textually.
-
-\subsubsection{Filter and search}
-a
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Filter and search textual use case\label{tab:textual:filterandsearch}}
@@ -274,12 +271,15 @@ a
 	\toprule
 	Element & Description\\
 	\midrule
-	Brief description & The user would like to filter and search for attributes in the packets displayed in Wireshark \\
-	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
-	Special requirements & The utility must support the built-in functionality. \\
-	Preconditions & The user have Wireshark running with dissectors. \\
+	Use case name & Filter and search on attributes\\
+	Goal & The developer wants the correct set of results based on the search phrase \\
+	Summary & The developer would like to filter and search on attributes in the packets displayed in Wireshark \\
+	Preconditions & Wireshark need to be running with dissectors. \\
 	Postconditions & Wireshark display the results.\\
-	Extension points & N/A \\
+	\multirow{3}{*}{Flow of Events} & 1. The user selects the search field in Wireshark's GUI.  \\
+	& 2. The user types in a search phrase. \\
+	& 3. Wireshark will present the search results that match the query. \\
+	Exceptions & \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -293,12 +293,13 @@ a
 	\toprule
 	Element & Description\\
 	\midrule
-	Brief description & The user would like to filter and search for attributes in the packets displayed in Wireshark \\
-	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
-	Special requirements & The utility must support the built-in functionality. \\
+	Use case name & View the dissectors in Wireshark\\
+	Goal & The user would like to see the dissected structs in Wireshark  \\
+	Summary & \\
 	Preconditions & The user have Wireshark running with dissectors. \\
 	Postconditions & Wireshark display the results.\\
-	Extension points & N/A \\
+	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
+	Exceptions & N/A \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -312,15 +313,134 @@ a
 	\toprule
 	Element & Description\\
 	\midrule
-	Brief description & The user would like to filter and search for attributes in the packets displayed in Wireshark \\
-	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
-	Special requirements & The utility must support the built-in functionality. \\
+	Use case name & Filter and search on attributes\\
+	Goal & The user wants the correct set of results based on the search phrase \\
+	Summary & The user would like to filter and search on attributes in the packets displayed in Wireshark \\
 	Preconditions & The user have Wireshark running with dissectors. \\
 	Postconditions & Wireshark display the results.\\
-	Extension points & N/A \\
+	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
+	Exceptions & N/A \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
 
-\subsection{User Stories}
-Write something here TODO TODO TODO TODO TODO
+\begin{table}[htbp] \footnotesize \center
+\caption{Configure platforms textual use case\label{tab:textual:configureplatforms}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	 & \includegraphics[scale=0.8]{./planning/img/uc_configureplatform} \\
+	\toprule
+	Element & Description\\
+	\midrule
+	Use case name & Filter and search on attributes\\
+	Goal & The administrator would like to filter and search on attributes in the packets displayed in Wireshark \\
+	Summary & \\
+	Preconditions & The user have Wireshark running with dissectors. \\
+	Postconditions & Wireshark display the results.\\
+	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
+	Exceptions & N/A \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Generate Lua dissector textual use case\label{tab:textual:generatelua}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	 & \includegraphics[scale=0.8]{./planning/img/uc_generatelua} \\
+	\toprule
+	Element & Description\\
+	\midrule
+	Use case name & Filter and search on attributes\\
+	Goal & The user would like to filter and search on attributes in the packets displayed in Wireshark \\
+	Summary & \\
+	Preconditions & The user have Wireshark running with dissectors. \\
+	Postconditions & Wireshark display the results.\\
+	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
+	Exceptions & N/A \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Create and change configuration file textual use case\label{tab:textual:configure}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	 & \includegraphics[scale=0.8]{./planning/img/uc_configurate} \\
+	\toprule
+	Element & Description\\
+	\midrule
+	Use case name & Filter and search on attributes\\
+	Goal & The user would like to filter and search on attributes in the packets displayed in Wireshark \\
+	Summary & \\
+	Preconditions & The user have Wireshark running with dissectors. \\
+	Postconditions & Wireshark display the results.\\
+	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
+	Exceptions & N/A \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Generate configured Lua-dissectors textual use case\label{tab:textual:generateconfiglua}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	 & \includegraphics[scale=0.8]{./planning/img/uc_generateconfiglua} \\
+	\toprule
+	Element & Description\\
+	\midrule
+	Use case name & Filter and search on attributes\\
+	Goal & The user would like to filter and search on attributes in the packets displayed in Wireshark \\
+	Summary & \\
+	Preconditions & The user have Wireshark running with dissectors. \\
+	Postconditions & Wireshark display the results.\\
+	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
+	Exceptions & N/A \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Generate batch of Lua dissectors textual use case\label{tab:textual:luabatch}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	 & \includegraphics[scale=0.8]{./planning/img/uc_luabatch} \\
+	\toprule
+	Element & Description\\
+	\midrule
+	Use case name & Filter and search on attributes\\
+	Goal & The user would like to filter and search on attributes in the packets displayed in Wireshark \\
+	Summary & \\
+	Preconditions & The user have Wireshark running with dissectors. \\
+	Postconditions & Wireshark display the results.\\
+	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
+	Exceptions & N/A \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\section{User Stories}
+To make it easier to implement the requirements, there have been written user stories. The user stories describes how the requirements should be implemented, and was written in each sprint planning meeting. The user stories that are written can be found in the sprint design for each of the sprint. \autoref{tab:us:template} shows an template of an user story.
+
+\begin{table}[htbp] \footnotesize \center
+\caption{User Story Template\label{tab:us:template}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+\toprule
+Header & Value \\
+\midrule
+ID & ID for the user stories, written like USxx. \\
+Requirements & The requirement that the user story descripbes. \\
+What & Description of what the user want to achieve.\\
+How & Description of how the requirement should be implemented. \\
+Result & What the result is after the implementation. \\
+\bottomrule
+\end{tabularx}}
+\end{table}
+
+

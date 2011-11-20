@@ -136,7 +136,7 @@ Timetable for this sprint: Table \ref{tab:sprint3time}. \\
 \label{sec:sp3:design}
 The system design defines the new modules and architecture that has to be in place to satisfy the specified requirements that we have included in the sprint 3 backlog. Most of the design are already done in earlier sprints; in this sprint we extend that and add some new elements.
 
-\subsection{System overview}
+\subsection{System Overview}
 %----------------------
 Now that the \gls{utility} has both basic and advanced features, it is time to specialize and make support for environmental variables that can be found in Thales' source code. This basically include various platform specific support, \gls{endian} handling and minor technicalities. The latter one is vital for the customer in order for the \gls{utility} to be efficient and adequate. \\
 \\
@@ -154,7 +154,7 @@ The new design resulted in both major and minor changes to the class diagram, se
 	\caption{Sprint 3 Module Diagram\label{fig:modulesp3}}
 \end{figure}
 
-\paragraph{Major changes}
+\paragraph{Major Changes}
 \begin{itemize}
 \item New module called Platform, to hold platform specific information. Ealier, some information about the platform was stored in the config module, but the platform specifications have become so extensive that it is best to separate it in its own module. See the section regarding platform specific support for more info.
 \item Moved the \gls{cli} class from csjark to config, and renamed it to Options. This class holds the attributes passed from the command line interface. This will make the code more loosely coupled, because the configuration attributes are stored in the correct module. 
@@ -164,7 +164,7 @@ The new design resulted in both major and minor changes to the class diagram, se
 
 \end{itemize}
 
-\paragraph{Minor changes}
+\paragraph{Minor Changes}
 \begin{itemize}
 \item Config methods reduced to one.
 \item In the ConformanceFile, tokens and methods have been added.
@@ -173,7 +173,7 @@ The new design resulted in both major and minor changes to the class diagram, se
 \item Methods have been added to different classes to support the major changes. This is a change, more than an addition of new elements. 
 \end{itemize}
 
-\subsubsection{Platform specific support}
+\subsubsection{Platform Specific Support}
 We know that the various platforms behave differently, and this must be supported by our \gls{utility}. The customer has mentioned at least three platforms that we have to support. As we emphasize extensibility and modifiability, it must also be expected that new platforms will be added or removed to the supported platforms in the future. Thereby we will try to make the set-up for support easily understandable.
 
 We have decided that the platform definition will be a subpart of a flag-field in the \glspl{struct} \gls{header}. To ensure modifiability we will assign a 16 bit field for this, giving the developers possibility to have 65536 unique platforms. We will make the platform flag point to the platform module, which has the following information about the actual platform:
@@ -186,7 +186,7 @@ We have decided that the platform definition will be a subpart of a flag-field i
 \end{itemize}
 All of these fields must be combined to enable the \gls{utility} to generate a \gls{dissector} that will dissect the \gls{struct} correctly.
 
-\subsubsection{Dictionary lookup}
+\subsubsection{Dictionary Lookup}
 Deciding how to implement handling of different platforms ended in a design draft seen in \autoref{fig:platformhandling}. The \gls{dissector} module will make a dictionary lookup in the table of supported platforms. This table conatins all platforms that the \gls{utility} can make \glspl{dissector} for, and their information of how the \gls{dissector} shall be encoded to achieve correct handling of \gls{endianness}, length of fields and memory alignment.
 We will start out by hardcoding this into the source code, but in the end we want to have this feed to the \gls{utility} through a configuration-file, which will be stored in the platform module. This is the way the customer has envisioned it.  
 
@@ -203,12 +203,12 @@ An important feature is the support for different \gls{endian} handling. \Gls{en
 \end{figure}
 \Gls{wireshark} has built-in support for reading big and little \gls{endian}, and the dissector will tell which it should use. When the \gls{dissector} module builds the abstract syntacs tree, it must call the platform module to see what \gls{endian} it shall use. In the class diagram the \gls{dissector} module imports the platform module, from there it gets the information it needs regarding the \gls{endianness}. 
 
-\subsubsection{\Gls{batch processing}}
+\subsubsection{Batch Processing}
 The \gls{batch processing} was implemented in the second sprint, but we have to modified it to ensure efficiency and reliability. When the \gls{utility} encounter a \gls{header} that it can not parse, it should skip that and move on to the next \gls{header} in the queue. This will make the \gls{utility} able to process almost all the \glspl{header} in one bacth, and ensure reliability. This is also according to the customers specification.
 
 The redesign of the config module will ensure better efficiency when the batch process is executed. It will also be easier to trace the connection between configuration and options. 
 
-\subsection{User stories}
+\subsection{User Stories}
 \label{sec:req:stories3}
 This section lists the user stories for the third sprint.
 They are displayed in \autoref{tab:req:stories7}, \autoref{tab:req:stories8} and \autoref{tab:req:stories9}.
@@ -506,7 +506,7 @@ display the \gls{packet} data. An example of a data type, which \Gls{wireshark} 
 support is \emph{long double} on the \gls{asparc} platform, which is a 128-bit foat. 
 For this \Gls{wireshark} will display the 16 bytes in \gls{hexadecimal}.
 
-\subsection{Support Specifying ID of \Glspl{dissector}}
+\subsection{Support Specifying ID of Dissectors}
 %-----------------------
 Specifying \gls{dissector} ID has been modified from sprint 2. The \gls{dissector} will 
 still use the ID given in the configuration for a \gls{struct}, if the \gls{struct} is not 
@@ -709,20 +709,20 @@ They feel that we are flexible and adapt well to their needs.
 Some of the features from sprint 2 were postponed to sprint 3 because we needed additional feedback from the customer.
 These include \gls{endianness} and completing the handling of custom \Gls{lua} files.
 
-\subsubsection{New requirements}
+\subsubsection{New Requirements}
 We have assigned all the remaining requirements in the product backlog for this sprint.
 If we are able to complete all the implementation tasks, the customer will provide us with more requirements for sprint 4.
 The customer wants our \gls{utility} to be as automatic as possible, and with as little configuration as possible. 
 Additional requirements for sprint 4 will address optimization of the \gls{utility}.
 
-\subsection{During sprint}
+\subsection{During Sprint}
 In sprint 3 we again demonstrated our \gls{utility} to the customer, and as a result we got some feedback on changes
 and improvements we could make. The changes and additions are listed below.
 
-\subsubsection{\Gls{wireshark}, support of search and filter}
+\subsubsection{\Gls{wireshark}, Support of Search and Filter}
 To support this the abbreviation field needs to be in place in our code
 
-\subsubsection{\Glspl{struct} within \glspl{struct}}
+\subsubsection{\Glspl{struct} within \Glspl{struct}}
 The customer thought we displayed too much information in the info column in \Gls{wireshark},
  we should only display the name of the outer \gls{struct}.
 
@@ -730,16 +730,16 @@ The customer thought we displayed too much information in the info column in \Gl
 We should not generate separate \gls{dissector} files for the different platforms. It is much better if we have one \gls{protocol}
 with different functions for the different platforms, as this would not be such a performance hit.
 
-\subsubsection{Flag values}
+\subsubsection{Flag Values}
 The customer said that our flag values were inconsistent, some flag values were platform names and some were operating
 system names. They suggested using flags such as Solaris-x86, Solaris-SPARC, Win32 and Linux-x86.
 
-\subsubsection{Testing of customer's \gls{header} files}
+\subsubsection{Testing of Customer's \Gls{header} Files}
 The customer stressed the importance of being able to run our \gls{utility} on the \gls{header} files they have provided.
 Once our \gls{utility} is able to successfully run on alle the files, they can begin testing the \gls{utility} on their own data.
 We can expect to get more feedback on the \gls{utility} when they can fully test it themselves.
 
-\subsection{The backlog and suggestions for sprint 4}
+\subsection{The Backlog and Suggestions for Sprint 4}
 The customer was satisfied with the backlog for sprint 3.
 They made several suggestions on features that could improve the \gls{utility}, which we could implement in sprint 4.
 These are listed below.

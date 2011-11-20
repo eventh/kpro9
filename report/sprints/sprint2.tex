@@ -1,7 +1,7 @@
 %=================
 \chapter{Sprint 2}
 %=================
-This chapter descriptes the results and process of sprint 2. In 
+This chapter describes the results and process of sprint 2. In 
 \autoref{sec:sp2:pre}, the planned changes from the first sprint is explained, 
 the planning of this sprint is covered in \autoref{sec:sp2:planning}, and the 
 design of the first sprint is explained in \autoref{sec:sp2:design}. To give a 
@@ -131,7 +131,7 @@ The second sprint we will implement thirteen requirements. These are listed in T
 	   &  & Testing - unit & 2 & 1.5 \\
 	   &  & User documentation & 1 & 1 \\
 	\addlinespace
-	13 & FR4-C & Support custom handeling of specific data types & \underline{ 5 } & 3 \\
+	13 & FR4-C & Support custom handling of specific data types & \underline{ 5 } & 3 \\
 	   &  & Implementation & 2 & 1.5 \\
 	   &  & Testing - unit & 1 & 0.5 \\
 	   &  & Testing - end to end & 1 & 1 \\
@@ -182,7 +182,7 @@ The second sprint we will implement thirteen requirements. These are listed in T
 	Customer meetings & 6 & 8 \\
 	Stand-up meetings & 21 & 14 \\
 	\addlinespace
-	\textbf{Project Managment} & \textbf{20} & \textbf{40} \\
+	\textbf{Project Management} & \textbf{20} & \textbf{40} \\
 	\midrule
 	Total: & 342 & 353 \\
 	\bottomrule
@@ -194,7 +194,7 @@ The second sprint we will implement thirteen requirements. These are listed in T
 \section{System Design}
 %----------------------
 \label{sec:sp2:design}
-For sprint 2 the team decided to refactor some of the code in order to make it easier to read and to split the functionalities of the \gls{utility} in such a way that it reduces coupling within the system. Some new functionality was also added on the \gls{parser} side in order to get the \gls{utility} to recognize the datatypes mentioned in the sprint 2 backlog. This new functionality is represented by the addition of new classes in the \gls{dissector} and config modules. These classes include the BitField, ArrayField, EnumField and ProtocolField classes, which contain the functionality required to handle Bitstrings, \glspl{array}, \glspl{enum} and \glspl{struct} within \glspl{struct} respectively. The classes added to the config module include the Trailer, Bitstring, Custom and Enum classes, which handles the configuration needs for \glspl{struct} with \gls{trailers}, \glspl{bit string}, custom handling of data types and \glspl{enum} respectively. Other than that, there were no other changes or additions made to the design during sprint 2.
+For sprint 2 the team decided to re-factor some of the code in order to make it easier to read and to split the functionalities of the \gls{utility} in such a way that it reduces coupling within the system. Some new functionality was also added on the \gls{parser} side in order to get the \gls{utility} to recognize the datatypes mentioned in the sprint 2 backlog. This new functionality is represented by the addition of new classes in the \gls{dissector} and config modules. These classes include the BitField, ArrayField, EnumField and ProtocolField classes, which contain the functionality required to handle bitstrings, \glspl{array}, \glspl{enum} and \glspl{struct} within \glspl{struct} respectively. The classes added to the config module include the Trailer, Bitstring, Custom and Enum classes, which handles the configuration needs for \glspl{struct} with \gls{trailers}, \glspl{bit string}, custom handling of data types and \glspl{enum} respectively. Other than that, there were no other changes or additions made to the design during sprint 2.
 
 \subsection{Utility}
 %--------------------
@@ -204,25 +204,24 @@ the functionality of the \gls{utility} so it can handle
 more complex \gls{header} files than it could before. The developers also 
 generalized some of the modules and used inheritance to support the re-use of 
 code. \autoref{fig:sp2:module} shows the dependencies between the modules,
-the only difference here, is that csjark do not use dissector, after som refactoring
+the only difference here, is that csjark do not use dissector, after some refactoring
 of the code.
 
 The addition to the class diagram have been mainly to support more data types 
 for C in the cparser and support for more configuration options in config 
 module, and generation of the fields in dissector module.
  
-\begin{figure}[!htb]
+\begin{figure}[htbp]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/ClassDiagramSprint2v2}
-	\caption{Class Diagram\label{fig:sp2:class}}
+	\caption{Sprint 2 Class Diagram\label{fig:sp2:class}}
 \end{figure}
 
-\begin{figure}[!htb]
+\begin{figure}[htbp]
 	\center
 	\includegraphics[width=0.5\textwidth]{./sprints/img/sp2modulediagram}
-	\caption{Module Diagram\label{fig:sp2:module}}
+	\caption{Sprint 2 Module Diagram\label{fig:sp2:module}}
 \end{figure}
-sp2modulediagram
 
 \subsubsection{Csjark}
 The main differences in this module was changes in the Cli class, which now 
@@ -397,7 +396,7 @@ and explain how the modules in the utility should interact with each other in th
 	ID & US21 \\
 	Requirements & FR4-C: Configuration must support custom handling of specific types. \\
 	What & The administrator will be able to specify that a certain type should be handled in a specific way specified in a configuration file. This configuration must be
- 	a \Gls{wireshark} supported lua field. The configuration could both be a global default value for that type, or specific for a \gls{struct} \gls{member}. \\
+ 	a \Gls{wireshark} supported Lua field. The configuration could both be a global default value for that type, or specific for a \gls{struct} \gls{member}. \\
 	How & The config module should read config files provided to the command line interface, and find any rules regarding the use of custom handling of types.
  	It will modify the field added to the prototype field representing the enclosing \gls{struct} with the behaviour specified in the configuration. \\
 	Result & The administrator is able to configure custom behaviour for specific types. \\
@@ -415,7 +414,7 @@ and explain how the modules in the utility should interact with each other in th
 	What & The administrator wants to specify the ID of a \gls{dissector} in a configuration file. \\
 	How & When the cparser finds a \gls{struct} in the \gls{AST} it looks for a configuration file for the \gls{struct}. If a config-file is found, the ID of the \gls{dissector}
 	is mapped to the ID given in the config-file when generating the \gls{dissector}. \\	
-	Result & The administrator can specfiy the ID of \glspl{dissector} in the configuration. \\
+	Result & The administrator can specify the ID of \glspl{dissector} in the configuration. \\
 	\midrule
 	
 \end{tabularx}}
@@ -431,7 +430,7 @@ and explain how the modules in the utility should interact with each other in th
 	ID & US24 \\
 	Requirements & FR5-C: Generate \glspl{dissector} which support both little and big \gls{endian} platforms \\
 	What & The administrator wants the \gls{utility} to produce \glspl{dissector} that can be used on both little and big \gls{endian} platforms. \\
-	How & The administrator will specify the platform he is using in a configuration file by adding a message flag and \gls{endian} pair. When the \gls{dissector} for a \gls{struct} is beeng generated,
+	How & The administrator will specify the platform he is using in a configuration file by adding a message flag and \gls{endian} pair. When the \gls{dissector} for a \gls{struct} is being generated,
  	the \gls{dissector} module in CSjark will encode a flag to \gls{endian} dictionary inside the \Gls{lua} \gls{dissector} file. This dictionary will be used to look up the \gls{endian} for a message given 
 	its flag. If no \gls{endian} is found in the dictionary, it will use a default value. \\
 	Result & The \glspl{dissector} are now able to support messages from platforms with different \gls{endian}. \\
@@ -443,16 +442,16 @@ and explain how the modules in the utility should interact with each other in th
 	If it is a file, parse it. If it is a folder, retrieve all files in that folder and add them to a list, this list will be sent to the \gls{parser} and all the files will be parsed one after another.
 	A directory within a directory should be detected, and traversed recursively. With this approach we can start in a root folder and include all files,
  	independent of the depth. The \gls{batch mode} shall only include files with the extension .h (a \gls{header} file) or .yml (config file), which are the files that are going to be
-	parsed as input.   \\
+	parsed as input. \\
 	Result & The administrator can feed the \gls{utility} with folders to make \glspl{dissector} of all the \glspl{header} found, also called \gls{batch mode}. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
 
 
-%----------------------
+%-----------------------
 \section{Implementation}
-%----------------------
+%-----------------------
 \label{sec:sp2:impl}
 In the previous sprint we focused on creating a naive implementation of the 
 \gls{utility}. In this sprint the focus was on implementing data types for the 
@@ -467,8 +466,8 @@ look at the user stories for sprint 2 in \autoref{sec:req:stories2}.
 
 %----------------------
 \label{sec:supportenum}
-\Gls{enum} is a type declaration in \Gls{c} that specifies enumeration constants.  \Gls{enum} 
-is supported because it is a basic datatype in the \Gls{c} language. 
+\Gls{enum} is a type declaration in \Gls{c} that specifies enumeration constants. \Gls{enum} 
+is supported because it is a basic data type in the \Gls{c} language. 
 \autoref{code:cenum} shows an example of an \gls{enum} in a \Gls{c}-\gls{header} file. The 
 \Gls{wireshark} \gls{dissector} will display the named value, making it 
 easier to read, an example is shown in \autoref{fig:wscenum}. The red 
@@ -484,7 +483,7 @@ rectangle shows the \gls{enumerated named value}.
 \lstinputlisting[language=C]{./sprints/code/cenum_test.h}
 
 \subsection{Support Members of Type \Gls{struct}}
-%----------------------
+%------------------------------------------------
 \Glspl{struct} are an important part of the \Gls{c} language, a \gls{struct} declaration consists 
 of a group of different fields, these fields can have any type, also \gls{struct}. 
 This was therefore an important requirement to implement. An example is shown 
@@ -494,26 +493,26 @@ in \autoref{code:structmember}.
 \lstinputlisting[language=C]{./sprints/code/struct_member.h}
 
 \subsection{Detect \Glspl{struct} with Same Name}
-%----------------------
+%------------------------------------------------
 Two \glspl{struct} can have the same name, and therefore we needed a way of detecting it. 
 If the \gls{parser} finds two \glspl{struct} with the same name, an exception is 
 raised, and the generation of the \gls{dissector} is terminated.
 
 \subsection{Support Display of \Glspl{struct} within \Glspl{struct}}
-%----------------------
+%-------------------------------------------------------------------
 The \gls{utility} is able to display \glspl{struct} within a \gls{struct} in \Gls{wireshark}, the 
 \gls{member} will be visible, and the \gls{struct} will be in a subtree that can be 
-expanded. \autoref{fig:wsstructstruct} is a screenshot of this \gls{dissector} in 
+expanded. \autoref{fig:wsstructstruct} is a screen shot of this \gls{dissector} in 
 \Gls{wireshark}.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_structwithstruct}
 	\caption{\Glspl{struct} in \Gls{wireshark}\label{fig:wsstructstruct}}
 \end{figure}
 
 \subsection{Support Enumerated Named Values}
-%----------------------
+%-------------------------------------------
 In \Gls{c} there are two ways to do enumerations, the first option was explained in 
 \autoref{sec:supportenum}, the other way is to use \gls{define} which is shown in 
 \autoref{code:defenum}. The advantage of using \gls{define} is that the values 
@@ -529,7 +528,7 @@ the same way as in \autoref{sec:supportenum}.
 \lstinputlisting[language=C]{./sprints/code/def_enum.yml}
 
 \subsection{Support for Bit Strings}
-%----------------------
+%-----------------------------------
 All bits in a basic data type can represent different values. An \gls{integer} is 
 represented by four bytes(32 bits), each of these bits can for example represent 
 32 ''true/false' values. Our \gls{utility} support configuration of these bits. Bits 
@@ -539,7 +538,7 @@ can be in groups, so they can represent more than two values.
 \Gls{wireshark}. Each group of bits is masked, so it is easier to see the values. 
 The values are also named, if they are configured.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_bitstring}
 	\caption{Bit string in \Gls{wireshark}\label{fig:wsbitstring}}
@@ -549,14 +548,14 @@ The values are also named, if they are configured.
 \lstinputlisting[language=C]{./sprints/code/bitstring.yml}
 
 \subsection{Support Members of Type \Gls{array}}
-%----------------------
+%------------------------------------------------
 CSjark supports \gls{header}-files with \glspl{array}, and is able to display them in 
 \Gls{wireshark} with the \Gls{lua}-\gls{dissector}. CSjark supports \glspl{array} of all data types 
 implemented so far. The \Gls{wireshark} \gls{dissector} can display multidimensional 
 \glspl{array}, and will create a new subtree for each dimension.  A representation of 
 \glspl{array} in \Gls{wireshark} is displayed in \autoref{fig:wsarray}.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_array}
 	\caption{\Glspl{array} in \Gls{wireshark}\label{fig:wsarray}}
@@ -576,7 +575,7 @@ fields with a size of six bytes, the number of fields are specified by the data
 sent with the \gls{struct}. At the end there is a field with a size of five bytes. An 
 example of \gls{asnone} in \Gls{wireshark}, can be seen in \autoref{fig:wstrailer}.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_trailer}
 	\caption{\gls{ber} Trailer in \Gls{wireshark}\label{fig:wstrailer}}
@@ -589,7 +588,7 @@ example of \gls{asnone} in \Gls{wireshark}, can be seen in \autoref{fig:wstraile
 \lstinputlisting[language=C]{./sprints/code/trailer.yml}
 
 \subsection{Custom \Gls{lua} Configuration}
-%----------------------
+%------------------------------------------
 CSjark can support custom \Gls{lua} configuration, by including \Gls{lua}-\glspl{script} from a 
 file specified in the configuration file. The reason for supporting custom \Gls{lua} 
 configuration is to add support for protocols that are not built-in \glspl{dissector} in \Gls{wireshark}, 
@@ -601,11 +600,11 @@ dissector the code should be inserted. This feature was not completely finished
 in this sprint, and will be finished in sprint 3.
 
 \subsection{\Gls{dissector} ID}
-%----------------------
+%------------------------------
 All luastructs-\glspl{packet} that \Gls{wireshark} captures have a \gls{header}. One of the fields in 
-the \gls{header} is the message id. This id is used to load the the correct 
+the \gls{header} is the message id. This id is used to load the correct 
 \gls{dissector} when a \gls{packet} is captured. Each \gls{dissector} should have a unique id, 
-to avoid possible conflicts. This functionallity is implemented and the 
+to avoid possible conflicts. This functionality is implemented and the 
 message id must be specified in the configuration file, \autoref{code:msgid} 
 is an example of how this is done.
 
@@ -613,12 +612,12 @@ is an example of how this is done.
 \lstinputlisting[language=C]{./sprints/code/messageid.yml}
 
 \subsection{\Gls{endian} Handling}
-%----------------------
+%---------------------------------
 \Gls{endian} handling is postponed to the next sprint, because it is a platform 
 specific problem, and should be implemented together with platform support.
 
 \subsection{Folder Support in the \gls{cli}}
-%----------------------
+%-------------------------------------------
 Folder support in the \gls{cli} has been 
 implemented, so it is possible to generate \Gls{lua}-\glspl{script} for all \glspl{struct} stored 
 in a given folder. At the moment, all \glspl{dissector} will be regenerated. 
@@ -634,7 +633,7 @@ generates \glspl{dissector} from the folder ''\gls{header}/'' and configurations
 \end{figure}
 
 \subsection{Support Custom Handling of Specified Data Types}
-%----------------------
+%-----------------------------------------------------------
 The \gls{utility} supports custom handling of specific data types, this includes 
 functionality to support  time\_t and nstime\_t. All basic data types and 
 \gls{struct} \glspl{member} can be configured to be handled in a special way. 
@@ -645,9 +644,9 @@ handled in a custom way. This \gls{struct} is configured in
 to be respectively absolute time and relative time, and the BOOL type to have 
 a size of four bytes. The \gls{struct} \gls{member} ''all' is configured with an enumerated 
 value, and will be visible as a hex-value. \autoref{fig:customdatatype} is a 
-screenshot of the \gls{struct} in \Gls{wireshark}.
+screen shot of the \gls{struct} in \Gls{wireshark}.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_custom}
 	\caption{Custom Handling of Data Types\label{fig:customdatatype}}
@@ -675,9 +674,10 @@ CSjark supports.
 This section introduces the tests performed during the sprint and their results. For sprint 2 it was also decided that the larger unit tests should also be documented and added to the test documents.
 
 \subsection{Test Results}
+%------------------------
 During the sprint, the team executed a total of seven test cases. An example of a test case can be seen in \autoref{tab:STID08} while the rest of the test cases can be found in \autoref{sec:testcases}. The results are listed in \autoref{tab:sp2TIDS}.
 
-\begin{table}[ht] \footnotesize \center
+\begin{table}[htb] \footnotesize \center
 \caption{Test Case TID08}\label{tab:STID08}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
@@ -703,7 +703,7 @@ During the sprint, the team executed a total of seven test cases. An example of 
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Sprint 1 Test Results\label{tab:sp2TIDS}}
+\caption{Sprint 2 Test Results\label{tab:sp2TIDS}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
 	\toprule
@@ -722,7 +722,7 @@ During the sprint, the team executed a total of seven test cases. An example of 
 	Result & Success \\
 	\midrule
 	Test ID & TID10 \\
-	Explanation & Supporting the display of sctructs within \glspl{struct} \\
+	Explanation & Supporting the display of structs within \glspl{struct} \\
 	Tester & Erik Bergersen\\
 	Date & 17.10.2011 \\
 	Result & Success \\
@@ -755,19 +755,20 @@ During the sprint, the team executed a total of seven test cases. An example of 
 \end{table}
 
 \subsection{Test Coverage}
+%-------------------------
 This section introduces the amount of code covered by our unit tests and how it relates to the test coverage from the previous sprints.
 
 \subsubsection{Sprint 1}
 As the team had not started measuring code coverage in sprint 1, the testing team had to revert the project to an earlier version and retroactively check the code coverage from the first sprint. The following list contains the unit tests used in the sprint, and the coverage is shown in \autoref{tab:sp1CoverageReport}
 
-\begin {itemize}
+\begin{itemize}
 \item requirements.py
 \item test\_cparser.py
 \item test\_csjark.py
 \item test\_config.py
 \end{itemize}
 
-\begin{table}[!htb]\footnotesize\center
+\begin{table}[!htb] \footnotesize \center
 	\caption{Sprint 1 Coverage Report\label{tab:sp1CoverageReport}}
 	\begin{tabular}{l l l l l}
 		\toprule
@@ -792,9 +793,9 @@ The following list contains the unit tests used in the second sprint, and the co
 \item test\_csjark.py
 \item test\_\gls{dissector}.py
 \item test\_cparser.py
-\end {itemize}
+\end{itemize}
 
-\begin{table}[!htb]\footnotesize\center
+\begin{table}[!htb] \footnotesize \center
 	\caption{Sprint 2 Coverage Report\label{tab:sp2CoverageReport}}
 	\begin{tabular}{l l l l l}
 		\toprule
@@ -809,7 +810,7 @@ The following list contains the unit tests used in the second sprint, and the co
 	\end{tabular}
 \end{table}
 
-\begin{figure}[ht]
+\begin{figure}[htb]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/sprint2_code_coverage_chart}
 	\caption{Code Coverage Progress from Previous Sprints\label{fig:sp2CoverageChart}}
@@ -830,7 +831,7 @@ The customer also added some new features they would like to have.
 These changes and additions are described in \autoref{sec:req:sprint2evo}.
 
 The customer was satisfied with the progress of the \gls{utility} and was so
-far pleased with the functionality. They wre also pleased that the team was
+far pleased with the functionality. They were also pleased that the team was
 flexible regarding feature refinement and additions.
 
 %--------------------------
@@ -886,7 +887,6 @@ The burndown chart, \autoref{fig:sp2:burndown}, shows the progress during the se
 	\item Could not complete all the tasks in the backlog
 \end{itemize}
 
-
 \subsection{Planned Actions}
 %--------------------------
 We intend to complete these planned actions for the next sprint. To achieve better performance, it is crucial that the importance of these actions are not neglected.
@@ -903,7 +903,6 @@ As some tasks are dependent on others, we must plan in such a way that no team m
 \subsubsection{Provide more and better documentation to the advisors}
 We will strive to give our advisors more documentation to look at. We need their feedback and help in order to finish this project in a suitable manner. 
 
-
 \subsection{Barriers}
 %--------------------------
 \subsubsection{The work distribution} 
@@ -914,3 +913,4 @@ We identified several bugs in \Gls{wireshark}, which ended up crashing it when w
 
 \subsubsection{Complexity consideration}
 As always, design and estimation of future implementation is hard. At the planning meeting, we evaluated each work item and estimated the complexity of it. In hindsight, we saw that our complexity consideration for some of the work items was wrong, making it hard to complete all the items in the sprint backlog.
+

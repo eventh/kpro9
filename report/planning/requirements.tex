@@ -480,7 +480,7 @@ Here each of the use cases are described textually.
 	\midrule
 	Use case name & View the dissectors in Wireshark\\
 	Goal & View structs correctly dissected in Wireshark\\
-	Summary & The developer would like to dissect a structs and have the members and values displayed in Wireshark by using the dissectors in Wireshakrs plugin folder.\\
+	Summary & The developer would like to dissect a structs and have the members and values displayed in Wireshark by using the dissectors in Wireshark's plugin folder.\\
 	\multirow{2}{*}{Preconditions}& 1. The developer have Wireshark running with dissectors. \\
 	& 2. The dissector for a struct will dissect it correctly, according to the initial internal structure of the struct. \\
 	Postconditions & Wireshark display the struct with the correct structure and values.\\
@@ -489,7 +489,7 @@ Here each of the use cases are described textually.
 	& 2. Wireshark calls the correct dissector and dissects the selected message. \\
 	& 3. Wireshark displays the members and values of the selected message. \\
 	\midrule
-	\multirow{2}{*}{Exceptions} & 1. The correct dissector for a struct might not exist in Wiresharks plugin folder, making it impossible to dissect the message. \\
+	\multirow{2}{*}{Exceptions} & 1. The correct dissector for a struct might not exist in Wireshark's plugin folder, making it impossible to dissect the message. \\
 	& 2. more? \\
 	\bottomrule
 \end{tabularx}}
@@ -504,13 +504,19 @@ Here each of the use cases are described textually.
 	\toprule
 	Element & Description\\
 	\midrule
-	Use case name & Filter and search on attributes\\
-	Goal & The user wants the correct set of results based on the search phrase \\
-	Summary & The user would like to filter and search on attributes in the packets displayed in Wireshark \\
-	Preconditions & The user have Wireshark running with dissectors. \\
-	Postconditions & Wireshark display the results.\\
-	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
-	Exceptions & N/A \\
+	Use case name & Debugging\\
+	Goal & The developer wants to debug inter-process commuination.\\
+	Summary & The developer wants to debug inter-process communication by using Wireshark extended by dissectors. \\
+	\multirow{2}{*}{Preconditions} & 1. The developer have Wireshark running with dissectors.\\
+	& 2. Wireshark have access to the packets sent between the processes that the developer wants to debug. \\
+	Postconditions & Wireshark display the communication dissected.\\
+	\midrule
+	\multirow{3}{*}{Flow of Events} & 1. The developer selects the inter-process communcation to debug. \\
+	& 2. Wireshark calls the correct dissector and dissects the selected messages. \\
+	& 3. The developer is able to debug the process communication by looking at the dissected messages. \\
+	\midrule
+	\multirow{2}{*}{Exceptions} & 1. The correct dissectors might not exist in Wireshark's plugin folder, making it impossible to dissect the messages. \\
+	& 2. The inter-process communication might not consist of structs only, which Wireshark do not have capability of displaying. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}

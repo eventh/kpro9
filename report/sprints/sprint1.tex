@@ -221,7 +221,7 @@ The RangeField class inherits from the Field class.
 %-------------------
 The utility's \emph{main()} function is a part of the csjark module. The function will start parsing of CLI arguments, start parsing of the configuration files, and start generating dissectors by calling \emph{createDissectors()}. When all structs have been generated, it will print the results to the user on the command-line interface.
 
-The Cli class will hold all the paramters, andl take the parameters from the command-line interface, it will parse the arguments and return lists for header and config.
+The Cli class will hold all the parameters, and take the parameters from the command-line interface, it will parse the arguments and return lists for header and config.
 
 \subsubsection{Cparser}
 %-------------------
@@ -353,7 +353,6 @@ the \gls{utility}, and that we had understood the task.
 To get a better understanding of how the different requirements were implemented,
 look at the user stories for sprint 1 in \autoref{sec:req:stories1}.
 
-
 \subsection{\gls{cli} Support for Header File}
 %-------------------
 The tool uses a command line interface. The user inputs a \Gls{c} \gls{header} file to the 
@@ -364,7 +363,7 @@ run.
 \subsection{Support Basic \Gls{c} Data Types}
 %-------------------
 In this first sprint the focus was to generate \glspl{dissector} from \glspl{struct} with 
-basic datatypes. These datatypes included \glspl{integer}, \glspl{float}, \gls{char}, \gls{boolean} and 
+basic data types. These data types included \glspl{integer}, \glspl{float}, \gls{char}, \gls{boolean} and 
 \glspl{array} of \glspl{char}. All different types of \glspl{integer} and \glspl{float} were also 
 implemented in the \gls{utility}, most of the functionality was included in the 
 \gls{pycparser} \gls{library}, and sizes for the different data types was specified in the 
@@ -387,7 +386,7 @@ and \gls{double}.
 %-------------------
 The \gls{preprocessor} in \Gls{c} is the first step of compilation. One of the most used 
 \gls{preprocessor} directives is \gls{include}, which include the content of a file 
-in the compilaton. Since the \gls{utility} reads \glspl{struct} from \gls{header}-files, it is 
+in the compilation. Since the \gls{utility} reads \glspl{struct} from \gls{header}-files, it is 
 possible that \gls{struct} \gls{member} may have been defined in other \gls{header}-files, 
 therefore \gls{include} is a important part of the \gls{utility}. The \gls{preprocessor} in 
 this \gls{utility} will replace the \gls{include}-line with the content of the included file.
@@ -477,7 +476,7 @@ The test results of the tests can be seen in \autoref{tab:sp1TIDS}.
 \end{tabularx}}
 \end{table}
 
-\begin{table}[!htb] \footnotesize \center
+\begin{table}[htbp] \footnotesize \center
 \caption{Sprint 2 Test Results \label{tab:sp1TIDS}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}

@@ -227,8 +227,33 @@ The following new requirements were added during this sprint based on feedback f
 \end{description}
 
 \subsubsection{Sprint 2}
+Based on feedback from the customer we added four new requirements in sprint 4,
+in addition to other small changes.
+
+Requirement FR4-B was split into two new requirements, FR4-F and FR4-G.
+Requirement FR6-B was completely rewritten, and the following requirements
+changed id during sprint 2.
+\begin{itemize}
+	\item FR4-E -> FR4-B
+	\item FR5 -> FR4-E
+	\item FR6 -> FR5
+	\item FR7 -> FR6
+\end{itemize}
+
+The following new requirements were added in sprint 2.
+\begin{description}
+	\item[FR1-F] The utility should detect structs with the same name, and report it as an error.
+	\item[FR4-F] Configuration must support integer members which represent enumerated named value.	
+	\item[FR4-G] Configuration must support members which are bit string.
+	\item[FR5-B] Generate dissectors with correct alignment depending on platform.
+\end{description}
 
 \subsubsection{Sprint 3}
+Customer feedback during sprint 3 resulted in the following new non-functional requirement:
+\begin{description}
+	\item[NR5] The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after 1 hour of reading.
+\end{description}
+Non-functional requirements NR5-8 had their id increased by one.
 
 \subsubsection{Sprint 4}
 

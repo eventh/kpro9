@@ -251,7 +251,8 @@ The following new requirements were added in sprint 2.
 	\item[FR5-B] Generate dissectors with correct alignment depending on platform.
 \end{description}
 
-\noindent The customer gave also further descriptions for the following requirements. 
+\noindent The customer also provided the following requirement descriptions
+and feedback.
 \paragraph{FR1-E: Support member of type array}
 \Glspl{array} should be displayed as a sublevel. Multidimensional
 \glspl{array} should have one sublevel per dimension. \Glspl{dissector} should
@@ -292,6 +293,33 @@ Customer feedback during sprint 3 resulted in one new non-functional requirement
 	\item[NR5] The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after 1 hour of reading.
 \end{description}
 Non-functional requirements NR5 to NR7 had their id increased by one.
+
+\noindent The customer also provided the following requirement descriptions
+and feedback.
+\paragraph{FR5: Support multiple platforms}
+We should not generate separate \gls{dissector} files for the different
+platforms. It is much better if we have one \gls{protocol} with different
+functions for the different platforms, as this would not lead to such a
+performance hit in Wireshark.
+
+\paragraph{FR2-F: Uninitialized memory}
+It would be nice if our \gls{utility} was able to detect uninitialized memory
+for debugging purposes. Different compilers use default patterns in
+\glspl{member} that are uninitialized. If our \gls{utility} could detect these
+patterns, we could display the data in \Gls{wireshark} with a warning that
+lets the user know that the data might have been uninitialized.
+
+\paragraph{FR4-D: \Gls{dissector} id's}
+The customer informed us that a \gls{struct} could belong to several
+\gls{dissector} id's. We should implement this by specifying a list of id's
+instead of just a single one.
+
+\paragraph{Include dependencies}
+The customer described a scenario where a \gls{struct} was included in another
+\gls{struct}, which is resident in a different \gls{header} file that the first
+\gls{struct} has not included. In the scenario both files are included in a third
+\gls{header} file. This creates a dependency that we must take into consideration
+and implement in the \gls{utility}.
 
 \subsubsection{Sprint 4}
 \label{sec:req:sprint4evo}

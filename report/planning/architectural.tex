@@ -14,7 +14,7 @@ The team has chosen Modifiability and Testability as the quality attributes for 
 
 The reason for using Modifiability is that the development team is not going to be the ones updating or maintaining the \gls{utility} after completing the project. It is therefore important that the code is easy to understand, well documented and easy to modify. This makes it easier for our customer to later modifiy or extend the \gls{utility}.
 
-Testability is important since the \gls{utility} will be used for debugging by the customer.  Since it is not possible for the team to test the \glspl{dissector} in a real environment, it will be more important to focus on testing. This is to ensure that the final product is working correctly.
+Testability is important since the \gls{utility} will be used for debugging by the customer.  Since it is not possible for the team to test the \glspl{dissector} in a real environment, it is very important that we do extensive testing of the utility's functionality. This is to ensure that the final product works correctly with both expected and unexpected input.
 
 \subsection{Testability Tactics}
 %-------------------------------
@@ -70,7 +70,7 @@ This section presents the different architectural patterns used in the \gls{util
 
 \subsection{Pipe and Filter}
 %---------------------------
-The pipe and filter architectural pattern consists of a stream of data that in turn is processed sequentially by several filters, in such a fashion that the output of one filter becomes the input of the other. It is a very flexible, yet robust way of processing data, with support for adding more filters if needed for future applications and processes. As the \gls{utility} will only work on one piece of data that gradually changes, and is then converted into \Gls{lua}-code at the end, this seemed like a good and structured way of processing data early on, while still being able to add new functionality further down the line.
+The pipe and filter architectural pattern consists of a stream of data that in turn is processed sequentially by several filters. This is done in such a fashion that the output of one filter becomes the input of the other. It is a very flexible, yet robust way of processing data, with support for adding more filters if needed for future applications and processes. As the \gls{utility} will only work on one piece of data that gradually changes, and is then converted into \Gls{lua}-code at the end, this seemed like a good and structured way of processing data early on, while still being able to add new functionality further down the line.
 
 \begin{figure}[htb]
 	\includegraphics[width=\textwidth]{./planning/img/PipeAndFilter}

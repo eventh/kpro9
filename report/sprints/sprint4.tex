@@ -3,7 +3,7 @@
 %=================
 This chapter describes the work done in sprint 4. The 
 chapter is divided into sprint planning in \autoref{sec:sp4:planning}, design 
-done during the sprint in \autoref{sec:sp4:design}, the implementation in 
+made in the sprint in \autoref{sec:sp4:design}, the implementation in 
 \autoref{sec:sp4impl}, the result of the sprint testing in 
 \autoref{sec:sp4test}, feedback from the customer in 
 \autoref{sec:sp4feedback} and evaluation of the sprint in 
@@ -185,10 +185,10 @@ The addition of new requirements from the customer resulted in changes in the ut
 \end{figure}
 
 \subsubsection{ccp module}
-The need for preprocessing C files before they are parsed have become so comprehensive, that we decided to create a dedicated module for it. All the existing cpp concerned code was relocated from the cparser module, and joint with the new implementation. The requirements listed in\autoref{tab:sprint4req}, made it necessary to have more functionality regarding the preprocessor step. Especially we need to remove parts of the output of the C preprocessor before forwarding it to the \gls{pycparser} library.
+The need for preprocessing C files before they are parsed have become so comprehensive, that we decided to create a dedicated module for it. All the existing cpp concerned code was relocated from the cparser module, and joined with the new implementation. The requirements listed in\autoref{tab:sprint4req}, made it necessary to have more functionality regarding the preprocessor step. Especially we need to remove parts of the output of the C preprocessor before forwarding it to the \gls{pycparser} library.
 
 \subsubsection{field module}
-Field specific classes were moved from the dissector module to its own module, field. For the same reason as the ccp module; the amount of code concerning fields became so great, that an own module was appropriate. There was some refactoring in the field module. An interface, BaseField, was added and has Field as a subclass. The class Field is the most important class in this module, and generate code for most of fields used by dissector. Subtree is a class that generates fields for the dissector, that will need a subtree in Wireshark, this class has three subclasses, BitField, ArrayField and ProtocolField.
+Field specific classes were moved from the dissector module to its own module, field. For the same reason as the ccp module; the amount of code concerning fields became so large, that an own module was appropriate. There was some refactoring in the field module. An interface, BaseField, was added and has Field as a subclass. The class Field is the most important class in this module, and generate code for most of fields used by dissector. Subtree is a class that generates fields for the dissector, that will need a subtree in Wireshark, this class has three subclasses, BitField, ArrayField and ProtocolField.
 
 \subsubsection{cparser module}
 Some changes was done in this module due to the refactoring, functionality for C preprocessing was moved, and some new methods was added. 
@@ -254,7 +254,7 @@ Some of the user stories explains how the user documentation should be written, 
 	\midrule
 	ID & US40 \\
 	Requirement & FR3-A modification: \gls{include} system includes \\
-	What & The \gls{utility} needs to be support system dependent \glspl{header}-files
+	What & The \gls{utility} needs to support system dependent \gls{header}-files
 	even if these are not available on the platform that the \gls{utility} is used on. \\
 	How & The administrator is able to specify a fake system \gls{header} file with the defines they need to make their \glspl{struct} work correctly.
 	This fake \gls{header} is then used to represent the system \gls{header} in the file so it is parsed correctly by \gls{pycparser}.  \\
@@ -263,7 +263,7 @@ Some of the user stories explains how the user documentation should be written, 
 	ID & US41 \\
 	Requirement & FR3-D: Ignoring \#pragma directives \\
 	What &  The \gls{utility} needs to be able to support \gls{header} files with the \#pragma directive without necessarily having to support the functionality of the directive\\
-	How & Before feeding the \gls{header} files to the \gls{parser} the \gls{utility} needs to be able to run a pass through all of the \glspl{header} that are to be parsed and remove all of the \#pragma directives encountered in those \gls{header} files.\\
+	How & Before feeding the \gls{header} files to the \gls{parser}, the \gls{utility} needs to be able to run a pass through all of the \glspl{header} that are to be parsed and remove all of the \#pragma directives encountered in those \gls{header} files.\\
 	Result & The user will be able to create \glspl{dissector} for \gls{header} files with the \#pragma directive instead of having the \gls{utility} be forced to skip them. \\
 	\midrule
 	ID & US42 \\
@@ -500,7 +500,7 @@ Support for specifying include folders was implemented in this sprint. This is
 given as an argument to the \gls{cli} with \emph{-I} or \emph{--Includes} followed 
 by the folders to include. The folders included will be added as an argument 
 to the \gls{preprocessor}, so the \gls{preprocessor} can search for files in these 
-folders, when a file is given in a include directive(\gls{include}).
+folders, when a file is given in an include directive(\gls{include}).
 
 \subsection{\gls{cli} Support for \Gls{c} Macro Definitions}
 %-----------------------------------------------------------
@@ -521,7 +521,7 @@ possible to add a list of message ID's to the configuration file of the
 
 \subsection{Configuration of Size for Unknown Structs}
 %-----------------------------------------------------
-\Gls{header}-files that the \gls{utility} parses, may have have nested \gls{struct} that is not 
+\Gls{header}-files that the \gls{utility} parses, may have nested \glspl{struct} that are not 
 defined in any other \gls{header} file. To make it possible to generate a 
 \gls{dissector} for this case, the size of the \gls{struct} needs to be specified
 in a configuration file. When the sizes are specified it will be possible to 
@@ -541,10 +541,10 @@ An example of configuration of size for a \gls{struct}, is shown in
 
 \subsection{Support Offset and Value in Custom \Gls{lua} Files}
 %--------------------------------------------------------------
-After feedback from the customer it was needed to add some more features to 
+After feedback from the customer, we added some more features to 
 the handling of custom \Gls{lua} files. This feature was that it should be possible 
 to add new proto fields to the \gls{dissector} \Gls{wireshark}, with correct offset value 
-and correct \Gls{lua} variable. To be able to do this, it was necessary to add a 
+and correct \Gls{lua} variable. To be able to do this, it was necessary to add
 variables for offset and value in the conformance file. Use of the \Gls{lua} 
 variable and offset value is only possible in the functionality part of the 
 \Gls{lua} \gls{dissector}. \autoref{code:customcnfsp4} is an example of how value and 
@@ -565,7 +565,7 @@ displayed in \Gls{wireshark}, with correct sizes for different platforms.
 
 \subsection{Auto generate Configuration Files}
 %---------------------------------------------
-The auto generation of configuration file is a simple feature, that could save 
+The auto generation of configuration file is a simple feature that could save 
 the user of the \gls{utility} some time, since the essential part of the 
 configuration file is generated automatically. The \gls{utility} will only create a new 
 file, containing the names of the \gls{struct} and lines to specify the ID for the 
@@ -581,9 +581,9 @@ ID, and for \glspl{struct} that those structs depends on. This may speed up the
 generation of \glspl{dissector}, since it only generates \glspl{dissector} that \Gls{wireshark} 
 can use.
 
-\subsection{Guess \gls{dissector} From Packet Size}
+\subsection{Guess \Gls{dissector} From Packet Size}
 %--------------------------------------------------
-When \Gls{wireshark} capture a packet with an unknown dissector ID, it should try to 
+When \Gls{wireshark} captures a packet with an unknown dissector ID, it should try to 
 guess which packet that is used, from a list of all generated dissectors. The 
 luastructs protocol will guess the correct dissector from the size of the 
 packet. All possible dissectors will be displayed in Wireshark with a warning. 
@@ -593,7 +593,7 @@ and it should be possible to dissect a packet, even if an ID was not set.
 \subsection{\gls{cli} Support to Exclude Files or Folders}
 %---------------------------------------------------------
 In this sprint it was added functionality to exclude files or folder from 
-parsing. This is done by adding \emph{-x} or \emph{--exclude} followed by the 
+parsing. This is done by adding \emph{-x} or \emph{--exclude}, followed by the 
 files or folders to the command-line interface when executing the utility. 
 This makes it possible to generate dissectors, without doing changes to the 
 folder containing all header files.
@@ -631,10 +631,10 @@ For more information about the test cases see \autoref{sec:testcases} in the app
 	Description & Including system-headers \\
 	Tester & Lars Solvoll Tønder \\
 	Prerequisites & The utility has to be installed on the system and there has to exist a pcap file which is associated with this test \\
-	Feature & Checking that the utility is able to support headers which use system headers \\
+	Feature & Checking that the utility is able to support headers that use system headers \\
 	\midrule
-	\multirow{5}{*}{Execution} & 1.Feed the utility with the name of a c-header file that includes system-headers and its configuration file \\
-	& 2.  Read the output\\
+	\multirow{5}{*}{Execution} & 1. Feed the utility with the name of a C-header file that includes system-headers and its configuration file \\
+	& 2. Read the output\\
 	& 3. Copy the resulting dissectors into the plugins folder of the personal configuration in Wireshark\\
 	& 4. Run Wireshark with the pcap file associated with this test\\
 	& 5. Look at the resulting structs and members are displayed in Wireshark\\
@@ -806,7 +806,7 @@ For more information about the test cases see \autoref{sec:testcases} in the app
 %---------------------------
 This sprint was very test intensive as it had been decided that the team would run regression tests with all of the test cases from the previous sprints.
 It was therefore heartening to see that all but two test cases failed, and that all of the functionality from the previous sprints were still intact.
-The bugs that caused the one use cases to fail was also not deemed severe enough that it would warrant a fix. This was due to the fact that they both
+The bugs that caused the one use case to fail was also not deemed severe enough that it would warrant a fix. This was due to the fact that they both
 included processing invalid input and the complexity of having to fix the bugs. The customer had also expressed that not having CSjark function properly
 would be the least of their problems if they had header files with invalid C-code.
 
@@ -852,7 +852,7 @@ As can be seen in \autoref{tab:sp4CoverageReport} and \autoref{fig:sp4CoverageCh
 \section{Customer Feedback}
 %--------------------------
 \label{sec:sp4feedback}
-This sprint we have mostly gotten feedback on implementation of requirements, and of new features that the customer would like in the utility. In addition they have given some thoughts on how to organize this sprint and of how to test some of the non functional requirements.
+This sprint we have mostly gotten feedback on implementation of requirements, and of new features that the customer would like in the utility. In addition they have given some thoughts on how to organize this sprint and of how to test some of the non-functional requirements.
 
 \subsection{Process Improvement Points}
 %--------------------------------------
@@ -892,7 +892,7 @@ All the team members raised their effort this sprint, both in hours and efficien
 	\caption{Burndown Chart\label{fig:sp4:burndown}}
 \end{figure}
 
-The final testing and patching of the utility had to be done at the customers site. Two of the team members was assigned to this task. To be allowed to see Thales source code, the team members had to sign a non-disclosure agreement and be under surveillance of the customer. As the customer had a demanding project on their own, they could not spare many hours for the testing.
+The final testing and patching of the utility had to be done at the customer's site. Two of the team members was assigned to this task. To be allowed to see Thales source code, the team members had to sign a non-disclosure agreement and be under surveillance of the customer. As the customer had a demanding project on their own, they could not spare many hours for the testing.
 
 It took long time to get the security clearance needed, so the testing was blocked until the last week of the sprint. The lack of testing time on the real code, could have ended in a unfinished utility. The lead programmer managed to fix all bugs and make the utility able to parse the source code in the end.
 

@@ -112,7 +112,7 @@ sprint.
 	FR2-B & The dissector shall be able to support structs within
 		structs.
 		& M & M \\
-	FR2-C & The dissector must support Wiresharks built-in filter and
+	FR2-C & The dissector must support Wireshark's built-in filter and
 		search on attributes.
 		& H & L \\
 	\midrule
@@ -154,11 +154,11 @@ sprint.
 	\midrule
 	FR7 & The utility shall support parameters from command line.
 		& H & \\
-	FR7-A & Command line shall support parameters for c-header file.
+	FR7-A & Command line shall support parameters for C header file.
 		& H & L \\
 	FR7-B & Command line shall support for configuration file.
 		& H & L \\
-	FR7-C & Command line shall support batch mode of c-header and
+	FR7-C & Command line shall support batch mode of C header and
 		configuration file.
 		& L & M \\
 	FR7-D & When running batch mode, dissectors that already are
@@ -254,8 +254,8 @@ The following new requirements were added in sprint 2.
 \noindent The customer also provided the following requirement descriptions
 and feedback.
 \paragraph{FR1-E: Support member of type array}
-\Glspl{array} should be displayed as a sublevel. Multidimensional
-\glspl{array} should have one sublevel per dimension. \Glspl{dissector} should
+\Glspl{array} should be displayed as a sub-level. Multidimensional
+\glspl{array} should have one sub-level per dimension. \Glspl{dissector} should
 also display the type of the \gls{array} and show indexes for sublevels.
 
 \paragraph{FR2-B: Struct within structs}
@@ -346,9 +346,9 @@ The final functional requirements are listed in \autoref{tab:req:func} and
 \autoref{tab:req:func2}, while the non-function requirements are listed in
 \autoref{tab:req:nonfunc}.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FINAL FUNCTIONAL REQUIREMENTS
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[htbp] \footnotesize \center
 \caption{Final Functional Requirements\label{tab:req:func}}
 \noindent\makebox[\textwidth]{%
@@ -460,16 +460,16 @@ each group of requirement are described below:
 		for, and what they shall support to be able to be display the packet 
 		correctly in Wireshark. 
 	\item[FR3] To be able to parse the header-files, the utility will need to 
-		support some c preprocessor directives and macros. This requirement covers 
+		support some C preprocessor directives and macros. This requirement covers 
 		what the utility need to support.
 	\item[FR4] To make the utility flexible, there is a need to support 
 		configuration of how the utility should handle different data types, custom 
 		code and configuration how to display members in Wireshark. This requirement 
 		specify what the utility should support configuration of.
-	\item[FR5] To be able to support diffent platforms, the utility will need 
+	\item[FR5] To be able to support different platforms, the utility will need 
 		functionality that can be different between the platforms. The requirement 
 		lists what the utility must support, to handle different platforms.
-	\item[FR6] These requirement tells what kind of command-line paramters the 
+	\item[FR6] These requirement tells what kind of command-line parameters the 
 		utility should support. 
 	\item[FR7] The requirement in this category, is for automatic genereation 
 		from the header-files. With automatic generation there will be faster the 
@@ -481,7 +481,7 @@ The relationship between the requirements can be seen in \autoref{fig:req:relati
 \begin{figure}[htbp]
 	\center
 	\includegraphics[width=\textwidth]{./planning/img/requirement_relationship}
-	\caption{Relationship Between Requirements \label{fig:req:relationship}}
+	\caption{Relationship Between Requirements\label{fig:req:relationship}}
 \end{figure}
 
 %------------------
@@ -529,7 +529,7 @@ diagram for the developer.
 Here each of the use cases are described textually.
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Filter and search textual use case\label{tab:textual:filterandsearch}}
+\caption{Filter and Search Textual Use Case\label{tab:textual:filterandsearch}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -553,7 +553,7 @@ Here each of the use cases are described textually.
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{View dissector textual use case\label{tab:textual:viewdissector}}
+\caption{View Dissector Textual Use Case\label{tab:textual:viewdissector}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -588,13 +588,13 @@ Here each of the use cases are described textually.
 	Element & Description\\
 	\midrule
 	Use case name & Debugging\\
-	Goal & The developer wants to debug inter-process commuination.\\
+	Goal & The developer wants to debug inter-process communication.\\
 	Summary & The developer wants to debug inter-process communication by using Wireshark extended by dissectors. \\
 	\multirow{2}{*}{Preconditions} & 1. The developer have Wireshark running with dissectors.\\
 	& 2. Wireshark have access to the packets sent between the processes that the developer wants to debug. \\
 	Postconditions & Wireshark display the communication dissected.\\
 	\midrule
-	\multirow{3}{*}{Flow of Events} & 1. The developer selects the inter-process communcation to debug. \\
+	\multirow{3}{*}{Flow of Events} & 1. The developer selects the inter-process communication to debug. \\
 	& 2. Wireshark calls the correct dissector and dissects the selected messages. \\
 	& 3. The developer is able to debug the process communication by looking at the dissected messages. \\
 	\midrule
@@ -605,7 +605,7 @@ Here each of the use cases are described textually.
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Configure platforms textual use case\label{tab:textual:configureplatforms}}
+\caption{Configure Platforms Textual Use Case\label{tab:textual:configureplatforms}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -629,7 +629,7 @@ Here each of the use cases are described textually.
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Generate Lua dissector textual use case\label{tab:textual:generatelua}}
+\caption{Generate Lua Dissector Textual Use Case\label{tab:textual:generatelua}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -655,7 +655,7 @@ Here each of the use cases are described textually.
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Create and change configuration file textual use case\label{tab:textual:configure}}
+\caption{Create and Change Configuration File Textual Use Case\label{tab:textual:configure}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -671,13 +671,13 @@ Here each of the use cases are described textually.
 	\midrule
 	Flow of Events & The administrator changes the located file to get the wanted configuration.  \\
 	\midrule
-	Exceptions & The created- or changed configuration file might not be of correct syntax. \\
+	Exceptions & The created or changed configuration file might not be of correct syntax. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Generate configured Lua-dissectors textual use case\label{tab:textual:generateconfiglua}}
+\caption{Generate Configured Lua Dissectors Textual Use Case\label{tab:textual:generateconfiglua}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -703,7 +703,7 @@ Here each of the use cases are described textually.
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Generate batch of Lua dissectors textual use case\label{tab:textual:luabatch}}
+\caption{Generate Batch of Lua Dissectors Textual Use Case\label{tab:textual:luabatch}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -738,12 +738,11 @@ To make it easier to implement the requirements, there have been written user st
 Header & Value \\
 \midrule
 ID & ID for the user stories, written like USxx. \\
-Requirements & The requirement that the user story descripbes. \\
+Requirements & The requirement that the user story describes. \\
 What & Description of what the user want to achieve.\\
 How & Description of how the requirement should be implemented. \\
 Result & What the result is after the implementation. \\
 \bottomrule
 \end{tabularx}}
 \end{table}
-
 

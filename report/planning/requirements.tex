@@ -547,13 +547,17 @@ Here each of the use cases are described textually.
 	\toprule
 	Element & Description\\
 	\midrule
-	Use case name & Filter and search on attributes\\
-	Goal & The administrator would like to filter and search on attributes in the packets displayed in Wireshark \\
-	Summary & \\
-	Preconditions & The user have Wireshark running with dissectors. \\
-	Postconditions & Wireshark display the results.\\
-	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
-	Exceptions & N/A \\
+	Use case name & Configure platforms\\
+	Goal & Successfully configure the supported platforms.\\
+	Summary & The administrator want to be able to configure the platforms that the utility supports. This includes adding, removing and editing supported platforms.\\
+	Preconditions & The administrator must have access to the utility's platform module (the source code).\\
+	Postconditions & The changes must be saved to the platform module.\\
+	\midrule
+	\multirow{3}{*}{Flow of Events} & 1. The administrator locates the platform module in the utility. \\
+	& 2. The administrator make changes to the module to achieve the wanted support.\\
+	& 3. The administrator saves the changes and exits. \\
+	\midrule
+	Exceptions & The changes made to the platform module was not of correct syntax. Leaving the utility defected. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}

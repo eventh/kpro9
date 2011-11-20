@@ -75,7 +75,10 @@ Detailed specification can be found at `YAML website <http://www.yaml.org/spec/1
 
 **Structure**
 
-CSjark configuration files consist of 2 main parts. The first part is used for specifing all the configuration corresponding CSjark processing in general. More about CSjark options in `Options Configuration`_. The second part contains configuration for individual C struct definitions. That is described in section `Struct Configuration`_.
+CSjark configuration files consist of two main parts:
+
+- The first part is used for specifing all the configuration corresponding CSjark processing in general. More about CSjark options in `Options Configuration`_. 
+- The second part contains configuration for individual C struct definitions. That is described in section `Struct Configuration`_.
 
 The configuration file may have following strucuture: ::
 
@@ -92,6 +95,9 @@ The configuration file may have following strucuture: ::
       - name: struct2
         id: [11, 13, 15]
         # another struct2 config
+        
+        
+        
 
 **Automatic generation of configuration files**
 

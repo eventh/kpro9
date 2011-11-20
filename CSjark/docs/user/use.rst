@@ -60,9 +60,10 @@ Both ``header`` and ``config`` can be:
 ``-x [path [path ...]], --exclude [path [path ...]]``                                                File or folders to exclude from parsing
 ``-o [output], --output [output]``                                                                   If ``output`` is a directory, CSjark saves the output dissectors into this directory, 
                                                                                                      otherwise CSjark saves the output dissectors into one specified file named ``output``.
+                                                                                                     If not specified, *default* location for the output dissectors is CSjark root directory (with the ``csjark.py`` file)
 ``-p, --placeholders``                                                                               Automatically generates configuration files with placeholders for structs without configuration. More in section :ref:`configfile`. 
 ``-n, --nocpp``              		                                                                 Disables the C pre-processor.
-``-C [cpp], --CPP [cpp]``                                                                            Specifies which preprocessor to use.
+``-C [cpp_path], --CPP [cpp_path]``                                                                  Specifies the path to the external C preprocessor. For Windows, the path is ``../utils/cpp.exe`` by default (uses cpp bundled with CSjark).
 ``-i [header [header ...]], --include [header [header ...]]``                                        Process file as Cpp ``#include "file"`` directive
 ``-I [directory [directory ...]], --Includes [directory [directory ...]]``                           Additional directories to be searched for Cpp includes.
                                                                                                      The directories included are added as an argument to the preprocessor.

@@ -20,21 +20,21 @@ When the customer needs to know the contents of \gls{ipc} messages that include 
 
 The biggest impact on savings will be caused by enabling filtering of the messages by specific attributes in the \Gls{c} \gls{struct} in \Gls{wireshark}. Once this is made possible, searching for a specific \gls{struct} or \gls{member} will become easier.
 
-Before the start of the project, \Gls{c} \glspl{struct} were investigated in two ways. The first, manual method, which means counting individual bytes of the \gls{binary} file that includes data in \Gls{c} \glspl{struct}. This is possible only for small-sized messages. For bigger messages, this method is inapplicable, since the message can consist of several thousands bytes. The second method consists of writing the \gls{dissector} in \Gls{lua} manually for the specific \Gls{c} \gls{header}. Also, this method cannot be used for more complex \Gls{c} \glspl{struct}, i.e. those using \glspl{nested struct}. So far, there has been written about 10 \Gls{lua} \glspl{script} manually.
+Before creating the utility, \Gls{c} \glspl{struct} were investigated in two ways. The first, manual method, meant counting individual bytes of the \gls{binary} file that includes data in \Gls{c} \glspl{struct}. This was possible only for small-sized messages. For bigger messages, this method was inapplicable, as a message can consist of several thousands bytes. The second method consisted of manually writing a \gls{dissector} in \Gls{lua} for the specific \Gls{c} \gls{header}. Also, this method could not be used for more complex \Gls{c} \glspl{struct}, i.e. those using \glspl{nested struct}. At the start of this project there had been written around 10 \Gls{lua} \glspl{script} manually.
 
-According to the customer, they have approximately 3000 \Gls{c} \glspl{struct} in their code base.
+According to the customer, they had approximately 3000 \Gls{c} \glspl{struct} in their code base at the beginning of the project.
 To debug all these structs, 3000 \glspl{dissector} needs to be written. Time spent writing a \gls{dissector} for a message manually depends on the \gls{struct}’s complexity. For simple \glspl{struct}, this takes around 15 minutes. It took about one hour for the most complicated \glspl{dissector} that the customer had developed so far.
 
-If one hour is the average time for creating a \gls{dissector} for one message, our solution will save about 3000 hours of work, not considering further changes to their code base. Due to everyday workload of the customer’s development team, this amount of time could never be used to accomplish such a task.
+If one hour is the average time for creating a \gls{dissector} for one message, our utility will be able to save around 3000 hours of work, not considering further changes to their code base. Due to everyday workload of the customer’s development team, this amount of time could never be used to accomplish such a task.
 
-None of the workaround methods mentioned above is capable of processing messages with \Gls{c} \glspl{struct} that are big and complex. Time savings in these cases are not easily estimated.
+None of the methods mentioned above are capable of processing messages with \Gls{c} \glspl{struct} that are big and complex, making it difficult to estimate time savings in these cases.
 
 In some cases, a representative of Thales Norway AS has to physically move to a customer’s site to solve a problem.
-With the delivered solution, this can sometimes be avoided, since the customer can use Wireshark with the dissectors, and then send the capture files to Thales, so the problem can be solved in-house. Savings in this case are not only time-based, as this will also directly cut the transportation costs, as well as being an enviromental benefit. It is also possible it will increase the satisfaction for the client.
+With the delivered solution, this can sometimes be avoided, since the customer can use Wireshark with the dissectors, and then send the capture files to Thales. This means that the problem in some cases can be solved in-house. Savings in this case are not only time-based, as this will also directly cut the transportation costs, as well as being an enviromental benefit. It is also possible it will increase the satisfaction for the client.
 
 \subsection{Limitations}
 %-----------------------
-As in all other projects, the project members have to deal with various limitations and constraints given either by the customer or simply by the fact that they are students.
+As in all other projects, the project members had to deal with various limitations and constraints given either by the customer or personal limitations stemming from things such as lack of experience or conflicts with other personal responsibilities. The limitations as identified at the beginning of the project are listed below. 
 
 \subsubsection{Technical Limitations}
 \begin{description}
@@ -71,7 +71,7 @@ selected the listed tools for use in this project.
 	\includegraphics[width=3.5cm]{./planning/img/git_logo}
 	\vspace{-20pt}
 \end{wrapfigure}
-The team has selected Git as the \gls{version control system}, with git \gls{repository}
+The team selected Git as the \gls{version control system}, with git \gls{repository}
 hosting provided by Github\footnote{\url{http://github.com/}}.
 
 \begin{wrapfigure}{r}{3cm}
@@ -109,8 +109,8 @@ selected tortoisegit.
 \end{wrapfigure}
 Skype\footnote{\url{http://www.skype.com}} is an application which allows the
 user to make video and voice chats over the Internet, including conference
-calls and chatting. The team will use Skype to communicate and collaborate when
-we are not physically at the same location at the same time.
+calls and chatting. The team used Skype to communicate and collaborate when
+we were not physically present at the same location at the same time.
 
 \subsubsection{Google Docs}
 \begin{wrapfigure}{r}{2cm}
@@ -121,7 +121,7 @@ we are not physically at the same location at the same time.
 Google Docs\footnote{\url{http://docs.google.com/}} is a free web site offering
 functionality for creating documents, spreadsheets and presentations.
 The benefits of using Google Docs are that it is easy to share documents with other users, and
-it is possible to collaborate in real-time. For this project we are going to use Google Docs
+it is possible to collaborate in real-time. For this project we used Google Docs
 to collaborate on document drafts, and to share documents within the team and
 with the team's advisor.
 
@@ -146,7 +146,7 @@ report, and we have created a few templates for test plans and minutes.
 	\includegraphics[width=4cm]{./planning/img/ntnu_logo}
 	\vspace{-20pt}
 \end{wrapfigure}
-For asynchronous communication the team uses an electronic mailing list
+For asynchronous communication the team used an electronic mailing list
 provided by \Gls{idi}, \Gls{ntnu}.
 
 \subsubsection{Google Calendar}
@@ -155,27 +155,25 @@ provided by \Gls{idi}, \Gls{ntnu}.
 	\includegraphics[width=3cm]{./planning/img/google_calendar_logo}
 	\vspace{-20pt}
 \end{wrapfigure}
-Since all team members have google accounts, we have created a team calendar
+Since all team members have google accounts, we created a team calendar
 in Google Calendar\footnote{\url{http://calendar.google.com/}}
 to help schedule and keep track of meetings. A single calendar that all
 members can include in their own prevents misunderstandings and duplication
 of work.
 
 \subsubsection{text2pcap}
-In this project text2pcap is used to generate capture files from ASCII\footnote{\url{http://www.asciitable.com/}}
-\glspl{hex dump}. Since the customer cannot provide us with capture files, 
-we have to create them ourselves. The capture files are important for testing
-the generated \Gls{lua}-\glspl{script}. The text2pcap tool is included with \Gls{wireshark}. 
+Since the customer could not provide us with capture files, 
+we had to create them ourselves.  The capture files are important for testing
+the generated \Gls{lua}-\glspl{script}. In this project text2pcap was used to generate capture files from ASCII\footnote{\url{http://www.asciitable.com/}}
+\glspl{hex dump}.  The text2pcap tool is included with \Gls{wireshark}. 
 The input to the tool is an ASCII \gls{hex dump} as a text-file, and the output will
-be a \gls{pcap-file}. When running text2pcap, it is necessary to specifiy the \gls{protocol}
-type.
+be a \gls{pcap-file}.
 
 \subsubsection{Hex Editor}
-The team is using a hex editor to create input for text2pcap. To make it
-easier to write ASCII \glspl{hex dump}, it is necessary to write them in a hex editor.
-HxD\footnote{\url{http://mh-nexus.de/en/hxd/}} is the recommended hex editor
-for this project, since it is free and has the necessary functionality. HxD is
-only for Windows.
+The team used a hex editor to create input for text2pcap. To make it
+easier to write ASCII \glspl{hex dump}, it was deemed necessary to write them in a hex editor.
+HxD\footnote{\url{http://mh-nexus.de/en/hxd/}} was the recommended hex editor
+for this project, as it is free and has all of the necessary functionality.
 
 \subsubsection{Violet}
 \begin{wrapfigure}{r}{3cm}
@@ -188,13 +186,13 @@ and easy to use modeling software for making \Gls{uml}-diagrams.
 It is also a cross platform solution, which means that all team members can use
 the same application. If we had to use different \Gls{uml} applications there could be a problem
 editing the diagrams due to incompatible file formats.
-The architectural and design team will be using Violet to create diagrams
+The architectural and design team used Violet to create diagrams
 to illustrate the workings of the utility. As very advanced diagrams were not needed for
 this project, Violet seemed like a fitting tool.
 
 \subsection{Schedule of Results}
 %-------------------------------
-This project will have two deliveries, pre-delivery and final delivery.
+This project had two deliveries,a pre-delivery and a final delivery.
 The milestones and sprints are listed below.
 
 \subsubsection{Milestones}
@@ -215,10 +213,10 @@ The milestones and sprints are listed below.
 
 \subsection{Concrete Project Work Plan}
 %--------------------------------------
-The first two weeks of the project will be used on planning and pre study.
-The project will be divided into four sprints that will each last for two weeks.
-The first sprint will have an estimated 200 person-hours, while the last three
-sprints will have 250 person-hours. The last one and a half weeks will be used to finish
+The first two weeks of the project was used on planning and pre study.
+The project was divided into four sprints that each lasted for two weeks.
+The first sprint had an estimated length of 200 person-hours, while the last three
+sprints had an estimate of 250 person-hours. The last one and a half weeks were used to finish
 the final report and prepare for the presentation. \autoref{tab:wbs} shows the
 work breakdown structure, and the project timeline is in \autoref{fig:gantt}.
 
@@ -284,11 +282,11 @@ work breakdown structure, and the project timeline is in \autoref{fig:gantt}.
 \section{Project Organization}
 %-----------------------------
 \label{sec:plan:org}
-This section describes how the team is organized, which roles the developers are divided into and the partners of the projet.
+This section describes how the team was organized, which roles the developers were divided into and the partners of the projet.
 
 \subsection{Project Organization}
 %--------------------------------
-Our project organization has a flat structure, and the organization chart can be seen in figure \ref{fig:orgchart}. The roles listed in the organization chart are described in table \ref{tab:roles}.
+Our project organization had a flat structure, and the organization chart can be seen in figure \ref{fig:orgchart}. The roles listed in the organization chart are described in table \ref{tab:roles}.
 
 \begin{figure}[htb]
 	\noindent\makebox[\textwidth]{%
@@ -375,16 +373,16 @@ listed in \autoref{tab:plan:advisors}.
 \section{Quality Assurance}
 %--------------------------
 \label{sec:plan:qa}
-The following section contains internal processes and routines the team will use in the project. This includes procesures for meetings, document templates and standards and internal reports.
+The following section contains internal processes and routines the team used in the project. This includes procesures for meetings, document templates and standards and internal reports.
 
 \subsection{Routines for Ensuring Quality Internally}
 %----------------------------------------------------
-We will organize in pairs when producing items, where the pair reviews each others work. This is done in an effort to enhance the quality of the project, as we will be able to find more errors, and 
+We decided to organize in pairs when producing items, where the pair reviews each others work. This would be done in an effort to enhance the quality of the project, as we wouldl be able to find more errors, and 
 also get a broader perspective on style and solutions.
 
-We have also assigned quality assurance responsibilities for three articles: documents, code and tests. The respective team members will try to have a bird's eye overview in their area to catch further errors.
+We also assigned quality assurance responsibilities for three articles: documents, code and tests. The respective team members tried to have a bird's eye overview in their area to catch further errors.
 
-We have agreed to have three weekly meetings to accommodate these routines.
+We agreed to have three weekly meetings to accommodate these routines.
 \begin{itemize}
 	\item Monday 12-14
 	\item Wednesday 12-17
@@ -393,13 +391,13 @@ We have agreed to have three weekly meetings to accommodate these routines.
 
 \subsection{Phase Result Approval}
 %---------------------------------
-To ensure the quality of the sprint deliverables, at least one team member will go through the work of another before it is delivered.
+To ensure the quality of the sprint deliverables, it was decided that at least one team member would go through the work of another before it is delivered.
 
-We will also present the results to the customer and advisor. They will then have the opportunity to point out problems and misunderstandings, and suggest solutions. This is a result of the \Gls{scrum} methodology: deliveries and deadlines throughout the project, making the progress very visible to the customer and advisors. We should be able to attain success at the end of the project because we have been guided by the feedback during the process of making the utility and report. If a problem appears, we will try to correct it and then reiterate the quality assurance.
+We would also present the results to the customer and advisor. They would then have the opportunity to point out problems and misunderstandings, and suggest solutions. This was a result of the \Gls{scrum} methodology: deliveries and deadlines throughout the project, making the progress very visible to the customer and advisors. We reckoned that we should be able to attain success at the end of the project because of the guidance and feedback received during the process of making the utility and report. If a problem appears, we will try to correct it and then reiterate the quality assurance.
 
 \subsection{Procedures for Customer Meetings}
 %--------------------------------------------
-All customer meetings should be scheduled with time, place, agenda specified. All background documents relevant to the meetings should also be supplied. This is to ensure efficient and effective meetings.
+All customer meetings were to be scheduled with time, place, agenda specified. All background documents relevant to the meetings should also be supplied. This was to ensure efficient and effective meetings.
 
 All customer meetings should be summarised in a document (minute). This document should include:
 \begin{itemize}
@@ -414,9 +412,9 @@ All customer meetings should be summarised in a document (minute). This document
 	\item The above should be in sequence according to time
 \end{itemize}
 
-This document should be written and sent to the customer by 12:00 the day after the meeting. If the customer does not approve the minutes, the minutes should again be corrected and sent 12:00 the following day. The customer contact is responsible for the above tasks.
+This document was to be written and sent to the customer by 12:00 the day after the meeting. If the customer did not approve the minutes, the minutes would again be corrected and sent 12:00 the following day. The customer contact was responsible for the above tasks.
 
-The customer has committed to respond to our interactions within two working days.
+The customer committed to respond to our interactions within two working days.
 
 \subsection{Procedure for Advisor Meeting}
 %-----------------------------------------
@@ -452,7 +450,7 @@ The minutes should be written and sent to the advisor for approval before 12:00 
 The team has specified procedures for templates and file organization.
 
 \subsubsection{Templates the Team Has Created}
-All templates are stored under docs/ on Github. The team has templates for:
+All templates were stored under docs/ on Github. The team had templates for:
 
 \begin{itemize}
 	\item Meeting agenda
@@ -501,19 +499,19 @@ agenda, phasedoc, e.g.) and the date, if applicable.
 
 \subsubsection{Coding Style Standard}
 The programming language used to implement the utility specified by the
-customer requirements is \Gls{python}. The coding style the team has agreed upon is
+customer requirements was \Gls{python}. The coding style the team agreed upon was
 the \Gls{python} Standard Styling Guide as defined by
 PEP8\footnote{Style Guide for Python Code: \url{http://www.python.org/dev/peps/pep-0008/}}.
-In addition the design should attempt to be pythonic, as detailed by
+In addition it was decided that the design should attempt to be pythonic, as detailed by
 PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}.
 
 \subsection{Version Control Procedures}
 %--------------------------------------
-Every relevant digital item should be pushed to our \gls{repository} at github, and be checked out by other participants. Those who work on a given item should commit and push their changes often, so that others can be as up to date as possible. All digital items should be labeled with a version number, starting at version one. If an item goes under review and is deemed insufficient by the customer, the version number should also be incremented by one for each revision of the document
+The team decided that every relevant digital item should be pushed to our \gls{repository} at github, and be checked out by other participants. Those who worked on a given item were supposed to commit and push their changes often, so that others ccould be as up to date as possible. All digital items were to be labeled with a version number, starting at version one. If an item went under review and was deemed insufficient by the customer, the version number was to also be incremented by one for each revision of the document
 
 Relevant digital items includes source code, documents, picture files, binary blobs, etc.
 
-NB: Google docs is not to be used for version control, so every document written there should also be pushed to git hub.
+NB: Google docs was not to be used for version control, so every document written there was also to be pushed to git hub.
 
 \subsection{Internal Reports}
 %----------------------------
@@ -532,8 +530,8 @@ These documents should follow the templates specified in Templates and Standards
 \section{Risk Management}
 %------------------------
 \label{sec:plan:risk}
-The following section lists the possible risk scenarios that can occur in the project, and how they should be handled. \autoref{tab:risk} shows how to handle the possible risks in the team. Each risk has a consequence and a probability:  \Gls{h}, \Gls{m} or \Gls{l}.
-Strategy and actions describes what we should do to reduce the consequences of the risk, or prevent the risk from happening altogether. Deadline states when we need to handle the risk.
+The following section lists the possible risk scenarios that could occur in the project, and how they were to be handled. \autoref{tab:risk} shows how to handle the possible risks in the team. Each risk has a consequence and a probability:  \Gls{h}, \Gls{m} or \Gls{l}.
+Strategy and actions describes what we were supposed to do to reduce the consequences of the risk, or prevent the risk from happening altogether. Deadline states when we needed to handle the risk.
 \begin{description}
 \item[R1. Choosing an incompatible technical solution]  The team decides to use a technical solution that is not suited for the given problem, or decides on an implementation that is too time consuming.
 \item[R2. Too much focus on report]  We spend too much time working on the report and neglect the implementation. 

@@ -72,8 +72,7 @@ The team has estimated the complexity for each requirement. We use the following
 \subsection{Initial Requirements}
 %--------------------------------
 The customer provided an initial requirements specification for the utility at
-the start of the project, which can be seen in \autoref{app:initreqs} in
-appendices.
+the start of the project, which can be seen in \autoref{app:initreqs}.
 
 We made some initial changes to the format, created some non-functional
 requirements and added priority and complexity to each requirement.
@@ -171,7 +170,7 @@ sprint.
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Non-Functional Requirements\label{tab:req:init:nonfuncreq}}
+\caption{Initial Non-Functional Requirements\label{tab:req:init:nonfuncreq}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X c c}
 	\toprule
@@ -214,9 +213,12 @@ sprint.
 
 \subsection{Requirements Evolution}
 %----------------------------------
+Based on feedback provided by the customer during the sprints, we added
+several new requirements or rewrote already existing requirements, which
+are described in this section. The final requirements are described in
+\autoref{sec:req:finalreq}.
 
 \subsubsection{Sprint 1}
-
 The following new requirements were added during this sprint based on feedback from customer.
 \begin{description}
 	\item[FR2-D] The dissector shall be able to recognize invalid values for a struct member.
@@ -239,7 +241,6 @@ changed id during sprint 2.
 	\item FR6 -> FR5
 	\item FR7 -> FR6
 \end{itemize}
-
 The following new requirements were added in sprint 2.
 \begin{description}
 	\item[FR1-F] The utility should detect structs with the same name, and report it as an error.
@@ -253,12 +254,28 @@ Customer feedback during sprint 3 resulted in the following new non-functional r
 \begin{description}
 	\item[NR5] The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after 1 hour of reading.
 \end{description}
-Non-functional requirements NR5-8 had their id increased by one.
+Non-functional requirements NR5 to NR7 had their id increased by one.
 
 \subsubsection{Sprint 4}
+As it became clear in sprint 3 that we would complete all the given
+requirements before the end of sprint 4, we requested new features which we
+would consider to implement. The following new requirements were suggest by
+the customer.
+\begin{description}
+	\item[FR2-E] The \gls{dissector} shall be able to guess dissector from packets size.
+	\item[FR2-F] The \gls{dissector} shall display an warning if a struct member contains uninitialized memory.
+	\item[FR4-H] The utility shall support automatic generation of configuration files for unknown structs.
+	\item[FR4-I] Configuration must support specifying the size of a struct members.
+	\item[FR6-E] Command line shall support \#define and --Include directives.
+	\item[FR6-F] The utility shall only generate dissectors from structs with valid id and theirs' dependencies.
+	\item[FR7] The utility shall be able to fetch configuration directly from source code.
+	\item[FR7-A] The utility shall support generation of struct member description from Doxygen comments.
+	\item[FR7-B] The utility shall support reading configuration for \#define enums from the header files.
+\end{description}
 
 \subsection{Final Requirements}
 %------------------------------
+\label{sec:req:finalreq}
 The final functional requirements are listed in \autoref{tab:req:func} and 
 \autoref{tab:req:func2}, while the non-function requirements are listed in
 \autoref{tab:req:nonfunc}.
@@ -292,7 +309,7 @@ The final functional requirements are listed in \autoref{tab:req:func} and
 	FR3 & The \gls{utility} must support \Gls{c} \gls{preprocessor} directives and macros & \Gls{h} & \\
 	FR3-A & The \gls{utility} shall support \gls{include} & \Gls{h} & \Gls{l} \\
 	FR3-B & The \gls{utility} shall support \gls{define} and \gls{if} & \Gls{h} & \Gls{l} \\
-	FR3-C & The \gls{utility} shall support \verb+WIN32+, \verb+_WIN32+, \verb+_WIN64+, \verb+__sparc__+, \verb+__sparc+ and \verb+sun+ & \Gls{m} & \Gls{h} \\
+	FR3-C & The \gls{utility} shall support \verb+_WIN32+, \verb+_WIN64+, \verb+__sparc__+, \verb+__sparc+ and \verb+sun+ & \Gls{m} & \Gls{h} \\
 	\midrule
 	FR4 & The \gls{utility} must support user configuration & \Gls{m} & \\
 	FR4-A & Configuration must support valid ranges for \gls{struct} \glspl{member} & \Gls{l} & \Gls{l} \\

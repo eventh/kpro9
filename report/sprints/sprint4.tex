@@ -852,28 +852,30 @@ As can be seen in \autoref{tab:sp4CoverageReport} and \autoref{fig:sp4CoverageCh
 \section{Customer Feedback}
 %--------------------------
 \label{sec:sp4feedback}
-This sprint we have mostly gotten feedback on implementation of requirements, and of new features that the customer would like in the utility. In addition they have given some thoughts on how to organize this sprint and of how to test some of the non functional requirements.
+This sprint we got mostly feedback on implementations, and on new features
+the customer would like us to add. They also gave some thoughts on how to
+organize the sprint and how to test some of the non functional requirements.
+New requirements and descriptions of existing requirements are listed in
+\autoref{sec:req:sprint4evo}. Post-sprint feedback can be found in
+\autoref{cha:conclusion}.
 
-\subsection{Process Improvement Points}
-%--------------------------------------
-The customer would like the fourth and final sprint to be split into two one week sprints. The benefit of this is that the customer would have a stable version of the utility after the first sprint to test on their files. Considering the overhead of an additional sprint, both in planning, evaluation and documentation, the team and the customer instead agreed to keep the customer updated with the progress of the utility. The customer could then test the utility on their code when certain blocking features were done, and then give feedback of additional bugs.
+The customer wanted the fourth and final sprint to be split into two one week
+sprints. This would provide the customer with a stable version of the utility
+after the first week for testing their files. Considering the overhead of an
+additional sprint, both in planning, evaluation and documentation, the team
+and the customer instead agreed to provide a stable release mid-sprint.
 
-Some of the header files that the customer wants to generate dissectors for depends on header files not directly included (the dependency might be included above an include to this header file inside a source file). These dependencies must be found so that the file may be parsed correctly. We cannot read the source files, that contains the correct includes, because the customer also has c++ files, which our parser does not support.
+Some of the header files that the customer wants to generate dissectors for
+depends on header files not directly included (the dependency might be
+included above an include to this header file inside a source file). These
+dependencies must be found so that the file may be parsed correctly.
 
-\subsection{Non functional requirement agreement}
-%------------------------------------------------
-We agreed on how some of the non functional requirements were to be tested, and the importance of them.
-
-\subsubsection{Testing on SPARC}
-The customer thought code inspections would be enough to verify that the dissectors would work on SPARC machines, since the team has no access to SPARC machines to test them.
-
-The utility itself does not have to be able to run on a sparc machine.
-
-\subsubsection{NR4 Testing user documentation on a person with Wireshark and C experience}
-The customer said that they have a person, with the relevant qualifications who, is willing to spend the hour necessary to test CSjark.
-
-\subsubsection{NR5 Testing user documentation on a person without experience with Wireshark, but with some C experience}
-The customer has previously specified that a person without prior knowledge of Wireshark, but with a good understanding of C should use about 5 hours to be able to use the utility. Due to the duration of this task it is, how every, unlikely that we find a person willing to do this test that meets the qualifications. The customer therefore said that we should not prioritize testing this requirement.
+We also got feedback on how to complete the non-functional requirements.
+Testing on SPARC platform would not be necessary, the customer felt code
+inspection would be sufficient. For NR5 the customer would provide a suitable
+person to test the fulfillment of the requirement. For NR4 and NR6 we did not
+have resources to perform these tests, and so the customer agreed it would
+not be necessary.
 
 
 %--------------------------

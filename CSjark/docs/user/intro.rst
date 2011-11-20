@@ -50,9 +50,7 @@ The `Figure 1`_ displays four packets, with packet number 1 highlighted. The con
 
 The dissector takes the C struct, decodes its binary representation and makes it readable by humans. Without a dissector, Wireshark would just display the struct and struct members as a binary blob.
 
-All the packets containing C structs belong to the protocol called luas-
-tructs. When opening a capture file in Wireshark, this protocol maps the
-id of the messages to the correct dissector, and calls them.
+All the packets containing C structs belong to the protocol called ``luastructs``. When opening a capture file in Wireshark, this protocol maps the id of the messages to the correct dissector, and calls them.
 
 From struct definition to Lua dissector
 ---------------------------------------
@@ -93,6 +91,7 @@ The protocol dissector method is the method that does the actual dissecting. A s
 
 For further information on the Lua integration in Wireshark, please visit:
 `Lua Support in Wireshark <http://www.wireshark.org/docs/wsug_html_chunked/wsluarm.html>`_.
+
 More information programming in Lua in general can be found in `Lua reference manual  <http://www.lua.org/manual/5.1/>`_.
 
 

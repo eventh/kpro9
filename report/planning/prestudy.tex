@@ -351,7 +351,7 @@ a custom \gls{parser} or use something like \gls{GCC-XML} and an \gls{axml} \gls
 behaves as a \gls{library} rather than an external tool, but for \Gls{java} we will have to
 use it like \Gls{agcc} because there are no \Gls{java}-\Gls{clang} bindings. It supports
 outputting the \gls{AST} as \Gls{axml}, which our \gls{utility} then will need to
-parse. \Gls{clang} provides bindings for \Gls{python} so there it can be used as a \gls{library},
+parse. \Gls{clang} provides bindings for \Gls{python} so it can be used as a \gls{library},
 but its main drawback is, like \Gls{agcc}, a lack of flexibility. \Gls{clang} is a part of
 the LLVM toolkit.
 
@@ -391,7 +391,7 @@ programming language, and it is available for both the 2.x and 3.x \gls{branch} 
 \subsection{configparser}
 %------------------------
 configparser\footnote{\url{http://docs.python.org/py3k/\gls{library}/configparser.html}}
-is a \Gls{python} module to manage user-editable configuration files. The
+is a \Gls{python} module used for managing user-editable configuration files. The
 files are organized into sections, and each section can contain name-value
 pairs for configuration data. Value interpolation using \Gls{python} formatting
 strings is also supported, to build values that depend on one another.
@@ -414,8 +414,8 @@ Among others, it has these additional features:
 	\item Integrated with a powerful validation system
 \end{itemize}
 
-\noindent Currently, ConfigObj module exists only for \Gls{python} up to version
-2.7. It is under \Gls{bsd} license.
+\noindent Currently, ConfigObj module only exists for \Gls{python} up to version
+2.7. It is under the \Gls{bsd} license.
 
 
 %--------------------------------
@@ -423,8 +423,8 @@ Among others, it has these additional features:
 %--------------------------------
 \label{sec:pre:testing}
 There are many different unit testing frameworks for \Gls{python}. We have evaluated
-three of them, to see which best suits our \gls{utility}, which we describe in this
-section. In \autoref{sec:pre:testchoice} we describe which we selected and why.
+three of them to see which best suits our \gls{utility}, which we describe in this
+section. In \autoref{sec:pre:testchoice}, we describe which one we selected and why.
 
 \subsection{py.test}
 %-------------------
@@ -526,9 +526,9 @@ PyCharm\footnote{\url{http://www.jetbrains.com/pycharm/}}
 is a cross platform, proprietary \Gls{ide} for \Gls{python}. It has good support
 for text editing, syntax highlighting, auto indentation, code navigation, code
 completion and automatic error checking. There is also a decent debugger and
-unit test support that can help finding errors and integrated version control
-support (including git), which makes it easy to synchronize with a remote
-repository. Most mentioned functions is also paired with keyboard shortcuts.
+unit test support that can help finding errors and it has integrated version control
+support, including git, which makes it easy to synchronize with a remote
+repository. The most used functions are also paired with keyboard shortcuts.
 
 The downside with PyCharm is that it requires a relative expensive license. It
 is, however, possible to apply for classroom licenses that are free of charge.
@@ -543,7 +543,7 @@ The latter is a requirement to make this \Gls{ide} a viable option.
 \end{wrapfigure}
 PyScripter\footnote{\url{http://code.google.com/p/pyscripter/}}
 is a Windows only, open source \Gls{ide} for \Gls{python}. It has support for
-basic text editing functions relevant to programming like syntax highlighting,
+basic text editing functions relevant to programming, like syntax highlighting,
 auto indentation, code completion, debugger and file management. It also has
 some support for navigating the code, for example by offering to find the next
 point in the code that references a certain variable or function. The mentioned
@@ -552,8 +552,8 @@ function mostly has keyboard shortcuts.
 It does not have support for automatic error checking in the program, so it
 will not alert the user of spelling and syntax errors. It also lacks integration
 with any version control systems like git or svn. The code completion and
-code navigation is a little lacking. It will for example not suggest importing
-files if you reference a class from another module and it cannot give a
+code navigation is a little lacking. It will, for example, not suggest importing
+files if you reference a class from another module, and it cannot give a
 complete list of usages of a function.
 
 \subsection{\Gls{vim}}
@@ -571,7 +571,7 @@ redo. It can be configured to support almost everything modern \Gls{ide}’s sup
 and its extensive customizability is considered parts of its strength. But it
 is also parts of its weakness, it is very difficult for new \gls{vim} users to learn
 how to use it effectively. Therefore we do not suggest any team member that is
-not already experienced with \gls{vim} to try it.
+not already experienced with \gls{vim} to use it.
 
 \subsection{Summary}
 %-------------------
@@ -629,7 +629,7 @@ that the \Gls{c} \gls{preprocessor} grammar was written in 2006, and had stopped
 2008 as newer versions of \gls{antlr} was not backwards compatible. Also the
 generated \Gls{c} \gls{parser} only validated \Gls{c} code, it did not create an \gls{AST} that we could traverse.
 This meant that using \Gls{java} and \gls{antlr} would
-require us to modify these grammars to suite our needs, and \gls{antlr}'s lack of
+require us to modify these grammars to suit our needs, and \gls{antlr}'s lack of
 documentation became a significant risk for our project.
 
 These issues and feedback from our customer made us evaluate \Gls{python} for
@@ -669,10 +669,10 @@ over PyCParser and cppheaderparser because it has better documentation, it
 seemed to be a more mature project, and it supports the most of the \Gls{C99}
 specification. \gls{pycparser} depends on \Gls{aply}, so our \gls{utility} will also depend on it.
 
-For \Gls{c} \gls{preprocessor} we have selected to use a tool for Windows which comes with
-\gls{pycparser}, on Mac we will use the one which comes with XCode, and on other
-platforms we will either use \Gls{agcc} or tools which comes with the platform. If we
-need to modify a \Gls{c} \gls{preprocessor} we might use \Gls{aply}'s incomplete \Gls{c} \gls{preprocessor}.
+For \Gls{c} \gls{preprocessor} we have selected to use a tool for Windows that comes with
+\gls{pycparser}, on Mac we will use the one that comes with XCode, and on other
+platforms we will either use \Gls{agcc} or tools that comes with the platform. If we
+need to modify a \Gls{c} \gls{preprocessor}, we might use \Gls{aply}'s incomplete \Gls{c} \gls{preprocessor}.
 
 \subsection{Configuration Framework Choice}
 %------------------------------------------
@@ -713,7 +713,7 @@ it lacked lists. Lists are needed for description of hierarchical structures of
 the \Gls{c} \glspl{header}. \Gls{yaml} has only two minor disadvantages we should be aware of.
 Firstly, there is no type validation mechanism, so we will have to create our
 validation manually, and secondly, it is an external \gls{library}. We find this drawback
-minor for now but it can turn out to be a problem in the future. Except for
+minor for now, but it can turn out to be a problem in the future. Except for
 these issues, \Gls{yaml}, more specifically pyYAML, seems to have a good potential
 for creating flexible configuration support for our \gls{utility}.
 
@@ -736,7 +736,7 @@ testing framework to learn. Therefor we decided to use
 \subsection{Our Framework}
 %-------------------------
 \label{sec:pre:framework}
-Our \gls{utility} will need to take as input \Gls{c} \gls{header} files, search through them to
+Our \gls{utility} will need to take \Gls{c} \gls{header} files as input, search through them to
 find \gls{struct} definitions, and create \Gls{lua} scripts that dissects the \glspl{struct} in
 \hyperref[sec:pre:wireshark]{Wireshark}.
 
@@ -798,7 +798,7 @@ This is summarized by
 \noindent Some of the requirements for our \gls{utility} might require us to modify
 the \Gls{c} \gls{preprocessor} in \Gls{aply} and the \gls{pycparser} \gls{library},
 which made us consider the new 2-clause \Gls{bsd} license the most suited for us.
-Since it also gives us the option to later move to a more restrictive license like \Gls{gpl},
+Since it also gives us the option to later move to a more restrictive license, like \Gls{gpl},
 we selected it.
 
 During sprint 3 we discovered that Lua dissectors which interfaces with the Wireshark API must

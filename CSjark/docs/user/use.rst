@@ -35,38 +35,46 @@ CSjark can be invoked by running the ``csjark.py`` script. The arguments must be
                  [-U [name [name ...]]] [-A [argument [argument ...]]]
                  [header] [config]
 			  
-The arguments here specify the following:
+**Required arguments**
 
 ``header``
-  a C header file to parse.
+  a C header file to parse or directory which includes header files
 ``config``
-  a configuration file to parse.
+  a configuration file to parse or directory which includes configuration files
+
+Both ``header`` and ``config`` can be:
+
+- file - CSjark processes only the specified file
+- directory - CSjark recursively searches the directory and processes all the appropriate files found
 
 
 **Optional arguments:**
 
-    =================================================================================================    ===========================
-    ``-h, --help``            		                                                                     Show a help message and exit.
-    ``-v, --verbose``                                                                                    Print detailed information.
-    ``-d, --debug``              	                                                                     Print debugging information.
-    ``-s, --strict``              	                                                                     Only generate dissectors for known structs.
-    ``-f [header [header ...]], --file [header [header ...]]``                                           Specifies that CSjark should look for struct definitions in the ``header`` files.
-    ``-c [config [config ...]], --config [config [config ...]]``                                         Specifies that the program should use the ``config`` files as configuration.
-    ``-x [path [path ...]], --exclude [path [path ...]]``                                                File or folders to exclude from parsing
-    ``-o [output], --output [output]``                                                                   Writes the output to the specified file ``output``.
-    ``-p, --placeholders``                                                                               Generate placeholder config file for unknown structs
-    ``-n, --nocpp``              		                                                                 Disables the C pre-processor.
-    ``-C [cpp], --CPP [cpp]``                                                                            Specifies which preprocessor to use.
-    ``-i [header [header ...]], --include [header [header ...]]``                                        Process file as Cpp ``#include "file"`` directive
-    ``-I [directory [directory ...]], --Includes [directory [directory ...]]``                           Directories to be searched for Cpp includes
-    ``-D [name=definition [name=definition ...]], --Define [name=definition [name=definition ...]]``     Predefine name as a Cpp macro
-    ``-U [name [name ...]], --Undefine [name [name ...]]``                                               Cancel any previous Cpp definition of name
-    ``-A [argument [argument ...]], --Additional [argument [argument ...]]``                             Any additional C preprocessor arguments
-    =================================================================================================    ===========================
+=================================================================================================    ===========================
+``-h, --help``            		                                                                     Show a help message and exit.
+``-v, --verbose``                                                                                    Print detailed information.
+``-d, --debug``              	                                                                     Print debugging information.
+``-s, --strict``              	                                                                     Only generate dissectors for known structs.
+``-f [header [header ...]], --file [header [header ...]]``                                           Specifies that CSjark should look for struct definitions in the ``header`` files.
+``-c [config [config ...]], --config [config [config ...]]``                                         Specifies that the program should use the ``config`` files as configuration.
+``-x [path [path ...]], --exclude [path [path ...]]``                                                File or folders to exclude from parsing
+``-o [output], --output [output]``                                                                   If ``output`` is a directory, CSjark saves the output dissectors into this directory, 
+                                                                                                     otherwise CSjark saves the output dissectors into one specified file named ``output``.
+``-p, --placeholders``                                                                               Automatically generates configuration files with placeholders for structs without configuration. More in section :ref:`configfile`. 
+``-n, --nocpp``              		                                                                 Disables the C pre-processor.
+``-C [cpp], --CPP [cpp]``                                                                            Specifies which preprocessor to use.
+``-i [header [header ...]], --include [header [header ...]]``                                        Process file as Cpp ``#include "file"`` directive
+``-I [directory [directory ...]], --Includes [directory [directory ...]]``                           Additional directories to be searched for Cpp includes.
+                                                                                                     The directories included are added as an argument to the preprocessor.
+                                                                                                     The preprocessor can search there for those files, which are given in an ``#include`` directive of the C header input.
+``-D [name=definition [name=definition ...]], --Define [name=definition [name=definition ...]]``     Predefine name as a Cpp macro
+``-U [name [name ...]], --Undefine [name [name ...]]``                                               Cancel any previous Cpp definition of name
+``-A [argument [argument ...]], --Additional [argument [argument ...]]``                             Any additional C preprocessor arguments
+=================================================================================================    ===========================
 
 **Example usage:** ::
 
-    python csjark.py -v headerfile.h configfile.yml
+    python csjark.py -v -o dissectors headerfile.h configfile.yml
 
 **Batch mode**
 
@@ -75,8 +83,6 @@ One of the most important features of CSjark is processing multiple C header fil
     python csjark.py headers configs
     
 In batch mode, CSjark only generates dissectors for structs that have a configuration file with an ID (see section :ref:`ids` for information how to specify dissector message ID), and for structs that depend on other structs. This speeds up the generation of dissectors, since it only generates dissectors that Wireshark can use.
-
-
 
 
 

@@ -29,5 +29,4 @@ document processor specifically written for the Python documentation.
 .. _reStructuredText: http://docutils.sf.net/rst.html
 .. _Sphinx: http://sphinx.pocoo.or
 
-These documents are hosted at `ReadTheDocs <http://www.readthedocs.org/>`_:
-http://csjark.readthedocs.org/.
+These documents are hosted at `ReadTheDocs <http://www.readthedocs.org/>`. You can find it at http://csjark.readthedocs.org/.

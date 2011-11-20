@@ -30,12 +30,48 @@ Because there exists distinct requirements for flexibility of generating dissect
 .. contents:: Contents
    :depth: 4
 
+
+.. _configfile:
+
 Configuration file format and structure
 ---------------------------------------
 
 **Format**
 
-The configuration files are written in YAML_ which is a data serialization format designed to be easy to read and write. Detailed specification can be found at `YAML website <http://www.yaml.org/spec/1.2/spec.html>`_. The configuration must be put in a ``filename.yml`` file and specified when running CSjark as a command line argument (more about CLI in section :ref:`use`).
+The configuration files are written in YAML_ which is a data serialization format designed to be easy to read and write. The configuration must be put in a ``filename.yml`` file and specified when running CSjark as a command line argument (more about CLI in section :ref:`use`).
+
+Basic YAML syntax is shown on following example: ::
+
+    # comments can start anywhere with number sign (#) and continues until the end of the line
+
+    key1: value1                   # associative array of two key-value pairs 
+    key2: value2                   # pairs are separated by colon (:) and space ( ) on a separate line
+    
+    {key3: value3, key4: value4}   # inline format of specifying associative arrays 
+                                   # pairs are separated by comma (,) and enclosed into curly braces ({})
+                                   
+    - item1                        # list of two items
+    - item2                        # each item starts with hyphen (-) and space ( ) on a separate line
+        
+    [item3, item4]                 # inline format of the list
+                                   # items are separated by comma (,) and enclosed into square brackets ([])
+
+Data structure hierarchy in YAML is maintained by outline indentation (whitespace is used, tab not allowed). All the basic elements can be combined to create a hierarchy: ::
+
+    Options:
+        use_cpp:                True
+        generate_placeholders:  True      
+    
+    Structs:
+      - name:   struct1
+        id:     [10, 12, 14]
+      - name:   struct2
+        id:     [11, 13, 15]
+
+
+Strings are ordinarily unquoted, but may be enclosed in double-quotes ("), or single-quotes ('). The specific number of spaces in the indentation is unimportant as long as parallel elements have the same left justification and the hierarchically nested elements are indented further. This sample defines an associative array with 2 top level keys: one of the keys, "Structs", contains a 2 element array (or "list"), each element of which is itself an associative array with differing keys.
+
+Detailed specification can be found at `YAML website <http://www.yaml.org/spec/1.2/spec.html>`_.
 
 **Structure**
 
@@ -59,7 +95,7 @@ The configuration file may have following strucuture: ::
 
 **Automatic generation of configuration files**
 
-Autogeneration of configuration file is a simple feature, that could save the user of the utility some time, since  the essential part of the configuration file is generated automatically.  The utility will only create a new file, containg the name of the struct and line to specifiy the ID for the dissector.  To generate the configuration file, the utility must be run with ``-p`` or ``--placeholders`` as an option (see :ref:`use` for about CSjark CLI.
+Autogeneration of configuration file is a simple feature, that could save the user of the utility some time, since  the essential part of the configuration file is generated automatically.  The utility will only create a new file, containg the name of the struct and line to specifiy the ID for the dissector.  To generate the configuration file, the utility must be run with ``-p`` or ``--placeholders`` as an option (see :ref:`use` for more about CSjark CLI).
 
     
 .. note::
@@ -75,7 +111,7 @@ Each individual C struct processed by CSjark can be treated in different way. Al
 Attribute name  Description
 ==============  =============
 name            C struct name (required field) 
-id              Dissector message id - more in `Dissector message ID`
+id              Dissector message id - more in `Dissector message ID`_
 description     Struct name displayed in Wireshark
 size            Size of the struct in memory - more in `Unknown structs handling`_
 cnf             Conformance file name - more in `External Lua dissectors`_
@@ -225,9 +261,7 @@ External Lua dissectors
 
 In some cases, CSjark will not be able to deliver the desired result from its own analysis, and the configuration options above may be too constraining. In this case, it is possible to write the lua dissector by hand, either for a given member or for an entire struct. 
 
-More information how to write Lua code can be found in `Lua reference manual`__.
-
-__ http://www.lua.org/manual/5.1/
+More information how to write Lua code can be found in `Lua reference manual  <http://www.lua.org/manual/5.1/>`_.
 
 A custom Lua code for desired struct must be defined in an external conformance file with extension ``.cnf``. The conformance file name and relative path then must be defined in the configuration file for the struct for which is the custom code applied for. The attribute name for the custom Lua definition file and path is ``cnf``, as shown below:
 

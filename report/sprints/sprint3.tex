@@ -154,7 +154,7 @@ The new design resulted in both major and minor changes to the class diagram, se
 	\caption{Sprint 3 Module Diagram\label{fig:modulesp3}}
 \end{figure}
 
-\paragraph{Major Changes}
+\paragraph{Major changes}
 \begin{itemize}
 \item New module called Platform, to hold platform specific information. Ealier, some information about the platform was stored in the config module, but the platform specifications have become so extensive that it is best to separate it in its own module. See the section regarding platform specific support for more info.
 \item Moved the \gls{cli} class from csjark to config, and renamed it to Options. This class holds the attributes passed from the command line interface. This will make the code more loosely coupled, because the configuration attributes are stored in the correct module. 
@@ -164,7 +164,7 @@ The new design resulted in both major and minor changes to the class diagram, se
 
 \end{itemize}
 
-\paragraph{Minor Changes}
+\paragraph{Minor changes}
 \begin{itemize}
 \item Config methods reduced to one.
 \item In the ConformanceFile, tokens and methods have been added.

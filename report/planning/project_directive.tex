@@ -7,11 +7,11 @@ This chapter will briefly introduce the project, its background and purpose.
 %------------------------
 \section{Project Mandate}
 %------------------------
-The purpose of this project is to develop a \gls{utility} that automatically creates \Gls{lua} \glspl{dissector} for \Gls{wireshark}, from \Gls{c} \gls{header} files. This report presents the planning, implementation
+The purpose of this project was to develop a \gls{utility} that automatically created \Gls{lua}-\glspl{dissector} for \Gls{wireshark}, from \Gls{c}-\gls{header} files. This report presents the planning, implementation
  and testing of the team’s product, and documents the process from the initial requirement specification to the finished product. 
 
-The title of the project is ''\Gls{wireshark} - Automated generation of \gls{protocol} \glspl{dissector}''~\cite{Compendium}.
-It was given to us by the customer and describes exactly what we are planning to accomplish. The name chosen for the \gls{utility} is ''CSjark''. Sjark is the Norwegian name for an iconic type of fishing boat, most commonly used in Northern Norway. The reason why the team picked this name was because of the way the \gls{utility} ''fishes'' for \Gls{c} \glspl{struct} in \gls{header} files. The \gls{utility} then creates \glspl{dissector} for these \glspl{struct}, in order for \Gls{wireshark} to display the \gls{struct} information properly. This reminded the team of what fishermen do to prepare the fish for the market. The word Sjark is also pronounced in a similar way to ''shark'', which makes our \gls{utility} name a play on words with ''\Gls{wireshark}'', the program our \gls{utility} is supposed to extend.
+The title of the project was ''\Gls{wireshark} - Automated generation of \gls{protocol} \glspl{dissector}''~\cite{Compendium}.
+It was given to us by the customer and describes exactly what we were planning to accomplish. The name chosen for the \gls{utility} was ''CSjark''. Sjark is the Norwegian name for an iconic type of fishing boat, most commonly used in Northern Norway. The reason why the team picked this name was because of the way the \gls{utility} ''fishes'' for \Gls{c} \glspl{struct} in \gls{header} files. The \gls{utility} then creates \glspl{dissector} for these \glspl{struct}, in order for \Gls{wireshark} to display the \gls{struct} information properly. This reminded the team of what fishermen do to prepare the fish for the market. The word Sjark is also pronounced in a similar way to ''shark'', which makes our \gls{utility} name a play on words with ''\Gls{wireshark}'', the program our \gls{utility} was supposed to extend.
 
 
 %-------------------
@@ -30,43 +30,41 @@ employees, which offers a wide range of technical competence~\cite{ThalesNO}.
 %--------------------------------
 Three parties are involved in this project: a) the client, b) the project team, and c) the advisors.
 
-The client, described in the section above, is represented by Christian Tellefsen and Stig Bjørlykke. See \autoref{tab:plan:customer} for their contact information.
-The project team consists of seven computer engineering students from \Gls{ntnu}, as listed in \autoref{tab:plan:devs}.
-For feedback and help during the project period, our team has been assigned a main supervisor, Daniela Soares Cruzes.
-She will be assisted by Maria Carolina Passos. Their contact information can be found in \autoref{tab:plan:advisors}.
-
+The client, described in the section above, was represented by Christian Tellefsen and Stig Bjørlykke. See \autoref{tab:plan:customer} for their contact information.
+The project team consisted of seven computer engineering students from \Gls{ntnu}, as listed in \autoref{tab:plan:devs}.
+For feedback and help during the project period our team was assigned a main advisor, Daniela Soares Cruzes.
+Daniela was also assisted by Maria Carolina Passos, who also helped us during the project. Their contact information can be found in \autoref{tab:plan:advisors}.
 %----------------------------
 \section{Project Background}
 %---------------------------
 Thales currently uses \Gls{wireshark} to analyze traffic data between different network nodes, for example, \Gls{ip} \glspl{packet} sent between a client and a server.
 Thales' programs send \Gls{c} \glspl{struct} internally between processes, and when Thales debug their programs they want to look at the contents of these \glspl{packet}.
-To be able to use \Gls{wireshark} for examining \glspl{packet} containing \Gls{c} \glspl{struct}, \Gls{wireshark} has to be extended with \gls{protocol} \glspl{dissector}.
-Thales can write these manually, but they have over 4000 \Gls{c} header files with structs, and creating \glspl{dissector} for
+To be able to use \Gls{wireshark} for examining \glspl{packet} containing \Gls{c} \glspl{struct}, \Gls{wireshark} had to be extended with \gls{protocol} \glspl{dissector}.
+Thales could write these manually, but as they have over 4000 \Gls{c} header files with structs, creating \glspl{dissector} for
 all of them would take too much time for this type of debugging to be time efficient. 
 
-To make debugging inter-process communication in \Gls{wireshark} viable, the customer wants us to develop a \gls{utility} that can generate \glspl{dissector} automatically.
+To make debugging inter-process communication in \Gls{wireshark} viable, the customer wanted us to develop a \gls{utility} that can generate \glspl{dissector} automatically.
 The generated \glspl{dissector} from this \gls{utility} will be used by \Gls{wireshark}'s developers when they are solving problems in their programs.
-Thales expects therefore that our \gls{utility} can save them valuable time.
+Thales therefore expects that our \gls{utility} can save them valuable time and effort .
 
 %--------------------------
 \section{Project Objective}
 %--------------------------
-The objective from the customer is to design a \gls{utility} that will be able to generate \Gls{lua} code for dissecting the \gls{binary} representation
-of \Gls{c}/\Gls{c++} \glspl{struct}, allowing \Gls{wireshark} to display, filter, and search through the data.
-The \gls{utility} needs to support a flexible configuration, as this will make it more useable for debugging in \Gls{wireshark}. 
-The code and configuration should be well documented, making it easy for Thales to use and extend the tool as they see fit.
+The objective from the customer was to design a \gls{utility} that would be able to generate \Gls{lua} code for dissecting the \gls{binary} representation
+of \Gls{c}/\Gls{c++} \glspl{struct}, allowing \Gls{wireshark} to display, filter, and search through this data.
+The \gls{utility} needed to support a flexible configuration, as this would make it more useable for debugging with \Gls{wireshark}. 
+The code and configuration also had to be well documented, making it easier for Thales to use and extend the tool as they see fit.
 
-The objective from \Gls{ntnu}'s point of view is that we acquire practical experience in executing all phases of a bigger \Gls{it}-project and learn
-how to work in a team.
+The objective from \Gls{ntnu}'s point of view was that the team members would acquire practical experience in executing all phases of a bigger \Gls{it}-project and learn
+how to work together in a team.
 
-Our team's goals for this project are to attain experience in working in a real development project, and to create a solution that the customer
-is satisfied with.
+Our team's goals for this project were to attain experience in working in a real development project, and to create a solution that the customer
+would be satisfied with.
 
 %-----------------
 \section{Duration}
 %-----------------
-Calculations done by the course staff suggests that each student should conduct 325 person-hours distributed over 13 weeks for the project.
-This amounts to 25 hours for each person per week. Our team, consisting of seven students, will have a total of 2275 person-hours to spend.\\
+Calculations done by the course staff suggested that each student should conduct 325 person-hours distributed over 13 weeks for the project. Our team, consisting of seven students, would therefore have a total of 2275 person-hours to spend on this project.\\
 \begin {itemize}
 	\item Project start: August 30th
 	\item Project end: November 24th

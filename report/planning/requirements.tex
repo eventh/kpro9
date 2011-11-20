@@ -13,9 +13,6 @@ and \autoref{sec:prodbacklog} contains the complete product backlog.
 \section{List of Requirements}
 %-----------------------------
 \label{sec:req:list}
-
-\subsection{Overview}
-%-----------------
 We are to create a \gls{utility} that allows \Gls{wireshark} to interpret the \gls{binary}
 representations of \Gls{c}-language \glspl{struct}. While \Gls{c} \glspl{struct} seldom are exchanged
 across networks, they are sometimes used in \gls{ipc}. The
@@ -450,6 +447,57 @@ the customer.
 	\item[FR7-B] The utility shall support reading configuration for \#define enums from the header files.
 \end{description}
 
+\noindent The customer also provided the following requirement descriptions
+and feedback.
+\paragraph{FR4-B: Custom Lua files}
+The customer wanted a way to be able to fetch the buffer offset value to be
+able to both use it to pick specific parts of the message and modify it.
+
+\paragraph{FR3: Support for the \#pragma directive}
+The customer uses the \#pragma directive to identify the version of the file.
+This will not affect the dissectors generated in any way. \#pragma will,
+however, crash CSjark if they are not removed.
+
+\paragraph{FR4-H: Auto-generation of configuration files}
+The customer asked if we could make the utility auto-generate template
+configuration for each struct it can generate a dissector for. This would make
+it easier for the user to configure structs, as the user only needs to fill
+in an id number in most of the cases.
+
+\paragraph{FR6-F: Only generate useful dissectors}
+The customer wants a mode where the utility only generates dissectors for
+structs with an corresponding configuration file containing an id, and for
+structs and unions that are inside these structs.
+
+\paragraph{FR6-E: Support specific C preprocessor directives}
+The customer want the utility to be able to take certain C preprocessor
+directive arguments from command line. For example --Include or --Define.
+
+\paragraph{FR7-A: Find struct description from Doxygen comments}
+Make our utility be able to read comments corresponding to the struct and
+use these for the description field in dissectors. This feature would make
+generating dissectors require less manual configuration.
+
+\paragraph{FR7-B: Read int-enum configuration from header files}
+Some of the integer members may really be intended to be used as an enum,
+with the numerical values corresponding to strings. Some of the headers
+contains \#define directives that specifies these string and integer pairs.
+The customer would like the utility to be able to find these and encode it
+in the configuration file. The benefit is that the customer then does not
+have to configure this manually.
+
+\paragraph{FR2-E: Guess the dissector from packet size}
+The customer want Wireshark to be able to guess what dissectors to use
+from the size of the packet. It could compare this size to the size dissectors
+expects. If multiple dissectors fit, it could try to display the message with
+all suitable dissectors. This makes the customer able to use some dissectors
+without manually configuring the message ID for the struct it represents.
+
+\paragraph{FR6-E: A way to ignore headers in a specified folder}
+The customer wants a way to specify what folder to ignore in batch mode.
+This is to avoid complex headers that are irrelevant to the customers goal
+(does not include structs), but which our utility fails to parse.
+
 
 %--------------------------------
 \section{Requirement Description}
@@ -538,10 +586,8 @@ Here each of the use cases are described textually.
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Filter and Search Textual Use Case\label{tab:textual:filterandsearch}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
-	 & \includegraphics[scale=0.8]{./planning/img/uc_filterandsearch} \\
+\begin{tabularx}{\textwidth}{l X}
+	& \includegraphics[scale=0.8]{./planning/img/uc_filterandsearch} \\
 	\toprule
 	Element & Description\\
 	\midrule
@@ -557,15 +603,13 @@ Here each of the use cases are described textually.
 	\midrule
 	Exceptions & None. \\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
 \caption{View Dissector Textual Use Case\label{tab:textual:viewdissector}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
-	 & \includegraphics[scale=0.8]{./planning/img/uc_viewdissectors} \\
+\begin{tabularx}{\textwidth}{l X}
+	& \includegraphics[scale=0.8]{./planning/img/uc_viewdissectors} \\
 	\toprule
 	Element & Description\\
 	\midrule
@@ -581,16 +625,14 @@ Here each of the use cases are described textually.
 	& 3. Wireshark displays the members and values of the selected message. \\
 	\midrule
 	\multirow{2}{*}{Exceptions} & 1. The correct dissector for a struct might not exist in Wireshark's plugin folder, making it impossible to dissect the message. \\
-	& 2. more? \\
+	& 2. more? \\ % WTF???
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Debugging textual use case\label{tab:textual:debugging}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
+\caption{Debugging Textual Use Case\label{tab:textual:debugging}}
+\begin{tabularx}{\textwidth}{l X}
 	 & \includegraphics[scale=0.8]{./planning/img/uc_debugging} \\
 	\toprule
 	Element & Description\\
@@ -609,14 +651,12 @@ Here each of the use cases are described textually.
 	\multirow{2}{*}{Exceptions} & 1. The correct dissectors might not exist in Wireshark's plugin folder, making it impossible to dissect the messages. \\
 	& 2. The inter-process communication might not consist of structs only, which Wireshark do not have capability of displaying. \\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Configure Platforms Textual Use Case\label{tab:textual:configureplatforms}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
+\begin{tabularx}{\textwidth}{l X}
 	 & \includegraphics[scale=0.8]{./planning/img/uc_configureplatform} \\
 	\toprule
 	Element & Description\\
@@ -633,14 +673,12 @@ Here each of the use cases are described textually.
 	\midrule
 	Exceptions & The changes made to the platform module was not of correct syntax. Leaving the utility defected. \\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Generate Lua Dissector Textual Use Case\label{tab:textual:generatelua}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
+\begin{tabularx}{\textwidth}{l X}
 	 & \includegraphics[scale=0.8]{./planning/img/uc_generatelua} \\
 	\toprule
 	Element & Description\\
@@ -659,14 +697,12 @@ Here each of the use cases are described textually.
 	\multirow{2}{*}{Exceptions} & 1. The header file might not be of correct syntax.\\
 	& 2. The utility's dependencies might not be covered, resulting in a crash of the utility.\\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Create and Change Configuration File Textual Use Case\label{tab:textual:configure}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
+\begin{tabularx}{\textwidth}{l X}
 	 & \includegraphics[scale=0.8]{./planning/img/uc_configurate} \\
 	\toprule
 	Element & Description\\
@@ -681,14 +717,12 @@ Here each of the use cases are described textually.
 	\midrule
 	Exceptions & The created or changed configuration file might not be of correct syntax. \\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Generate Configured Lua Dissectors Textual Use Case\label{tab:textual:generateconfiglua}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
+\begin{tabularx}{\textwidth}{l X}
 	 & \includegraphics[scale=0.8]{./planning/img/uc_generateconfiglua} \\
 	\toprule
 	Element & Description\\
@@ -707,14 +741,12 @@ Here each of the use cases are described textually.
 	\multirow{2}{*}{Exceptions} & 1. The header and/or configuration file might not be of correct syntax.\\
 	& 2. The utility's dependencies might not be covered, resulting in a crash of the utility.\\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Generate Batch of Lua Dissectors Textual Use Case\label{tab:textual:luabatch}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
+\begin{tabularx}{\textwidth}{l X}
 	 & \includegraphics[scale=0.8]{./planning/img/uc_luabatch} \\
 	\toprule
 	Element & Description\\
@@ -732,7 +764,7 @@ Here each of the use cases are described textually.
 	\multirow{2}{*}{Exceptions} & 1. A header or configuration file might not be of correct syntax, which will make the utility skip that actual file and proceed with the rest of the files in the batch.\\
 	& 2. The utility's dependencies might not be covered, resulting in a crash of the utility.\\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \section{User Stories}

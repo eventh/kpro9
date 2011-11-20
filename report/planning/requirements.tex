@@ -270,7 +270,7 @@ a
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
-	 & \includegraphics[scale=0.6]{./planning/img/usecase1} \\
+	 & \includegraphics[scale=0.8]{./planning/img/uc_filterandsearch} \\
 	\toprule
 	Element & Description\\
 	\midrule
@@ -281,7 +281,34 @@ a
 	Postconditions & Wireshark display the results.\\
 	Extension points & N/A \\
 	\bottomrule
-	 & \includegraphics[scale=0.6]{./planning/img/usecase1} \\
+\end{tabularx}}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{View dissector textual use case\label{tab:textual:viewdissector}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	 & \includegraphics[scale=0.8]{./planning/img/uc_viewdissectors} \\
+	\toprule
+	Element & Description\\
+	\midrule
+	Brief description & The user would like to filter and search for attributes in the packets displayed in Wireshark \\
+	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
+	Special requirements & The utility must support the built-in functionality. \\
+	Preconditions & The user have Wireshark running with dissectors. \\
+	Postconditions & Wireshark display the results.\\
+	Extension points & N/A \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Debugging textual use case\label{tab:textual:debugging}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X}
+	\toprule
+	 & \includegraphics[scale=0.8]{./planning/img/uc_debugging} \\
 	\toprule
 	Element & Description\\
 	\midrule

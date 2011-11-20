@@ -47,7 +47,7 @@ The second sprint we will implement thirteen requirements. These are listed in T
 \ref{tab:sprint2req1} and Table \ref{tab:sprint2req2}.
 
 \begin{table}[!htb] \small \center
-\caption{Sprint 2 Requirements\label{tab:sprint2req1}}
+\caption{Sprint 2 Requirements Part 1\label{tab:sprint2req1}}
 \begin{tabularx}{\textwidth}{l l X c c}
 	\toprule
 	& & & \multicolumn{2}{c}{Hours} \\
@@ -95,7 +95,7 @@ The second sprint we will implement thirteen requirements. These are listed in T
 \end{table}
 
 \begin{table}[!htb] \small \center
-\caption{Sprint 2 Requirements continued\label{tab:sprint2req2}}
+\caption{Sprint 2 Requirements Part 2\label{tab:sprint2req2}}
 \begin{tabularx}{\textwidth}{l l X c c}
 	\toprule
 	& & & \multicolumn{2}{c}{Hours} \\
@@ -267,7 +267,7 @@ These user stories represent how we intend to add the functionality of the requi
 and explain how the modules in the utility should interact with each other in the different scenarios.
 
 \begin{table}[htbp] \footnotesize \center
-\caption{User stories - Sprint 2 part 1\label{tab:req:stories3}}
+\caption{User Stories - Sprint 2 Part 1\label{tab:req:stories3}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -320,7 +320,7 @@ and explain how the modules in the utility should interact with each other in th
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{User stories - Sprint 2 part 2\label{tab:req:stories4}}
+\caption{User Stories - Sprint 2 Part 2\label{tab:req:stories4}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -371,7 +371,7 @@ and explain how the modules in the utility should interact with each other in th
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{User stories - Sprint 2 part 3\label{tab:req:stories5}}
+\caption{User Stories - Sprint 2 Part 3\label{tab:req:stories5}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -422,7 +422,7 @@ and explain how the modules in the utility should interact with each other in th
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{User stories - Sprint 2 part 4\label{tab:req:stories6}}
+\caption{User Stories - Sprint 2 Part 4\label{tab:req:stories6}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -463,7 +463,7 @@ implemented, what the \gls{header} and config files looks like, and what the ''o
 To get a better understanding of how the different requirements were implemented,
 look at the user stories for sprint 2 in \autoref{sec:req:stories2}.
 
-\subsection{Support Members of Type \gls{enum}}
+\subsection{Support Members of Type \Gls{enum}}
 
 %----------------------
 \label{sec:supportenum}
@@ -499,7 +499,7 @@ Two \glspl{struct} can have the same name, and therefore we needed a way of dete
 If the \gls{parser} finds two \glspl{struct} with the same name, an exception is 
 raised, and the generation of the \gls{dissector} is terminated.
 
-\subsection{Support display of \glspl{struct} within \glspl{struct}}
+\subsection{Support Display of \Glspl{struct} within \Glspl{struct}}
 %----------------------
 The \gls{utility} is able to display \glspl{struct} within a \gls{struct} in \Gls{wireshark}, the 
 \gls{member} will be visible, and the \gls{struct} will be in a subtree that can be 
@@ -650,7 +650,7 @@ screenshot of the \gls{struct} in \Gls{wireshark}.
 \begin{figure}[ht]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_custom}
-	\caption{Custom handling of Data Types\label{fig:customdatatype}}
+	\caption{Custom Handling of Data Types\label{fig:customdatatype}}
 \end{figure}
 
 \lstset{language=C,caption={\Gls{struct} for custom handling},label=code:customstruct}
@@ -678,7 +678,7 @@ This section introduces the tests preformed during the sprint and their results.
 During the sprint, the team executed a total of seven test cases. An example of a testcase can be seen in \autoref{tab:STID08} while the rest of the  test cases can be found in \autoref{sec:testcases}.The results are listed in \autoref{tab:sp2TIDS}.
 
 \begin{table}[ht] \footnotesize \center
-\caption{Test case TID08}\label{tab:STID08}
+\caption{Test Case TID08}\label{tab:STID08}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -703,7 +703,7 @@ During the sprint, the team executed a total of seven test cases. An example of 
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Sprint 1 test results\label{tab:sp2TIDS}}
+\caption{Sprint 1 Test Results\label{tab:sp2TIDS}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
 	\toprule
@@ -812,7 +812,7 @@ The following list contains the unit tests used in the second sprint and the cod
 \begin{figure}[ht]
 	\center
 	\includegraphics[width=\textwidth]{./sprints/img/sprint2_code_coverage_chart}
-	\caption{Code coverage progress from previous sprints\label{fig:sp2CoverageChart}}
+	\caption{Code Coverage Progress from Previous Sprints\label{fig:sp2CoverageChart}}
 \end{figure}
 
 \subsection{Test Evaluation}
@@ -824,24 +824,24 @@ For the second sprint the developers focused a lot more on testing during implem
 \section{Customer Feedback}
 %--------------------------
 \label{sec:sp2:feedback}
-\subsection{Requirement changes and feedback}
+\subsection{Requirement Changes and Feedback}
 In sprint 2 we were able to demonstrate many of the requirements for the customer, and as a result we got some feedback of some changes and refinements that the customer wants. The customer also added some new features they would like to have. The changes and additions are listed below.
 
-\subsubsection{FR1-E: Support \glspl{member} of type \gls{array}}
+\subsubsection{FR1-E: Support \Glspl{member} of Type \Gls{array}}
 \Glspl{array} should be displayed as a sublevel. Multidimensional \glspl{array} should have one sublevel per dimension. The \gls{dissector} should also display the type of the \gls{array} and show the different indexes for the sublevels.
 
-\subsubsection{FR2-B: \gls{struct} within \glspl{struct}}
+\subsubsection{FR2-B: \Gls{struct} within \Glspl{struct}}
 The customer stated that the inner \gls{struct} should be displayed as a sublevel of the outer \gls{struct}.
 When an external \gls{dissector} is called, it should be called with a name and not an id, in order to not assign an id to \glspl{struct} that are never used as a base.
 
-\subsubsection{FR4-C Custom handling of specific types}
+\subsubsection{FR4-C Custom Handling of Specific Types}
 The customer stated that they would like certain types to be interpreted in a certain way as default behaviour, but that the user should be able to configure specific behaviour for a specific \gls{member} of a \gls{struct}.
 
-\subsubsection{FR4-E: \Glspl{header}/\gls{trailers}}
+\subsubsection{FR4-E: \Glspl{header}/\Gls{trailers}}
 The customer originally stated that this feature included both \glspl{header} and trailer \glspl{struct} for a given \gls{struct}. This is now refined to mean that the given \gls{struct} is the \gls{header}, and that it can have various \gls{trailers} (could be one or more \Gls{c} \glspl{struct}, \gls{asnone}, etc.). A configuration file should specify the kind of trailer, and what variable inside the \gls{header} \gls{struct} which specify how many trailer items to expect. If the \gls{header} does not specify the length of the trailer the \gls{dissector} should just use the rest of the buffer, or the \gls{dissector} is responsible to return the length used from the buffer, so the caller can give the rest to the next \gls{dissector}.
 In \Gls{wireshark} it should be displayed as a sequence of \glspl{struct}.
 
-\subsubsection{FR4-F: Support for \glspl{integer} that represents enumerated values and \glspl{bit string}}
+\subsubsection{FR4-F: Support for Enumerated Values and Bit Strings
 The customer clarified this by explaining that they wanted \glspl{integer} that represents an enumerated value to be displayed like an \gls{enum} (\gls{member} name and the \gls{string} that represents the \gls{integer} value) and that the \glspl{bit string} should be displayed as a list with the name and value (1 / 0 or yes / no) of the different bits in the \gls{integer}. It should also display the original \gls{integer} I hex. As a result of this, the requirement was split into two:
 \begin{itemize}
 \item FR4-F	Support \glspl{enumerated named value}
@@ -849,10 +849,10 @@ The customer clarified this by explaining that they wanted \glspl{integer} that 
 \end{itemize}
 The customer also confirmed that the \glspl{bit string} are \gls{endian} specific and that they would like them to start counting from 1 (not zero, as in our first implementation).
 
-\subsubsection{FR5-C \Gls{endian} handling}
+\subsubsection{FR5-C \Gls{endian} Handling}
 The customer stated that the \gls{header} part of the \gls{packet}, which include the platform flag, will always be in big \gls{endian} (network order).
 
-\subsubsection{FR7-C: \Gls{batch mode}}
+\subsubsection{FR7-C: Batch Mode
 The customer clarified this to mean that the \gls{utility} should be able to run completely unattended given a set of command line arguments. For example it should not ask the users any questions under this mode. This is to be able to run it as a \gls{cron} job at night.
 
 \subsubsection{NR4: A user without prior knowledge should be able to use the tool within X hours.}
@@ -861,10 +861,10 @@ The customer defined X as five.
 \subsubsection{NR5: A user with prior knowledge should be able to use the tool within Y hours.}
 The customer defined Y as one.
 
-\subsubsection{Detecting ambiguous \gls{struct} definitions (more than one \gls{struct} definition with the same name)}
+\subsubsection{Detecting ambiguous \gls{Struct} Definitions}
 The \gls{utility} should detect if there are more that one \gls{struct} with the same name. If found, the \gls{utility} should exit with a proper error message because 
 
-\subsubsection{Data alignment}
+\subsubsection{Data Alignment}
 The customer said that we could have some problems with alignment with the current offsets, because the different platforms may pad the data \glspl{member} of a \gls{struct} to match an \gls{integer} number of words on that platform.
 
 \subsubsection{Testability}
@@ -873,7 +873,7 @@ The customer suggested that we might want to refine some of the requirement to m
 \subsubsection{Documentation}
 The documentation should specify what parameters are needed, like what parameters that should be passed to a \gls{dissector}.
 
-\subsubsection{Locating “missing” \gls{header} files}
+\subsubsection{Locating \gls{Header} Files}
 Some of the \gls{header} files specified in a file might be located in an unknown location. The customer suggested that we should include a way to configure \gls{header} location.
 
 \subsubsection{What \glspl{header} should the \gls{utility} generate \glspl{dissector} for}
@@ -914,7 +914,7 @@ This actually resulted in two bad experiences:
 The burndown chart, \autoref{fig:sp2:burndown}, shows the progress during the second sprint. The estimation seem bad, but since we postponed one of the work items it does not reflect the true actual hours left. The postponed item was estimated 13 hours. Then the sprint end up being 27-13=14 actual hours left. We feel that the estimations, if we exclude the postponed work item, were good and accurate.
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{./sprints/img/burndown_chart_s2}
-	\caption{Burndown chart\label{fig:sp2:burndown}}
+	\caption{Burndown Chart\label{fig:sp2:burndown}}
 \end{figure}
 
 

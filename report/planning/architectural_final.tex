@@ -72,7 +72,7 @@ This section presents the different architectural patterns used in the \gls{util
 
 \subsection{Pipe and Filter}
 %---------------------------
-The pipe and filter architectural pattern consists of a stream of data which in turn is processed sequentially by several filters, in such a fashion that the output of one filter becomes the input of the other. It is a very flexible, yet robust way of processing data, with support for adding more filters if needed for future applications and processes. As the \gls{utility} works on one piece of data that gradually changes, and is then converted into \Gls{lua}-code at the end, this seemed like a good and structured way of processing data early on, while still being able to add new functionality furhter down the line.
+The pipe and filter architectural pattern consists of a stream of data that in turn is processed sequentially by several filters. This is done in such a fashion that the output of one filter becomes the input of the other. It is a very flexible, yet robust way of processing data, with support for adding more filters if needed for future applications and processes. As the \gls{utility} will only work on one piece of data that gradually changes, and is then converted into \Gls{lua}-code at the end, this seemed like a good and structured way of processing data early on, while still being able to add new functionality further down the line.
 
 \begin{figure}[htb]
 	\includegraphics[width=\textwidth]{./planning/img/PipeAndFilter}

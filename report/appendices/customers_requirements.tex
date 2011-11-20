@@ -1,0 +1,37 @@
+%=====================================
+\chapter{Initial List of Requirements}
+%=====================================
+\label{app:initreqs}
+
+The customer provided the following list of requirements, for the utility
+we should create, at the start of the project.
+\begin{description}
+	\item[F01] The utility shall be able to read basic C language struct
+		definitions, and generate a Wireshark dissector for the binary
+		representation of the structs.
+	\item[F02] The utility shall support structs with any of the basic data
+		types (e.g. int, boolean, float, char) and structs.
+	\item[F03] The utility shall be able to follow \#include <...> statements.
+		This allows parsing structs that depend on structs or defines from
+		other header files.
+	\item[F04] Each struct may be connected to one or more references (integer value).
+		For instance, a member parameter 'type' can have names for a set of values.
+	\item[F05] The dissector shall be able to recognize invalid values for a
+		struct member. Allowed ranges should be specified by configuration. An
+		example is an integer that indictates a percentage between 0 and 100.
+	\item[F06] A struct may have a header and/or trailer (other registered
+		protocol). This must be configurable.
+	\item[F07] The dissector shall be able to display each struct member.
+		Structs within structs shall also be dissected and displayed.
+	\item[F08] It shall be possible to configure special handling of specific
+		data types. E.g. a 'time\_t' may be interpreted to contain a unixtime
+		value, and be displayed as a date.
+	\item[F09] An integer member may indicate that a variable number of other
+		structs (array of structs) are following the current struct.
+	\item[F10] Integers may be an enumerated named value or a bit string.
+	\item[F11] The dissectors produced shall be able to handle binary input
+		from at least Windows 32bit and 64bit, Solaris 64bit and Sparc.
+		Example: BOOL is 1 byte on Solaris and 4 bytes on Win32. Endian and
+		alignment also differs between the architectures.
+\end{description}
+

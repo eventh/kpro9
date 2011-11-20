@@ -10,7 +10,7 @@ while \autoref{sec:req:usecases} provides use cases for the \gls{utility},
 and \autoref{sec:prodbacklog} contains the complete product backlog.
 
 %-----------------------------
-\section{List of requirements}
+\section{List of Requirements}
 %-----------------------------
 \label{sec:req:list}
 
@@ -28,11 +28,11 @@ which contain \gls{struct} definitions, and output \Gls{wireshark} \glspl{dissec
 in \Gls{lua} scripts. A configuration file or source code annotations in the \gls{header}
 files may be used when additional configuration is required.
 
-\autoref{tab:req:func} lists the functional requirements, while
-\autoref{tab:req:nonfunc} lists the non-functional requirements. Each
-requirement have a priority (Pri) and a complexity (Cmp): \Gls{h}, 
-\Gls{m} or \Gls{l}. Priority can also be listed as Optional(O). This is explained in \autoref{sec:req:priority} and
-\autoref{sec:req:compl}.
+\autoref{tab:req:func} and \autoref{tab:req:func2} lists the final functional requirements,
+while \autoref{tab:req:nonfunc} lists non-functional requirements.
+Each requirement have a priority (Pri) and a complexity (Cmp): \Gls{h}, 
+\Gls{m} or \Gls{l}. Priority can also be listed as optional (O). This is
+explained in \autoref{sec:req:priority} and \autoref{sec:req:compl}.
 
 \subsection{Prioritization}
 %--------------------------
@@ -41,7 +41,7 @@ The team has, in cooperation with the customer, prioritized the requirements
 in four categories:
 \begin{inparaenum}[\itshape a\upshape)]
 	\item High,
-	\item Medium or
+	\item Medium,
 	\item Low or
 	\item Optional.
 \end{inparaenum} 
@@ -50,7 +50,7 @@ in four categories:
 	\item[High] Core functionality of the \gls{utility} that must be implemented.
 	\item[Medium] Requirements that will improve the value of the \gls{utility}.
 	\item[Low] Requirements that will not add much value to the \gls{utility}.
-	\item[Optional] Requirement that may be implemented if the team has time to complete it.
+	\item[Optional] Requirement that may be implemented depending on available time.
 \end{description}
 
 \subsection{Complexity}
@@ -61,7 +61,7 @@ The team has estimated the complexity for each requirement. We use the following
 	\item High,
 	\item Medium or
 	\item Low.
-\end{inparaenum} 
+\end{inparaenum}
 
 \begin{description}
 	\item[High] Functionality that seems difficult and non-trivial to create.
@@ -69,23 +69,171 @@ The team has estimated the complexity for each requirement. We use the following
 	\item[Low] Requirements that are trivial to implement.
 \end{description}
 
+\subsection{Initial Requirements}
+%--------------------------------
+The customer provided an initial requirements specification for the utility at
+the start of the project, which can be seen in \autoref{app:initreqs} in
+appendices.
+
+We made some initial changes to the format, created some non-functional
+requirements and added priority and complexity to each requirement.
+This resulted in the initial function requirements listed in
+\autoref{tab:req:init:funcreq} and initial non-functional requirements listed
+in \autoref{tab:req:init:nonfuncreq}.
+These changes was approved by the customer before the start of the first
+sprint.
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Initial Functional Requirements\label{tab:req:init:funcreq}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X c c}
+	\toprule
+	ID & Description & Pri. & Cmp. \\
+	\midrule
+	FR1 & The utility must be able to read basic C language
+		struct definitions from C header files.
+		& H & \\
+	FR1-A & The utility must support the following basic data types:
+		int, float, char and boolean.
+		& H & L \\
+	FR1-B & The utility must support members of type enums.
+		& H & L \\
+	FR1-C & The utility must support members of type structs.
+		& H & M \\
+	FR1-D & The utility must support members of type unions.
+		& M & M \\
+	FR1-E & The utility must support member of type array.
+		& H & M \\
+	\midrule
+	FR2 & The utility must be able to generate lua-script for Wireshark
+		dissectors for the binary representation of C struct.
+		& H & \\
+	FR2-A & The dissector shall be able to display simple structs.
+		& H & L \\
+	FR2-B & The dissector shall be able to support structs within
+		structs.
+		& M & M \\
+	FR2-C & The dissector must support Wiresharks built-in filter and
+		search on attributes.
+		& H & L \\
+	\midrule
+	FR3 & The utility must support C preprocessor directives and macros.
+		& H & \\
+	FR3-A & The utility shall support \#include.
+		& H & L \\
+	FR3-B & The utility shall support \#define and \#if.
+		& H & L \\
+	FR3-C & The utility shall support , \verb+_WIN32+,
+		\verb+_WIN64+, \verb+__sparc__+, \verb+__sparc+ and \verb+sun+.
+		& M & H \\
+	\midrule
+	FR4 & The utility must support user configuration.
+		& M & \\
+	FR4-A & The dissector shall be able to recognize invalid values for
+		a struct member. Allowed ranges should be specified by configuration.
+		& L & L \\
+	FR4-B & Configuration must support integer members which represent
+		enumerated named value or a bit string.
+		& M & L \\
+	FR4-C & Configuration must support custom handling of specific data
+		types. E.g. a 'time\_t' may be interpreted to contain a unixtime value,
+		and be displayed as a date.
+		& L & M \\
+	\midrule
+	FR5 & A struct may have a header and/or trailer (other registered
+		protocol). The configuration must support the use of integer members to
+		indicate the number of other structs that will follow in the trailer
+		& L & H \\
+	\midrule
+	FR6 & The dissectors must be able to handle binary input which size
+		and endian depends on originating platform.
+		& M & \\
+	FR6-A & Flags must be specified for each platform.
+		& M & M \\
+	FR6-B & Flags within message headers should signal the platform.
+		& M & H \\
+	\midrule
+	FR7 & The utility shall support parameters from command line.
+		& H & \\
+	FR7-A & Command line shall support parameters for c-header file.
+		& H & L \\
+	FR7-B & Command line shall support for configuration file.
+		& H & L \\
+	FR7-C & Command line shall support batch mode of c-header and
+		configuration file.
+		& L & M \\
+	FR7-D & When running batch mode, dissectors that already are
+		generated, shall not be regenerated, if the source are not modified
+		since last run.
+		& L & M \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Non-Functional Requirements\label{tab:req:init:nonfuncreq}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X c c}
+	\toprule
+	ID & Description & Pri. & Cmp. \\
+	\midrule
+	NR1 & The utility shall be able to run on latest Windows and Solaris
+		operating system.
+		& M & L \\
+	\addlinespace
+	NR2 & The dissector shall be able to run on Windows x86, Windows x86-64,
+		Solaris x86, Solaris x86-64 and Solaris SPARC.
+		& M & M \\
+	\addlinespace
+	NR3 & The utilities user interface shall be command line. No clicking!.
+		& H & L \\
+	\addlinespace
+	NR4 & The configuration shall have sufficient documentation to allow a
+		person with no previous knowledge of the system to be able to use it
+		to generate LUA-scripts after X hours of reading.
+		& M & M \\
+	\addlinespace
+	NR5 & The configuration should have sufficient documentation to allow a
+		person, already proficient with the system, to understand the code
+		well enough to be able to extend it’s functionality after Y hours of
+		reading.
+		& M & M \\
+	\addlinespace
+	NR6 & The utility code should follow standard python coding convention as
+		specified by PEP8, and try to follow python style guidelines defined
+		by PEP20.
+		& H & L \\
+	\addlinespace
+	NR7 & The utilities code should be documented by python docstrings which
+		should explain the use of the code. Python modules, classes, functions
+		and methods should have docstrings.
+		& M & L \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\subsection{Requirements Evolution}
+%----------------------------------
+
+\subsubsection{Sprint 1}
+
+\subsubsection{Sprint 2}
+
+\subsubsection{Sprint 3}
+
+\subsubsection{Sprint 4}
+
+\subsection{Final Requirements}
+%------------------------------
+The final functional requirements are listed in \autoref{tab:req:func} and 
+\autoref{tab:req:func2}, while the non-function requirements are listed in
+\autoref{tab:req:nonfunc}.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%        OBS OBS OBS OBS
-%
-% These requirements are duplicated
-% in many different locations,
-% remember to update them all
-%
-% * product backlog
-% * user stories
-% * sprint 1 backlog
-% * anywhere else?
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% FINAL FUNCTIONAL REQUIREMENTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[htbp] \footnotesize \center
-\caption{Functional Requirements\label{tab:req:func}}
+\caption{Final Functional Requirements\label{tab:req:func}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X c c}
 	\toprule
@@ -131,8 +279,9 @@ The team has estimated the complexity for each requirement. We use the following
 	\bottomrule
 \end{tabularx}}
 \end{table}
+
 \begin{table}[htbp] \footnotesize \center
-\caption{Functional Requirements part 2\label{tab:req:func2}}
+\caption{Final Functional Requirements part 2\label{tab:req:func2}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X c c}
 	\toprule
@@ -152,7 +301,7 @@ The team has estimated the complexity for each requirement. We use the following
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Non-Functional Requirements\label{tab:req:nonfunc}}
+\caption{Final Non-Functional Requirements\label{tab:req:nonfunc}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X c c}
 	\toprule
@@ -178,9 +327,9 @@ The team has estimated the complexity for each requirement. We use the following
 \end{table}
 
 
-%------------------
+%--------------------------------
 \section{Requirement Description}
-%------------------
+%--------------------------------
 \label{sec:req:desc}
 This section gives a short description of the requirements, to give the reader 
 of the paper a better understanding of the requirements. The description for 

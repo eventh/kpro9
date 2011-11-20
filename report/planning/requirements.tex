@@ -434,10 +434,12 @@ Here each of the use cases are described textually.
 	Summary & The developer would like to filter and search on attributes in the packets displayed in Wireshark \\
 	Preconditions & Wireshark need to be running with dissectors. \\
 	Postconditions & Wireshark display the results.\\
-	\multirow{3}{*}{Flow of Events} & 1. The user selects the search field in Wireshark's GUI.  \\
+	\midrule
+	\multirow{3}{*}{Flow of Events} & 1. The developer selects the search field in Wireshark's GUI.  \\
 	& 2. The user types in a search phrase. \\
 	& 3. Wireshark will present the search results that match the query. \\
-	Exceptions & \\
+	\midrule
+	Exceptions & None. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -452,12 +454,18 @@ Here each of the use cases are described textually.
 	Element & Description\\
 	\midrule
 	Use case name & View the dissectors in Wireshark\\
-	Goal & The user would like to see the dissected structs in Wireshark  \\
-	Summary & \\
-	Preconditions & The user have Wireshark running with dissectors. \\
-	Postconditions & Wireshark display the results.\\
-	Flow of Events & The user selects the search field in Wireshark's API and types in a search phrase, then Wireshark will present the search results that match the query. \\
-	Exceptions & N/A \\
+	Goal & View structs correctly dissected in Wireshark\\
+	Summary & The developer would like to dissect a structs and have the members and values displayed in Wireshark by using the dissectors in Wireshakrs plugin folder.\\
+	\multirow{2}{*}{Preconditions}& 1. The developer have Wireshark running with dissectors. \\
+	& 2. The dissector for a struct will dissect it correctly, according to the initial internal structure of the struct. \\
+	Postconditions & Wireshark display the struct with the correct structure and values.\\
+	\midrule
+	\multirow{3}{*}{Flow of Events} & 1. The developer selects a struct message in Wireshark. \\
+	& 2. Wireshark calls the correct dissector and dissects the selected message. \\
+	& 3. Wireshark displays the members and values of the selected message. \\
+	\midrule
+	\multirow{2}{*}{Exceptions} & 1. The correct dissector for a struct might not exist in Wiresharks plugin folder, making it impossible to dissect the message. \\
+	& 2. more? \\
 	\bottomrule
 \end{tabularx}}
 \end{table}

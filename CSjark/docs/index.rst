@@ -40,15 +40,19 @@ User Documentation
    user/use_ws
    user/config
 
-..
-    Developer Documentation
-    -----------------------
 
-    .. toctree::
-       :maxdepth: 2
+Developer Documentation
+-----------------------
 
-    ..
-        deve/devel
+.. toctree::
+   :maxdepth: 1
+
+   devel/general
+   devel/design
+   devel/testing
+   devel/code
+   devel/docs
+   
 
 Other Information
 -----------------

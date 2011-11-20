@@ -267,7 +267,10 @@ External Lua dissectors
 
 In some cases, CSjark will not be able to deliver the desired result from its own analysis, and the configuration options above may be too constraining. In this case, it is possible to write the lua dissector by hand, either for a given member or for an entire struct. 
 
-More information how to write Lua code can be found in `Lua reference manual  <http://www.lua.org/manual/5.1/>`_.
+.. note::
+    To be able to understand and write external Lua dissectors, the user should be familiar with basics of Lua programming and Lua integration into Wireshark. 
+    More information how to write Lua code can be found in `Lua reference manual  <http://www.lua.org/manual/5.1/>`_. For further information on the Lua integration in Wireshark, please visit `Lua Support in Wireshark <http://www.wireshark.org/docs/wsug_html_chunked/wsluarm.html>`_.
+    
 
 A custom Lua code for desired struct must be defined in an external conformance file with extension ``.cnf``. The conformance file name and relative path then must be defined in the configuration file for the struct for which is the custom code applied for. The attribute name for the custom Lua definition file and path is ``cnf``, as shown below:
 

@@ -27,6 +27,6 @@ These documents are generated from `reStructuredText`_ sources by `Sphinx`_, a
 document processor specifically written for the Python documentation.
 
 .. _reStructuredText: http://docutils.sf.net/rst.html
-.. _Sphinx: http://sphinx.pocoo.or
+.. _Sphinx: http://sphinx.pocoo.org
 
 These documents are hosted at `ReadTheDocs <http://www.readthedocs.org/>`. You can find it at http://csjark.readthedocs.org/.

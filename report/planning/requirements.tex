@@ -211,134 +211,6 @@ sprint.
 \end{tabularx}}
 \end{table}
 
-\subsection{Requirements Evolution}
-%----------------------------------
-Based on feedback provided by the customer during the sprints, we added
-several new requirements or rewrote already existing requirements, which
-are described in this section. The final requirements are described in
-\autoref{sec:req:finalreq}.
-
-\subsubsection{Sprint 1}
-\label{sec:req:sprint1evo}
-The following new requirements were added during this sprint based on feedback from customer.
-\begin{description}
-	\item[FR2-D] The dissector shall be able to recognize invalid values for a struct member.
-	\item[FR4-D] Configuration must support specifying the ID of dissectors.
-	\item[FR4-E] Configuration must support custom Lua files for specific protocols.
-	\item[FR6-C] Generate dissectors which support both little and big endian platforms.
-	\item[FR6-D] Generate dissectors which support different sizes depending on platforms.
-\end{description}
-
-\subsubsection{Sprint 2}
-\label{sec:req:sprint2evo}
-Based on feedback from the customer we added four new requirements in sprint
-2, in addition to other small requirements changes.
-
-Requirement FR4-B was split into two new requirements, FR4-F and FR4-G.
-Requirement FR6-B was completely rewritten, and the following requirements
-changed id during sprint 2.
-\begin{itemize}
-	\item FR4-E -> FR4-B
-	\item FR5 -> FR4-E
-	\item FR6 -> FR5
-	\item FR7 -> FR6
-\end{itemize}
-The following new requirements were added in sprint 2.
-\begin{description}
-	\item[FR1-F] The utility should detect structs with the same name, and report it as an error.
-	\item[FR4-F] Configuration must support integer members which represent enumerated named value.	
-	\item[FR4-G] Configuration must support members which are bit string.
-	\item[FR5-B] Generate dissectors with correct alignment depending on platform.
-\end{description}
-
-\noindent The customer also provided the following requirement descriptions
-and feedback.
-\paragraph{FR1-E: Support member of type array}
-\Glspl{array} should be displayed as a sub-level. Multidimensional
-\glspl{array} should have one sub-level per dimension. \Glspl{dissector} should
-also display the type of the \gls{array} and show indexes for sublevels.
-
-\paragraph{FR2-B: Struct within structs}
-Inner \glspl{struct} should be displayed as a
-sub-level of the outer \gls{struct}. When an external \gls{dissector} is
-called, it should be called with a name and not an id, in order to not
-assign an id to \glspl{struct} that are never used as a base.
-
-\paragraph{FR4-E: Headers/trailers}
-The customer specified this mean that a given \gls{struct} is a \gls{header},
-and that it can have various \gls{trailers}. A configuration file should
-specify the kind of trailer, and what variable inside the \gls{struct} which
-specify how many trailer items to expect.
-
-\paragraph{FR5-C: \Gls{endian} handling}
-The \gls{header} part of the \gls{packet}, which include the platform flag,
-will always be in big \gls{endian} (network order).
-
-\paragraph{FR6-C: Batch mode}
-The customer clarified this to mean that the \gls{utility} should be able to
-run completely unattended given a set of command line arguments. For example
-it should not ask the users any questions under this mode. This is to be able
-to run it as a \gls{cron} job at night.
-
-\paragraph{Data Alignment}
-The customer said that we could have some problems with alignment with the
-current offsets, because the different platforms may pad the data
-\glspl{member} of a \gls{struct} to match an \gls{integer} number of words on
-that platform.
-
-\subsubsection{Sprint 3}
-\label{sec:req:sprint3evo}
-Customer feedback during sprint 3 resulted in one new non-functional requirement.
-\begin{description}
-	\item[NR5] The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after 1 hour of reading.
-\end{description}
-Non-functional requirements NR5 to NR7 had their id increased by one.
-
-\noindent The customer also provided the following requirement descriptions
-and feedback.
-\paragraph{FR5: Support multiple platforms}
-We should not generate separate \gls{dissector} files for the different
-platforms. It is much better if we have one \gls{protocol} with different
-functions for the different platforms, as this would not lead to such a
-performance hit in Wireshark.
-
-\paragraph{FR2-F: Uninitialized memory}
-It would be nice if our \gls{utility} was able to detect uninitialized memory
-for debugging purposes. Different compilers use default patterns in
-\glspl{member} that are uninitialized. If our \gls{utility} could detect these
-patterns, we could display the data in \Gls{wireshark} with a warning that
-lets the user know that the data might have been uninitialized.
-
-\paragraph{FR4-D: \Gls{dissector} id's}
-The customer informed us that a \gls{struct} could belong to several
-\gls{dissector} id's. We should implement this by specifying a list of id's
-instead of just a single one.
-
-\paragraph{Include dependencies}
-The customer described a scenario where a \gls{struct} was included in another
-\gls{struct}, which is resident in a different \gls{header} file that the first
-\gls{struct} has not included. In the scenario both files are included in a third
-\gls{header} file. This creates a dependency that we must take into consideration
-and implement in the \gls{utility}.
-
-\subsubsection{Sprint 4}
-\label{sec:req:sprint4evo}
-As it became clear in sprint 3 that we would complete all the given
-requirements before the end of sprint 4, we requested new features which we
-would consider to implement. The following new requirements were suggest by
-the customer.
-\begin{description}
-	\item[FR2-E] The \gls{dissector} shall be able to guess dissector from packets size.
-	\item[FR2-F] The \gls{dissector} shall display an warning if a struct member contains uninitialized memory.
-	\item[FR4-H] The utility shall support automatic generation of configuration files for unknown structs.
-	\item[FR4-I] Configuration must support specifying the size of a struct members.
-	\item[FR6-E] Command line shall support \#define and --Include directives.
-	\item[FR6-F] The utility shall only generate dissectors from structs with valid id and theirs' dependencies.
-	\item[FR7] The utility shall be able to fetch configuration directly from source code.
-	\item[FR7-A] The utility shall support generation of struct member description from Doxygen comments.
-	\item[FR7-B] The utility shall support reading configuration for \#define enums from the header files.
-\end{description}
-
 \subsection{Final Requirements}
 %------------------------------
 \label{sec:req:finalreq}
@@ -444,6 +316,141 @@ The final functional requirements are listed in \autoref{tab:req:func} and
 \end{table}
 
 
+%-------------------------------
+\section{Requirements Evolution}
+%-------------------------------
+Based on feedback provided by the customer during the sprints, we added
+several new requirements or rewrote already existing requirements, which
+are described in this section. The final requirements are described in
+\autoref{sec:req:finalreq}.
+
+\subsection{Sprint 1}
+%--------------------
+\label{sec:req:sprint1evo}
+The following new requirements were added during this sprint based on feedback from customer.
+\begin{description}
+	\item[FR2-D] The dissector shall be able to recognize invalid values for a struct member.
+	\item[FR4-D] Configuration must support specifying the ID of dissectors.
+	\item[FR4-E] Configuration must support custom Lua files for specific protocols.
+	\item[FR6-C] Generate dissectors which support both little and big endian platforms.
+	\item[FR6-D] Generate dissectors which support different sizes depending on platforms.
+\end{description}
+
+\subsection{Sprint 2}
+%--------------------
+\label{sec:req:sprint1evo}
+\label{sec:req:sprint2evo}
+Based on feedback from the customer we added four new requirements in sprint
+2, in addition to other small requirements changes.
+
+Requirement FR4-B was split into two new requirements, FR4-F and FR4-G.
+Requirement FR6-B was completely rewritten, and the following requirements
+changed id during sprint 2.
+\begin{itemize}
+	\item FR4-E -> FR4-B
+	\item FR5 -> FR4-E
+	\item FR6 -> FR5
+	\item FR7 -> FR6
+\end{itemize}
+The following new requirements were added in sprint 2.
+\begin{description}
+	\item[FR1-F] The utility should detect structs with the same name, and report it as an error.
+	\item[FR4-F] Configuration must support integer members which represent enumerated named value.	
+	\item[FR4-G] Configuration must support members which are bit string.
+	\item[FR5-B] Generate dissectors with correct alignment depending on platform.
+\end{description}
+
+\noindent The customer also provided the following requirement descriptions
+and feedback.
+\paragraph{FR1-E: Support member of type array}
+\Glspl{array} should be displayed as a sub-level. Multidimensional
+\glspl{array} should have one sub-level per dimension. \Glspl{dissector} should
+also display the type of the \gls{array} and show indexes for sublevels.
+
+\paragraph{FR2-B: Struct within structs}
+Inner \glspl{struct} should be displayed as a
+sub-level of the outer \gls{struct}. When an external \gls{dissector} is
+called, it should be called with a name and not an id, in order to not
+assign an id to \glspl{struct} that are never used as a base.
+
+\paragraph{FR4-E: Headers/trailers}
+The customer specified this mean that a given \gls{struct} is a \gls{header},
+and that it can have various \gls{trailers}. A configuration file should
+specify the kind of trailer, and what variable inside the \gls{struct} which
+specify how many trailer items to expect.
+
+\paragraph{FR5-C: \Gls{endian} handling}
+The \gls{header} part of the \gls{packet}, which include the platform flag,
+will always be in big \gls{endian} (network order).
+
+\paragraph{FR6-C: Batch mode}
+The customer clarified this to mean that the \gls{utility} should be able to
+run completely unattended given a set of command line arguments. For example
+it should not ask the users any questions under this mode. This is to be able
+to run it as a \gls{cron} job at night.
+
+\paragraph{Data Alignment}
+The customer said that we could have some problems with alignment with the
+current offsets, because the different platforms may pad the data
+\glspl{member} of a \gls{struct} to match an \gls{integer} number of words on
+that platform.
+
+\subsection{Sprint 3}
+%--------------------
+\label{sec:req:sprint3evo}
+Customer feedback during sprint 3 resulted in one new non-functional requirement.
+\begin{description}
+	\item[NR5] The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after 1 hour of reading.
+\end{description}
+Non-functional requirements NR5 to NR7 had their id increased by one.
+
+\noindent The customer also provided the following requirement descriptions
+and feedback.
+\paragraph{FR5: Support multiple platforms}
+We should not generate separate \gls{dissector} files for the different
+platforms. It is much better if we have one \gls{protocol} with different
+functions for the different platforms, as this would not lead to such a
+performance hit in Wireshark.
+
+\paragraph{FR2-F: Uninitialized memory}
+It would be nice if our \gls{utility} was able to detect uninitialized memory
+for debugging purposes. Different compilers use default patterns in
+\glspl{member} that are uninitialized. If our \gls{utility} could detect these
+patterns, we could display the data in \Gls{wireshark} with a warning that
+lets the user know that the data might have been uninitialized.
+
+\paragraph{FR4-D: \Gls{dissector} id's}
+The customer informed us that a \gls{struct} could belong to several
+\gls{dissector} id's. We should implement this by specifying a list of id's
+instead of just a single one.
+
+\paragraph{Include dependencies}
+The customer described a scenario where a \gls{struct} was included in another
+\gls{struct}, which is resident in a different \gls{header} file that the first
+\gls{struct} has not included. In the scenario both files are included in a third
+\gls{header} file. This creates a dependency that we must take into consideration
+and implement in the \gls{utility}.
+
+\subsection{Sprint 4}
+%--------------------
+\label{sec:req:sprint4evo}
+As it became clear in sprint 3 that we would complete all the given
+requirements before the end of sprint 4, we requested new features which we
+would consider to implement. The following new requirements were suggest by
+the customer.
+\begin{description}
+	\item[FR2-E] The \gls{dissector} shall be able to guess dissector from packets size.
+	\item[FR2-F] The \gls{dissector} shall display an warning if a struct member contains uninitialized memory.
+	\item[FR4-H] The utility shall support automatic generation of configuration files for unknown structs.
+	\item[FR4-I] Configuration must support specifying the size of a struct members.
+	\item[FR6-E] Command line shall support \#define and --Include directives.
+	\item[FR6-F] The utility shall only generate dissectors from structs with valid id and theirs' dependencies.
+	\item[FR7] The utility shall be able to fetch configuration directly from source code.
+	\item[FR7-A] The utility shall support generation of struct member description from Doxygen comments.
+	\item[FR7-B] The utility shall support reading configuration for \#define enums from the header files.
+\end{description}
+
+
 %--------------------------------
 \section{Requirement Description}
 %--------------------------------
@@ -483,6 +490,7 @@ The relationship between the requirements can be seen in \autoref{fig:req:relati
 	\includegraphics[width=\textwidth]{./planning/img/requirement_relationship}
 	\caption{Relationship Between Requirements\label{fig:req:relationship}}
 \end{figure}
+
 
 %------------------
 \section{Use Cases}

@@ -841,7 +841,7 @@ The customer stated that they would like certain types to be interpreted in a ce
 The customer originally stated that this feature included both \glspl{header} and trailer \glspl{struct} for a given \gls{struct}. This is now refined to mean that the given \gls{struct} is the \gls{header}, and that it can have various \gls{trailers} (could be one or more \Gls{c} \glspl{struct}, \gls{asnone}, etc.). A configuration file should specify the kind of trailer, and what variable inside the \gls{header} \gls{struct} which specify how many trailer items to expect. If the \gls{header} does not specify the length of the trailer the \gls{dissector} should just use the rest of the buffer, or the \gls{dissector} is responsible to return the length used from the buffer, so the caller can give the rest to the next \gls{dissector}.
 In \Gls{wireshark} it should be displayed as a sequence of \glspl{struct}.
 
-\subsubsection{FR4-F: Support for Enumerated Values and Bit Strings
+\subsubsection{FR4-F: Support for Enumerated Values and Bit Strings}
 The customer clarified this by explaining that they wanted \glspl{integer} that represents an enumerated value to be displayed like an \gls{enum} (\gls{member} name and the \gls{string} that represents the \gls{integer} value) and that the \glspl{bit string} should be displayed as a list with the name and value (1 / 0 or yes / no) of the different bits in the \gls{integer}. It should also display the original \gls{integer} I hex. As a result of this, the requirement was split into two:
 \begin{itemize}
 \item FR4-F	Support \glspl{enumerated named value}
@@ -852,7 +852,7 @@ The customer also confirmed that the \glspl{bit string} are \gls{endian} specifi
 \subsubsection{FR5-C \Gls{endian} Handling}
 The customer stated that the \gls{header} part of the \gls{packet}, which include the platform flag, will always be in big \gls{endian} (network order).
 
-\subsubsection{FR7-C: Batch Mode
+\subsubsection{FR7-C: Batch Mode}
 The customer clarified this to mean that the \gls{utility} should be able to run completely unattended given a set of command line arguments. For example it should not ask the users any questions under this mode. This is to be able to run it as a \gls{cron} job at night.
 
 \subsubsection{NR4: A user without prior knowledge should be able to use the tool within X hours.}
@@ -861,7 +861,7 @@ The customer defined X as five.
 \subsubsection{NR5: A user with prior knowledge should be able to use the tool within Y hours.}
 The customer defined Y as one.
 
-\subsubsection{Detecting ambiguous \gls{Struct} Definitions}
+\subsubsection{Detecting ambiguous \Gls{struct} Definitions}
 The \gls{utility} should detect if there are more that one \gls{struct} with the same name. If found, the \gls{utility} should exit with a proper error message because 
 
 \subsubsection{Data Alignment}
@@ -873,7 +873,7 @@ The customer suggested that we might want to refine some of the requirement to m
 \subsubsection{Documentation}
 The documentation should specify what parameters are needed, like what parameters that should be passed to a \gls{dissector}.
 
-\subsubsection{Locating \gls{Header} Files}
+\subsubsection{Locating \Gls{header} Files}
 Some of the \gls{header} files specified in a file might be located in an unknown location. The customer suggested that we should include a way to configure \gls{header} location.
 
 \subsubsection{What \glspl{header} should the \gls{utility} generate \glspl{dissector} for}

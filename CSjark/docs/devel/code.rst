@@ -2,6 +2,8 @@
  Source code overview
 ======================
 
+**Program modules**
+
 .. autosummary:: 
    
    csjark
@@ -11,6 +13,12 @@
    dissector
    field
    platform
+
+**Testing modules**
+
+Modules for testing are located in
+
+    `CSjark/csjark/test <https://github.com/eventh/kpro9/tree/master/CSjark/csjark/test>`_
 
 
 csjark

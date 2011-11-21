@@ -22,6 +22,8 @@ The entire CSjark project is hosted on `GitHub <https://github.com/>`_. In order
 - `download most recent tar archive <https://github.com/eventh/kpro9/zipball/master>`_
 - `download most recent zip archive <https://github.com/eventh/kpro9/tarball/master>`_
 
+.. note:: When commiting to the repository, always write good log messages. It will help people that will read the diffs in the future.
+
 Issue tracking
 --------------
 

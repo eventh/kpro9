@@ -22,15 +22,13 @@
 CSjark is a tool for generating Lua dissectors from C struct
 definitions to use with Wireshark.
 
-Usage:
-    csjark.py [-h] [-v] [-d] [-s] [-f [header [header ...]]]
-          [-c [config [config ...]]] [-x [path [path ...]]]
-          [-o [output]] [-p] [-n] [-C [cpp]] [-i [header [header ...]]]
-          [-I [directory [directory ...]]]
-          [-D [name=definition [name=definition ...]]]
-          [-U [name [name ...]]] [-A [argument [argument ...]]]
-          [header] [config]
-
+usage: csjark.py [-h] [-v] [-d] [-s] [-f [header [header ...]]]
+                 [-c [config [config ...]]] [-x [path [path ...]]]
+                 [-o [output]] [-p] [-n] [-C [cpp]] [-i [header [header ...]]]
+                 [-I [directory [directory ...]]]
+                 [-D [name=definition [name=definition ...]]]
+                 [-U [name [name ...]]] [-A [argument [argument ...]]]
+                 [header] [config]
 
 Generate Wireshark dissectors from C structs.
 
@@ -49,7 +47,7 @@ optional arguments:
   -c, --config          configuration file(s) to parse
   -x, --exclude         file or folders to exclude from parsing
   -o, --output          write output to directory/file
-  -C, --CPP             which C preprocessor to use
+  -C, --Cpppath         which C preprocessor to use
   -i, --include         process file as Cpp #include "file" directive
   -I, --Includes        directories to be searched for Cpp includes
   -D, --Define          predefine name as a Cpp macro
@@ -123,7 +121,7 @@ def parse_args(args=None):
             default=Options.use_cpp, help='disable C preprocessor')
 
     # Argument for specifying which CPP to use
-    parser.add_argument('-C', '--CPP', metavar='cpp',
+    parser.add_argument('-C', '--Cpppath', metavar='cpp',
             nargs='?', help='which C preprocessor to use')
 
     # CPP include arguments
@@ -159,7 +157,7 @@ def parse_args(args=None):
     Options.excludes.extend(namespace.exclude)
     Options.generate_placeholders = namespace.placeholders
     Options.use_cpp = namespace.nocpp
-    Options.cpp_path = namespace.CPP
+    Options.cpp_path = namespace.Cpppath
     Options.default.includes = namespace.include
     Options.default.include_dirs = namespace.Includes
     Options.default.defines = namespace.Define

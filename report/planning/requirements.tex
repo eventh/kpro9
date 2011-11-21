@@ -5,7 +5,7 @@
 This chapter describes a \gls{utility} that creates \Gls{wireshark} \glspl{dissector} from \Gls{c}
 \gls{header} files. The \glspl{dissector} must interpret \gls{binary} representations of \Gls{c}
 \glspl{struct}. In \autoref{sec:req:list} we give a high level overview of the
-\gls{utility} and lists all the functional and non-function requirements, 
+\gls{utility} and lists all the functional and non-functional requirements, 
 while \autoref{sec:req:usecases} provides use cases for the \gls{utility}, 
 and \autoref{sec:prodbacklog} contains the complete product backlog.
 
@@ -397,7 +397,7 @@ that platform.
 \label{sec:req:sprint3evo}
 Customer feedback during sprint 3 resulted in one new non-functional requirement.
 \begin{description}
-	\item[NR5] The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after 1 hour of reading.
+	\item[NR5] The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after one hour of reading.
 \end{description}
 Non-functional requirements NR5 to NR7 had their id increased by one.
 
@@ -411,7 +411,7 @@ performance hit in Wireshark.
 
 \paragraph{FR2-F: Uninitialized memory}
 It would be nice if our \gls{utility} was able to detect uninitialized memory
-for debugging purposes. Different compilers use default patterns in
+for debugging purposes. Different compilers use default patterns ins
 \glspl{member} that are uninitialized. If our \gls{utility} could detect these
 patterns, we could display the data in \Gls{wireshark} with a warning that
 lets the user know that the data might have been uninitialized.
@@ -470,7 +470,7 @@ structs with an corresponding configuration file containing an id, and for
 structs and unions that are inside these structs.
 
 \paragraph{FR6-E: Support specific C preprocessor directives}
-The customer want the utility to be able to take certain C preprocessor
+The customer wants the utility to be able to take certain C preprocessor
 directive arguments from command line. For example --Include or --Define.
 
 \paragraph{FR7-A: Find struct description from Doxygen comments}
@@ -487,7 +487,7 @@ in the configuration file. The benefit is that the customer then does not
 have to configure this manually.
 
 \paragraph{FR2-E: Guess the dissector from packet size}
-The customer want Wireshark to be able to guess what dissectors to use
+The customer wants Wireshark to be able to guess what dissectors to use
 from the size of the packet. It could compare this size to the size dissectors
 expects. If multiple dissectors fit, it could try to display the message with
 all suitable dissectors. This makes the customer able to use some dissectors
@@ -495,7 +495,7 @@ without manually configuring the message ID for the struct it represents.
 
 \paragraph{FR6-E: A way to ignore headers in a specified folder}
 The customer wants a way to specify what folder to ignore in batch mode.
-This is to avoid complex headers that are irrelevant to the customers goal
+This is to avoid complex headers that are irrelevant to the customer's goal
 (does not include structs), but which our utility fails to parse.
 
 

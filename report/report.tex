@@ -19,6 +19,7 @@
 \usepackage{tabularx} % Simple column stretching
 \usepackage{multirow} % Row spanning
 \usepackage{wrapfig} % Wrap text around figures
+\usepackage{caption} % Hide some tables from list of tables
 \usepackage{array}
 \usepackage{longtable}
 \usepackage{listings}
@@ -92,14 +93,14 @@
 %==========
 \begin{abstract}
 This paper addresses the problem of creating Lua dissectors for \Gls{wireshark}, 
-to analyze \gls{aipc} with C structs. The dissectors are used to display the 
-binary data in a readable format in \Gls{wireshark}. Writing Lua dissector 
-manually is difficult and time consuming, and a solution for doing this 
+to analyze \gls{aipc} with C structs. These dissectors are used to display the 
+binary data in a readable format in \Gls{wireshark}. Writing a Lua dissector 
+manually is difficult and time consuming, therefore a solution for doing this 
 automatically was necessary.  
 
-The problem was solved by parsing C structs defined in C header-files, then 
+This problem was solved by parsing C structs defined in C header-files, then 
 processing the abstract-syntax tree, and generating the Lua dissectors 
-for the structs. Configuration will ensure flexibility in generation of 
+for the structs. Using configuration files ensures flexibility in the generation of 
 dissectors.
 
 The project resulted in CSjark, which is a stand-alone \gls{utility} that acts 

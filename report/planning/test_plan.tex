@@ -19,7 +19,7 @@ Regarding software testing, we have two different types of tests available, name
 %--------------------------
 \subsection{White Box Testing}
 %--------------------------
-White box testing is a method of software testing where you test internal structures or modules of an application, as opposed to its functions. White box testing requires the tester to have an internal perspective of the system, as well as sufficent programming skills. As the \gls{utility} was required to be able to function with a variety of different input, as well as being used as a debugging tool itself, we chose to have every developer on the team write unit tests for their own code, and then have someone else on the team do the testing of their code in order to ensure correctness. Also, in order to get a proper overview over what and how many parts of the system that are covered by unit tests, the team decided to use a tool for measuring code coverage.
+White box testing is a method of software testing where you test internal structures or modules of an application, as opposed to its functions. White box testing requires the tester to have an internal perspective of the system, as well as sufficient programming skills. As the \gls{utility} was required to be able to function with a variety of different input, as well as being used as a debugging tool itself, we chose to have every developer on the team write unit tests for their own code, and then have someone else on the team do the testing of their code in order to ensure correctness. Also, in order to get a proper overview over what and how many parts of the system that are covered by unit tests, the team decided to use a tool for measuring code coverage.
 
 \subsubsection{Attest}
 As a tool for creating white box unit tests, the team decided to use the Attest testing framework for python code. To create unit tests using Attest, you start off by importing Tests, assert\_hook and optionally contexts from attest. You then create a variable and initialize it to an instance of Tests, which is the variable that will contain list functions that each constitutes one test that is to be run. To feed your test instance with functions for testing you then have to mark these functions with a decorator and feed it the .tests function of the Tests instance. After creating a unit test in this fashion you can run all of your unit tests through Attest from the command line by typing ''python -m attest''. This runs all of your unit tests through Attest and returns a message telling the user how many assertions failed, as well as what input made them fail. For more information read the user documentation of Attest. 
@@ -44,7 +44,7 @@ As evaluating the non-functional requirements of a system through its source cod
 \autoref{tab:testcase} , \autoref{tab:testreport} and \autoref{tab:TestCoverageReport} are templates we will be
 using for testing purposes.
 
-In order to standarize the testing process, the team decided on making templates for both the test cases themselves and for reporting their results. The ones responsible for testing were given the task of not only creating and running the testcases themselves, but also adhering to the standards set in this document.
+In order to standardize the testing process, the team decided on making templates for both the test cases themselves and for reporting their results. The ones responsible for testing were given the task of not only creating and running the test cases themselves, but also adhering to the standards set in this document.
 
 \autoref{tab:testcase} shows the template for each test case. All of the test cases written for the \gls{utility} will be in this format, and executed according to this document.
 
@@ -99,9 +99,9 @@ In order to standarize the testing process, the team decided on making templates
 \end{table}
 
 
-%-----------------------
-\section{Test Criterias}
-%-----------------------
+%----------------------
+\section{Test Criteria}
+%----------------------
 An item will be considered to have passed a test if the actual result from the test matches the expected result from the test. An item will be considered to have failed the test if the output varies from the expected result. If there are any specifics as to why the test passed/failed, which needs to be discussed, they will be listed as a comment to the result
 
 
@@ -113,11 +113,11 @@ The tests will mainly not be executed by the same developers who wrote the code 
 
 \subsection{Testing Routines}
 %---------------------------------
-In each sprint we decided that the unit tests would be run continuously throughout the sprints in order to make sure that no new functionality broke any of the earlier code. As the test cases depended somewhat on having completed most of the functionalities for a sprint, as well as requiring a lot of manually generated testing data, it was decided that they would be run towards the end of the sprint. The test results would then be presented a few days before the sprint evaluation, giving the developers some time to fix any bugs discovered by the testcases. 
+In each sprint we decided that the unit tests would be run continuously throughout the sprints in order to make sure that no new functionality broke any of the earlier code. As the test cases depended somewhat on having completed most of the functionalities for a sprint, as well as requiring a lot of manually generated testing data, it was decided that they would be run towards the end of the sprint. The test results would then be presented a few days before the sprint evaluation, giving the developers some time to fix any bugs discovered by the test cases. 
 
-%---------------------
+%------------------
 \section{Changelog}
-%----------------------
+%------------------
 
 \subsection{Sprint 1}
 %----------------------
@@ -133,7 +133,4 @@ As of sprint 2, it was decided that the team should use an automated tool for ca
 %----------------------
 During sprint 3, it was suggested that the team should make a \Gls{c} program that returns \glspl{hex dump}. The \glspl{hex dump} are used for producing traffic to test the \gls{utility} with. It was therefore decided that the team would create such a program to generate data for the bigger and more complex \Gls{c}-\gls{header} files.
 These \gls{header} files could have a dozen of \gls{struct}-\glspl{member} of various types. As it would be tedious to have to manually write down the hex values of each \gls{struct} \gls{member}, creating this small program would reduce the time for generating test traffic.
-
-\subsection{Sprint 4}
-%----------------------
 

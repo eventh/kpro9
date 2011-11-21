@@ -21,7 +21,7 @@
 
 
 #.COMMENT
-	DEF_FOOTER places code below the Field defintion.
+	DEF_FOOTER places code below the Field definition.
 #.DEF_FOOTER pointer
 -- This is below 'pointer'
 #.END
@@ -31,7 +31,7 @@
 	DEF_EXTRA places extra code at the end of
 	the field definition section.
 #.DEF_EXTRA
--- This was all the field defintions
+-- This was all the field definitions
 #.END
 
 

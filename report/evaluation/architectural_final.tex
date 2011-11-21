@@ -10,13 +10,13 @@ The purpose of this document is to describe our architecture in a structured way
 \section{Architectural Drivers}
 %-------------------------------------
 This section is dedicated to the discussion of the architectural drivers that were discovered during the project.
-The team chose Modifiability and Testability as quality attributes, but it later on became apparent that some care should also be taken considering Preformance.
+The team chose Modifiability and Testability as quality attributes, but it later on became apparent that some care should also be taken considering Performance.
 
 The reason for choosing Modifiability was that the development team would be unable to update or maintain the \gls{utility} after completing this project. The code would also be distributed under a GPL which allows other developers to continue working on the utility and use it for their own applications in the future. It was therefore important that the code would be easy to understand, well documented and easy to modify. Not only will this promote the further development of the utility, but it would also make it easier for the customer to use and modify for their own purposes.
 
 Testability would also be an important quality attribute as the \gls{utility} was to be used by the customer for debugging purposes. It was therefore be very important that the utility it self contained as few bugs as possible so that the customer could be sure that the output given by the utility would be able to help them in analyzing and debugging. The developers of this project were also unable to test any given \glspl{dissector} in a real environment, which made it even more necessary for the developers to do extensive testing of the utility's functionality. This was to ensure that the final product works properly even without the developers having had taken a good look on the data the utility will have to process after going public.
 
-Preformance became somewhat of an issue for the utility during the project as it became apparent that the customer would have to run the utility on several thousand header files at once. It would therefore be important for the utility to be able to run through all of the customer's header files in a reasonable amount of time, which in this case would be that the utility should be able to run through several thousand header files over one night of being run in batch mode.
+Performance became somewhat of an issue for the utility during the project as it became apparent that the customer would have to run the utility on several thousand header files at once. It would therefore be important for the utility to be able to run through all of the customer's header files in a reasonable amount of time, which in this case would be that the utility should be able to run through several thousand header files over one night of being run in batch mode.
 
 \subsection{Testability Tactics}
 %------------------------------------
@@ -28,7 +28,7 @@ Using a specialized testing interface makes it possible to specify values for a 
 We incorporated the use of this tactic by using the Attest testing framework when creating unit tests. By using attest we were able to create instances of and test parts and modules of the system independently with the exact input we wanted without having to run the entire utility. 
 
 \subsubsection{Code Coverage}
-By using a framework to see which parts and how much of the code is actually being run during the unit tests, it becomes easier to improve the quality of the unit tests. It could also be used as a checklist to see if the ones creating the unit tests have implemented some functionality that is currently not beng tested.
+By using a framework to see which parts and how much of the code is actually being run during the unit tests, it becomes easier to improve the quality of the unit tests. It could also be used as a checklist to see if the ones creating the unit tests have implemented some functionality that is currently not being tested.
 
 We incorporated the use of this tactic by using the Coverage tool for python. By using coverage we were able to measure the code coverage of the unit tests by having Coverage create a html table which showed which parts and percentage of the system actually underwent testing.
 
@@ -54,15 +54,15 @@ We followed this tactic by using code inspection. If we discovered during a spri
 \subsubsection{Using Configuration Files}
 By using configuration files, it is possible to change the behaviour of the system without having to do any changes to its code. It is very important that this system uses configuration files as this was a requirement from the customer, as well as making it a lot more flexible for the end user.
 
-In order to implement this in the project it was decided that we would use the YAML format for writing and parsing configuration files. These configuration files would then make it possible for the users of the utility to make several alterations to how data should be displayed in wireshark as well as having their own custom LUA code that would get run inside of the generated dissectors.
+In order to implement this in the project it was decided that we would use the YAML format for writing and parsing configuration files. These configuration files would then make it possible for the users of the utility to make several alterations to how data should be displayed in Wireshark as well as having their own custom LUA code that would get run inside of the generated dissectors.
 
 \subsection{Business Requirements}
 %---------------------------------
 \begin{itemize}
 \item The \gls{utility} must be delivered on time as it is not possible for the developers to continue the development after the deadline
-\item The ability for the \gls{utility} to be able to create dissectors for the c-structs in the header files used  by Thales.
+\item The ability for the \gls{utility} to be able to create dissectors for the C-structs in the header files used  by Thales.
 \item The ability for the \gls{utility} to create dissectors that run on all of the platforms used by Thales and their customers
-\item The ability for \Gls{wireshark} to be able to use the generated dissectors to display the values of the c-structs passed through the system.
+\item The ability for \Gls{wireshark} to be able to use the generated dissectors to display the values of the C-structs passed through the system.
 \end{itemize}
 
 %------------------------------
@@ -88,7 +88,7 @@ The layered architectural pattern is a pattern that involves grouping several di
 
 \begin{figure}[htb]
 	\center
-	\includegraphics[width = 0.7\textwidth]{./planning/img/layered}
+	\includegraphics[width=0.7\textwidth]{./planning/img/layered}
 	\caption{Layered Architectural Pattern in the \gls{utility}\label{fig:layered}}
 \end{figure}
 
@@ -99,7 +99,7 @@ This section describes three different views the team used for this project: A l
 
 \subsection{Logical View}
 %------------------------
-This view shown in \autoref{fig:logicalview}. Command line takes the arguments for \gls{header} file and configuration file as a string. The arguments are parsed in the command line \gls{parser}. Header file is sent to ''\Gls{c} \gls{preprocessor} \& \Gls{c} \gls{parser}'', the \Gls{c} \gls{header} file is loaded and parsed by the \Gls{c} \gls{parser}, whcih generates a parsing tree. Command line also call Configuration, which load the configuration file. The configuration will parse the configuration file and create configuation rules. The \Gls{lua} \gls{script} generator will generate a \Gls{lua} \gls{script} from the parsing tree and the config rules.
+This view shown in \autoref{fig:logicalview}. Command line takes the arguments for \gls{header} file and configuration file as a string. The arguments are parsed in the command line \gls{parser}. Header file is sent to ''\Gls{c} \gls{preprocessor} \& \Gls{c} \gls{parser}'', the \Gls{c} \gls{header} file is loaded and parsed by the \Gls{c} \gls{parser}, whcih generates a parsing tree. Command line also call Configuration, which load the configuration file. The configuration will parse the configuration file and create configuration rules. The \Gls{lua} \gls{script} generator will generate a \Gls{lua} \gls{script} from the parsing tree and the config rules.
 
 \begin{figure}[htb]
 	\includegraphics[width=\textwidth]{./planning/img/overall_design}
@@ -132,8 +132,7 @@ This view shown in \autoref{fig:logicalview}. Command line takes the arguments f
 %--------------------------------
 The team decided to use the pipe and filter pattern as the architects felt that it was one of the only architectural patterns that would benefit the \gls{utility} without having to make it needlessly complex. The \gls{utility} was supposed to take \gls{header} files as input and then process the data from them several times, until the end result was a list of \glspl{struct} and \glspl{member} that could be used to make \glspl{dissector} for \Gls{wireshark}. This seemed like an excellent application to use the pipe and filter pattern with, as it would then be easy to add new filters to the \gls{header} file for future increments of the development cycle without having to rewrite what had already been implemented in previous sprints.
 
-The team also decided to use the layered architectural pattern as the code of the utility would have to stay logical and well structured through the entire project if we wanted the future development of the utility to go more smoothly. By dividing the entire utility into several modules and designate layers between them it became easier to decide which functionality would go where in the code which could save the different developers some grief. It would also make the code easier to inspect by whomever that wishes to understand the code and more specificly how the utility works.
+The team also decided to use the layered architectural pattern as the code of the utility would have to stay logical and well structured through the entire project if we wanted the future development of the utility to go more smoothly. By dividing the entire utility into several modules and designate layers between them it became easier to decide which functionality would go where in the code which could save the different developers some grief. It would also make the code easier to inspect by whomever that wishes to understand the code and more specifically how the utility works.
 
-For the views the team decided to use a logical view, process view and deployment view. These views were chosen because the architects of the \gls{utility} felt that these views alone could represent the system sufficently without creating too much overhead for the readers of the document. The logical view supplies the reader with a more in depth view of what the system is comprised of, which is useful for developers who need to figure out the workings of the system. The process view also seemed important for the developers and the testers of the \gls{utility}, as it provides the reader with a more proper overview of the dataflow in the system. This makes it a lot easier to see which modules are run when, and to see which external calls dictate the modules' behaviour. Lastly a deployment view was chosen to make it more clear for the reader of the document what the \gls{utility} really produces as output and what other external applications it has to cooperate with. 
-
+For the views the team decided to use a logical view, process view and deployment view. These views were chosen because the architects of the \gls{utility} felt that these views alone could represent the system sufficiently without creating too much overhead for the readers of the document. The logical view supplies the reader with a more in depth view of what the system is comprised of, which is useful for developers who need to figure out the workings of the system. The process view also seemed important for the developers and the testers of the \gls{utility}, as it provides the reader with a more proper overview of the data flow in the system. This makes it a lot easier to see which modules are run when, and to see which external calls dictate the modules' behaviour. Lastly a deployment view was chosen to make it more clear for the reader of the document what the \gls{utility} really produces as output and what other external applications it has to cooperate with. 
 

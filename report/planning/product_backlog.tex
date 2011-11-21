@@ -40,7 +40,7 @@ The product backlog can be seen in \autoref{tab:prodbacklog}. The requirements m
 	FR4-E & Support various \gls{trailers} (other registered protocols) & SP2 & 18 & 15 \\
 	FR4-F & Support \glspl{enumerated named value} & SP2 & 5 & 6.5 \\
 	FR4-G & Support bit strings & SP2 & 10 & 11.5 \\
-	FR4-H & Automatic generation configuration for unknown structs & SP4 & 1 & 0.5\\
+	FR4-H & Automatic generation of placeholder configuration & SP4 & 1 & 0.5\\
 	FR4-I & Support specifying the size of unknown struct members & SP4 & 4 & 1\\
 	\addlinespace
 	FR5 & Handle input which size and \gls{endian} depends on platform & & \textbf{40} & \textbf{23.5} \\
@@ -69,8 +69,8 @@ The product backlog can be seen in \autoref{tab:prodbacklog}. The requirements m
 	FR6-F & Only generate dissectors for structs with valid id and their dependences & SP4 & 4 & 1.5\\
     \addlinespace
 	FR7 & Fetch configuration directly from source code & & \textbf{40} &  \textbf{*} \\
-	FR7-A & Use Doxygen comments for struct members as ''Description'' & - & 20 & *\\
-	FR7-B & Read int-enum configuration from header files & - & 20 & * \\
+	FR7-A & Find struct descriptions from Doxygen comments & - & 20 & *\\
+	FR7-B & Find configuration of \#define enums from header files & - & 20 & * \\
 	\bottomrule
 \end{tabularx}
 \end{table}

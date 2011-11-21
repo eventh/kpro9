@@ -1,16 +1,17 @@
-
-%==============
+%===================
 \chapter{Test Cases}
-%==============
+%===================
 \label{sec:testcases}
-This section introduces the testcases we ran during the different sprints of the project. All of the testcases follow the template mentioned in the testplan on \autoref{tab:testcase}.
+This section introduces the test cases we ran during the different sprints of the project. All of the test cases follow the template mentioned in the test plan on \autoref{tab:testcase}.
+
+
 %-----------------------
 \section{Sprint 1 Tests}
 %-----------------------
-In this sprint we ran the testcases shown in \autoref{tab:TID01}-\ref{tab:TID07}. The testcases made for this sprint covers most of the extremely simple functionality needed in order to have a working utility. 
+In this sprint we ran the test cases shown in \autoref{tab:TID01}-\ref{tab:TID07}. The test cases made for this sprint covers most of the extremely simple functionality needed in order to have a working utility. 
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID01}\label{tab:TID01}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID01}\label{tab:TID01}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -29,8 +30,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID01}-\ref{tab:TID07}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID02}\label{tab:TID02}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID02}\label{tab:TID02}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -49,8 +50,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID01}-\ref{tab:TID07}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID03}\label{tab:TID03}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID03}\label{tab:TID03}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -71,8 +72,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID01}-\ref{tab:TID07}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID04}\label{tab:TID04}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID04}\label{tab:TID04}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -91,8 +92,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID01}-\ref{tab:TID07}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID05}\label{tab:TID05}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID05}\label{tab:TID05}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -111,8 +112,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID01}-\ref{tab:TID07}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID06}\label{tab:TID06}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID06}\label{tab:TID06}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -131,8 +132,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID01}-\ref{tab:TID07}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID07}\label{tab:TID07}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID07}\label{tab:TID07}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -140,12 +141,12 @@ In this sprint we ran the testcases shown in \autoref{tab:TID01}-\ref{tab:TID07}
 	\midrule
 	Description & Recognizing invalid values \\
 	Tester & Lars Solvoll Tønder \\
-	Prerequisites &  The \gls{utility} has to have been installed on the system and there needs to exist a header file with a struct that has a configuration file tied to it. Wireshark must also have been installed on the system and be configured to being able to run dissectors written in LUA. and there needs to exist a pcap file associated with this test\\
+	Prerequisites &  The \gls{utility} has to have been installed on the system and there needs to exist a header file with a struct that has a configuration file tied to it. Wireshark must also have been installed on the system and be configured to being able to run dissectors written in Lua. and there needs to exist a pcap file associated with this test\\
 	Feature & Test that our \gls{utility} recognizes invalid values for \gls{struct} \glspl{member} specified in the config file. \\
 	\midrule
 	\multirow{4}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \gls{header} and a config-file, where the config file sets restrictions on the \glspl{member} of the \gls{header} file. \\
-	& 2. Copy the resulting dissector to the personal plugins folder of wireshark.\\
-	& 3. Run wireshark with the pcap file associated with this test \\
+	& 2. Copy the resulting dissector to the personal plugins folder of Wireshark.\\
+	& 3. Run Wireshark with the pcap file associated with this test \\
 	& 4. Inspect the different packets displayed in \Gls{wireshark} \\
 	\midrule
 	Expected result & 3. \Gls{wireshark} should display the \gls{struct} \glspl{member} with invalid values marked as invalid \\
@@ -157,10 +158,10 @@ In this sprint we ran the testcases shown in \autoref{tab:TID01}-\ref{tab:TID07}
 %-----------------------
 \section{Sprint 2 Tests}
 %-----------------------
-In this sprint we ran the testcases shown in  \autoref{tab:TID08}-\ref{tab:TID14}. These are tests to see that the basic functionalities of the utility are in place. 
+In this sprint we ran the test cases shown in  \autoref{tab:TID08}-\ref{tab:TID14}. These are tests to see that the basic functionalities of the utility are in place. 
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID08}\label{tab:TID08}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID08}\label{tab:TID08}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -184,8 +185,8 @@ In this sprint we ran the testcases shown in  \autoref{tab:TID08}-\ref{tab:TID14
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID09}\label{tab:TID09}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID09}\label{tab:TID09}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -208,8 +209,8 @@ In this sprint we ran the testcases shown in  \autoref{tab:TID08}-\ref{tab:TID14
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID10}\label{tab:TID10}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID10}\label{tab:TID10}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -218,7 +219,7 @@ In this sprint we ran the testcases shown in  \autoref{tab:TID08}-\ref{tab:TID14
 	Description & Supporting the display of \glspl{struct} within \glspl{struct} \\
 	Tester & Erik Bergersen \\
 	Prerequisites & The utility must have been installed on the system and there needs to exist a header, config and pcap file associated with this test \\
-	Feature & Test that the \gls{utility} iis able to support \Gls{c}-\gls{header} files with \glspl{struct} that have other \gls{struct} \glspl{member}  and display it properly in \Gls{wireshark}\\
+	Feature & Test that the \gls{utility} is able to support \Gls{c}-\gls{header} files with \glspl{struct} that have other \gls{struct} \glspl{member}  and display it properly in \Gls{wireshark}\\
 	\midrule
 	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of the \Gls{c}-\gls{header} file associated with this test, which includes a \gls{struct} with another \gls{struct} \gls{member} \\
 	& 2. Read the output \\
@@ -227,13 +228,13 @@ In this sprint we ran the testcases shown in  \autoref{tab:TID08}-\ref{tab:TID14
 	& 5. Look at the different \gls{struct} \glspl{member} that are displayed in \Gls{wireshark}\\
 	\midrule
 	\multirow{2}{*}{Expected result} & 2. The program should provide the user with some text expressing the success of generating a dissector for the struct in the header file\\
-	& 5. The \gls{struct} \glspl{member} within \glspl{struct} should be displayed as subtrees, indicated by having a clickable ''+'' box to the left whch when clicked, displayes the contents of the given \gls{struct}\\
+	& 5. The \gls{struct} \glspl{member} within \glspl{struct} should be displayed as subtrees, indicated by having a clickable ''+'' box to the left which when clicked, displays the contents of the given \gls{struct}\\
 	\bottomrule
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID11}\label{tab:TID11}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID11}\label{tab:TID11}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -257,8 +258,8 @@ In this sprint we ran the testcases shown in  \autoref{tab:TID08}-\ref{tab:TID14
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID12}\label{tab:TID12}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID12}\label{tab:TID12}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -281,8 +282,8 @@ In this sprint we ran the testcases shown in  \autoref{tab:TID08}-\ref{tab:TID14
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID13}\label{tab:TID13}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID13}\label{tab:TID13}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -291,7 +292,7 @@ In this sprint we ran the testcases shown in  \autoref{tab:TID08}-\ref{tab:TID14
 	Description & Supporting \glspl{struct} with various \gls{trailers} \\
 	Tester & Erik Bergersen \\
 	Prerequisites & The \gls{utility} must have been installed on the system and there needs to exist a header, config and pcap file associated with this test \\
-	Feature & Test that the \gls{utility} iis able to support \Gls{c}-\gls{header} files with \gls{trailers} \\
+	Feature & Test that the \gls{utility} is able to support \Gls{c}-\gls{header} files with \gls{trailers} \\
 	\midrule
 	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of a \Gls{c}-\gls{header} file with a \gls{struct} that has a trailer \\
 	& 2. Read the output \\
@@ -305,8 +306,8 @@ In this sprint we ran the testcases shown in  \autoref{tab:TID08}-\ref{tab:TID14
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID14}\label{tab:TID14}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID14}\label{tab:TID14}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -329,10 +330,10 @@ In this sprint we ran the testcases shown in  \autoref{tab:TID08}-\ref{tab:TID14
 %------------------------------
 \section{Sprint 3 Tests}
 %-----------------------------
-In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}. These are tests to see that the utility is working properly even with the most advanced features.
+In this sprint we ran the test cases shown in \autoref{tab:TID15}-\ref{tab:TID23}. These are tests to see that the utility is working properly even with the most advanced features.
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID15}\label{tab:TID15}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID15}\label{tab:TID15}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -341,7 +342,7 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
 	Description & Support \gls{batch mode} of \Gls{c} \gls{header} and configuration files \\
 	Tester & Lars Solvoll Tønder \\
 	Prerequisites & The \gls{utility} has have been installed on the system, there also needs to exist a header and configuration file for this test \\
-	Feature &  Test that the \gls{utility} is able to genereate \glspl{dissector} for all \gls{header}-files in a folder, with configuration\\
+	Feature &  Test that the \gls{utility} is able to generate \glspl{dissector} for all \gls{header}-files in a folder, with configuration\\
 	\midrule
 	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} the name of the two folders with \gls{header}-files and configuration-files. \\
 	& 2. Read output from the \gls{utility} \\
@@ -351,8 +352,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID16}\label{tab:TID16}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID16}\label{tab:TID16}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -372,15 +373,15 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
 	& 5. Open the \gls{pcap-file} for this test with \Gls{wireshark} \\
 	& 6. Look at the different \gls{struct} \glspl{member} that are displayed in \Gls{wireshark} \\
 	\midrule
-	\multirow{2}{*}{Expected result}  & 3. The program should provide the user with some text expressing the			success of the \Gls{lua} file generation \\
+	\multirow{2}{*}{Expected result}  & 3. The program should provide the user with some text expressing the success of the \Gls{lua} file generation \\
 	& 6. Assert that the custom \Gls{lua} file(s) have affected the display of the \gls{struct} \glspl{member} in the 		
 	expected way. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID17}\label{tab:TID17}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID17}\label{tab:TID17}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -405,8 +406,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
 
 \clearpage
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID18}\label{tab:TID18}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID18}\label{tab:TID18}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X} 
 	\toprule
@@ -426,8 +427,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID19}\label{tab:TID19}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID19}\label{tab:TID19}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
  	\toprule
@@ -445,13 +446,13 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
  	& 5. Look at the different \gls{struct} \glspl{member} that are displayed in \Gls{wireshark}\\
 	\midrule
 	\multirow{2}{*}{Expected result}  & 2. The program should provide the user with some text expressing the success of generating a dissector for each of the structs inside the header file. \\
-	& 5. The different \glspl{struct} should be displayed as having the right \gls{struct} \glspl{member} according to the \Gls{c}-\gls{header} definitions. For example, the \gls{member} defined surronded by \texttt{\gls{ifdef} \_WIN32 ... \#endif} directives should be displayed correctly in WIN32 \gls{struct}. \\
+	& 5. The different \glspl{struct} should be displayed as having the right \gls{struct} \glspl{member} according to the \Gls{c}-\gls{header} definitions. For example, the \gls{member} defined surrounded by \texttt{\gls{ifdef} \_WIN32 ... \#endif} directives should be displayed correctly in WIN32 \gls{struct}. \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID20}\label{tab:TID20}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID20}\label{tab:TID20}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -472,8 +473,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
 
 \clearpage
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID21}\label{tab:TID21}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID21}\label{tab:TID21}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X} 
 	\toprule
@@ -496,8 +497,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID22}\label{tab:TID22}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID22}\label{tab:TID22}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X} 
 	\toprule
@@ -506,7 +507,7 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
 	Description & Supporting alignments  \\
 	Tester & Erik Bergersen \\
 	Prerequisites & There have to exist a \gls{header}-file, config-file and pcap-file to do the test. \\
-	Feature & Genereate \glspl{dissector} on platforms with different alignment \\
+	Feature & Generate \glspl{dissector} on platforms with different alignment \\
 	\midrule
 	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with the name of the \Gls{c}-\gls{header} file associated with this test\\
 	& 2. Read the output \\
@@ -520,8 +521,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID23}\label{tab:TID23}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID23}\label{tab:TID23}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X} 
 	\toprule
@@ -544,8 +545,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID24}\label{tab:TID24}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID24}\label{tab:TID24}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -565,8 +566,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID25}\label{tab:TID25}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID25}\label{tab:TID25}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -589,10 +590,10 @@ In this sprint we ran the testcases shown in \autoref{tab:TID15}-\ref{tab:TID23}
 %----------------------
 \section{Sprint 4}
 %----------------------
-In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}. These are tests to see that the utility has been fixed in accordance to the  extra requirements made by the customer in sprint 3 as well as the final touches that were needed in order to get the utility to work in a real environment. This section also includes the testcases made for the non-functional requirements.
+In this sprint we ran the test cases shown in \autoref{tab:TID26}-\ref{tab:TID48}. These are tests to see that the utility has been fixed in accordance to the  extra requirements made by the customer in sprint 3 as well as the final touches that were needed in order to get the utility to work in a real environment. This section also includes the test cases made for the non-functional requirements.
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID26}\label{tab:TID26}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID26}\label{tab:TID26}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -616,8 +617,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID27}\label{tab:TID27}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID27}\label{tab:TID27}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -637,8 +638,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID28}\label{tab:TID28}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID28}\label{tab:TID28}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -649,7 +650,7 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 	Prerequisites & The \gls{utility} has to be installed on the system \\
 	Feature & Making sure the \gls{utility} only generates one \gls{dissector} for the \gls{struct} instead of several, but still keeping all of the functionality\\
 	\midrule
-	\multirow{7}{*}{Execution} & 1. Feed the \gls{utility} with any \Gls{c}-\gls{header} file and it's configration\\
+	\multirow{7}{*}{Execution} & 1. Feed the \gls{utility} with any \Gls{c}-\gls{header} file and it's configuration\\
 	& 2.  Read the output\\
 	& 3. Copy the resulting \glspl{dissector} into the plugins folder of the personal configuration in \Gls{wireshark}\\
 	& 4. Run \Gls{wireshark}\\
@@ -664,8 +665,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID29}\label{tab:TID29}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID29}\label{tab:TID29}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -687,8 +688,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID30}\label{tab:TID30}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID30}\label{tab:TID30}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -712,8 +713,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID31}\label{tab:TID31}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID31}\label{tab:TID31}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -724,7 +725,7 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 	Prerequisites & The \gls{utility} has to be installed on the system \\
 	Feature & Checking that the \gls{utility} is able to support the use of pointers in \gls{header} files\\
 	\midrule
-	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file that has pointers, and it's configration file\\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file that has pointers, and it's configuration file\\
 	& 2.  Read the output\\
 	& 3. Copy the resulting \glspl{dissector} into the plugins folder of the personal configuration in \Gls{wireshark}\\
 	& 4. Run \Gls{wireshark} with the \gls{pcap-file} associated with this test\\
@@ -737,8 +738,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID32}\label{tab:TID32}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID32}\label{tab:TID32}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -749,7 +750,7 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 	Prerequisites & The \gls{utility} has to be installed on the system \\
 	Feature & Checking that the \gls{utility} is able to support the use of \glspl{enum} inside of \glspl{array}\\
 	\midrule
-	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file that has an \gls{array} of \glspl{enum}, and it's configration file\\
+	\multirow{2}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file that has an \gls{array} of \glspl{enum}, and it's configuration file\\
 	& 2.  Read the output\\
 	\midrule
 	\multirow{1}{*}{Expected result}
@@ -758,8 +759,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID33}\label{tab:TID33}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID33}\label{tab:TID33}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -770,7 +771,7 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 	Prerequisites & The \gls{utility} has to be installed on the system \\
 	Feature & Checking that it is possible to feed the \gls{utility} with a \gls{define} argument and have it force pre-processor to add a corresponding argument to the \gls{header} files it is processing\\
 	\midrule
-	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file, it's configration file and a \gls{define} directive\\
+	\multirow{5}{*}{Execution} & 1. Feed the \gls{utility} with a \Gls{c}-\gls{header} file, it's configuration file and a \gls{define} directive\\
 	& 2.  Read the output\\
 	& 3. Copy the resulting \glspl{dissector} into the plugins folder of the personal configuration in \Gls{wireshark}\\
 	& 4. Run \Gls{wireshark} with the \gls{pcap-file} associated with this test\\
@@ -783,8 +784,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID34}\label{tab:TID34}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID34}\label{tab:TID34}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -804,8 +805,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID35}\label{tab:TID35}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID35}\label{tab:TID35}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -831,14 +832,14 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 
 \clearpage
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID36}\label{tab:TID36}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID36}\label{tab:TID36}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
 	Header & Description \\
 	\midrule
-	Description & Autogenerating configuration files for \glspl{struct} that has no config file of their own\\
+	Description & Auto generating configuration files for \glspl{struct} that has no config file of their own\\
 	Tester & Lars Solvoll Tønder \\
 	Prerequisites & The \gls{utility} has to be installed on the system \\
 	Feature & Checking that the \gls{utility} is able to create template configuration files for all \glspl{struct} that does not currently have a configuration\\
@@ -853,8 +854,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID37}\label{tab:TID37}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID37}\label{tab:TID37}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -874,8 +875,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID38}\label{tab:TID38}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID38}\label{tab:TID38}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -895,8 +896,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID39}\label{tab:TID39}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID39}\label{tab:TID39}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -916,8 +917,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID40}\label{tab:TID40}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID40}\label{tab:TID40}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -937,8 +938,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID41}\label{tab:TID41}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID41}\label{tab:TID41}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -958,8 +959,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID42}\label{tab:TID42}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID42}\label{tab:TID42}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -980,8 +981,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID43}\label{tab:TID43}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID43}\label{tab:TID43}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -1001,8 +1002,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID44}\label{tab:TID44}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID44}\label{tab:TID44}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -1022,8 +1023,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID45}\label{tab:TID45}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID45}\label{tab:TID45}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -1043,8 +1044,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID46}\label{tab:TID46}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID46}\label{tab:TID46}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -1064,8 +1065,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID47}\label{tab:TID47}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID47}\label{tab:TID47}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -1084,8 +1085,8 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 \end{tabularx}}
 \end{table}
 
-\begin{table}[ht] \footnotesize \center
-\caption{Test case TID48}\label{tab:TID48}
+\begin{table}[htbp] \footnotesize \center
+\caption[]{Test case TID48}\label{tab:TID48}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X}
 	\toprule
@@ -1102,3 +1103,4 @@ In this sprint we ran the testcases shown in \autoref{tab:TID26}-\ref{tab:TID48}
 	\bottomrule
 \end{tabularx}}
 \end{table}
+

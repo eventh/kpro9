@@ -36,9 +36,12 @@ Because there exists distinct requirements for flexibility of generating dissect
 Configuration file format and structure
 ---------------------------------------
 
+.. note::
+    Besides the configuration described below, one part of the configuration is held directly in the code. It represents the platform specific setup (file ``platform.py``) - see `Platform specific configuration`_.
+
 **Format**
 
-The configuration files are written in YAML_ which is a data serialization format designed to be easy to read and write. The configuration must be put in a ``filename.yml`` file and specified when running CSjark as a command line argument (more about CLI in section :ref:`use`).
+The configuration files are written in YAML_ which is a data serialization format designed to be easy to read and write. The configuration must be put in a ``.yml`` file and specified when running CSjark as a command line argument (more about CLI in section :ref:`use`).
 
 Basic YAML syntax is shown on following example: ::
 
@@ -71,16 +74,16 @@ Data structure hierarchy in YAML is maintained by outline indentation (whitespac
 
 Strings are ordinarily unquoted, but may be enclosed in double-quotes ("), or single-quotes ('). The specific number of spaces in the indentation is unimportant as long as parallel elements have the same left justification and the hierarchically nested elements are indented further. This sample defines an associative array with 2 top level keys: one of the keys, "Structs", contains a 2 element array (or "list"), each element of which is itself an associative array with differing keys.
 
-Detailed specification can be found at `YAML website <http://www.yaml.org/spec/1.2/spec.html>`_.
+Detailed specification of YAML syntax can be found at `YAML website <http://www.yaml.org/spec/1.2/spec.html>`_.
 
 **Structure**
 
-CSjark configuration files consist of two main parts:
+CSjark configuration files might consist of two main parts:
 
-- The first part is used for specifing all the configuration corresponding CSjark processing in general. More about CSjark options in `Options Configuration`_. 
+- The first part is used for specifying all the configuration corresponding CSjark processing in general. More about CSjark options in `Options Configuration`_.
 - The second part contains configuration for individual C struct definitions. That is described in section `Struct Configuration`_.
 
-The configuration file may have following strucuture: ::
+The configuration file may have following structure: ::
 
     Options:
       # there will be all your CSjark processing configuration
@@ -96,16 +99,10 @@ The configuration file may have following strucuture: ::
         id: [11, 13, 15]
         # another struct2 config
         
-        
-        
 
 **Automatic generation of configuration files**
 
-Autogeneration of configuration file is a simple feature, that could save the user of the utility some time, since  the essential part of the configuration file is generated automatically.  The utility will only create a new file, containg the name of the struct and line to specifiy the ID for the dissector.  To generate the configuration file, the utility must be run with ``-p`` or ``--placeholders`` as an option (see :ref:`use` for more about CSjark CLI).
-
-    
-.. note::
-    One part of the configuration is held directly in the code. It represents the platform specific setup (file ``platform.py``) - see `Platform specific configuration`_.
+Automatic generation of configuration file is a simple feature, that could save the user of the utility some time, since  the essential part of the configuration file is generated automatically.  The utility will only create a new file containing the name of the struct and line to specify the ID for the dissector.  To generate the configuration file, the utility must be run with ``-p`` or ``--placeholders`` as an option (see :ref:`use` for more about CSjark CLI).
 
 
 Struct Configuration
@@ -129,6 +126,29 @@ customs         Definitions for custom struct member handling - more in `Custom 
 ==============  =============
 
 
+**General notes**
+
+- Definition of ``Structs`` part of configuration is not mandatory. However, the user must be aware that if a struct configuration is not defined (namely the ``id`` attribute), it can be dissected only as a part of other struct (as its struct member). Otherwise there will be no dissectors registered for the struct.
+
+- If there exists a configuration for a struct member and also configuration for the type of this member, the behaviour is not defined. It is up to the user to ensure the definitions are exclusive for each struct member. 
+  For example, in the :ref:`ranges` section example, if the ``percent`` is defined as `float`, the configuration would be ambiguous and there would be no guarantee that ``percent`` value is between 0 to 100 or -10 to 10.
+    
+- If a struct contains another struct as its member, none of the configuration valid for the outer struct is applied on the nested struct. The same goes for unions. In order to configure the nested struct, the user must define separate struct configuration for it.
+  In this example, the configuration valid for the members of `person` struct is not valid for members of `address` struct ::
+        
+        struct address {
+            int housenum;
+            string street;
+        };
+        
+        struct person {
+            string name;
+            address adr;
+            int age;
+        };
+
+.. _ranges:
+
 Value ranges
 ~~~~~~~~~~~~
 
@@ -143,7 +163,9 @@ Some variables may have a domain that is smaller than its given type. You could 
               max: "Highest allowed value"
               
 
-When the definition specified as a type, the value range is applid to all the members of that type within the struct.
+When the definition specified as a type, the value range is applied to all the members of that type within the struct. 
+
+The value ranges configuration is valid only for data types that are meaningful for this purpose (e.g. integers, float, enums). Definitions for other data types are not taken into account.   
 
 Example: ::
 
@@ -154,9 +176,9 @@ Example: ::
             - member: percent
               min: 0
               max: 100
-            - type: int
-              min: -10
-              max: 10
+            - type: float
+              min: -10.0
+              max: 10.0
 
 Value explanations
 ~~~~~~~~~~~~~~~~~~
@@ -269,7 +291,7 @@ In some cases, CSjark will not be able to deliver the desired result from its ow
 
 .. note::
     To be able to understand and write external Lua dissectors, the user should be familiar with basics of Lua programming and Lua integration into Wireshark. 
-    More information how to write Lua code can be found in `Lua reference manual  <http://www.lua.org/manual/5.1/>`_. For further information on the Lua integration in Wireshark, please visit `Lua Support in Wireshark <http://www.wireshark.org/docs/wsug_html_chunked/wsluarm.html>`_.
+    More information how to write Lua code can be found in `Lua reference manual  <http://www.lua.org/manual/5.1/>`_. For further information on the Lua integration in Wireshark, please visit `Lua Support in Wireshark <http://www.Wireshark.org/docs/wsug_html_chunked/wsluarm.html>`_.
     
 
 A custom Lua code for desired struct must be defined in an external conformance file with extension ``.cnf``. The conformance file name and relative path then must be defined in the configuration file for the struct for which is the custom code applied for. The attribute name for the custom Lua definition file and path is ``cnf``, as shown below:
@@ -293,10 +315,10 @@ Writing the conformance file implies respecting following rules:
 The conformance file implementation allows user to place the custom Lua code on various places within the Lua dissector code already generated by CSjark. There is a list of possible places:
 
     ====================================    =======================                                                                                                                                                           
-    ``DEF_HEADER id``                       Lua code added before a Field defintion.                                                                                                                                          
-    ``DEF_BODY id``                         Lua code to replace a Field defintion. Within the definition, the original body can be referenced as ``%(DEFAULT_BODY)s`` or ``{DEFAULT_BODY}``                                   
-    ``DEF_FOOTER id``                       Lua code added after a Field defintion                                                                                                                                            
-    ``DEF_EXTRA``                           Lua code added after the last defintion                                                                                                                                           
+    ``DEF_HEADER id``                       Lua code added before a Field definition.                                                                                                                                          
+    ``DEF_BODY id``                         Lua code to replace a Field definition. Within the definition, the original body can be referenced as ``%(DEFAULT_BODY)s`` or ``{DEFAULT_BODY}``                                   
+    ``DEF_FOOTER id``                       Lua code added after a Field definition                                                                                                                                            
+    ``DEF_EXTRA``                           Lua code added after the last definition                                                                                                                                           
     ``FUNC_HEADER id``                      Lua code added before a Field function code                                                                                                                                       
     ``FUNC_BODY id``                        Lua code to replace a Field function code                                                                                                                                         
     ``FUNC_FOOTER id``                      Lua code added after a Field function code                                                                                                                                        
@@ -306,7 +328,7 @@ The conformance file implementation allows user to place the custom Lua code on 
     ``END_OF_CNF``                          End of the conformance file                                                                                                                                                       
     ====================================    =======================          
    
-Where ``id`` denotes C struct member name (``DEF_*``) or field name (``FUNC_*``).                                                                                                                                                 
+Where ``id`` denotes C struct member name (``DEF_*``) or field name (``FUNC_*``). The ``END`` token is only optional, it does not have to be placed at the end of each section. However, all code after ``END`` token which is not part of another section defined above is discarded.                                                                                                                                                
                                                                                                                                                                                                                                  
 Example of such conformance file follows: ::                                                                                                                                                                                     
                                                                                                                                                                                                                                  
@@ -331,9 +353,10 @@ Example of such conformance file follows: ::
     -- This is below 'name' definition
     #.END
     
+    -- This text would be discarded.
     
     #.DEF_EXTRA
-    -- This was all the Field defintions
+    -- This was all the Field definitions
     #.END
     
     
@@ -358,7 +381,7 @@ Example of such conformance file follows: ::
     #.FUNC_EXTRA
         -- This is the last line of the dissector function
     #.END_OF_CNF
-    
+
 This conformance file when run with this C header code: ::
 
     struct custom_lua {
@@ -376,7 +399,7 @@ This conformance file when run with this C header code: ::
     -- Dissector for win32.custom_lua: custom_lua (Win32)
     local proto_custom_lua = Proto("win32.custom_lua", "custom_lua (Win32)")
     
-    -- ProtoField defintions for: custom_lua
+    -- ProtoField definitions for: custom_lua
     local f = proto_custom_lua.fields
     f.normal = ProtoField.int16("custom_lua.normal", "normal")
     -- This code will be added above the 'super' field definition
@@ -387,7 +410,7 @@ This conformance file when run with this C header code: ::
     f.name = ProtoField.string("custom_lua.name", "name")
     -- This is below 'name' definition
     f.precise = ProtoField.double("custom_lua.precise", "precise")
-    -- This was all the field defintions
+    -- This was all the field definitions
     
     -- Dissector function for: custom_lua
     function proto_custom_lua.dissector(buffer, pinfo, tree)
@@ -493,7 +516,7 @@ List of available output types follows:
     
 For ``Integer`` types, there are some specific attributes that can be defined (see below_). More about each individual type can be found in `Wireshark reference`_.
 
-.. _Wireshark reference: http://www.wireshark.org/docs/wsug_html_chunked/lua_module_Proto.html#lua_class_ProtoField 
+.. _Wireshark reference: http://www.Wireshark.org/docs/wsug_html_chunked/lua_module_Proto.html#lua_class_ProtoField 
 
 
 The section name in configuration file for custom data type handling is called ``customs``. This section can contain following attributes:
@@ -639,7 +662,7 @@ To ensure that CSjark is usable as much as possible, platform specific
 Entire platform setup is done via Python code, specifically ``platform.py``. This file contains following sections:
 
 1. Platform class definition including it's methods
-2. Default mapping of C type and their wireshark field type
+2. Default mapping of C type and their Wireshark field type
 3. Default C type size in bytes
 4. Default alignment size in bytes
 5. Custom C type sizes for every platform which differ from default

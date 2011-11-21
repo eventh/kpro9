@@ -1,14 +1,32 @@
 \section{Product Backlog}
 %------------------------
 \label{sec:prodbacklog}
-The product backlog can be seen in \autoref{tab:prodbacklog}.
-Optional requirements
-
-These requirements are described in the further development section in \autoref{sec:eval:furtherdev}.
+The complete product backlog can be seen in \autoref{tab:prodbacklog}.
+Optional requirements which we did not implement are listed in
+\autoref{tab:prodbacklog2}. These optional requirements are described
+in \autoref{sec:eval:furtherdev}.
 
 \begin{table}[htbp] \small \center
-\caption{Product Backlog, Part 1 \label{tab:prodbacklog}}
-\begin{tabularx}{\textwidth}{l X c c c}
+\caption{Optional Requirements Estimates\label{tab:prodbacklog2}}
+\begin{tabularx}{\textwidth}{l X c}
+	\toprule
+	Req. & Description & Est. Hours \\
+	\midrule	
+	FR2-F & Display if struct member contains uninitialized memory & 8 \\
+	FR6-D & Do not regenerate dissectors across multiple runs & 2 \\
+	FR7-A & Find struct descriptions from Doxygen comments & 20 \\
+	FR7-B & Find configuration of \#define enums from header files & 20 \\
+	\midrule
+	& Total & 50 \\
+	\bottomrule
+\end{tabularx}
+\end{table}
+
+%\begin{table}[htbp] \footnotesize \center
+\begin{table}[htbp] \small \center
+\caption{Product Backlog\label{tab:prodbacklog}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.13\textwidth}{l X c c c}
 	\toprule
 	& & & \multicolumn{2}{c}{Hours} \\
 	\cmidrule(r){4-5}
@@ -22,13 +40,12 @@ These requirements are described in the further development section in \autoref{
 	FR1-E & Support \glspl{member} of type \gls{array} & SP2 & 7 & 12 \\
 	FR1-F & Detect \glspl{struct} with same name & SP2 & 3 & 3.5 \\
 	\addlinespace
-	FR2 & Generate \Gls{wireshark} \glspl{dissector} in \Gls{lua} & & \textbf{77} &  \textbf{59.5} \\
+	FR2 & Generate \Gls{wireshark} \glspl{dissector} in \Gls{lua} & & \textbf{69} &  \textbf{59.5} \\
 	FR2-A & Display simple \glspl{struct} & SP1 & 28 & 25 \\
 	FR2-B & Support display of \glspl{struct} within \glspl{struct} & SP2 & 11 & 15 \\
 	FR2-C & Support \Gls{wireshark} filter and search on attributes & SP3 & 3 & 1.5 \\
 	FR2-D & Recognize invalid values for a \gls{struct} \gls{member} & SP1 & 22 & 15 \\
 	FR2-E & Guess \glspl{dissector} from packet size & SP4 & 5 & 3\\
-	FR2-F & Display if struct member contains uninitialized memory & - & 8 & * \\
     \addlinespace
 	FR3 & Support \Gls{c} \gls{preprocessor} directives and macros & & \textbf{24} &  \textbf{7.5}\\
 	FR3-A & Support \gls{include} & SP1 & 8 & 2 \\
@@ -51,30 +68,16 @@ These requirements are described in the further development section in \autoref{
 	FR5-B & \Glspl{dissector} support memory alignment & SP3 & 12 & 6.5 \\
 	FR5-C & \Glspl{dissector} support both little and big \gls{endian} & SP3 & 6 & 4 \\
 	FR5-D & \Glspl{dissector} support different sizes from flags & SP3 & 14 & 2 \\	
-    \bottomrule
-\end{tabularx}
-\end{table}	
-	
-\begin{table}[htbp] \small \center
-\caption{Product Backlog, Part 2 \label{tab:prodbacklog2}}
-\begin{tabularx}{\textwidth}{l X c c c}
-	\toprule
-	& & & \multicolumn{2}{c}{Hours} \\
-	\cmidrule(r){4-5}
-	Req. & Description & Sprint & Est. & Act. \\
-	\midrule	
+    \addlinespace
 	FR6 & Support parameters from command line & & \textbf{51} & \textbf{24}\\
 	FR6-A & Support parameter for \Gls{c} \gls{header} file & SP1 & 9 & 9 \\
 	FR6-B & Support parameter for configuration file & SP1 & 28 & 8 \\
 	FR6-C & Support batch processing of \Gls{c} \gls{header} and configuration & SP2 & 7 & 4.5 \\
-	FR6-D & Do not regenerate dissectors across multiple runs & - & 2 & *\\
-	FR6-E & Support C \#defines from CLI & SP4 & 1 & 1 \\
-	FR6-F & Only generate dissectors for structs with valid id and their dependences & SP4 & 4 & 1.5\\
-    \addlinespace
-	FR7 & Fetch configuration directly from source code & & \textbf{40} &  \textbf{*} \\
-	FR7-A & Find struct descriptions from Doxygen comments & - & 20 & *\\
-	FR7-B & Find configuration of \#define enums from header files & - & 20 & * \\
-	\bottomrule
-\end{tabularx}
-\end{table}
+	FR6-E & Support C \#defines and --Include from CLI & SP4 & 1 & 1 \\
+	FR6-F & Only generate dissectors for structs with valid id & SP4 & 4 & 1.5 \\
+	\midrule
+	& Total & & 327 & 236.5 \\
+    \bottomrule
+\end{tabularx}}
+\end{table}	
 

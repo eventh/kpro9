@@ -41,7 +41,7 @@ which will check that remote URLs are reachable.
 Automatic builds on Read The Docs
 ---------------------------------
 
-The CSjark project documentation is hosted at ReadTheDocs_. Each push to the repository triggers a new build of the documentation, therefore it always remains up to date. 
+The CSjark project documentation is hosted at ReadTheDocs_. Each commit to the repository triggers a new build of the documentation, therefore it always remains up to date. 
 
 .. _`ReadTheDocs`: http://csjark.readthedocs.org/
 

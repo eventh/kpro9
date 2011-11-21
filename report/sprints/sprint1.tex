@@ -1,10 +1,10 @@
 %=================
 \chapter{Sprint 1}
 %=================
-In this chapter the first sprint is explained. In \autoref{sec:sp1:planning} 
+In this chapter the first sprint is detailed. In \autoref{sec:sp1:planning} 
 the planning of the first sprint is explained, the design of sprint 1 is 
-covered in \autoref{sec:sp1:design}. \autoref{sec:sp1:impl} descripbes the 
-features implemented in this sprint, and \autoref{sec:sp1:test} consists of 
+covered in \autoref{sec:sp1:design}. In \autoref{sec:sp1:impl}, the 
+features implemented in this sprint is described, and \autoref{sec:sp1:test} consists of 
 the results from the tests. The feedback the team has got from the customer 
 during the sprint is listed in \autoref{sec:sp1:feedback}, and the evaluation 
 of the first sprint is covered in \autoref{sec:sp1:eval}.
@@ -135,7 +135,7 @@ used.
 %------------------------------
 The following is a description of the preliminary design we had for our
 \gls{utility}. We split our program into several parts, described in the
-following paragraphs. Their relationship is explained in
+following paragraphs. Their relationship is shown in
 \autoref{fig:sp1:design}.
 
 \begin{figure}[!htb]
@@ -219,23 +219,23 @@ The RangeField class inherits from the Field class.
 
 \subsubsection{Csjark}
 %-------------------
-The utilities \emph{main()} function is a part of the csjark module, the method will start parsing of CLI arguments, start parsing of the configuration files, and start generating dissectors by calling \emph{createDissectors()}. When all structs have been generated, it will print the results to the user on the command-line interface.
+The utility's \emph{main()} function is a part of the csjark module. The function will start parsing of CLI arguments, start parsing of the configuration files, and start generating dissectors by calling \emph{createDissectors()}. When all structs have been generated, it will print the results to the user on the command-line interface.
 
-The Cli class will hold all the paramters, andl take the parameters from the command-line interface, it will parse the arguments and return lists for header and config.
+The Cli class will hold all the parameters, and take the parameters from the command-line interface, it will parse the arguments and return lists for header and config.
 
 \subsubsection{Cparser}
 %-------------------
 The Cparser module is used to parse the header files, and has three methods and a class. The preprocessing is done in \emph{parse\_file()}, \emph{parse()} is used to parse the file with pycparser library. To find a struct in the abstract syntax tree, the function \emph{find\_structs()} is used.
 
-StructVisitor is a class that go through the abstract syntax tree, which the pycparser library generates. The class will handle all the declaration, and return a struct with the members.
+StructVisitor is a class that goes through the abstract syntax tree, which the pycparser library generates. The class will handle all the declaration, and return a struct with the members.
 
 \subsubsection{Dissector}
 %-------------------
-This module has three classes that generated the Lua dissector.
+This module has three classes that generates the Lua dissector.
 
 \begin{itemize}
-	\item Protocol: This class generates the Lua dissector from a c struct. It will use Field class for each of the struct members.
-	\item Field: Field is a class that generates code for each of the struct members. Field will used to generate code for basic data types, and will be a superclass for other data types and for fields that are configured.
+	\item Protocol: This class generates the Lua dissector from a \Gls{c} struct. It will use Field class for each of the struct members.
+	\item Field: Field is a class that generates code for each of the struct members. Field will be used to generate code for basic data types, and will be a superclass for other data types and for fields that are configured.
 	\item RangeField: Is a subclass of Field. It is modified in order to generate a field that will give a warning for an invalid value in Wireshark.
 \end{itemize}
 
@@ -243,7 +243,7 @@ This module has three classes that generated the Lua dissector.
 %-------------------
 This module consist of three classes, and a method to parse all the configuration files.
 \begin{itemize}
-	\item StructConfig: This is a class is used to store configuration for the c structs, and the configured members of the structs.
+	\item StructConfig: This is a class used to store configuration for the \Gls{c} structs, and the configured members of the structs.
 	\item RangeRule: This class is for range rules, stores information of minimum and maximum values, and the struct member.
 	\item ConfigError: This class will raise an exception, if pyYAML is unable to parse the config file due to a error message.
 \end{itemize}
@@ -347,12 +347,11 @@ Each user story also contains information on how the modules of CSjark should in
 In this sprint we have created a very naive implementation of the \gls{utility}. It
 supports the most basic types of \Gls{c} \glspl{struct}. In addition, the \gls{utility} supports
 some very basic configuration. The main reason for the naive implementation, 
-was to find out that the \glspl{library} that the team had chosen, was suitable for 
-the \gls{utility} and that we had understood the task.
+was to find out that the \glspl{library} that the team had chosen was suitable for 
+the \gls{utility}, and that we had understood the task.
 
 To get a better understanding of how the different requirements were implemented,
 look at the user stories for sprint 1 in \autoref{sec:req:stories1}.
-
 
 \subsection{\gls{cli} Support for Header File}
 %-------------------
@@ -364,16 +363,16 @@ run.
 \subsection{Support Basic \Gls{c} Data Types}
 %-------------------
 In this first sprint the focus was to generate \glspl{dissector} from \glspl{struct} with 
-basic datatypes. These datatypes included \glspl{integer}, \glspl{float}, \gls{char}, \gls{boolean} and 
+basic data types. These data types included \glspl{integer}, \glspl{float}, \gls{char}, \gls{boolean} and 
 \glspl{array} of \glspl{char}. All different types of \glspl{integer} and \glspl{float} were also 
-implemented in the \gls{utility}, most of the functionallity was included in the 
+implemented in the \gls{utility}, most of the functionality was included in the 
 \gls{pycparser} \gls{library}, and sizes for the different data types was specified in the 
 \gls{utility}.
 
 \subsection{Display Simple Structs}
 %-------------------
 The \glspl{dissector} that our \gls{utility} generates is used to display the \glspl{packet} that 
-are captured by wireshark. \autoref{fig:sp1wsstruct} shows an example of a 
+are captured by Wireshark. \autoref{fig:sp1wsstruct} shows an example of a 
 \gls{packet} capture. The example include a \gls{struct} that is used to test different 
 basic data types, for example, signed \gls{char}, \gls{char}, short, \gls{int}, long \gls{int}, \gls{float} 
 and \gls{double}.
@@ -387,7 +386,7 @@ and \gls{double}.
 %-------------------
 The \gls{preprocessor} in \Gls{c} is the first step of compilation. One of the most used 
 \gls{preprocessor} directives is \gls{include}, which include the content of a file 
-in the compilaton. Since the \gls{utility} reads \glspl{struct} from \gls{header}-files, it is 
+in the compilation. Since the \gls{utility} reads \glspl{struct} from \gls{header}-files, it is 
 possible that \gls{struct} \gls{member} may have been defined in other \gls{header}-files, 
 therefore \gls{include} is a important part of the \gls{utility}. The \gls{preprocessor} in 
 this \gls{utility} will replace the \gls{include}-line with the content of the included file.
@@ -400,7 +399,7 @@ sequence of characters. This can for example be used to define length of
 \glspl{array}, define values for enumeration or define a platform. \gls{if} and \gls{ifdef} 
 are conditional directives that the \gls{utility} will use to check if macros are 
 defined. This will be used when the \gls{utility} is generating \glspl{dissector} for 
-different platforms. The functionallity for these \gls{preprocessor} directives and 
+different platforms. The functionality for these \gls{preprocessor} directives and 
 the other \gls{preprocessor} directives for \Gls{c}, was implemented by the \gls{library} we 
 use, which is cpp.exe for \Gls{Windows} and \gls{agcc} for \Gls{mac} and \Gls{linux}.
 
@@ -449,12 +448,12 @@ user with a message and description, this make it easier for debugging.
 \section{Sprint Testing}
 %-----------------------
 \label{sec:sp1:test}
-This section introduces the tests preformed during the sprint and their
+This section introduces the tests performed during the sprint and their
 results.
 
 \subsection{Test Results}
 %-----------------
-During the sprint the team executed a total of seven test cases. An example of a testcase run this sprint can be seen in \autoref{tab:STID01} while the rest of the test cases can be found in \autoref{sec:testcases}. These are the results for the tests the team ran for sprint 1 as according to \autoref{tab:testreport} discussed in the test plan.
+During the sprint the team executed a total of seven test cases. An example of a test case run this sprint can be seen in \autoref{tab:STID01} while the rest of the test cases can be found in \autoref{sec:testcases}. These are the results for the tests the team ran for sprint 1 as according to \autoref{tab:testreport} discussed in the test plan.
 The test results of the tests can be seen in \autoref{tab:sp1TIDS}.
 
 \begin{table}[htb] \footnotesize \center
@@ -477,7 +476,7 @@ The test results of the tests can be seen in \autoref{tab:sp1TIDS}.
 \end{tabularx}}
 \end{table}
 
-\begin{table}[!htb] \footnotesize \center
+\begin{table}[htbp] \footnotesize \center
 \caption{Sprint 2 Test Results \label{tab:sp1TIDS}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{\textwidth}{l X}
@@ -533,7 +532,7 @@ The test results of the tests can be seen in \autoref{tab:sp1TIDS}.
 %---------------------------
 Most of our tests failed because the developers had forgotten to implement
 usability features presenting the user with any textual information. With all
-core functionality in place it only took three lines of code to fix this issue.
+core functionality in place, it only took three lines of code to fix this issue.
 
 
 %--------------------------
@@ -611,7 +610,7 @@ probably be part of the next sprint.
 %--------------------------------
 \begin{itemize}
 	\item Good customer communication and relation from the beginning
-	\item Implementation was easy
+	\item Implementation went smoothly
 	\item Most of the requirements for this sprint were completed
 	\begin{itemize} 
 		\item all design, implementation and testing were completed
@@ -637,7 +636,7 @@ probably be part of the next sprint.
 
 \subsection{Planned Actions}
 %---------------------------
-Below there is listed planned actions for the following sprints.
+Below the planned actions for the following sprints are listed.
 
 \subsubsection{Better Sprint Planning}
 In order to avoid having to redo much of the work because of incorrect/poorly
@@ -652,10 +651,10 @@ estimate hours and divide work.
 
 \subsubsection{Documenting in Parallel while Implementing}
 We suffered from the problem, code first then document. This is not a good
-practise in team divided work. We will try to do the documentation as we code.
+practice in team divided work. We will try to do the documentation as we code.
 The documents for the project report also experienced a standstill while the
 team worked on implementation. Writing parts of sprint documentation while
-having the sprint is a much better way to work, then most part of the
+having the sprint is a much better way to work, then most of the
 documentation is already done before the sprint evaluation.
 
 \subsubsection{Split Coding and Report Writing Between Team Members} 

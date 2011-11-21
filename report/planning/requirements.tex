@@ -5,17 +5,15 @@
 This chapter describes a \gls{utility} that creates \Gls{wireshark} \glspl{dissector} from \Gls{c}
 \gls{header} files. The \glspl{dissector} must interpret \gls{binary} representations of \Gls{c}
 \glspl{struct}. In \autoref{sec:req:list} we give a high level overview of the
-\gls{utility} and lists all the functional and non-function requirements, 
+\gls{utility} and lists all the functional and non-functional requirements, 
 while \autoref{sec:req:usecases} provides use cases for the \gls{utility}, 
 and \autoref{sec:prodbacklog} contains the complete product backlog.
+
 
 %-----------------------------
 \section{List of Requirements}
 %-----------------------------
 \label{sec:req:list}
-
-\subsection{Overview}
-%-----------------
 We are to create a \gls{utility} that allows \Gls{wireshark} to interpret the \gls{binary}
 representations of \Gls{c}-language \glspl{struct}. While \Gls{c} \glspl{struct} seldom are exchanged
 across networks, they are sometimes used in \gls{ipc}. The
@@ -28,11 +26,11 @@ which contain \gls{struct} definitions, and output \Gls{wireshark} \glspl{dissec
 in \Gls{lua} scripts. A configuration file or source code annotations in the \gls{header}
 files may be used when additional configuration is required.
 
-\autoref{tab:req:func} and \autoref{tab:req:func2} lists the final functional requirements,
+\autoref{tab:req:func} and \autoref{tab:req:func2} lists the functional requirements,
 while \autoref{tab:req:nonfunc} lists non-functional requirements.
 Each requirement have a priority (Pri) and a complexity (Cmp): \Gls{h}, 
-\Gls{m} or \Gls{l}. Priority can also be listed as optional (O). This is
-explained in \autoref{sec:req:priority} and \autoref{sec:req:compl}.
+\Gls{m} or \Gls{l}. This is explained in \autoref{sec:req:priority}
+and \autoref{sec:req:compl}.
 
 \subsection{Prioritization}
 %--------------------------
@@ -69,160 +67,18 @@ The team has estimated the complexity for each requirement. We use the following
 	\item[Low] Requirements that are trivial to implement.
 \end{description}
 
-\subsection{Initial Requirements}
-%--------------------------------
-The customer provided an initial requirements specification for the utility at
-the start of the project, which can be seen in \autoref{app:initreqs}.
-
-We made some initial changes to the format, created some non-functional
-requirements and added priority and complexity to each requirement.
-This resulted in the initial function requirements listed in
-\autoref{tab:req:init:funcreq} and initial non-functional requirements listed
-in \autoref{tab:req:init:nonfuncreq}.
-These changes was approved by the customer before the start of the first
-sprint.
-
-\begin{table}[htbp] \footnotesize \center
-\caption{Initial Functional Requirements\label{tab:req:init:funcreq}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X c c}
-	\toprule
-	ID & Description & Pri. & Cmp. \\
-	\midrule
-	FR1 & The utility must be able to read basic C language
-		struct definitions from C header files.
-		& H & \\
-	FR1-A & The utility must support the following basic data types:
-		int, float, char and boolean.
-		& H & L \\
-	FR1-B & The utility must support members of type enums.
-		& H & L \\
-	FR1-C & The utility must support members of type structs.
-		& H & M \\
-	FR1-D & The utility must support members of type unions.
-		& M & M \\
-	FR1-E & The utility must support member of type array.
-		& H & M \\
-	\midrule
-	FR2 & The utility must be able to generate lua-script for Wireshark
-		dissectors for the binary representation of C struct.
-		& H & \\
-	FR2-A & The dissector shall be able to display simple structs.
-		& H & L \\
-	FR2-B & The dissector shall be able to support structs within
-		structs.
-		& M & M \\
-	FR2-C & The dissector must support Wireshark's built-in filter and
-		search on attributes.
-		& H & L \\
-	\midrule
-	FR3 & The utility must support C preprocessor directives and macros.
-		& H & \\
-	FR3-A & The utility shall support \#include.
-		& H & L \\
-	FR3-B & The utility shall support \#define and \#if.
-		& H & L \\
-	FR3-C & The utility shall support , \verb+_WIN32+,
-		\verb+_WIN64+, \verb+__sparc__+, \verb+__sparc+ and \verb+sun+.
-		& M & H \\
-	\midrule
-	FR4 & The utility must support user configuration.
-		& M & \\
-	FR4-A & The dissector shall be able to recognize invalid values for
-		a struct member. Allowed ranges should be specified by configuration.
-		& L & L \\
-	FR4-B & Configuration must support integer members which represent
-		enumerated named value or a bit string.
-		& M & L \\
-	FR4-C & Configuration must support custom handling of specific data
-		types. E.g. a 'time\_t' may be interpreted to contain a unixtime value,
-		and be displayed as a date.
-		& L & M \\
-	\midrule
-	FR5 & A struct may have a header and/or trailer (other registered
-		protocol). The configuration must support the use of integer members to
-		indicate the number of other structs that will follow in the trailer
-		& L & H \\
-	\midrule
-	FR6 & The dissectors must be able to handle binary input which size
-		and endian depends on originating platform.
-		& M & \\
-	FR6-A & Flags must be specified for each platform.
-		& M & M \\
-	FR6-B & Flags within message headers should signal the platform.
-		& M & H \\
-	\midrule
-	FR7 & The utility shall support parameters from command line.
-		& H & \\
-	FR7-A & Command line shall support parameters for C header file.
-		& H & L \\
-	FR7-B & Command line shall support for configuration file.
-		& H & L \\
-	FR7-C & Command line shall support batch mode of C header and
-		configuration file.
-		& L & M \\
-	FR7-D & When running batch mode, dissectors that already are
-		generated, shall not be regenerated, if the source are not modified
-		since last run.
-		& L & M \\
-	\bottomrule
-\end{tabularx}}
-\end{table}
-
-\begin{table}[htbp] \footnotesize \center
-\caption{Initial Non-Functional Requirements\label{tab:req:init:nonfuncreq}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X c c}
-	\toprule
-	ID & Description & Pri. & Cmp. \\
-	\midrule
-	NR1 & The utility shall be able to run on latest Windows and Solaris
-		operating system.
-		& M & L \\
-	\addlinespace
-	NR2 & The dissector shall be able to run on Windows x86, Windows x86-64,
-		Solaris x86, Solaris x86-64 and Solaris SPARC.
-		& M & M \\
-	\addlinespace
-	NR3 & The utilities user interface shall be command line.
-		& H & L \\
-	\addlinespace
-	NR4 & The configuration shall have sufficient documentation to allow a
-		person with no previous knowledge of the system to be able to use it
-		to generate LUA-scripts after X hours of reading.
-		& M & M \\
-	\addlinespace
-	NR5 & The configuration should have sufficient documentation to allow a
-		person, already proficient with the system, to understand the code
-		well enough to be able to extend it’s functionality after Y hours of
-		reading.
-		& M & M \\
-	\addlinespace
-	NR6 & The utility code should follow standard python coding convention as
-		specified by PEP8, and try to follow python style guidelines defined
-		by PEP20.
-		& H & L \\
-	\addlinespace
-	NR7 & The utilities code should be documented by python docstrings which
-		should explain the use of the code. Python modules, classes, functions
-		and methods should have docstrings.
-		& M & L \\
-	\bottomrule
-\end{tabularx}}
-\end{table}
-
 \subsection{Final Requirements}
 %------------------------------
 \label{sec:req:finalreq}
-The final functional requirements are listed in \autoref{tab:req:func} and 
-\autoref{tab:req:func2}, while the non-function requirements are listed in
-\autoref{tab:req:nonfunc}.
+The functional requirements are listed in \autoref{tab:req:func}, optional
+requirements in \autoref{tab:req:func2}, and non-function requirements are
+listed in \autoref{tab:req:nonfunc}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FINAL FUNCTIONAL REQUIREMENTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[htbp] \footnotesize \center
-\caption{Final Functional Requirements\label{tab:req:func}}
+\caption{Functional Requirements\label{tab:req:func}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X c c}
 	\toprule
@@ -241,8 +97,7 @@ The final functional requirements are listed in \autoref{tab:req:func} and
 	FR2-B & The \gls{dissector} shall be able to support \glspl{struct} within \glspl{struct} & \Gls{m} & \Gls{m} \\
 	FR2-C & The \gls{dissector} must support \Gls{wireshark}'s built-in filter and search on attributes & \Gls{h} & \Gls{l} \\
 	FR2-D & The \gls{dissector} shall be able to recognize invalid values for a \gls{struct} \gls{member} & \Gls{l} & \Gls{l} \\
-	FR2-E & The \gls{dissector} shall be able to guess dissector from packets size & ? & ? \\
-	FR2-F & The \gls{dissector} shall display an warning if a struct member contains uninitialized memory & O & ? \\
+	FR2-E & The \gls{dissector} shall be able to guess dissector from packets size & \Gls{l} & \Gls{l} \\
 	\midrule
 	FR3 & The \gls{utility} must support \Gls{c} \gls{preprocessor} directives and macros & \Gls{h} & \\
 	FR3-A & The \gls{utility} shall support \gls{include} & \Gls{h} & \Gls{l} \\
@@ -257,40 +112,43 @@ The final functional requirements are listed in \autoref{tab:req:func} and
 	FR4-E & Configuration must support various trailers (other registered \gls{protocol}) & \Gls{l} & \Gls{h} \\
 	FR4-F & Configuration must support integer \glspl{member} which represent enumerated named value & \Gls{m} & \Gls{l} \\	
 	FR4-G & Configuration must support \glspl{member} which are \gls{bit string} & \Gls{m} & \Gls{l} \\
-	FR4-H & The utility shall support automatic generation of configuration files for unknown structs & ? & ? \\
-	FR4-I & Configuration must support specifying the size of a struct members & ? & ? \\
+	FR4-H & The utility shall support automatic generation of placeholder configuration & \Gls{l} & \Gls{l} \\
+	FR4-I & Configuration must support specifying the size of a struct members & \Gls{m} & \Gls{l} \\
 	\midrule
 	FR5 & The \glspl{dissector} must be able to handle \gls{binary} input which size and \gls{endian} depends on originating platform & \Gls{m} & \\
 	FR5-A & Flags must be specified in configuration for each platform & \Gls{m} & \Gls{m} \\
 	FR5-B & Generate \glspl{dissector} with correct alignment depending on platform & \Gls{m} & \Gls{m} \\
 	FR5-C & Generate \glspl{dissector} which support both little and big \gls{endian} platforms & \Gls{h} & \Gls{m} \\
 	FR5-D & Generate \glspl{dissector} which support different sizes depending on platforms & \Gls{m} & \Gls{h} \\
-	\bottomrule
-\end{tabularx}}
-\end{table}
-
-\begin{table}[htbp] \footnotesize \center
-\caption{Final Functional Requirements part 2\label{tab:req:func2}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X c c}
-	\toprule
+	\midrule
 	FR6 & The \gls{utility} shall support parameters from command line & \Gls{h} & \\
 	FR6-A & Command line shall support parameter for \Gls{c} \gls{header} file & \Gls{h} & \Gls{l} \\
 	FR6-B & Command line shall support parameter for configuration file & \Gls{h} & \Gls{l} \\
 	FR6-C & Command line shall support batch processing of \Gls{c} \gls{header} and configuration files & \Gls{l} & \Gls{m} \\
-	FR6-D & When running \gls{batch mode}, \glspl{dissector} that already are generated, shall not be regenerated, if the source are not modified since last run & O & \Gls{m} \\
-	FR6-E & Command line shall support \#define and --Include directives & ? &  \\
-	FR6-F & The utility shall only generate dissectors from structs with valid id and theirs' dependencies & ? & ? \\
-	\midrule
-	FR7 & The utility shall be able to etch configuration directly from source code & O & ? \\
-	FR7-A & The utility shall support generation of struct member description from Doxygen comments & O & ?\\
-	FR7-B & The utility shall support reading configuration for \#define enums from the header files & O & ? \\
+	FR6-E & Command line shall support \#define and --Include directives & \Gls{m} & \Gls{l} \\
+	FR6-F & The utility shall only generate dissectors from structs with valid id and theirs' dependencies & \Gls{l} & \Gls{m} \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Final Non-Functional Requirements\label{tab:req:nonfunc}}
+\caption{Optional Requirements\label{tab:req:func2}}
+\noindent\makebox[\textwidth]{%
+\begin{tabularx}{1.2\textwidth}{l X c c}
+	\toprule
+	FR2-F & \Glspl{dissector} shall display a warning if a struct member contains uninitialized memory & \Gls{l} & \Gls{m} \\
+	\addlinespace
+	FR6-D & When running \gls{batch mode}, \glspl{dissector} that already are generated, shall not be regenerated, if the source are not modified since last run & \Gls{l} & \Gls{h} \\
+	\addlinespace
+	FR7 & The utility shall be able to fetch configuration directly from source code & \Gls{l} & \\
+	FR7-A & The utility shall find struct descriptions from Doxygen comments & \Gls{l} & \Gls{h} \\
+	FR7-B & The utility shall find configuration of \#define enums from header files & \Gls{l} & \Gls{h} \\
+	\bottomrule
+\end{tabularx}}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Non-Functional Requirements\label{tab:req:nonfunc}}
 \noindent\makebox[\textwidth]{%
 \begin{tabularx}{1.2\textwidth}{l X c c}
 	\toprule
@@ -300,13 +158,13 @@ The final functional requirements are listed in \autoref{tab:req:func} and
 	\addlinespace
 	NR2 & The \gls{dissector} shall be able to run on Windows \gls{x86}, Windows \gls{x86-64}, \Gls{Solaris} \gls{x86}, \Gls{Solaris} \gls{x86-64} and \Gls{Solaris} \gls{asparc} & \Gls{m} & \Gls{m} \\
 	\addlinespace
-	NR3 & The \gls{utility} shall only have a command line user interface. & \Gls{h} & \Gls{l} \\ %No GUI or clicking!
+	NR3 & The \gls{utility} shall only have a command line user interface. & \Gls{h} & \Gls{l} \\
 	\addlinespace
 	NR4 & The \gls{utility} must have sufficient documentation to allow a person, with no prior knowledge of the system or \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after five hours of reading & \Gls{m} & \Gls{m} \\
 	\addlinespace
 	NR5 & The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after one hour of reading & \Gls{m} & \Gls{m} \\
 	\addlinespace
-	NR6 & The \gls{utility} must have sufficient documentation to allow a person, already proficient with the system, to be able to extend its functionality after Y hours of reading & \Gls{m} & \Gls{m} \\
+	NR6 & The \gls{utility} must have sufficient documentation to allow a person, already proficient with the system, to be able to extend its functionality after four hours of reading & \Gls{m} & \Gls{m} \\
 	\addlinespace
 	NR7 & The \gls{utility} code should follow standard python coding convention as specified by PEP8 and try to follow python style guidelines defined by PEP20 & \Gls{h} & \Gls{l} \\
 	\addlinespace
@@ -319,6 +177,14 @@ The final functional requirements are listed in \autoref{tab:req:func} and
 %-------------------------------
 \section{Requirements Evolution}
 %-------------------------------
+The customer provided an initial requirements specification for the utility at
+the start of the project, which can be seen in \autoref{app:initreqs}.
+
+We made some initial changes to the format, created some non-functional
+requirements and added priority and complexity to each requirement.
+This resulted in the initial requirements listed in
+\autoref{tab:req:init:funcreq} and \autoref{tab:req:init:nonfuncreq}.
+
 Based on feedback provided by the customer during the sprints, we added
 several new requirements or rewrote already existing requirements, which
 are described in this section. The final requirements are described in
@@ -400,7 +266,7 @@ that platform.
 \label{sec:req:sprint3evo}
 Customer feedback during sprint 3 resulted in one new non-functional requirement.
 \begin{description}
-	\item[NR5] The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after 1 hour of reading.
+	\item[NR5] The \gls{utility} must have sufficient documentation to allow a person, with prior knowledge of \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after one hour of reading.
 \end{description}
 Non-functional requirements NR5 to NR7 had their id increased by one.
 
@@ -414,7 +280,7 @@ performance hit in Wireshark.
 
 \paragraph{FR2-F: Uninitialized memory}
 It would be nice if our \gls{utility} was able to detect uninitialized memory
-for debugging purposes. Different compilers use default patterns in
+for debugging purposes. Different compilers use default patterns ins
 \glspl{member} that are uninitialized. If our \gls{utility} could detect these
 patterns, we could display the data in \Gls{wireshark} with a warning that
 lets the user know that the data might have been uninitialized.
@@ -441,7 +307,7 @@ the customer.
 \begin{description}
 	\item[FR2-E] The \gls{dissector} shall be able to guess dissector from packets size.
 	\item[FR2-F] The \gls{dissector} shall display an warning if a struct member contains uninitialized memory.
-	\item[FR4-H] The utility shall support automatic generation of configuration files for unknown structs.
+	\item[FR4-H] The utility shall support automatic generation of configuration files.
 	\item[FR4-I] Configuration must support specifying the size of a struct members.
 	\item[FR6-E] Command line shall support \#define and --Include directives.
 	\item[FR6-F] The utility shall only generate dissectors from structs with valid id and theirs' dependencies.
@@ -449,6 +315,57 @@ the customer.
 	\item[FR7-A] The utility shall support generation of struct member description from Doxygen comments.
 	\item[FR7-B] The utility shall support reading configuration for \#define enums from the header files.
 \end{description}
+
+\noindent The customer also provided the following requirement descriptions
+and feedback.
+\paragraph{FR4-B: Custom Lua files}
+The customer wanted a way to be able to fetch the buffer offset value to be
+able to both use it to pick specific parts of the message and modify it.
+
+\paragraph{FR3: Support for the \#pragma directive}
+The customer uses the \#pragma directive to identify the version of the file.
+This will not affect the dissectors generated in any way. \#pragma will,
+however, crash CSjark if they are not removed.
+
+\paragraph{FR4-H: Auto-generation of configuration files}
+The customer asked if we could make the utility auto-generate template
+configuration for each struct it can generate a dissector for. This would make
+it easier for the user to configure structs, as the user only needs to fill
+in an id number in most of the cases.
+
+\paragraph{FR6-F: Only generate useful dissectors}
+The customer wants a mode where the utility only generates dissectors for
+structs with an corresponding configuration file containing an id, and for
+structs and unions that are inside these structs.
+
+\paragraph{FR6-E: Support specific C preprocessor directives}
+The customer wants the utility to be able to take certain C preprocessor
+directive arguments from command line. For example --Include or --Define.
+
+\paragraph{FR7-A: Find struct description from Doxygen comments}
+Make our utility be able to read comments corresponding to the struct and
+use these for the description field in dissectors. This feature would make
+generating dissectors require less manual configuration.
+
+\paragraph{FR7-B: Read int-enum configuration from header files}
+Some of the integer members may really be intended to be used as an enum,
+with the numerical values corresponding to strings. Some of the headers
+contains \#define directives that specifies these string and integer pairs.
+The customer would like the utility to be able to find these and encode it
+in the configuration file. The benefit is that the customer then does not
+have to configure this manually.
+
+\paragraph{FR2-E: Guess the dissector from packet size}
+The customer wants Wireshark to be able to guess what dissectors to use
+from the size of the packet. It could compare this size to the size dissectors
+expects. If multiple dissectors fit, it could try to display the message with
+all suitable dissectors. This makes the customer able to use some dissectors
+without manually configuring the message ID for the struct it represents.
+
+\paragraph{FR6-E: A way to ignore headers in a specified folder}
+The customer wants a way to specify what folder to ignore in batch mode.
+This is to avoid complex headers that are irrelevant to the customer's goal
+(does not include structs), but which our utility fails to parse.
 
 
 %--------------------------------
@@ -538,10 +455,8 @@ Here each of the use cases are described textually.
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Filter and Search Textual Use Case\label{tab:textual:filterandsearch}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
-	 & \includegraphics[scale=0.8]{./planning/img/uc_filterandsearch} \\
+\begin{tabularx}{\textwidth}{l X}
+	\multicolumn{2}{c}{\includegraphics[scale=0.8]{./planning/img/uc_filterandsearch}} \\
 	\toprule
 	Element & Description\\
 	\midrule
@@ -557,15 +472,13 @@ Here each of the use cases are described textually.
 	\midrule
 	Exceptions & None. \\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
 \caption{View Dissector Textual Use Case\label{tab:textual:viewdissector}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
-	 & \includegraphics[scale=0.8]{./planning/img/uc_viewdissectors} \\
+\begin{tabularx}{\textwidth}{l X}
+	\multicolumn{2}{c}{\includegraphics[scale=0.8]{./planning/img/uc_viewdissectors}} \\
 	\toprule
 	Element & Description\\
 	\midrule
@@ -580,18 +493,15 @@ Here each of the use cases are described textually.
 	& 2. Wireshark calls the correct dissector and dissects the selected message. \\
 	& 3. Wireshark displays the members and values of the selected message. \\
 	\midrule
-	\multirow{2}{*}{Exceptions} & 1. The correct dissector for a struct might not exist in Wireshark's plugin folder, making it impossible to dissect the message. \\
-	& 2. more? \\
+	Exceptions & 1. The correct dissector for a struct might not exist in Wireshark's plugin folder, making it impossible to dissect the message. \\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Debugging textual use case\label{tab:textual:debugging}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
-	 & \includegraphics[scale=0.8]{./planning/img/uc_debugging} \\
+\caption{Debugging Textual Use Case\label{tab:textual:debugging}}
+\begin{tabularx}{\textwidth}{l X}
+	\multicolumn{2}{c}{\includegraphics[scale=0.8]{./planning/img/uc_debugging}} \\
 	\toprule
 	Element & Description\\
 	\midrule
@@ -609,15 +519,13 @@ Here each of the use cases are described textually.
 	\multirow{2}{*}{Exceptions} & 1. The correct dissectors might not exist in Wireshark's plugin folder, making it impossible to dissect the messages. \\
 	& 2. The inter-process communication might not consist of structs only, which Wireshark do not have capability of displaying. \\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Configure Platforms Textual Use Case\label{tab:textual:configureplatforms}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
-	 & \includegraphics[scale=0.8]{./planning/img/uc_configureplatform} \\
+\begin{tabularx}{\textwidth}{l X}
+	\multicolumn{2}{c}{\includegraphics[scale=0.8]{./planning/img/uc_configureplatform}} \\
 	\toprule
 	Element & Description\\
 	\midrule
@@ -631,17 +539,15 @@ Here each of the use cases are described textually.
 	& 2. The administrator make changes to the module to achieve the wanted support.\\
 	& 3. The administrator saves the changes and exits. \\
 	\midrule
-	Exceptions & The changes made to the platform module was not of correct syntax. Leaving the utility defected. \\
+	Exceptions & The changes made to the platform module were not of correct syntax. Leaving the utility defected. \\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Generate Lua Dissector Textual Use Case\label{tab:textual:generatelua}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
-	 & \includegraphics[scale=0.8]{./planning/img/uc_generatelua} \\
+\begin{tabularx}{\textwidth}{l X}
+	\multicolumn{2}{c}{\includegraphics[scale=0.8]{./planning/img/uc_generatelua}} \\
 	\toprule
 	Element & Description\\
 	\midrule
@@ -659,15 +565,13 @@ Here each of the use cases are described textually.
 	\multirow{2}{*}{Exceptions} & 1. The header file might not be of correct syntax.\\
 	& 2. The utility's dependencies might not be covered, resulting in a crash of the utility.\\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Create and Change Configuration File Textual Use Case\label{tab:textual:configure}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
-	 & \includegraphics[scale=0.8]{./planning/img/uc_configurate} \\
+\begin{tabularx}{\textwidth}{l X}
+	\multicolumn{2}{c}{\includegraphics[scale=0.8]{./planning/img/uc_configurate}} \\
 	\toprule
 	Element & Description\\
 	\midrule
@@ -681,15 +585,13 @@ Here each of the use cases are described textually.
 	\midrule
 	Exceptions & The created or changed configuration file might not be of correct syntax. \\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Generate Configured Lua Dissectors Textual Use Case\label{tab:textual:generateconfiglua}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
-	 & \includegraphics[scale=0.8]{./planning/img/uc_generateconfiglua} \\
+\begin{tabularx}{\textwidth}{l X}
+	\multicolumn{2}{c}{\includegraphics[scale=0.8]{./planning/img/uc_generateconfiglua}} \\
 	\toprule
 	Element & Description\\
 	\midrule
@@ -707,15 +609,13 @@ Here each of the use cases are described textually.
 	\multirow{2}{*}{Exceptions} & 1. The header and/or configuration file might not be of correct syntax.\\
 	& 2. The utility's dependencies might not be covered, resulting in a crash of the utility.\\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Generate Batch of Lua Dissectors Textual Use Case\label{tab:textual:luabatch}}
-\noindent\makebox[\textwidth]{%
-\begin{tabularx}{1.2\textwidth}{l X}
-	\toprule
-	 & \includegraphics[scale=0.8]{./planning/img/uc_luabatch} \\
+\begin{tabularx}{\textwidth}{l X}
+	\multicolumn{2}{c}{\includegraphics[scale=0.8]{./planning/img/uc_luabatch}} \\
 	\toprule
 	Element & Description\\
 	\midrule
@@ -732,7 +632,7 @@ Here each of the use cases are described textually.
 	\multirow{2}{*}{Exceptions} & 1. A header or configuration file might not be of correct syntax, which will make the utility skip that actual file and proceed with the rest of the files in the batch.\\
 	& 2. The utility's dependencies might not be covered, resulting in a crash of the utility.\\
 	\bottomrule
-\end{tabularx}}
+\end{tabularx}
 \end{table}
 
 \section{User Stories}

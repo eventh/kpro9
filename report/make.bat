@@ -11,7 +11,7 @@ goto :eof
 
 :clean
     echo "Removing LaTeX build files"
-    del /S *.aux *.toc *.log *.out *.lof *.lot *.bbl *.blg
+    del /S *.aux *.toc *.log *.out *.lof *.lot *.bbl *.blg *.acn
     rmdir /S /Q tmp
     goto :eof
 

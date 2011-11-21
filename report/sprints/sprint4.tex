@@ -850,6 +850,37 @@ dissectors from 200 C header files. As the utility worked on the example codes
 provided by the customer, we were unable to improve the situation without 
 access to their code.
 
+The customer requested that two team members spent a day
+at their office to fix bugs found when running the utility on their code.
+We had to fill out security clearance forms and non-disclosure agreements
+before we were allowed access to the code.
+
+Some of the bugs we encountered were trivial to fix, but challenging to
+understand. For example header files with C++ includes, or ''indent''
+directives without \#pragma. We also spent some time fixing bugs which
+were caused by Python behaviour which was different on Solaris. At the
+end of the day we were able to parse about 40 of 200 files, but tries on
+the complete source tree failed with ''too many open files'' error. We
+agreed to provide one team member for one more day of on-site testing.
+
+In the second day of testing we fixed several bugs and set up some
+configuration for includes, defines and excludes. This resulted in our utility
+parsing 160 of 200 header files generating over 500 dissectors. These files
+were the include folder in the customers source tree, and contained the
+majority of structs the customer wanted dissectors for. One of these files
+contained the infamous xcon struct, which the customer was very pleased we
+were able to generate a dissector for.
+
+Attempts at parsing the whole source tree in one run, failed after parsing
+of 1400 out of 4000 header files, with a ''out of memory'' error. The
+virtual machine we tested on only allowed 512 MB memory for each process,
+which our utility reached.
+
+Overall the customer was very pleased with our willingness to test the utility
+on-site, and with the results on their include folder. We agreed to
+investigate if it was possible to reduce the memory consumption, while the
+customer agreed to test our utility on a machine with more memory.
+
 
 %--------------------------
 \section{Customer Feedback}

@@ -2,9 +2,9 @@
 \chapter{Final Architectural Description}
 %========================================
 This chapter introduces the final architectural documents for the project. The team followed the definition of software architecture defined by Len Bass, Paul Clements and Rick Kazman: ``The software architecture of a program or computing
-system is the structure of structures of the system, which comprise software elements, the externally visible properties of those elements, and the relationships between them.''\cite{Bass2003}
+system is the structure of structures of the system, which comprise software elements, the externally visible properties of those elements, and the relationships between them.''~\cite[p.3]{Bass2003}
 
-The purpose of this document is to describe our architecture in a structured way so that it can be used not only by the team, but also as an aid for other stakeholders who are trying to understand the system.
+The purpose of this document is to describe our architecture in a structured way so that it can be used, not only by the team, but also as an aid for other stakeholders who are trying to understand the system.
 
 %-------------------------------------
 \section{Architectural Drivers}
@@ -58,11 +58,23 @@ In order to implement this in the project it was decided that we would use the Y
 
 \subsection{Business Requirements}
 %---------------------------------
+The following business requirements encompass the most important needs of the customer.
 \begin{itemize}
 \item The \gls{utility} must be delivered on time as it is not possible for the developers to continue the development after the deadline
 \item The ability for the \gls{utility} to be able to create dissectors for the C-structs in the header files used  by Thales.
 \item The ability for the \gls{utility} to create dissectors that run on all of the platforms used by Thales and their customers
 \item The ability for \Gls{wireshark} to be able to use the generated dissectors to display the values of the C-structs passed through the system.
+\end{itemize}
+
+\subsection{Design Goals}
+%------------------------
+To help guide the design and the implementation we tried to follow these goals and guidelines:
+\begin{itemize}
+	\item Smart data structures and dumb code works better than the other way around~\cite{Raymond1999}!
+	\item Clear and clean separation of the front-end and the back-end so in the future other parsers can be used to generate \glspl{dissector}.
+	\item Try to be pythonic, follow  PEP8 \footnote{Style Guide for Python Code: \url{http://www.python.org/dev/peps/pep-0008/}} and PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}.
+	\item Now is better than never. Don't be afraid to write stupid or ugly code, we can always fix it later.
+	\item The first version is never perfect, so don't wait until its perfect before you commit. Commit often!
 \end{itemize}
 
 %------------------------------
@@ -120,7 +132,13 @@ This view shown in \autoref{fig:logicalview}. Command line takes the arguments f
 %------------------------
 \subsection{Deployment View}
 %------------------------
-\autoref{fig:deployment} shows the deployment diagram for this project. Csjark takes \gls{header}- and config-files as input, and generates \Gls{lua}-\glspl{script}. The \Gls{lua}-\glspl{script} are used for \glspl{dissector} in \Gls{wireshark}.
+
+\autoref{fig:deployment} shows the deployment diagram for this project. CSjark 
+takes \gls{header}-files and config-files as input, and generates \Gls{lua} 
+\glspl{dissector}. All these \glspl{dissector} are added as plugins to 
+\Gls{wireshark}, extending the functionality. \Gls{wireshark} will capture the 
+data packet when Process A send data to Process B, the \Gls{lua} 
+\glspl{dissector} is used to display these data packets correctly.
 
 \begin{figure}[htb]
 	\includegraphics[width = \textwidth]{./planning/img/Deployment}

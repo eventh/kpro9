@@ -4,7 +4,7 @@
 This chapter introduces the architectural documents pertaining to our solution. The team followed the definition of software architecture defined by Len Bass, Paul Clements and Rick Kazman: ``The software architecture of a program or computing
 system is the structure of structures of the system, which comprise software elements, the externally visible properties of those elements, and the relationships between them.''~\cite[p.3]{Bass2003}
 
-The purpose of this document is to describe our architecture in a structured way so it can be used not only by the team, but also as an aid for other stakeholders who are trying to understand the system.
+The purpose of this document is to describe our architecture in a structured way so it can be used, not only by the team, but also as an aid for other stakeholders who are trying to understand the system.
 
 %------------------------------
 \section{Architectural Drivers}
@@ -56,7 +56,7 @@ The following business requirements encompass the most important needs of the cu
 %------------------------
 To help guide the design and the implementation we tried to follow these goals and guidelines:
 \begin{itemize}
-	\item Smart data structures and dumb code works better than the other way around\cite{Raymond1999}!
+	\item Smart data structures and dumb code works better than the other way around~\cite{Raymond1999}!
 	\item Clear and clean separation of the front-end and the back-end so in the future other parsers can be used to generate \glspl{dissector}.
 	\item Try to be pythonic, follow  PEP8 \footnote{Style Guide for Python Code: \url{http://www.python.org/dev/peps/pep-0008/}} and PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}.
 	\item Now is better than never. Don't be afraid to write stupid or ugly code, we can always fix it later.

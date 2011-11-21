@@ -238,8 +238,8 @@ The final functional requirements are listed in \autoref{tab:req:func} and
 	FR2-B & The \gls{dissector} shall be able to support \glspl{struct} within \glspl{struct} & \Gls{m} & \Gls{m} \\
 	FR2-C & The \gls{dissector} must support \Gls{wireshark}'s built-in filter and search on attributes & \Gls{h} & \Gls{l} \\
 	FR2-D & The \gls{dissector} shall be able to recognize invalid values for a \gls{struct} \gls{member} & \Gls{l} & \Gls{l} \\
-	FR2-E & The \gls{dissector} shall be able to guess dissector from packets size & ? & ? \\
-	FR2-F & The \gls{dissector} shall display an warning if a struct member contains uninitialized memory & O & ? \\
+	FR2-E & The \gls{dissector} shall be able to guess dissector from packets size & \Gls{l} & \Gls{l} \\
+	FR2-F & The \gls{dissector} shall display an warning if a struct member contains uninitialized memory & O & \Gls{l} \\
 	\midrule
 	FR3 & The \gls{utility} must support \Gls{c} \gls{preprocessor} directives and macros & \Gls{h} & \\
 	FR3-A & The \gls{utility} shall support \gls{include} & \Gls{h} & \Gls{l} \\
@@ -254,8 +254,8 @@ The final functional requirements are listed in \autoref{tab:req:func} and
 	FR4-E & Configuration must support various trailers (other registered \gls{protocol}) & \Gls{l} & \Gls{h} \\
 	FR4-F & Configuration must support integer \glspl{member} which represent enumerated named value & \Gls{m} & \Gls{l} \\	
 	FR4-G & Configuration must support \glspl{member} which are \gls{bit string} & \Gls{m} & \Gls{l} \\
-	FR4-H & The utility shall support automatic generation of configuration files for unknown structs & ? & ? \\
-	FR4-I & Configuration must support specifying the size of a struct members & ? & ? \\
+	FR4-H & The utility shall support automatic generation of configuration files for unknown structs & \Gls{l} & \Gls{l} \\
+	FR4-I & Configuration must support specifying the size of a struct members & \Gls{m} & \Gls{l} \\
 	\midrule
 	FR5 & The \glspl{dissector} must be able to handle \gls{binary} input which size and \gls{endian} depends on originating platform & \Gls{m} & \\
 	FR5-A & Flags must be specified in configuration for each platform & \Gls{m} & \Gls{m} \\
@@ -276,12 +276,12 @@ The final functional requirements are listed in \autoref{tab:req:func} and
 	FR6-B & Command line shall support parameter for configuration file & \Gls{h} & \Gls{l} \\
 	FR6-C & Command line shall support batch processing of \Gls{c} \gls{header} and configuration files & \Gls{l} & \Gls{m} \\
 	FR6-D & When running \gls{batch mode}, \glspl{dissector} that already are generated, shall not be regenerated, if the source are not modified since last run & O & \Gls{m} \\
-	FR6-E & Command line shall support \#define and --Include directives & ? &  \\
-	FR6-F & The utility shall only generate dissectors from structs with valid id and theirs' dependencies & ? & ? \\
+	FR6-E & Command line shall support \#define and --Include directives & \Gls{m} & \Gls{l} \\
+	FR6-F & The utility shall only generate dissectors from structs with valid id and theirs' dependencies & \Gls{l} & \Gls{m} \\
 	\midrule
-	FR7 & The utility shall be able to etch configuration directly from source code & O & ? \\
-	FR7-A & The utility shall support generation of struct member description from Doxygen comments & O & ?\\
-	FR7-B & The utility shall support reading configuration for \#define enums from the header files & O & ? \\
+	FR7 & The utility shall be able to etch configuration directly from source code & O & \\
+	FR7-A & The utility shall support generation of struct member description from Doxygen comments & O & \Gls{h} \\
+	FR7-B & The utility shall support reading configuration for \#define enums from the header files & O & \Gls{h} \\
 	\bottomrule
 \end{tabularx}}
 \end{table}
@@ -297,7 +297,7 @@ The final functional requirements are listed in \autoref{tab:req:func} and
 	\addlinespace
 	NR2 & The \gls{dissector} shall be able to run on Windows \gls{x86}, Windows \gls{x86-64}, \Gls{Solaris} \gls{x86}, \Gls{Solaris} \gls{x86-64} and \Gls{Solaris} \gls{asparc} & \Gls{m} & \Gls{m} \\
 	\addlinespace
-	NR3 & The \gls{utility} shall only have a command line user interface. & \Gls{h} & \Gls{l} \\ %No GUI or clicking!
+	NR3 & The \gls{utility} shall only have a command line user interface. & \Gls{h} & \Gls{l} \\
 	\addlinespace
 	NR4 & The \gls{utility} must have sufficient documentation to allow a person, with no prior knowledge of the system or \Gls{wireshark}, to be able to use it to generate \Gls{lua} \glspl{dissector} after five hours of reading & \Gls{m} & \Gls{m} \\
 	\addlinespace
@@ -609,7 +609,7 @@ Here each of the use cases are described textually.
 \begin{table}[htbp] \footnotesize \center
 \caption{View Dissector Textual Use Case\label{tab:textual:viewdissector}}
 \begin{tabularx}{\textwidth}{l X}
-	& \includegraphics[scale=0.8]{./planning/img/uc_viewdissectors} \\
+	 \multicolumn{2}{c}{\includegraphics[scale=0.8]{./planning/img/uc_viewdissectors}} \\
 	\toprule
 	Element & Description\\
 	\midrule

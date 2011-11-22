@@ -50,18 +50,18 @@ Timetable for this sprint: Table \ref{tab:sprint3time}. \\
 	User story & Req. and Description & Est. & Act. \\
 	\midrule
 	\textbf{Impl.} &  & \textbf{56} & \textbf{48} \\
-	\hyperref[tab:req:stories7]{US29} & FR5-A: Flags specified for each platform &  5  & 11 \\
-	\hyperref[tab:req:stories8]{US30} & FR5-C: \Gls{dissector} support both little and big \gls{endian} & 5  & 4 \\
-	\hyperref[tab:req:stories8]{US31} & FR5-D: \Gls{dissector} support different sizes from flags & 12  & 2 \\
-	\hyperref[tab:req:stories8]{US32} & FR3-C: Support WIN32, WIN64,\gls{asparc} etc &  5  & 2.5 \\
-	\hyperref[tab:req:stories5]{US20} & FR4-B: Configuration supports custom \Gls{lua} files & 6 & 3.5\\
-	\hyperref[tab:req:stories7]{US28} & FR2-C: Support \Gls{wireshark} filter and search on attributes &  3 & 1.5\\
-	\hyperref[tab:req:stories10]{US39} & FR5-B: \Glspl{dissector} support memory alignment & 4 & 6.5\\
-	\hyperref[tab:req:stories7]{US26} & FR1-D: Support \glspl{member} of type \gls{union} & 5  & 6\\
-	\hyperref[tab:req:stories7]{US27} & FR2-A add: Display a \gls{wildcard} type for valid \Gls{c} types that \Gls{wireshark} has no support for & 3  & 1.5\\
-	\hyperref[tab:req:stories9]{US34} & FR4-D mod: Support specifying the ID of \glspl{dissector} (name and function) & 3  & 3 \\
-	\hyperref[tab:req:stories9]{US37} & FR6-D: Don’t regenerate \glspl{dissector} & 1 & 1.5\\
-	\hyperref[tab:req:stories9]{US38} & FR2: Handle \Gls{lua} reserved definition names & 2 & 3 \\
+	US29 & FR5-A: Flags specified for each platform &  5  & 11 \\
+	US30 & FR5-C: \Gls{dissector} support both little and big \gls{endian} & 5  & 4 \\
+	US31 & FR5-D: \Gls{dissector} support different sizes from flags & 12  & 2 \\
+	US32 & FR3-C: Support WIN32, WIN64,\gls{asparc} etc &  5  & 2.5 \\
+	US20 & FR4-B: Configuration supports custom \Gls{lua} files & 6 & 3.5\\
+	US28 & FR2-C: Support \Gls{wireshark} filter and search on attributes &  3 & 1.5\\
+	US39 & FR5-B: \Glspl{dissector} support memory alignment & 4 & 6.5\\
+	US26 & FR1-D: Support \glspl{member} of type \gls{union} & 5  & 6\\
+	US27 & FR2-A add: Display a \gls{wildcard} type for valid \Gls{c} types that \Gls{wireshark} has no support for & 3  & 1.5\\
+	US34 & FR4-D mod: Support specifying the ID of \glspl{dissector} (name and function) & 3  & 3 \\
+	US37 & FR6-D: Don’t regenerate \glspl{dissector} & 1 & 1.5\\
+	US38 & FR2: Handle \Gls{lua} reserved definition names & 2 & 3 \\
 	\addlinespace
 	\textbf{Testing} &  & \textbf{19} & \textbf{18.5} \\
 	 & FR4-B: Custom \Gls{lua} configuration & 2 & 3\\
@@ -74,9 +74,9 @@ Timetable for this sprint: Table \ref{tab:sprint3time}. \\
 	\addlinespace
 	\textbf{Doc.} &  & \textbf{11} & \textbf{12} \\
 	 & FR4-B: Custom \Gls{lua} configuration & 2 & 3.5\\
-	\hyperref[tab:req:stories8]{US33} & FR4-C: Support custom handling of specific data types & 2 & 1.5 \\
-	\hyperref[tab:req:stories9]{US35} & FR5: User documentation for what platform that the \gls{utility} support & 3 & 0 \\
-	\hyperref[tab:req:stories9]{US36} & FR5: Create developer manual from \Gls{python} docstrings (autodoc plugin) & 4 & 7 \\
+	US33 & FR4-C: Support custom handling of specific data types & 2 & 1.5 \\
+	US35 & FR5: User documentation for what platform that the \gls{utility} support & 3 & 0 \\
+	US36 & FR5: Create developer manual from \Gls{python} docstrings (autodoc plugin) & 4 & 7 \\
 	\addlinespace
 	\textbf{Fixes} &  & \textbf{16} & \textbf{27} \\
 	\midrule
@@ -196,10 +196,10 @@ We will start out by hard coding this into the source code, but in the end we wa
 \end{figure}
 
 \subsubsection{\Gls{endianness}}
-An important feature is the support for different \gls{endian} handling. \Gls{endianness} defines how the bytes are ordered. Big and little endian tells which bit that is the most significant, and thereby the value that the bits represent. \autoref{fig:endianness} show the difference between big and little endian.
+An important feature is the support for different \gls{endian} handling. \Gls{endianness} defines how the bytes are ordered. Big and little endian tells which bit that is the most significant, and thereby the value that the bits represent. \autoref{fig:endianness}\cite{Endianness} show the difference between big and little endian.
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{./sprints/img/endianness}
-	\caption{\Gls{endianness}\cite{Endianness} \label{fig:endianness}}
+	\caption{\Gls{endianness} \label{fig:endianness}}
 \end{figure}
 \Gls{wireshark} has built-in support for reading big and little \gls{endian}, and the dissector will tell which it should use. When the \gls{dissector} module builds the abstract syntax tree, it must call the platform module to see what \gls{endian} it shall use. In the class diagram the \gls{dissector} module imports the platform module, from there it gets the information it needs regarding the \gls{endianness}. 
 

@@ -100,7 +100,7 @@ The time table for the sprint can be seen in \autoref{tab:sprint1time}.
 \end{tabularx}
 \end{table}
 
-\begin{table}[!ht] \footnotesize \center
+\begin{table}[!htb] \footnotesize \center
 \caption{Sprint 1 Timetable\label{tab:sprint1time}}
 \begin{tabularx}{\textwidth}{X c c}
 	\toprule
@@ -338,6 +338,7 @@ Each user story also contains information on how the modules of CSjark should in
 	\bottomrule
 \end{tabularx}}
 \end{table}
+\clearpage
 
 
 %-----------------------
@@ -377,7 +378,7 @@ are captured by Wireshark. \autoref{fig:sp1wsstruct} shows an example of a
 basic data types, for example, signed \gls{char}, \gls{char}, short, \gls{int}, long \gls{int}, \gls{float} 
 and \gls{double}.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
 	\includegraphics[width=\textwidth]{./sprints/img/wireshark_simple}
 	\caption{Wireshark: Simple Lua dissector\label{fig:sp1wsstruct}}
 \end{figure}
@@ -411,9 +412,9 @@ configuration-file in the \gls{cli}. An example of this is shown in
 \gls{utility}. The option ''-v'' is specified, which will display the abstract 
 syntax tree when the \gls{utility} has generated the \gls{dissector}.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
 	\includegraphics[width=\textwidth]{./sprints/img/cmd_agetest_run}
-	\caption{Command Line\label{fig:sp1cmd}}
+	\caption{Command Line Screenshot\label{fig:sp1cmd}}
 \end{figure}
 
 \subsection{Configuration of Valid Ranges}

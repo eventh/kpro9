@@ -1,18 +1,19 @@
-==================
- Features
-==================
-
-This is a list of CSjark features:
-
-- C header files
-- Batch mode
-- Searching and filtering in Wireshark
-- ...
+..
+    ==================
+     Features
+    ==================
+    
+    This is a list of CSjark features:
+    
+    - C header files
+    - Batch mode
+    - Searching and filtering in Wireshark
+    - ...
 
 
 
 Currently supported platforms
------------------------------
+=============================
 
 - Windows 32-bit
 - Windows 64-bit

@@ -22,7 +22,7 @@
 \usepackage{textcomp}
 \usepackage[style=treenoname,subentrycounter,numberedsection, 
         section=chapter, acronym]{glossaries}
-\usepackage{standalone}
+\usepackage{pdfpages}
 
 % new for userdoc
 % \usepackage{times}
@@ -90,8 +90,6 @@
     stringstyle=\color[rgb]{0.627,0.126,0.941},
 }
 
-\include{./appendices/manual_hdr}
-
 % Configure links in pdfs
 \hypersetup{
     bookmarksopen=false, % Hide bookmarks menu
@@ -105,8 +103,7 @@
 \begin{document}
 %\maketitle
 %\tableofcontents
-\begin{standalone}
-    \input{./appendices/CSjark}
-\end{standalone}
+
+\include{./appendices/manual}
 \end{document}
 

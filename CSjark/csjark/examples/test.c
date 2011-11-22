@@ -9,9 +9,9 @@
 #include "xcon.h"
 
 
-SAP init_sap(int i)
+SAP_ init_sap(int i)
 {
-   SAP s;
+   SAP_ s;
 
    switch(i) {
    case 1:
@@ -237,7 +237,7 @@ void print_char_array(const char* prefix, const char *array, const size_t size)
    printf("]\n");
 }
 
-void print_sap(const char* prefix, const SAP *sap)
+void print_sap(const char* prefix, const SAP_ *sap)
 {
    printf("%s=TODO\n", prefix);
 }

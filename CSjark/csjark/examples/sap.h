@@ -68,6 +68,6 @@ typedef struct {
 #define sap_sk     _SAP_un._SAP_c.s_sk
 #endif
 
-} SAP;
+} SAP_;
 
 #endif

@@ -8,6 +8,29 @@ This chapter describes the final product.
 %------------------------
 \section{System Overview}
 %------------------------
+\autoref{fig:logicalview} shows an overview of the final version of the
+product. Our utility consist of seven Python modules:
+\begin{itemize}
+	\item csjark
+	\item cpp
+	\item cparser
+	\item field
+	\item dissector
+	\item platform
+\end{itemize}
+The CSjark modules takes as input C header files and config files. Config
+files are forward to the config module which reads them to find rules and
+options.
+
+CSjark then forward header files to the cpp module, which calls an external
+program, a C preprocessor. The output of the C preprocessor is given to the
+cparser module, which forwards it to the pycparser library. An abstract
+syntax three is returned by pycparser, which is traversed by the cparser
+module when it search for struct definitions.
+
+The cparser module creates a Protocol instance from the dissector module for
+each struct it finds. It creates 
+
 
 
 %----------------

@@ -123,10 +123,9 @@ This section describes three different views the team used for this project: A l
 %---------------------
 \autoref{fig:processview} shows the process view for our \gls{utility}. Csjark takes \gls{header} and config files as input and then uses the config and cparser to parse the files. CSjark then uses the cparser to find the \glspl{struct} in the \gls{header} file and then creates \glspl{dissector} for them. These \glspl{dissector} are then written to a file and CSjark then reports to the user by sending a message to the command line.
 
-
 \begin{figure}[htb]
 	\center
-	\includegraphics[width = \textwidth]{./evaluation/img/FinalSequenceDiagram}
+	\includegraphics[width=\textwidth]{./evaluation/img/FinalSequenceDiagram}
 	\caption{Data flow during regular execution\label{fig:processview}}
 \end{figure}
 

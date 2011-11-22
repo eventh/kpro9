@@ -8,10 +8,10 @@
    
    csjark
    config
-   cparser
    cpp
-   dissector
+   cparser
    field
+   dissector
    platform
 
 **Testing modules**
@@ -31,27 +31,27 @@ config
 
 .. automodule:: config
 
+cpp
+---
+
+.. automodule:: cpp
 
 cparser
 -------
 
 .. automodule:: cparser
 
-cpp
----
+field
+-----
 
-.. automodule:: cpp
+.. automodule:: field
 
 dissector
 ---------
 
 .. automodule:: dissector
  
-field
------
 
-..automodule:: field 
- 
 platform
 --------
 

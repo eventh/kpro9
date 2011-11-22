@@ -308,7 +308,6 @@ A custom Lua code for desired struct must be defined in an external conformance 
 
 Writing the conformance file implies respecting following rules:
 
-- The conformance file (as well as CSjark configuration files) follows YAML_ syntax specification.
 - Each section starts with ``#.<SECTION>`` for example ``#.COMMENT``.
 - Unknown sections are ignored.
 
@@ -328,7 +327,7 @@ The conformance file implementation allows user to place the custom Lua code on 
     ``END_OF_CNF``                          End of the conformance file                                                                                                                                                       
     ====================================    =======================          
    
-Where ``id`` denotes C struct member name (``DEF_*``) or field name (``FUNC_*``). The ``END`` token is only optional, it does not have to be placed at the end of each section. However, all code after ``END`` token which is not part of another section defined above is discarded.                                                                                                                                                
+Where ``id`` denotes C struct member name . The ``END`` token is only optional, it does not have to be placed at the end of each section. However, all code after ``END`` token which is not part of another section defined above is discarded.                                                                                                                                                
                                                                                                                                                                                                                                  
 Example of such conformance file follows: ::                                                                                                                                                                                     
                                                                                                                                                                                                                                  
@@ -439,7 +438,7 @@ This conformance file when run with this C header code: ::
 Support for Offset and Value in Lua Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Via `External Lua dissectors`_ CSjark also provides a way to add new proto fields to the dissector in Wireshark, with correct offset value and correct Lua variable.
+Via `External Lua dissectors`_ CSjark also provides a way to reference the proto fields of the dissector, with correct offset value and correct Lua variable.
 
 To access the fields value and offset, ``{OFFSET}`` and ``{VALUE}`` strings may be put into the conformance file as shown below: ::
 

@@ -2,32 +2,53 @@
 \chapter{Conclusion}
 %===================
 \label{cha:conclusion}
-This chapter describes the final product.
+This chapter describes the final state of the product.
+It also contains suggestions on how to improve the utility, as well as a short discussion on the testing done to the utility, and how this affected the utility.
 
 
 %------------------------
 \section{System Overview}
 %------------------------
+\autoref{fig:logicalview} shows an overview of the final version of the
+product. Our utility consist of seven Python modules:
+\begin{itemize}
+	\item csjark
+	\item cpp
+	\item cparser
+	\item field
+	\item dissector
+	\item platform
+\end{itemize}
+The csjark module takes as input C header files and config files. Config
+files are forward to the config module which reads them to find rules and
+options. The csjark module outputs Lua dissector files.
 
+Csjark then forward header files to the cpp module, which calls an external
+program, a C preprocessor. The output of the C preprocessor is given to the
+cparser module, which forwards it to the pycparser library. An abstract
+syntax three is returned by pycparser, which is traversed by the cparser
+module when it search for struct definitions.
 
-%----------------
-\section{Testing}
-%----------------
-At the beginning of the project all of the team members agreed that we were going to focus on doing extensive and proper testing of our utility. In this section we will discuss whether or not we were able to reach the goals we sat at the beginning and during the project.
+The cparser module creates a Protocol instance from the dissector module for
+each struct it finds. The Protocol instance is populated with Field instances
+or subclass instances for each struct member.
 
-\subsection{Methods}
-%-------------------
-At the beginning of the project we only used black box test cases and unit tests. We quickly found that even though we were able to uncover several bugs using these methods, it was hard to calculate what and how many parts of the system were actually undergoing testing. This again made it difficult to figure out the real quality of our tests and if our testing efforts were used to their true potential. When we then decided to use a tool for calculating code coverage we noticed that there were large parts of the system that were still untested even though the functionality of the system had been tested in our black box test cases. We therefore made a goal of trying to have a test coverage of at least 80\% in order to catch as many bugs as possible. This proved to be a hard task at first, but as can be seen in \autoref{fig:finalCodeCoverage}, once we got used to using a tool to calculate the coverage of our unit tests, we were able to improve the quality of our tests so that they covered more parts of the system.
+After all headers have been parsed, the csjark module takes the list of all
+protocols created by the cparser module, and writes to file the output of the
+generate() function. In the end it writes the output of the generate function
+on a Delegator instance.
 
-\begin{figure}[htb]
-	\center
-	\includegraphics[width=\textwidth]{./sprints/img/sprint4_code_coverage_chart}
-	\caption{Code Coverage Progress from Previous Sprints\label{fig:sp4CoverageChart}}
-\end{figure}
+The platform module contains platform-specific details, which are used by the
+cparser when it creates new fields.
 
-\subsection{Testing Conclusion}
-%------------------------------
-After finishing the project we had uncovered several serious and many more non-critical bugs in our utility. We also discovered several bugs in the LUA-implementation of Wireshark that we needed to have our customer to fix. This proved to be very important as this severely reduced the amounts of bugfixes that had to be implemented after being allowed to send our developers to work with the utility at the customer-site. We were therefore able to create a working product within the small time-frame we had left after testing the utility at the customer-site. We therefore conclude that it had indeed been necessary to focus on creating extensive tests for the utility and that the methods we had chosen for testing were sufficient to get a working end-product.
+\subsection{System summary}
+%--------------------------
+Originally we had some design goals for the product. We wished to have some
+logical groupings of functionality into a front-end and back-end. We believe
+that we have achieved this goal. Everything specific for generating Lua
+dissectors are contained to the field and dissector modules, which contains
+no C specific code. These consist of smart data structures which are created
+by the front-end, the cpp and cparser module.
 
 
 %----------------------------
@@ -135,6 +156,27 @@ Several of the optional requirements are focused on requiring less manual
 configuration. If we perform the C preprocessing ourself instead of delegating
 it to an external program, we would be able to read configuration from
 comments and \#define's inside the header files.
+
+%----------------
+\section{Testing}
+%----------------
+At the beginning of the project all of the team members agreed that we were going to focus on doing extensive and proper testing of our utility. In this section we will discuss whether or not we were able to reach the goals we sat at the beginning and during the project.
+
+\subsection{Methods}
+%-------------------
+At the beginning of the project we only used black box test cases and unit tests. We quickly found that even though we were able to uncover several bugs using these methods, it was hard to calculate what and how many parts of the system were actually undergoing testing. This again made it difficult to figure out the real quality of our tests and if our testing efforts were used to their true potential. When we then decided to use a tool for calculating code coverage we noticed that there were large parts of the system that were still untested even though the functionality of the system had been tested in our black box test cases. We therefore made a goal of trying to have a test coverage of at least 80\% in order to catch as many bugs as possible. This proved to be a hard task at first, but as can be seen in \autoref{fig:finalCodeCoverage}, once we got used to using a tool to calculate the coverage of our unit tests, we were able to improve the quality of our tests so that they covered more parts of the system.
+
+\begin{figure}[htb]
+	\center
+	\includegraphics[width=\textwidth]{./sprints/img/sprint4_code_coverage_chart}
+	\caption{Code Coverage Progress from Previous Sprints\label{fig:sp4CoverageChart}}
+\end{figure}
+
+\subsection{Testing Conclusion}
+%------------------------------
+After finishing the project we had uncovered several serious and many more non-critical bugs in our utility. We also discovered several bugs in the LUA-implementation of Wireshark that we needed to have our customer to fix. This proved to be very important as this severely reduced the amounts of bugfixes that had to be implemented after being allowed to send our developers to work with the utility at the customer-site. We were therefore able to create a working product within the small time-frame we had left after testing the utility at the customer-site. We therefore conclude that it had indeed been necessary to focus on creating extensive tests for the utility and that the methods we had chosen for testing were sufficient to get a working end-product.
+
+
 
 
 %----------------

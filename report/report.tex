@@ -4,7 +4,7 @@
 %
 % Use *_standalone.tex to generate standalone parts
 %######################################################
-\documentclass[a4paper, 11pt, notitlepage, twoside, openright]{report}
+\documentclass[11pt,a4paper,twoside,openright]{report}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
@@ -85,6 +85,7 @@
 % Title page
 %============
 \include{./misc/title}
+\cleardoublepage
 
 %==========
 % Abstract
@@ -118,6 +119,7 @@ traffic.
 % Preface
 %=========
 \pagenumbering{roman}
+\cleardoublepage
 \chapter*{Preface}
 \addcontentsline{toc}{chapter}{Preface}
 This report was written for a project in the course TDT4290 Customer Driven
@@ -174,7 +176,7 @@ development process.
 %===================
 % Table of Contents
 %===================
-\clearpage
+\cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{Contents}
 \tableofcontents
@@ -182,7 +184,7 @@ development process.
 %=================
 % List of Figures
 %=================
-\clearpage
+\cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{List of Figures}
 \listoffigures
@@ -190,7 +192,7 @@ development process.
 %================
 % List of Tables
 %================
-\clearpage
+\cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{List of Tables}
 \listoftables
@@ -198,7 +200,7 @@ development process.
 %###########################
 % Planning and Requirements
 %###########################
-\clearpage
+\cleardoublepage
 \pagenumbering{arabic}
 \part{Planning \& Requirements}
 \include{./planning/introduction}
@@ -232,7 +234,7 @@ development process.
 %##############
 % Bibliography
 %##############
-\clearpage
+\cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{references}{}

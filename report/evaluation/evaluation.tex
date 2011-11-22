@@ -8,11 +8,11 @@ This chapter gives an evaluation of the project and the course, TDT4290 Customer
 %----------------------------------
 The forming and development of the team are described in this section.
 %----------------------------------
-\subsection{Goals And Team Building}
+\subsection{Goals and Team Building}
 %----------------------------------
 The project started out with randomly assigned student groups of six to seven people. This was done intentionally to learn the students to work in a realistic setting. Our group consisted of six Norwegian students and one Czech student. 
 
-As one of the team members was a foreign student, all the internal team communication had to be done in english. In addition our advisors were english speaking, so the whole project was done in english. This did not occur as a problem, because all the team members both spoke and wrote fluent english.
+As one of the team members was a foreign student, all the internal team communication had to be done in english. In addition our advisors were english speaking, so the whole project was done in english. This did not occur as a problem, because all the team members both spoke and wrote english fluently.
 
 At the first meeting we decided to state our personal goals for the project. This resulted in the following list:
 \begin{itemize}
@@ -21,18 +21,15 @@ At the first meeting we decided to state our personal goals for the project. Thi
 	\item Learn to work in a realistic environment.
 	\item Fulfill the needs of the customer. 
 \end{itemize}
-These goals match the course's goals, with some extensions.
+These goals match the course's goals, with some extensions. All these goals was common for the team members, which resulted in good cooperation from the start and an agreement of what we wanted to achieve in the project. The decision to characterize ourselves as a team came early in the project, which is defined to be a collection of people working interdependently and is committed to achieve one common goal.
 
 None of the team members had any relations with each other when the project started. During the project we learned how to work together in a professionally and efficient manner. Getting there was a demanding task and is described more thoroughly in the section regarding team evolution.
 
-The decision to characterize ourselves as a team came early in the project. The definition of a group is 
-
-
-\subsection{Team evolution}
+\subsection{Team Evolution}
 %---------------------------------
 The first weeks of the project the team were in a good, but also uncertain stage. The team members did not know each others boundaries and tried to not end up in an argument. This resulted in a series of matters, including low work effort and bad commitment. This all changed when the team members got more familiar with each other.   
 
-\section{Risk handling}
+\section{Risk Handling}
 %----------------------------------
 Some of the risks predicted in the planning phase occured to a certain degree during the project.
 This section will discuss those risks and how they were handled.
@@ -68,9 +65,30 @@ As we had to focus on tweaking some functionalities to work on their code, and a
 %under construction!
 %--------------------------------
 TODO: Sondre
+
+%-----------------
 \subsection{Scrum}
-%--------------------------------
-TODO: Erik
+%-----------------
+During the preliminary study, we decided to use an agile development method, 
+to be able to adopt to changes in requirement during the project, so we 
+decided to use Scrum. None of the team member had any previous experience with 
+Scrum. In the beginning of the course we had a lecture about Scrum, and we 
+got a basic insight in how Scrum works.
+
+When the first sprint planning was finished, we understood that we did not 
+follow Scrum properly. The meeting was very short, and we did not do any 
+design during the sprint planning. The work items from the sprint was wrong 
+estimated, and was not divided propely into work items. For each sprints we 
+improved, and the scrum process was good in the end of the project.
+
+Some of team members feel that we followed Scrum to strict, instead of doing 
+what that was best for the project. In the end of the project we needed to use 
+much time on fixing the utility so it run on the customer's code, since we 
+could not change our sprint plan, we ended up with a very high workload.
+
+During the project we learned the advantages of using Scrum, since we could 
+get some feedback on the work we had done from the customer, and then improve 
+the features to what the customer exactly wanted. 
 
 %------------------------
 \section{Time Estimation}
@@ -126,9 +144,31 @@ we needed to finish the last sprint and very much work on the report was done.
 TODO: Sondre
 
 %----------------
-\section{Customer}
+\section{Customer Relations}
 %----------------
-%short section
+Our relationship with the customer was good throughout the entire project.
+We were assigned two customer representatives. As they were developers themselves, they both had a technical background. This made it easier to communicate with the customer.
+They knew exactly what they wanted, and were more than happy to give feedback and tips on the implementation of the different requirements. When we first received the initial requirements, we did not fully understand them. After some meetings and dicussions, both internally and with the customer, the team was able to provide the customer with a clear requirement specification that they accepted.
+
+One of the customer contacts was a member of Wireshark's core development team. When we discovered bugs in Wireshark, he could fix them and apply a patch. He also had insight into how 
+Lua dissectors were built, and how they interacted with Wireshark. This was a major asset to the team. When we encountered problems during implementation, the customer was able to give us invaluable feedback on how to proceed. This is something that a less technical customer would not have been able to give us.
+
+Each week we had a meeting with the customer where we demonstrated the requirements we had implemented since last meeting. The customer then gave us feedback on the functionalities, and told us what we had to change or improve. This way, any misunderstandings were detected and dealt with in a swift manner.
+
+The customer contacts also had access to our repository, thus they could test the utility themselves.
+This meant that they could get a first hand-experience of the utility, and could more easily detect bugs and other issues.	
+
+A problem we had was that, due to security issues, Thales could not allow us to test our utility on their source code. This meant that we had to do some guessing during the implementation, and getting the utility to work on their code was a difficult process. Luckily, Thales gave us the opportunity to send two of our members to them for a few days, as documented in the test section of sprint 4. That gave us an opportunity to fix most of the bugs that we encountered, and in the end the customer said that they were happy with our utility. They approved all the requirements we had listed, although a few of the optional requirements were not implemented due to time constraints.
+Overall the customer felt that we were flexible, and adhered to most of their needs.
+
+The week before the end of the project, the team had a presentation at Thales for our advisor, the customer contacts, and some other employees of Thales. The employees that were there are probable users of the dissectors that our utility creates. Due to this, the presentation was focused on the demonstration of the utility, where we showed how the structs were dissected in Wireshark.
+
+The customer also got one of their co-workers to read CSjark's user manual.
+The user manual was a little too unclear in some parts, so we used that feedback to improve it, and increase its quality.
+
+The team felt that we were lucky with the customer that we were assigned.
+The fact that they knew exactly what they wanted, had a technical background and showed great enthusiasm for the project, made the project more manageable. This also increased the motivation for the team. We felt that they were interested in what we were developing, which ensured a good meeting atmosphere and a good working relationship. Throughout the entire project, they gave us essential feedback on the implementation and requirements, and they were not afraid to tell us if we did something that they disagreed with. The fact that we had two customer contacts, instead of one, increased the amount of feedback we received, and also meant that there was always one person available for us to contact. All in all, we could not be more satisfied with our customer.
+
 
 %----------------
 \section{Summary}

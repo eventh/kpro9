@@ -46,9 +46,11 @@ using for testing purposes.
 
 In order to standardize the testing process, the team decided on making templates for both the test cases themselves and for reporting their results. The ones responsible for testing were given the task of not only creating and running the test cases themselves, but also adhering to the standards set in this document.
 
-\autoref{tab:testcase} shows the template for each test case. All of the test cases written for the \gls{utility} will be in this format, and executed according to this document.
+\autoref{tab:testcase} shows the template for each test case. All of the test cases written for the \gls{utility} will be in this format, and executed according to this document. 
 
-\begin{table}[htb] \small \center
+\autoref{tab:testreport} shows the template for reporting the result of each test case. \autoref{tab:TestCoverageReport} shows the template for reporting code coverage.
+
+\begin{table}[htbp] \footnotesize \center
 \caption{Test Case Template \label{tab:testcase}}
 \begin{tabular}{l l}
 	\toprule
@@ -64,11 +66,9 @@ In order to standardize the testing process, the team decided on making template
 \end{tabular}
 \end{table}
 
-\autoref{tab:testreport} shows the template for reporting the result of each test case.
-
-\begin{table}[htb] \small \center
+\begin{table}[htbp] \footnotesize \center
 \caption{Test Report Template \label{tab:testreport}}
-\begin{tabular}{l l}
+\begin{tabularx}{\textwidth}{l l}
 	\toprule
 	Header & Description \\
 	\midrule
@@ -78,14 +78,13 @@ In order to standardize the testing process, the team decided on making template
 	Date & The date the testing took place \\
 	Result & The success or failure of the test, and a comment on the result if needed \\
 	\bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
-\autoref{tab:TestCoverageReport} shows the template for reporting code coverage.
-
-\begin{table}[!htb]\footnotesize\center
+\begin{table}[htbp] \footnotesize \center
 	\caption{Code Coverage Report Template\label{tab:TestCoverageReport}}
-	\begin{tabular}{l l l l l}
+	\noindent\makebox[\textwidth]{%
+	\begin{tabularx}{1.2\textwidth}{l l l l l}
 		\toprule
 		Module & Statements & Missing & Excluded & Coverage\\
 		\midrule
@@ -95,7 +94,7 @@ In order to standardize the testing process, the team decided on making template
 		\bottomrule
 		Total & Statements ran & Statements not ran & Excluded statements & Percent code coverage \\
 		\bottomrule
-	\end{tabular}
+	\end{tabularx}}
 \end{table}
 
 

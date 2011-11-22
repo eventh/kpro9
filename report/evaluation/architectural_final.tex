@@ -123,8 +123,10 @@ This view shown in \autoref{fig:logicalview}. Command line takes the arguments f
 %---------------------
 \autoref{fig:processview} shows the process view for our \gls{utility}. Csjark takes \gls{header} and config files as input and then uses the config and cparser to parse the files. CSjark then uses the cparser to find the \glspl{struct} in the \gls{header} file and then creates \glspl{dissector} for them. These \glspl{dissector} are then written to a file and CSjark then reports to the user by sending a message to the command line.
 
+
 \begin{figure}[htb]
-	\includegraphics[width=\textwidth]{./planning/img/SequenceDiagram}
+	\center
+	\includegraphics[width = \textwidth]{./evaluation/img/FinalSequenceDiagram}
 	\caption{Data flow during regular execution\label{fig:processview}}
 \end{figure}
 
@@ -141,7 +143,8 @@ data packet when Process A send data to Process B, the \Gls{lua}
 \glspl{dissector} is used to display these data packets correctly.
 
 \begin{figure}[htb]
-	\includegraphics[width = \textwidth]{./planning/img/Deployment}
+	\center
+	\includegraphics[width = 0.8\textwidth]{./planning/img/Deployment}
 	\caption{Deployment View\label{fig:deployment}}
 \end{figure}
 

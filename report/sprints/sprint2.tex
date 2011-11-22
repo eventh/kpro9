@@ -196,7 +196,7 @@ The second sprint we will implement thirteen requirements. These are listed in T
 \label{sec:sp2:design}
 For sprint 2 the team decided to re-factor some of the code in order to make it easier to read and to split the functionalities of the \gls{utility} in such a way that it reduces coupling within the system. Some new functionality was also added on the \gls{parser} side in order to get the \gls{utility} to recognize the datatypes mentioned in the sprint 2 backlog. This new functionality is represented by the addition of new classes in the \gls{dissector} and config modules. These classes include the BitField, ArrayField, EnumField and ProtocolField classes, which contain the functionality required to handle bitstrings, \glspl{array}, \glspl{enum} and \glspl{struct} within \glspl{struct} respectively. The classes added to the config module include the Trailer, Bitstring, Custom and Enum classes, which handles the configuration needs for \glspl{struct} with \gls{trailers}, \glspl{bit string}, custom handling of data types and \glspl{enum} respectively. Other than that, there were no other changes or additions made to the design during sprint 2.
 
-\subsection{Utility}
+\subsection{System Overview}
 %--------------------
 \autoref{fig:sp2:class} shows the class diagram the team made for sprint 2. 
 The main differences from sprint 1 are the additions of new classes, extending 

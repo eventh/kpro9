@@ -196,7 +196,7 @@ We will start out by hard coding this into the source code, but in the end we wa
 \end{figure}
 
 \subsubsection{\Gls{endianness}}
-An important feature is the support for different \gls{endian} handling. \Gls{endianness} defines how the bytes are ordered. Big and little endian tells which bit that is the most significant, and thereby the value that the bits represent. \autoref{fig:endianness}\cite{Endianness} show the difference between big and little endian.
+An important feature is the support for different \gls{endian} handling. \Gls{endianness} defines how the bytes are ordered. Big and little endian tells which bit that is the most significant, and thereby the value that the bits represent. \autoref{fig:endianness}~\cite{Endianness} show the difference between big and little endian.
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{./sprints/img/endianness}
 	\caption{\Gls{endianness} \label{fig:endianness}}
@@ -481,7 +481,7 @@ The \gls{union} type is a \gls{member} that can contain different data types wit
 different sizes. The \gls{union} will allocate memory for the largest type defined 
 in the \gls{union}. \autoref{code:union} shows an example of a \gls{header}-file with a 
 \gls{union} type. The compiler is responsible for keeping track of size and 
-alignment requirements\cite[p.147]{Kerninghan1988} . Since it is not 
+alignment requirements~\cite[p.147]{Kerninghan1988} . Since it is not 
 possible to find out which data type that is used in \Gls{wireshark}, the \gls{utility} 
 has to generate a \gls{dissector} that displays the values for each data type. 
 \autoref{fig:wsunion} displays the \gls{dissector} generated from the \gls{struct} in 

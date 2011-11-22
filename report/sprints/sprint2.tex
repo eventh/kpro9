@@ -285,7 +285,7 @@ and explain how the modules in the utility should interact with each other in th
 	What & The administrator wants the \gls{utility} to support \glspl{struct} with \glspl{member} of type \gls{struct}. \\
 	How & When the cparser module detects a \gls{struct} in the AST that has a \gls{struct} \gls{member}, the cparser searches for its definition in the 
 		dictionary of previously detected \glspl{struct}. When it finds it, it looks up the identification number and the size of the inner \gls{struct} and creates a 
-		struct\_field object with that information inside the prototype object corresponding to the outer \gls{struct}. \\
+		struct\_field object inside the prototype object corresponding to the outer \gls{struct}. \\
 	Result & The \gls{utility} supports \glspl{member} of type \glspl{struct}. \\
 	\midrule
 	ID & US11 \\
@@ -344,9 +344,9 @@ and explain how the modules in the utility should interact with each other in th
 	User doc & FR4-G: User documentation for writing configuration for integer \glspl{member} which are \glspl{bit string}. \\
 	What & The administrator should be able to educate himself of how to give CSjark the necessary information to get integer values mapped to \gls{bit string} in 
 	the generated \gls{dissector}. \\
-	How & The administrator opens the user documentation and finds the section about configuration. From here he locates the sub section about \gls{bit string}
-	 integer values. This section gives a good description of how to write such configuration, and the administrator is able to implement his desired configuration
-	after reading through once and looking at provided examples.  \\
+	How & The administrator opens the user documentation and finds the section about configuration. Then he locates the section about \gls{bit string}
+	 values. This section gives a good description of how to write such configuration, and the administrator is able to implement his desired configuration
+	after reading through once and looking at the examples.  \\
 	Result & The administrator is now able to configure CSjark to generate \gls{dissector} that recognises and formats \glspl{bit string} correctly. \\
 	\midrule
 	ID & US17 \\
@@ -405,7 +405,7 @@ and explain how the modules in the utility should interact with each other in th
 	User doc & FR4-C: User documentation for configuring custom handling of specific types. \\
 	What & The administrator should be able to find out how to specify custom handling for a specific type by reading the user documentation.\\
 	How & The administrator opens the user documentation and finds the section about configuration. From here he locates the sub section about custom type handling. 
-	This section gives a good description of how to write such configuration and what kind of configuration that could be done. There should also be some
+	This section gives a good description of how to write such configuration. There should also be some
  	examples to clarify the description. After reading the section, the administrator has a good idea of how to do the desired custom handling. \\
 	Result & The administrator is able to use custom handling of specific types. \\
 	\midrule

@@ -60,10 +60,15 @@ In order to implement this in the project it was decided that we would use the Y
 %---------------------------------
 The following business requirements encompass the most important needs of the customer.
 \begin{itemize}
-\item The \gls{utility} must be delivered on time as it is not possible for the developers to continue the development after the deadline
-\item The ability for the \gls{utility} to be able to create dissectors for the C-structs in the header files used  by Thales.
-\item The ability for the \gls{utility} to create dissectors that run on all of the platforms used by Thales and their customers
-\item The ability for \Gls{wireshark} to be able to use the generated dissectors to display the values of the C-structs passed through the system.
+\item The \gls{utility} must be delivered on time as it is not possible for the
+developers to continue the development after the deadline
+\item The utility should be able to create dissectors for the C-structs in
+header files used by Thales
+\item The utility should be able to create dissectors that run on all of the
+platforms used by Thales and their customers
+\item Developers at Thales should be able to use Glswireshark with the generated
+dissectors to display the values in C-structs passed through the
+system.
 \end{itemize}
 
 \subsection{Design Goals}

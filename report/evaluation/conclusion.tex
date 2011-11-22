@@ -43,6 +43,13 @@ cparser when it creates new fields.
 
 \subsection{System summary}
 %--------------------------
+Originally we had some design goals for the product. We wished to have some
+logical groupings of functionality into a front-end and back-end. We believe
+that we have achieved this goal. Everything specific for generating Lua
+dissectors are contained to the field and dissector modules, which contains
+no C specific code. These consist of smart data structures which are created
+by the front-end, the cpp and cparser module.
+
 
 %----------------------------
 \section{Further Development}

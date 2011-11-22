@@ -418,10 +418,10 @@ textual use cases for these diagrams.
 
 \subsection{Actors}
 %------------------
-An actor specifies a role played by an external person or thing that interact
+An actor specifies a role played by an external person or entity that interact
 with our \gls{utility}. We have three types of actors to consider. First is the
-primary actor, that uses the \gls{utility} to generate \glspl{dissector} from 
-\Gls{c} header-files. A secondary actor is the user who configures the
+primary actor that uses the \gls{utility} to generate \glspl{dissector} from 
+\Gls{c} header-files. A secondary actor is a user who configures the
 \gls{utility} to change the output of it. Finally, we have an offstage actor, which
 does not use our \gls{utility} himself, but uses the outputted \glspl{dissector} in \Gls{wireshark}.
 
@@ -465,8 +465,8 @@ understanding of the use cases diagrams. The textual use cases can be seen in
 	Use case name & Filter and search on attributes\\
 	Goal & The developer wants the correct set of results based on the search phrase \\
 	Summary & The developer would like to filter and search on attributes in the packets displayed in Wireshark \\
-	Preconditions & Wireshark need to be running with dissectors. \\
-	Postconditions & Wireshark display the results.\\
+	Preconditions & Wireshark needs to be running with dissectors. \\
+	Postconditions & Wireshark displays the results.\\
 	\midrule
 	\multirow{3}{*}{Flow of Events} & 1. The developer selects the search field in Wireshark's GUI.  \\
 	& 2. The user types in a search phrase. \\
@@ -489,7 +489,7 @@ understanding of the use cases diagrams. The textual use cases can be seen in
 	Summary & The developer would like to dissect a structs and have the members and values displayed in Wireshark by using the dissectors in Wireshark's plugin folder.\\
 	\multirow{2}{*}{Preconditions}& 1. The developer have Wireshark running with dissectors. \\
 	& 2. The dissector for a struct will dissect it correctly, according to the initial internal structure of the struct. \\
-	Postconditions & Wireshark display the struct with the correct structure and values.\\
+	Postconditions & Wireshark displays the struct with the correct structure and values.\\
 	\midrule
 	\multirow{3}{*}{Flow of Events} & 1. The developer selects a struct message in Wireshark. \\
 	& 2. Wireshark calls the correct dissector and dissects the selected message. \\
@@ -512,14 +512,14 @@ understanding of the use cases diagrams. The textual use cases can be seen in
 	Summary & The developer wants to debug inter-process communication by using Wireshark extended by dissectors. \\
 	\multirow{2}{*}{Preconditions} & 1. The developer have Wireshark running with dissectors.\\
 	& 2. Wireshark have access to the packets sent between the processes that the developer wants to debug. \\
-	Postconditions & Wireshark display the communication dissected.\\
+	Postconditions & Wireshark displays the communication dissected.\\
 	\midrule
 	\multirow{3}{*}{Flow of Events} & 1. The developer selects the inter-process communication to debug. \\
 	& 2. Wireshark calls the correct dissector and dissects the selected messages. \\
 	& 3. The developer is able to debug the process communication by looking at the dissected messages. \\
 	\midrule
 	\multirow{2}{*}{Exceptions} & 1. The correct dissectors might not exist in Wireshark's plugin folder, making it impossible to dissect the messages. \\
-	& 2. The inter-process communication might not consist of structs only, which Wireshark do not have capability of displaying. \\
+	& 2. The inter-process communication might not only consist of structs, but also data structures that Wireshark are unable to display. \\
 	\bottomrule
 \end{tabularx}
 \end{table}
@@ -533,12 +533,12 @@ understanding of the use cases diagrams. The textual use cases can be seen in
 	\midrule
 	Use case name & Configure platforms\\
 	Goal & Successfully configure the supported platforms.\\
-	Summary & The administrator want to be able to configure the platforms that the utility supports. This includes adding, removing and editing supported platforms.\\
+	Summary & The administrator wants to be able to configure the platforms that the utility supports. This includes adding, removing and editing supported platforms.\\
 	Preconditions & The administrator must have access to the utility's platform module (the source code).\\
 	Postconditions & The changes must be saved to the platform module.\\
 	\midrule
 	\multirow{3}{*}{Flow of Events} & 1. The administrator locates the platform module in the utility. \\
-	& 2. The administrator make changes to the module to achieve the wanted support.\\
+	& 2. The administrator makes changes to the module to achieve the wanted support.\\
 	& 3. The administrator saves the changes and exits. \\
 	\midrule
 	Exceptions & The changes made to the platform module were not of correct syntax. Leaving the utility defected. \\
@@ -556,11 +556,11 @@ understanding of the use cases diagrams. The textual use cases can be seen in
 	Use case name & Generate Lua-dissector\\
 	Goal & Successfully generate a Lua-dissector. \\
 	Summary & The administrator wants to generate a Lua-dissector based on a header file. \\
-	\multirow{2}{*}{Preconditions} & 1. The administrator have the utility and its dependent libraries installed.  \\
-	& 2. The administrator have a header file, which a Lua-dissector shall be made of. \\
+	\multirow{2}{*}{Preconditions} & 1. The administrator has the utility and its dependent libraries installed.  \\
+	& 2. The administrator has a header file, which a Lua-dissector shall be made from. \\
 	Postconditions & The utility outputs the generated Lua-dissector to a default- or given output location. \\
 	\midrule
-	\multirow{3}{*}{Flow of Events} & 1. The Administrator feeds the utility with the header- and configuration file\\
+	\multirow{3}{*}{Flow of Events} & 1. The administrator feeds the utility with the header- and configuration file\\
 	& 2. The utility generates a Lua-dissector based on the input. \\
 	& 3. The utility outputs the Lua-dissector to a default- or given output location.\\
 	\midrule
@@ -600,8 +600,8 @@ understanding of the use cases diagrams. The textual use cases can be seen in
 	Use case name & Generate configured Lua-dissectors.\\
 	Goal & Successfully generate a configured Lua-dissector. \\
 	Summary & The administrator wants to generate a Lua-dissector from a header file with an associated configuration file. \\
-	\multirow{2}{*}{Preconditions} & 1. The administrator have the utility and its dependent libraries installed.  \\
-	& 2. The administrator have the header and configuration pair, which the Lua-dissector shall be made of. \\
+	\multirow{2}{*}{Preconditions} & 1. The administrator has the utility and its dependent libraries installed.  \\
+	& 2. The administrator has the header and configuration pair, which the Lua-dissector shall be made from. \\
 	Postconditions & The utility outputs the generated Lua-dissector to a default- or given output location.\\
 	\midrule
 	\multirow{3}{*}{Flow of Events} & 1. The Administrator feeds the utility with the header- and configuration-file\\
@@ -624,7 +624,7 @@ understanding of the use cases diagrams. The textual use cases can be seen in
 	Use case name & Generate batch of Lua-dissectors.\\
 	Goal & Successfully create multiple Lua-dissectors. \\
 	Summary & The administrator wants to process multiple header- and configuration-file pairs in one run of the utility. \\
-	Preconditions & The administrator know the locations of all the files to parse. \\
+	Preconditions & The administrator knows the locations of all the files to parse. \\
 	Postconditions & The utility outputs the generated Lua-dissectors to a default- or given output location.\\
 	\midrule
 	\multirow{3}{*}{Flow of Events} &  1. The administrator feeds the utility with the header- and configuration-files.\\
@@ -638,7 +638,8 @@ understanding of the use cases diagrams. The textual use cases can be seen in
 \end{table}
 
 \section{User Stories}
-To make it easier to implement the requirements, there have been written user stories. The user stories describes how the requirements should be implemented, and was written in each sprint planning meeting. The user stories that are written can be found in the sprint design for each of the sprints. \autoref{tab:us:template} shows an template of an user story.
+To make it easier to implement the requirements, user stories were written. The user stories describes how the requirements should be implemented. 
+The user stories that was written can be found in the sprint design for each of the sprints. \autoref{tab:us:template} shows a template of a user story.
 
 \begin{table}[htbp] \footnotesize \center
 \caption{User Story Template\label{tab:us:template}}

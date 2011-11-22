@@ -2,20 +2,21 @@
 \chapter{Conclusion}
 %===================
 \label{cha:conclusion}
-This chapter describes the final product. 
+This chapter describes the final product.
 
-%-----------------------
+
+%------------------------
 \section{System Overview}
-%-----------------------
+%------------------------
 
 
-%-----------------------
+%----------------
 \section{Testing}
-%-----------------------
+%----------------
 At the beginning of the project all of the team members agreed that we were going to focus on doing extensive and proper testing of our utility. In this section we will discuss wether or not we were able to reach the goals we sat at the beginning and during the project.
 
 \subsection{Methods}
-%------------------------------
+%-------------------
 At the beginning of the project we only used black box test cases and unit tests. We quickly found that even though we were able to uncover several bugs using these methods, it was hard to calculate what and how many parts of the system were actually undergoing testing. This again made it difficult to figure out the real quality of our tests and if our testing efforts were used to their true potential. When we then decided to use a tool for calculating code coverage we noticed that there were large parts of the system that were still untested even though the functionality of the system had been tested in our black box test cases. We therefore made a goal of trying to have a test coverage of at least 80% in order to catch as many bugs as possible. This proved to be a hard task at first, but as can be seen in \autoref{fig:finalCodeCoverage}, once we got used to using a tool to calculate the coverage of our unit tests, we were able to improve the quality of our tests so that they covered more parts of the system.
 
 \begin{figure}[htb]
@@ -25,30 +26,43 @@ At the beginning of the project we only used black box test cases and unit tests
 \end{figure}
 
 \subsection{Testing Conclusion}
-%--------------------------
+%------------------------------
 After finishing the project we had uncovered several serious and many more non-critical bugs in our utility. We also discovered several bugs in the LUA-implementation of wireshark that we needed to have our customer to fix. This proved to be very important as this severely reduced the amounts of bugfixes that had to be implemented after being allowed to send our developers to work with the utility at the customer-site. We were therefore able to create a working product within the small time-frame we had left after testing the utility at the customer-site. We therefore conclude that it had indeed been necessary to focus on creating extensive tests for the utility and that the methods we had chosen for testing were sufficent to get a working end-product.
 
-%------------------------
+
+%----------------------------
 \section{Further Development}
 \label{sec:eval:furtherdev}
-%------------------------
-During the third sprint, as we had completed most of the requirements given to us, it became clear we would not have sufficient requirements for a fourth sprint. We requested more possible features from the customer, who provided us with a list of new functional requirements and their prioritization.
-
-In the fourth sprint planning meeting, we estimated the work hours needed to complete each of the new requirements, including implementation, testing and documentation. Based on the customers prioritization and our estimates, we classified four of them as optional, as we did not deem it possible to fulfill them in the fourth sprint. 
-
-The customer asked us to provide a description of how the unfulfilled requirements could be implemented.
+%----------------------------
+This section describes possible improvements to our utility.
+In \autoref{sec:conc:optional} we describe how one might implement the remaining
+optional requirements, while \autoref{sec:conc:addimps} list other improvements.
 
 \subsection{Optional Requirements}
-These are the optional requirements:
+%---------------------------------
+\label{sec:conc:optional}
+During the third sprint, as we had completed most of the requirements given to
+us, it became clear we would not have sufficient requirements for a fourth
+sprint. We requested more possible features from the customer, who provided us
+with a list of new functional requirements and their prioritization.
+
+In the fourth sprint planning meeting, we estimated the work hours needed to
+complete each of the new requirements, including implementation, testing and
+documentation. Based on the customers prioritization and our estimates, we
+classified four of them as optional, as we did not deem it possible to
+fulfill them in the fourth sprint.
+
+The customer asked us to provide a description of how the unfulfilled
+requirements could be implemented, which is listed below.
 \begin{enumerate}
 \item Don't regenerate dissectors across multiple runs
 \item Use Doxygen comments for "Description"	
 \item Read int-enum config from header files
 \item Display if struct member contains uninitialized memory
-\end {enumerate}
-The following sections describe how they can be implemented.
+\end{enumerate}
 
-\subsubsection{1. Don't regenerate dissectors across multiple runs}
+\noindent The following paragraphs describe how they can be implemented.
+\paragraph{Don't regenerate dissectors across multiple runs}
 To be able to decide if we have already generated dissectors in earlier runs, we need to store some state on disk. 
 
 We need to store the last modified timestamp, which the operating system reports, at the time we last read them. 
@@ -61,12 +75,12 @@ We estimate this task would require implementing our own C preprocessor or using
 
 When we are able to know which files depend on each other, and the last time they were modified, the task is simply to find a suitable data structure to store on disk between runs.
 
-\subsubsection{2. Use Doxygen comments for "Description"}
+\paragraph{Use Doxygen comments for "Description"}
 Comments are removed by the C preprocessor, which means we must parse them before it is run. As the preprocessor evaluates which files to open, we would be required to implement our own or use a library, or try to evaluate applicable files in all include folders.
 
 The task, if such support was available, would simply be to search for doxygen comments, and when one is found parse it to extract the correct information.
 
-\subsubsection{3. Read int-enum config from header files}
+\paragraph{Read int-enum config from header files}
 Integers, which should act as enums in Wireshark, are defined by some specific C preprocessor macro define directives in the customer's current header files. This task is to automatically extract such information, to require less manual configuration of our utility.
 
 Like the two previous task, this will require us to parse C preprocessor directives before they are removed by the C preprocessor, which means we must implement our own C preprocessor or use a library.
@@ -75,7 +89,7 @@ To avoid having to parse both C preprocessor directives and C code at the same t
 
 This task becomes trivial to implement if we had a custom C preprocessor we could modify.
 
-\subsubsection{4. Display if struct member contains uninitialized memory}
+\paragraph{Display if struct member contains uninitialized memory}
 Uninitialized memory will look different depending on the compiler, so therefore we need to add support for specifying how it will look for each Platform instance in platform module. Since we can only evaluate the actual memory on the Wireshark end of things, most of the functionality must be written in Lua code.
 
 These two conditions suggest that the dissector module should, inside the Delegator class, generate a suitable Lua function in luastructs.lua which accepts a buffer value for a field and the field node. This function should, if the buffer value match uninitialized memory,  set an appropriate warning on the field node.
@@ -86,9 +100,9 @@ In addition to implementation, the task involves researching how uninitialized m
 
 \subsection{Additional Improvements}
 \label{sec:conc:addimps}
-%Fill with the description of additional improvements
-%author: Even
+
 
 %----------------
 \section{Summary}
 %----------------
+

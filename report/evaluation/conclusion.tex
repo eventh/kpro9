@@ -10,7 +10,7 @@ on testing, and how it affected our utility.
 %------------------------
 \section{System Overview}
 %------------------------
-\autoref{fig:logicalview} shows an overview of the final version of the
+\autoref{fig:conc:sysow} shows an overview of the final version of the
 product. Our utility consist of seven Python modules:
 \begin{itemize}
 	\item csjark
@@ -23,6 +23,11 @@ product. Our utility consist of seven Python modules:
 The csjark module takes as input C header files and config files. Config
 files are forwarded to the config module, which reads them to find rules and
 options. The csjark module outputs Lua dissector files.
+
+\begin{figure}[htb]
+	\includegraphics[width=\textwidth]{./planning/img/final_arch}
+	\caption{Overall Architecture\label{fig:conc:sysow}}
+\end{figure}
 
 Csjark then forwards header files to the cpp module, which calls an external
 program, a C preprocessor. The output of the C preprocessor is given to the

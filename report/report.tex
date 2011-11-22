@@ -26,7 +26,7 @@
 \usepackage{color}
 \usepackage{textcomp}
 \usepackage[style=treenoname,subentrycounter,numberedsection, 
-        section=chapter, acronym]{glossaries}
+        section=chapter,acronym]{glossaries}
 \usepackage{pdfpages}
       
 
@@ -103,15 +103,16 @@ dissectors.
 
 The project resulted in CSjark, which is a stand-alone \gls{utility} that acts 
 as a supporting tool for \Gls{wireshark}. Our \gls{utility} is written in 
-\Gls{python}, and uses open source {library} like \gls{pycparser} and 
-\gls{ply} to achieve this. For configuration pyYAML was used to make the 
+\Gls{python}, and uses open source \glspl{library} \gls{pycparser} and 
+PLY to achieve this. For configuration pyYAML was used to make the 
 utility flexible. The \gls{utility} automates the process of generating 
 \glspl{dissector} for \Gls{wireshark} from \Gls{c} \gls{header} files. 
 
 CSjark reduces the time developers use to write dissectors, which 
-will make it easier to utilize \Gls{wireshark} for debugging of  \gls{aipc} 
+will make it easier to utilize \Gls{wireshark} for debugging of \gls{aipc}
 traffic.
 \end{abstract}
+
 
 %=========
 % Preface

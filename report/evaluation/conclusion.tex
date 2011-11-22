@@ -101,7 +101,41 @@ In addition to implementation, the task involves researching how uninitialized m
 \subsection{Additional Improvements}
 %-----------------------------------
 \label{sec:conc:addimps}
-Based on experiences from testing the utility 
+In \autoref{sec:sp4:onsite} we described testing of our utility on customer's
+code base. We discovered several corner cases which we did not support, and we
+also found problems with memory consumption when number of input files was
+over 1000. These problems could be solved by further development, which we
+describe in following paragraphs.
+
+\paragraph{Reduce memory consumption}
+We did some basic profiling, both of memory and CPU usage, to evaluate what
+could be improved. Almost all CPU usage was defined to the preprocessor and
+the pycparser library, which means we could not find any possible improvements
+in out utility.
+
+Memory profiling on 1000 header files revealed that almost all memory was used
+by Python dictionaries and lists. Our utility builds up a list of Protocol
+instances which represent all structs we parse, before we write any to disk.
+This grows as more files are parsed. A simple, but effective, solution would
+be to write Protocols to disk as after we have parsed a single file. We would
+still need to store a few attributes for each Protocol, such as name, id,
+size. We believe this would reduce memory consumption sufficiently.
+
+It is also possible that we leak some memory each time we fail to parse a
+file, which could be investigated and fixed afterwards.
+
+\paragraph{Additional C parsing support}
+We successfully parsed 160 of 200 header files in customer's include folder,
+the remaining files failed mostly from corner cases our utility did not
+support, for example typedef's we had not considered. We believe it would be
+relatively easy to add further support for them when they are discovered.
+
+\paragraph{Less manual configuration}
+Several of the optional requirements are focused on requiring less manual
+configuration. If we perform the C preprocessing ourself instead of delegating
+it to an external program, we would be able to read configuration from
+comments and \#define's inside the header files.
+
 
 %----------------
 \section{Summary}

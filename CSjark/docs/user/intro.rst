@@ -61,7 +61,7 @@ ______________
 
 The code below shows what the code for the Lua dissector, displayed in packet 1 in `Figure 1`_, looks like. The ``Proto`` variable defines a new protocol. In this example, a dissector for the internal_snd struct, called internal_snd, is created. The different fields of the struct are created as instances of ``ProtoField``, and put in ``Protocol.fields``. For example, the ``name`` variable is a string in C, and as such it is created as a ProtoField.string with the name ``name``.
 
-The protocol dissector method is the method that does the actual dissecting. A subtree for the dissector is created, and the description of the dissector is appended to the information column. All the ProtoFields are added to the subtree. Here you can see that the type, name and time fields are added to the subtree for the ``internal_snd`` dissector. The buffer size allocated to the fields is the size of the members in C. ::
+The protocol dissector method is the method that does the actual dissecting. A subtree for the dissector is created, and the description of the dissector is appended to the information column. All the ProtoFields are added to the subtree. Here you can see that the ``type``, ``name`` and ``time`` fields are added to the subtree for the ``internal_snd`` dissector. The buffer size allocated to the fields is the size of the members in C. ::
 
     --
     --  A sample dissector for testing Lua C structs scripts
@@ -88,6 +88,9 @@ The protocol dissector method is the method that does the actual dissecting. A s
     end
     
     luastructs_dt:add (1, PROTOCOL)
+    
+.. note::
+    Lua dissectors are usually files with extension ``.lua``.
 
 For further information on the Lua integration in Wireshark, please visit:
 `Lua Support in Wireshark <http://www.wireshark.org/docs/wsug_html_chunked/wsluarm.html>`_.

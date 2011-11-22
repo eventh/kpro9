@@ -13,11 +13,11 @@ This chapter describes the final product.
 %----------------
 \section{Testing}
 %----------------
-At the beginning of the project all of the team members agreed that we were going to focus on doing extensive and proper testing of our utility. In this section we will discuss wether or not we were able to reach the goals we sat at the beginning and during the project.
+At the beginning of the project all of the team members agreed that we were going to focus on doing extensive and proper testing of our utility. In this section we will discuss whether or not we were able to reach the goals we sat at the beginning and during the project.
 
 \subsection{Methods}
 %-------------------
-At the beginning of the project we only used black box test cases and unit tests. We quickly found that even though we were able to uncover several bugs using these methods, it was hard to calculate what and how many parts of the system were actually undergoing testing. This again made it difficult to figure out the real quality of our tests and if our testing efforts were used to their true potential. When we then decided to use a tool for calculating code coverage we noticed that there were large parts of the system that were still untested even though the functionality of the system had been tested in our black box test cases. We therefore made a goal of trying to have a test coverage of at least 80% in order to catch as many bugs as possible. This proved to be a hard task at first, but as can be seen in \autoref{fig:finalCodeCoverage}, once we got used to using a tool to calculate the coverage of our unit tests, we were able to improve the quality of our tests so that they covered more parts of the system.
+At the beginning of the project we only used black box test cases and unit tests. We quickly found that even though we were able to uncover several bugs using these methods, it was hard to calculate what and how many parts of the system were actually undergoing testing. This again made it difficult to figure out the real quality of our tests and if our testing efforts were used to their true potential. When we then decided to use a tool for calculating code coverage we noticed that there were large parts of the system that were still untested even though the functionality of the system had been tested in our black box test cases. We therefore made a goal of trying to have a test coverage of at least 80\% in order to catch as many bugs as possible. This proved to be a hard task at first, but as can be seen in \autoref{fig:finalCodeCoverage}, once we got used to using a tool to calculate the coverage of our unit tests, we were able to improve the quality of our tests so that they covered more parts of the system.
 
 \begin{figure}[htb]
 	\center
@@ -27,13 +27,13 @@ At the beginning of the project we only used black box test cases and unit tests
 
 \subsection{Testing Conclusion}
 %------------------------------
-After finishing the project we had uncovered several serious and many more non-critical bugs in our utility. We also discovered several bugs in the LUA-implementation of wireshark that we needed to have our customer to fix. This proved to be very important as this severely reduced the amounts of bugfixes that had to be implemented after being allowed to send our developers to work with the utility at the customer-site. We were therefore able to create a working product within the small time-frame we had left after testing the utility at the customer-site. We therefore conclude that it had indeed been necessary to focus on creating extensive tests for the utility and that the methods we had chosen for testing were sufficent to get a working end-product.
+After finishing the project we had uncovered several serious and many more non-critical bugs in our utility. We also discovered several bugs in the LUA-implementation of Wireshark that we needed to have our customer to fix. This proved to be very important as this severely reduced the amounts of bugfixes that had to be implemented after being allowed to send our developers to work with the utility at the customer-site. We were therefore able to create a working product within the small time-frame we had left after testing the utility at the customer-site. We therefore conclude that it had indeed been necessary to focus on creating extensive tests for the utility and that the methods we had chosen for testing were sufficient to get a working end-product.
 
 
 %----------------------------
 \section{Further Development}
-\label{sec:eval:furtherdev}
 %----------------------------
+\label{sec:eval:furtherdev}
 This section describes possible improvements to our utility.
 In \autoref{sec:conc:optional} we describe how one might implement the remaining
 optional requirements, while \autoref{sec:conc:addimps} list other improvements.
@@ -99,7 +99,42 @@ This new function must be called for every field defined in every dissector we g
 In addition to implementation, the task involves researching how uninitialized memory looks on different platforms we support, and creating pcap files for testing the functionality.
 
 \subsection{Additional Improvements}
+%-----------------------------------
 \label{sec:conc:addimps}
+In \autoref{sec:sp4:onsite} we described testing of our utility on customer's
+code base. We discovered several corner cases which we did not support, and we
+also found problems with memory consumption when number of input files was
+over 1000. These problems could be solved by further development, which we
+describe in following paragraphs.
+
+\paragraph{Reduce memory consumption}
+We did some basic profiling, both of memory and CPU usage, to evaluate what
+could be improved. Almost all CPU usage was defined to the preprocessor and
+the pycparser library, which means we could not find any possible improvements
+in out utility.
+
+Memory profiling on 1000 header files revealed that almost all memory was used
+by Python dictionaries and lists. Our utility builds up a list of Protocol
+instances which represent all structs we parse, before we write any to disk.
+This grows as more files are parsed. A simple, but effective, solution would
+be to write Protocols to disk as after we have parsed a single file. We would
+still need to store a few attributes for each Protocol, such as name, id,
+size. We believe this would reduce memory consumption sufficiently.
+
+It is also possible that we leak some memory each time we fail to parse a
+file, which could be investigated and fixed afterwards.
+
+\paragraph{Additional C parsing support}
+We successfully parsed 160 of 200 header files in customer's include folder,
+the remaining files failed mostly from corner cases our utility did not
+support, for example typedef's we had not considered. We believe it would be
+relatively easy to add further support for them when they are discovered.
+
+\paragraph{Less manual configuration}
+Several of the optional requirements are focused on requiring less manual
+configuration. If we perform the C preprocessing ourself instead of delegating
+it to an external program, we would be able to read configuration from
+comments and \#define's inside the header files.
 
 
 %----------------

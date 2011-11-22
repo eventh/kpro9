@@ -237,8 +237,8 @@ struct xcon {                               /* x = a,p or s*/
    int               pres_ctx[CTX_LIST_LEN+1];  /* int array + addition */
    OCTET             common_ref[COM_REF_LEN]; /* typedeffed array */
    char              name[50];		 /* C-string                       */
-   SAP               a_xsap;		 /* struct with union+structs in it */
-   SAP               b_xsap;		 /* struct with union+structs in it */
+   SAP_               a_xsap;		 /* struct with union+structs in it */
+   SAP_               b_xsap;		 /* struct with union+structs in it */
    RESULT_SOURCE     result_source;      /* typedef of std type            */
    DIAGNOSTIC        diagnostic;         /* typedef of std type            */
    TSK_TRAK          trak;               /* typedef of std type            */

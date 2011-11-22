@@ -51,7 +51,7 @@ Is a tool for generating \Gls{wireshark} \glspl{dissector} from \gls{asnone} \gl
 four input files: an \gls{asnone} \gls{protocol} description, a configuration file and two
 template files. Advantages of using Asn2wrs are faster development because of
 easier recompilation, and plugins that are easy to distribute. The disadvantage
-is that code and \glspl{makefile} are more complex.\cite{asn2wrs} 
+is that code and \glspl{makefile} are more complex~\cite{asn2wrs}.
 
 Our customer cannot use this solution as it would require them to rewrite 
 their \Gls{c} \glspl{struct} to \gls{asnone} descriptions, which would take a 
@@ -69,7 +69,7 @@ why.
 \subsection{Waterfall}
 %---------------------
 \label{sec:pre:waterfall}
-Waterfall\cite{waterfall} is a software development methodology based on sequential phases.
+Waterfall~\cite{waterfall} is a software development methodology based on sequential phases.
 It consist of the following phases: requirement specification, design,
 implementation, integration, testing, deployment, and maintenance. In its pure
 form, these phases are non-overlapping and one way only, which means that each
@@ -115,7 +115,7 @@ customer finds the need for.
 \subsection{\Gls{scrum}}
 %-----------------------
 \label{sec:pre:scrum}
-\Gls{scrum} \cite{Rising2000} is an agile development methodology based on the philosophy that it is
+\Gls{scrum}~\cite{Rising2000} is an agile development methodology based on the philosophy that it is
 impossible to completely and accurately plan everything in a software project
 before you begin. It is therefore more or less based on iterations of the
 waterfall phases described in \autoref{sec:pre:waterfall}, but instead of
@@ -173,7 +173,7 @@ the team members, where all members share their reflections of how the sprint
 went and on how we could improve for the next sprint. This is important for improving the
 process.
 
-
+\pagebreak
 %------------------------
 \section{\Gls{wireshark}}
 %------------------------
@@ -186,7 +186,7 @@ process.
 \Gls{wireshark}\footnote{\url{http://www.wireshark.org/}} is a free, open source
 network \gls{protocol} analyzer. It lets you capture and browse traffic running
 through a computer network. \Gls{wireshark} is currently being developed by the
-\Gls{wireshark} team, a group of networking experts spanning the globe.\cite{WiresharkORG} Because of
+\Gls{wireshark} team, a group of networking experts spanning the globe~\cite{WiresharkORG}. Because of
 its rich set of features and ease of use, \Gls{wireshark} is the de facto standard in
 many different industries and the educational community. \Gls{wireshark} is able to
 dissect and display data from a plethora of different \glspl{protocol}. One of its
@@ -227,7 +227,7 @@ embedded into applications. \Gls{lua} has only a few basic data structures: bool
 numbers, strings and table. Still \Gls{lua} implements advanced features such as
 first-class functions, garbage collection, closures, coroutines and dynamic
 module loading. \Gls{lua} was created in 1993 at the Pontifical Catholic University
-of Rio de Janeiro, in Brazil.\cite{LuaORG}
+of Rio de Janeiro, in Brazil~\cite{LuaORG}.
 
 The output of our \gls{utility} will be \Gls{wireshark} \glspl{dissector} written in \Gls{lua}. While
 \Gls{wireshark} supports \glspl{dissector} written in both \Gls{c} and \Gls{lua}, \Gls{lua} is preferred
@@ -247,7 +247,7 @@ imperative, statically typed programming language. It was originally developed
 by Sun Microsystems, which is now a subsidiary of Oracle Corporation. \Gls{java} was
 released in 1995, and it derived much of its syntax from \Gls{c} and \Gls{c++}, but with
 fewer low-level facilities. \Gls{java}’s strength are portability, automatic memory
-management, security, good documentation and an extensive standard \gls{library}.\cite{JavaCOM}
+management, security, good documentation and an extensive standard \gls{library}~\cite{JavaCOM}.
 \Gls{java} has several tools and \glspl{library} of varying quality for creating \glspl{parser},
 for example \gls{antlr} and \gls{javacc}. A detailed description of \gls{antlr} can be found in 
 \autoref{sec:pre:antlr}.
@@ -265,7 +265,7 @@ multi-paradigm, object-oriented, imperative, dynamically typed programming
 language. It was created by Guido van Rossum, and is today developed by \Gls{python}
 Software Foundation and the \Gls{python} community. \Gls{python}’s strength include
 automatic memory management, large and comprehensive standard \gls{library},
-portability, powerful but very clear, concise and simple syntax.\cite{PythonORG} There exists
+portability, powerful but very clear, concise and simple syntax~\cite{PythonORG}. There exists
 several pure \Gls{python} \glspl{library} for creating \glspl{lexer} and \glspl{parser}, like \gls{aply},
 \gls{pycparser} and cppheaderparser. These are described further in
 \autoref{sec:pre:parser}.

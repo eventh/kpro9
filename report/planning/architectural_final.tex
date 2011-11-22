@@ -1,10 +1,10 @@
 %========================================
-\chapter{Final Architectural Description}
+\chapter{Architectural Description}
 %========================================
 This chapter introduces the final architectural documents for the project. The team followed the definition of software architecture defined by Len Bass, Paul Clements and Rick Kazman: ``The software architecture of a program or computing
-system is the structure of structures of the system, which comprise software elements, the externally visible properties of those elements, and the relationships between them.''\cite{Bass2003}
+system is the structure of structures of the system, which comprise software elements, the externally visible properties of those elements, and the relationships between them.''~\cite[p.3]{Bass2003}
 
-The purpose of this document is to describe our architecture in a structured way so that it can be used not only by the team, but also as an aid for other stakeholders who are trying to understand the system.
+The purpose of this document is to describe our architecture in a structured way so that it can be used, not only by the team, but also as an aid for other stakeholders who are trying to understand the system.
 
 %-------------------------------------
 \section{Architectural Drivers}
@@ -12,9 +12,9 @@ The purpose of this document is to describe our architecture in a structured way
 This section is dedicated to the discussion of the architectural drivers that were discovered during the project.
 The team chose Modifiability and Testability as quality attributes, but it later on became apparent that some care should also be taken considering Performance.
 
-The reason for choosing Modifiability was that the development team would be unable to update or maintain the \gls{utility} after completing this project. The code would also be distributed under the GPL license which allows other developers to continue working on the utility and use it for their own applications in the future. It was therefore important that the code would be easy to understand, well documented and easy to modify. Not only will this promote the further development of the utility, but it would also make it easier for the customer to use and modify for their own purposes.
+The reason for choosing Modifiability was that the development team would be unable to update or maintain the \gls{utility} after completing this project. The code would also be distributed under a GPL which allows other developers to continue working on the utility and use it for their own applications in the future. It was therefore important that the code would be easy to understand, well documented and easy to modify. Not only will this promote the further development of the utility, but it would also make it easier for the customer to use and modify for their own purposes.
 
-Testability would also be an important quality attribute as the \gls{utility} would be used by the customer for debugging purposes. It would therefore be very important that the utility it self contained as few bugs as possible so that the customer could be sure that the output given by the utility would be able to help them in analyzing and debugging. The developers of this project were also unable to test any given \glspl{dissector} in a real environment, which made it even more necessary for the developers to focus on testing. This is to ensure that the final product works properly even without the developers having had taken a good look on the data the utility will have to process after going public.
+Testability would also be an important quality attribute as the \gls{utility} was to be used by the customer for debugging purposes. It was therefore be very important that the utility it self contained as few bugs as possible so that the customer could be sure that the output given by the utility would be able to help them in analyzing and debugging. The developers of this project were also unable to test any given \glspl{dissector} in a real environment, which made it even more necessary for the developers to do extensive testing of the utility's functionality. This was to ensure that the final product works properly even without the developers having had taken a good look on the data the utility will have to process after going public.
 
 Performance became somewhat of an issue for the utility during the project as it became apparent that the customer would have to run the utility on several thousand header files at once. It would therefore be important for the utility to be able to run through all of the customer's header files in a reasonable amount of time, which in this case would be that the utility should be able to run through several thousand header files over one night of being run in batch mode.
 
@@ -49,7 +49,7 @@ This was implemented mostly by using inheritance where we reused a lot of the fu
 \subsubsection{Restrict Communication Paths}
 By restricting the number of modules that are able to collect data from a specific module, the less dependent the entire system becomes of that specific module. This makes it easier to swap out existing modules with new ones without having to make many widespread changes to the entire system. This is important for this project as the source code could change drastically after discovering new requirements in later sprints. By having a loose coupling we will minimize the amount of code that has to be rewritten after every sprint.
 
-We followed this tactic by using code inspection. If we discovered during a sprint that the coupling between the modules were becoming too tight, it was decided to re-factor some of the code early on in order to save time by not having to do any major refactoring later on.
+We followed this tactic by using code inspection. If we discovered during a sprint that the coupling between the modules were becoming too tight, it was decided to refactor some of the code early on in order to save time by not having to do any major refactoring later on.
 
 \subsubsection{Using Configuration Files}
 By using configuration files, it is possible to change the behaviour of the system without having to do any changes to its code. It is very important that this system uses configuration files as this was a requirement from the customer, as well as making it a lot more flexible for the end user.
@@ -58,11 +58,23 @@ In order to implement this in the project it was decided that we would use the Y
 
 \subsection{Business Requirements}
 %---------------------------------
+The following business requirements encompass the most important needs of the customer.
 \begin{itemize}
 \item The \gls{utility} must be delivered on time as it is not possible for the developers to continue the development after the deadline
 \item The ability for the \gls{utility} to be able to create dissectors for the C-structs in the header files used  by Thales.
 \item The ability for the \gls{utility} to create dissectors that run on all of the platforms used by Thales and their customers
 \item The ability for \Gls{wireshark} to be able to use the generated dissectors to display the values of the C-structs passed through the system.
+\end{itemize}
+
+\subsection{Design Goals}
+%------------------------
+To help guide the design and the implementation we tried to follow these goals and guidelines:
+\begin{itemize}
+	\item Smart data structures and dumb code works better than the other way around~\cite{Raymond1999}!
+	\item Clear and clean separation of the front-end and the back-end so in the future other parsers can be used to generate \glspl{dissector}.
+	\item Try to be pythonic, follow  PEP8 \footnote{Style Guide for Python Code: \url{http://www.python.org/dev/peps/pep-0008/}} and PEP20\footnote{The Zen of Python \url{http://www.python.org/dev/peps/pep-0020/}}.
+	\item Now is better than never. Don't be afraid to write stupid or ugly code, we can always fix it later.
+	\item The first version is never perfect, so don't wait until its perfect before you commit. Commit often!
 \end{itemize}
 
 %------------------------------
@@ -87,7 +99,8 @@ The layered architectural pattern is a pattern that involves grouping several di
 \autoref{fig:layered} shows how the layered architectural pattern is used in the \gls{utility}
 
 \begin{figure}[htb]
-	\includegraphics[width = \textwidth]{./planning/img/layered}
+	\center
+	\includegraphics[width=0.7\textwidth]{./planning/img/layered}
 	\caption{Layered Architectural Pattern in the \gls{utility}\label{fig:layered}}
 \end{figure}
 
@@ -98,10 +111,10 @@ This section describes three different views the team used for this project: A l
 
 \subsection{Logical View}
 %------------------------
-This view shown in \autoref{fig:logicalview}. Command line takes the arguments for \gls{header} file and configuration file as a string. The arguments are parsed in the command line \gls{parser}. Header file is sent to ''\Gls{c} \gls{preprocessor} \& \Gls{c} \gls{parser}'', the \Gls{c} \gls{header} file is loaded and parsed by the \Gls{c} \gls{parser}, which generates a parsing tree. Command line also call Configuration, which load the configuration file. The configuration will parse the configuration file and create configuration rules. The \Gls{lua} \gls{script} generator will generate a \Gls{lua} \gls{script} from the parsing tree and the config rules.
+This view shown in \autoref{fig:logicalview}. Command line takes the arguments for \gls{header} file and configuration file as a string. The arguments are parsed in the command line \gls{parser}. Header file is sent to ''\Gls{c} \gls{preprocessor} \& \Gls{c} \gls{parser}'', the \Gls{c} \gls{header} file is loaded and parsed by the \Gls{c} \gls{parser}, whcih generates a parsing tree. Command line also call Configuration, which load the configuration file. The configuration will parse the configuration file and create configuration rules. The \Gls{lua} \gls{script} generator will generate a \Gls{lua} \gls{script} from the parsing tree and the config rules.
 
 \begin{figure}[htb]
-	\includegraphics[width=\textwidth]{./planning/img/overall_design}
+	\includegraphics[width=\textwidth]{./planning/img/final_arch}
 	\caption{Overall Architecture\label{fig:logicalview}}
 \end{figure}
 
@@ -110,8 +123,10 @@ This view shown in \autoref{fig:logicalview}. Command line takes the arguments f
 %---------------------
 \autoref{fig:processview} shows the process view for our \gls{utility}. Csjark takes \gls{header} and config files as input and then uses the config and cparser to parse the files. CSjark then uses the cparser to find the \glspl{struct} in the \gls{header} file and then creates \glspl{dissector} for them. These \glspl{dissector} are then written to a file and CSjark then reports to the user by sending a message to the command line.
 
+
 \begin{figure}[htb]
-	\includegraphics[width=\textwidth]{./planning/img/SequenceDiagram}
+	\center
+	\includegraphics[width = \textwidth]{./evaluation/img/FinalSequenceDiagram}
 	\caption{Data flow during regular execution\label{fig:processview}}
 \end{figure}
 
@@ -119,10 +134,17 @@ This view shown in \autoref{fig:logicalview}. Command line takes the arguments f
 %------------------------
 \subsection{Deployment View}
 %------------------------
-\autoref{fig:deployment} shows the deployment diagram for this project. Csjark takes \gls{header}- and config-files as input, and generates \Gls{lua}-\glspl{script}. The \Gls{lua}-\glspl{script} are used for \glspl{dissector} in \Gls{wireshark}.
+
+\autoref{fig:deployment} shows the deployment diagram for this project. CSjark 
+takes \gls{header}-files and config-files as input, and generates \Gls{lua} 
+\glspl{dissector}. All these \glspl{dissector} are added as plugins to 
+\Gls{wireshark}, extending the functionality. \Gls{wireshark} will capture the 
+data packet when Process A send data to Process B, the \Gls{lua} 
+\glspl{dissector} is used to display these data packets correctly.
 
 \begin{figure}[htb]
-	\includegraphics[width=\textwidth]{./planning/img/Deployment}
+	\center
+	\includegraphics[width = 0.8\textwidth]{./planning/img/Deployment}
 	\caption{Deployment View\label{fig:deployment}}
 \end{figure}
 

@@ -4,7 +4,7 @@
 %
 % Use *_standalone.tex to generate standalone parts
 %######################################################
-\documentclass[a4paper, 11pt, twoside]{report}
+\documentclass[a4paper, 11pt, notitlepage, twoside, openright]{report}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
@@ -82,7 +82,6 @@
 \include{./appendices/manual_hdr}
 
 \begin{document}
-
 %============
 % Title page
 %============
@@ -209,7 +208,7 @@ development process.
 \include{./planning/requirements}
 \include{./planning/product_backlog}
 \include{./planning/test_plan}
-\include{./planning/architectural}
+\include{./planning/architectural_final}
 
 
 %#########
@@ -226,7 +225,6 @@ development process.
 % Conclusion and Evaluation
 %###########################
 \part{Conclusion \& Evaluation}
-\include{./evaluation/architectural_final}
 \include{./evaluation/conclusion}
 \include{./evaluation/evaluation}
 
@@ -249,6 +247,7 @@ development process.
 \include{./appendices/acronym}
 \include{./appendices/glossary}
 \include{./appendices/testcases}
+\include{./appendices/architectural}
 \include{./appendices/customers_requirements}
 \include{./appendices/manual}
 

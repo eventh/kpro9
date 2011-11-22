@@ -43,6 +43,13 @@ cparser when it creates new fields.
 
 \subsection{System summary}
 %--------------------------
+Originally we had some design goals for the product. We wished to have some
+logical groupings of functionality into a front-end and back-end. We believe
+that we have achieved this goal. Everything specific for generating Lua
+dissectors are contained to the field and dissector modules, which contains
+no C specific code. These consist of smart data structures which are created
+by the front-end, the cpp and cparser module.
+
 
 %----------------------------
 \section{Further Development}
@@ -168,8 +175,6 @@ At the beginning of the project we only used black box test cases and unit tests
 \subsection{Testing Conclusion}
 %------------------------------
 After finishing the project we had uncovered several serious and many more non-critical bugs in our utility. We also discovered several bugs in the LUA-implementation of Wireshark that we needed to have our customer to fix. This proved to be very important as this severely reduced the amounts of bugfixes that had to be implemented after being allowed to send our developers to work with the utility at the customer-site. We were therefore able to create a working product within the small time-frame we had left after testing the utility at the customer-site. We therefore conclude that it had indeed been necessary to focus on creating extensive tests for the utility and that the methods we had chosen for testing were sufficient to get a working end-product.
-
-
 
 
 %----------------

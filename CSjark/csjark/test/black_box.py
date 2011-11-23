@@ -209,20 +209,20 @@ def arrays(structs):
     local array = subtree:add(f.chararr3, buffer(80, 6))
     array:add(f.chararr3_0, buffer(80, 3))
     array:add(f.chararr3_1, buffer(83, 3))
-    local array = subtree:add(f.floatarr4, buffer(86, 24))
+    local array = subtree:add(f.floatarr4, buffer(88, 24))
     array:set_text("floatarr4 (6 x float)")
-    local subarray = array:add(f.floatarr4_0, buffer(86, 12))
+    local subarray = array:add(f.floatarr4_0, buffer(88, 12))
     subarray:set_text("floatarr4[0] (3 x float)")
-    subarray:add(f.floatarr4_0_0, buffer(86, 4))
-    subarray:add(f.floatarr4_0_1, buffer(90, 4))
-    subarray:add(f.floatarr4_0_2, buffer(94, 4))
-    local subarray = array:add(f.floatarr4_1, buffer(98, 12))
+    subarray:add(f.floatarr4_0_0, buffer(88, 4))
+    subarray:add(f.floatarr4_0_1, buffer(92, 4))
+    subarray:add(f.floatarr4_0_2, buffer(96, 4))
+    local subarray = array:add(f.floatarr4_1, buffer(100, 12))
     subarray:set_text("floatarr4[1] (3 x float)")
-    subarray:add(f.floatarr4_1_0, buffer(98, 4))
-    subarray:add(f.floatarr4_1_1, buffer(102, 4))
-    subarray:add(f.floatarr4_1_2, buffer(106, 4))
+    subarray:add(f.floatarr4_1_0, buffer(100, 4))
+    subarray:add(f.floatarr4_1_1, buffer(104, 4))
+    subarray:add(f.floatarr4_1_2, buffer(108, 4))
     end
-    delegator_register_proto(proto_array_test, "array_test", 16, {[0]=110})
+    delegator_register_proto(proto_array_test, "array_test", 16, {[0]=112})
     ''')
 
 
@@ -921,9 +921,9 @@ def cpp_arguments(structs):
     subarray:add_le(f.arr_1_2, buffer(40, 8))
     subtree:add_le(f.test, buffer(48, 4))
     end
-    delegator_register_proto(proto_cpp_test, "cpp_test", 10, {[1]=52})
-    delegator_register_proto(proto_cpp_test, "cpp_test", 12, {[1]=52})
-    delegator_register_proto(proto_cpp_test, "cpp_test", 14, {[1]=52})
+    delegator_register_proto(proto_cpp_test, "cpp_test", 10, {[1]=56})
+    delegator_register_proto(proto_cpp_test, "cpp_test", 12, {[1]=56})
+    delegator_register_proto(proto_cpp_test, "cpp_test", 14, {[1]=56})
     ''')
 
 

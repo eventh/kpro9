@@ -380,7 +380,8 @@ class ArrayField(Subtree):
         if type not in ('string', 'stringz'):
             type = 'bytes'
         size = len(children) * field.size
-        super().__init__(tree, field.name, type, size, 0, field.endian)
+        super().__init__(tree, field.name, type,
+                size, field.alignment, field.endian)
         self.parent = parent
         self.children = children
 

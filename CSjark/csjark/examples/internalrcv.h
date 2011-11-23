@@ -6,10 +6,10 @@
 #include <time.h>
 
 #define INTERNALRCV 2
-#define STRING_LEN 26
+#define STRING_LENGTH 26
 
 struct internal_rcv {
    int    type;
    time_t time;
-   char   data[STRING_LEN];
+   char   data[STRING_LENGTH];
 };

@@ -95,15 +95,12 @@ def parse_file(filename, platform=None, folders=None, includes=None):
         feed = ''
 
     # Missing universal newlines forces input to expect bytes
-    if sys.platform.startswith('win'):
-        newlines = True
-    else:
+    if not sys.platform.startswith('win'):
         feed = bytes(feed, 'ascii')
-        newlines = False
 
     # Call C preprocessor with args and file
     with Popen(path_list, stdin=PIPE, stdout=PIPE,
-            stderr=PIPE, universal_newlines=newlines) as proc:
+            stderr=PIPE, universal_newlines=True) as proc:
         text, warnings = proc.communicate(input=feed)
     if warnings:
         print(warnings.strip(), file=sys.stderr)
